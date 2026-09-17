@@ -58,3 +58,35 @@ model ChatMessage {
 
   @@index([sessionId])
 }
+
+// ── Login accounts ──
+// Admin account (never expires, always unlocked) + guest accounts (guest1, guest2, …)
+// whose access expires 2 days after the admin "unlocks" (payment received) them.
+model Account {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  passwordHash  String                 // scrypt hash, salt-prefixed
+  role          String   @default("guest") // "admin" | "guest"
+  status        String   @default("locked") // "locked" | "unlocked"
+  passwordSetAt DateTime?              // when the 2-day window started
+  expiresAt     DateTime?              // passwordSetAt + 2 days
+  fullName      String?
+  note          String?                // e.g. "Payment received ₹X"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  unlockLogs    UnlockLog[]
+}
+
+// Audit trail of every admin "unlock / payment received" action.
+model UnlockLog {
+  id        String   @id @default(cuid())
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  adminUser String                  // who unlocked
+  reason    String?                 // e.g. "Payment received"
+  expiresAt DateTime               // the new expiry that was set
+  createdAt DateTime @default(now())
+
+  @@index([accountId])
+}

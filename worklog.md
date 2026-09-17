@@ -167,3 +167,38 @@ Stage Summary:
 - The external Medium article URL is fully replaced by an in-portal, Shekhar Dube-branded end-to-end ML housing-price project walkthrough at `#shekhar-dube-ml`.
 - All references across aiml-program, data.ts, and the AI assistant system prompt now point to Shekhar Dube's in-portal project.
 - Nav exposes it under the Internships dropdown. Lint clean. No external medium.com URLs remain.
+
+---
+Task ID: 7
+Agent: Z.ai Code (orchestrator) — Login system with 2-day password expiry
+Task: Add login (username/password), admin + guest1/guest2/guest3/… accounts, guest passwords expire in 2 days, admin unlocks after payment.
+
+Work Log:
+- Prisma: added `Account` model (username, passwordHash, role, status, passwordSetAt, expiresAt, fullName, note) and `UnlockLog` model (audit trail of every unlock). `bun run db:push` → DB in sync, Prisma client regenerated.
+- `src/lib/auth.ts`: scrypt-based password hashing (salt-prefixed), HMAC-signed httpOnly session cookie (no sessions table needed), `ensureAccountsSeeded()` idempotently seeds admin + guest1..guest5 on first API hit. Admin: admin/admin123, always unlocked, never expires. Guests: guestN/guestN, start LOCKED, 2-day expiry set on unlock.
+- API routes:
+  - `POST /api/auth/login` — validates credentials; admin always allowed; guests rejected if `status != unlocked` ("Your account is locked. Contact the admin to unlock after payment." / code LOCKED) or if `now > expiresAt` ("Your password has expired (2-day limit). Contact the admin to renew." / code EXPIRED). On success sets the signed session cookie.
+  - `POST /api/auth/logout` — clears the cookie.
+  - `GET /api/auth/me` — reads the cookie, re-checks DB status/expiry live (so admin locks/expiries take effect immediately).
+  - `GET /api/admin/accounts` — admin-only; lists all accounts with computed `expired` flag.
+  - `POST /api/admin/unlock` — admin-only; sets guest `status=unlocked`, `passwordSetAt=now`, `expiresAt=now+2 days`, writes an `UnlockLog` row (adminUser + reason + new expiry).
+- `src/components/agile/auth-menu.tsx` (client): a `Dialog` triggered by a nav button that morphs based on auth state:
+  - Logged out → login form (username + password) + clickable demo-credential chips (admin/guest1/guest2/guest3) that autofill + copy-password buttons.
+  - Admin → "Admin Console" panel: table of all 6 accounts (User, Status badge, Expires countdown, Action button). Locked/expired guests show a red "Locked/Expired" badge + green "Unlock" button; active guests show a green/amber "Active" badge + "Renew" button. Unlocking confirms "payment received" and logs an audit entry.
+  - Guest → "Welcome" panel: "Access active" + a live ticking countdown (1d 23h 59m 02s) + absolute expiry date, OR "Access expired" with a contact-admin CTA (shekhar.dube@agileprojection.com / WhatsApp 9644084473) when the 2-day window has passed.
+- Wired `<AuthMenu />` into `src/components/agile/nav.tsx` — desktop action row (before the phone link) and mobile sheet action row.
+
+Verification (Agent Browser, end-to-end):
+- Dev server had a stale Prisma client cached from before the schema update; `db.account` was undefined → restarted the dev server so it picked up the regenerated client. After restart, login API works.
+- Locked-guest rejection: POST /api/auth/login {guest1/guest1} → `{"ok":false,"error":"Your account is locked. Contact the admin to unlock after payment.","code":"LOCKED"}` ✓
+- Logged in as admin/admin123 → dialog switched to "Admin Console · admin" with 6 accounts (admin=Active/Never expires/—, guest1–5=Locked/—/Unlock).
+- Clicked guest1's Unlock button → guest1 row updated to "Active / 1d 23h 59m / Renew" (2-day countdown started; audit `UnlockLog` row written). Other guests remain Locked.
+- Logged out admin → dialog closed, nav button reverted to "Login".
+- Logged in as guest1/guest1 (now unlocked) → guest panel: "Welcome, Guest User 1 / You are signed in as guest1 (guest) / Access active / Your password expires in: 1d 23h 59m 02s / Expires 19 Sept 2026, 8:35 pm." Countdown ticks live.
+- Nav button now reads "guest1" (logged-in state). guest2 (still locked) still rejected with the LOCKED error.
+- `bun run lint` clean. 6 accounts seeded in DB.
+
+Stage Summary:
+- Login system live: admin (admin/admin123) + guest1–guest5 (guestN/guestN).
+- Guest passwords expire exactly 2 days after admin unlock; admin renews by clicking Unlock/Renew (payment-received flow); every unlock is audit-logged.
+- Login dialog accessible from the nav (desktop + mobile). `bun run lint` clean.

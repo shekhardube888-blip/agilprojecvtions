@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AuthMenu } from "@/components/agile/auth-menu";
 
 type NavLink = {
   label: string;
@@ -124,6 +125,7 @@ export function Nav() {
         </ul>
 
         <div className="hidden lg:flex items-center gap-3 shrink-0">
+          <AuthMenu />
           <a
             href="tel:+918095557332"
             className="text-sm text-slate-300 hover:text-cyan-400 inline-flex items-center gap-1.5"
@@ -191,12 +193,15 @@ export function Nav() {
                   ))}
                 </ul>
                 <div className="mt-4 flex flex-col gap-2 px-2">
-                  <a
-                    href="tel:+918095557332"
-                    className="text-sm text-slate-300 inline-flex items-center justify-center gap-1.5 h-9 rounded-md border border-[rgba(6,182,212,0.2)]"
-                  >
-                    <Phone className="size-3.5" /> +91 80955 57332
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <AuthMenu />
+                    <a
+                      href="tel:+918095557332"
+                      className="flex-1 text-sm text-slate-300 inline-flex items-center justify-center gap-1.5 h-9 rounded-md border border-[rgba(6,182,212,0.2)]"
+                    >
+                      <Phone className="size-3.5" /> +91 80955 57332
+                    </a>
+                  </div>
                   <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
                     <Link href="#register" onClick={closeAll}>Register →</Link>
                   </Button>
