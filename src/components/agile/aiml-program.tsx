@@ -7,13 +7,14 @@ import {
   Brain,
   Target,
   Rocket,
-  ExternalLink,
+  ArrowUpRight,
 } from "lucide-react";
 import { AIML_CURRICULUM, AIML_FEATURES } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 
-const HOUSING_URL =
-  "https://medium.com/@gurupratap.matharu/end-to-end-machine-learning-project-on-predicting-housing-prices-using-regression-7ab7832840ab";
+// Internal reference — Shekhar Dube's end-to-end ML project lives on this portal
+// at #shekhar-dube-ml (replaces the external Medium article link).
+const HOUSING_URL = "#shekhar-dube-ml";
 
 const PIPELINE = [
   { icon: Database, step: "Data Ingestion", note: "Housing CSV → Pandas DataFrame" },
@@ -41,15 +42,13 @@ export function AIMLProgram() {
             🚀 AI/ML Industry Internship — <span className="ap-gradient-text">80+ Industry Projects</span>
           </h2>
           <p className="text-slate-300 mt-3 max-w-3xl leading-relaxed text-sm md:text-base">
-            A 6-week, project-based ML internship designed for <strong className="text-slate-100">BE / B.Tech final-year, M.Tech and MCA students</strong>. You&apos;ll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using the famous{" "}
+            A 6-week, project-based ML internship designed for <strong className="text-slate-100">BE / B.Tech final-year, M.Tech and MCA students</strong>. You&apos;ll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using{" "}
             <a
               href={HOUSING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-cyan-300 underline underline-offset-4 inline-flex items-center gap-1"
             >
-              end-to-end housing-price regression project
-              <ExternalLink className="size-3" />
+              Shekhar Dube&apos;s end-to-end housing-price regression project
+              <ArrowUpRight className="size-3" />
             </a>{" "}
             as the reference architecture, and ship a working AI product by week 6.
           </p>
@@ -143,11 +142,9 @@ export function AIMLProgram() {
                 {i === 0 && (
                   <a
                     href={HOUSING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center gap-1 text-[11px] text-cyan-300 hover:text-cyan-200"
                   >
-                    <ExternalLink className="size-3" /> Read the housing-price end-to-end ML article on Medium
+                    <ArrowUpRight className="size-3" /> Open Shekhar Dube&apos;s full housing-price ML walkthrough
                   </a>
                 )}
               </div>

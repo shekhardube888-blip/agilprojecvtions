@@ -19,6 +19,7 @@ import { Reports } from "@/components/agile/reports";
 import { ITCourses } from "@/components/agile/it-courses";
 import { Instructors } from "@/components/agile/instructors";
 import { AIMLProgram } from "@/components/agile/aiml-program";
+import { ShekharDubeMLProject } from "@/components/agile/shekhar-dube-ml-project";
 import { AIAssistant } from "@/components/agile/ai-assistant";
 import { Newsletter } from "@/components/agile/newsletter";
 import { Footer } from "@/components/agile/footer";
@@ -54,6 +55,7 @@ export default function Home() {
         <ITCourses />
         <Instructors />
         <AIMLProgram />
+        <ShekharDubeMLProject />
         <AIAssistant />
         <Newsletter />
 

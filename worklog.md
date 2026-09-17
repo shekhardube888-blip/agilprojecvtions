@@ -133,3 +133,37 @@ Stage Summary:
 - New `/api/admin/registrations` (already existed) is now visualised in a full dashboard at `#reports`.
 - Stat cards + 2 bar charts (recharts) + recent-registrations table, all in the AgileProjection navy/cyan theme.
 - Nav has a "Reports" link. Lint clean.
+
+---
+Task ID: 6
+Agent: Z.ai Code (orchestrator) — Shekhar Dube ML project branding
+Task: Replace the external Medium article URL with an in-portal "Shekhar Dube" branded end-to-end ML housing-price project.
+
+Work Log:
+- Created `src/components/agile/shekhar-dube-ml-project.tsx` — a comprehensive, branded walkthrough:
+  - Author banner: "🏠 Shekhar Dube's End-to-End ML Project — Housing Price Prediction", SD avatar, role "AI/ML Lead Mentor · AgileProjection NT-AI Network", mailto:shekhar.dube@agileprojection.com chip.
+  - 4 metric cards: Dataset (California Housing, 20,640 rows), Target (Median House Value), Eval Metric (RMSE), Best Model (Random Forest).
+  - Tech stack pills: Python 3.11, Pandas, NumPy, Scikit-Learn, Matplotlib, Seaborn, Jupyter, FastAPI, Streamlit.
+  - 6-stage vertical timeline (Data Ingestion → EDA → Feature Engineering → Modelling → Evaluation → Deployment), each with icon, week label, description, bullet list, and a real Python/Scikit-Learn code snippet (fetch_california_housing, EDA plots, ColumnTransformer pipeline, RandomizedSearchCV, SHAP, FastAPI /predict endpoint).
+  - Author quote card + 3 CTAs (Build with mentor → #register, Ask AI Mentor → #ai-assistant, Starter repo → github.com).
+- Replaced EVERY external Medium URL reference with the internal anchor `#shekhar-dube-ml`:
+  - `src/components/agile/aiml-program.tsx`: HOUSING_URL constant → "#shekhar-dube-ml"; two in-body links now read "Shekhar Dube's end-to-end housing-price regression project" and "Open Shekhar Dube's full housing-price ML walkthrough" (internal, no target=_blank, swapped ExternalLink for ArrowUpRight icon).
+  - `src/lib/data.ts`: RESOURCES entry retitled "Shekhar Dube's End-to-End ML Project" pointing to #shekhar-dube-ml; AIML_CURRICULUM week texts + comment now reference Shekhar Dube's stages; AIML_FEATURES "End-to-End ML Pipeline" feature now names Shekhar Dube's project as the reference architecture.
+  - `src/app/api/ai-assistant/route.ts`: SYSTEM_PROMPT now tells the LLM the canonical reference is "Shekhar Dube's End-to-End ML Project — Housing Price Prediction using Regression" at #shekhar-dube-ml, and to point students to it + summarise the 6 stages when asked how to build a complete ML project.
+- Wired `<ShekharDubeMLProject />` into `src/app/page.tsx` immediately after `<AIMLProgram />` (reference architecture sits right next to the internship that uses it).
+- Added "Shekhar Dube's ML Project" entry to the Internships nav dropdown (`src/components/agile/nav.tsx`) with desc "End-to-end housing-price regression".
+- Verified no `gurupratap` or `medium.com` strings remain anywhere in `src/` (grep returned nothing).
+- `bun run lint` clean.
+
+Verification (Agent Browser + VLM):
+- Dev server restarted after a transient stop; `/` returns HTTP 200.
+- Section renders at `#shekhar-dube-ml` with all content: "REFERENCE PROJECT · CURATED BY SHEKHAR DUBE", H2 "Shekhar Dube's End-to-End ML Project — Housing Price Prediction", role "AI/ML Lead Mentor · AgileProjection NT-AI Network", all 4 metric cards (California Housing / Median House Value / RMSE / Random Forest), tech stack, and all 6 stages with code (fetch_california_housing, correlation/geo scatter, ColumnTransformer pipeline, RandomizedSearchCV "Best RMSE", SHAP beeswarm, FastAPI /predict).
+- aiml-program links now resolve to `#shekhar-dube-ml` (verified via getAttribute JSON dump: two internal links + Register link; zero external).
+- Nav Internships dropdown contains "Shekhar Dube's ML Project — End-to-end housing-price regression"; clicking it jumps to the section (scrollY ≈ 16606).
+- VLM confirmed: Shekhar Dube name + SD avatar + AI/ML Lead Mentor role + 4 metric cards render with clean layout/good contrast.
+- AI assistant reply to "How do I build a complete end-to-end ML project? Where can I find a reference?" now says: "follow Shekhar Dube's structured 6-stage walkthrough available in the AgileProjection portal (#shekhar-dube-ml)" and summarises the stages.
+
+Stage Summary:
+- The external Medium article URL is fully replaced by an in-portal, Shekhar Dube-branded end-to-end ML housing-price project walkthrough at `#shekhar-dube-ml`.
+- All references across aiml-program, data.ts, and the AI assistant system prompt now point to Shekhar Dube's in-portal project.
+- Nav exposes it under the Internships dropdown. Lint clean. No external medium.com URLs remain.

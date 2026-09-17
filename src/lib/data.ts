@@ -288,7 +288,7 @@ export const FAQS = [
 export const RESOURCES = [
   { icon: "📚", title: "Technical Resource Library", desc: "Free course material covering Embedded C, Linux internals, IoT protocols, RTOS, ARM architecture, and more. Updated every quarter with new content from our mentors.", link: "Explore Library", href: "#ai-assistant" },
   { icon: "💬", title: "AI Learning Assistant", desc: "Ask our AI-powered assistant any technical or career question — from 'how do I start my final year AI project' to 'which domain suits my branch'. Built specifically for BE / B.Tech / MCA / M.Tech students.", link: "Ask the AI →", href: "#ai-assistant" },
-  { icon: "📝", title: "End-to-End ML Project Guide", desc: "A practical, step-by-step guide to building a complete Machine Learning project — based on the famous housing-price regression walkthrough. Covers data ingestion, EDA, feature engineering, modelling, and deployment.", link: "Read the Guide →", href: "#aiml-program" },
+  { icon: "📝", title: "Shekhar Dube's End-to-End ML Project", desc: "A complete, in-portal walkthrough by Shekhar Dube — building a Housing Price Prediction regression model from raw CSV to deployed API. Covers data ingestion, EDA, feature engineering, modelling, evaluation and deployment with real Python/Scikit-Learn code at every stage.", link: "Open the walkthrough →", href: "#shekhar-dube-ml" },
   { icon: "🎓", title: "Career & Technical Blog", desc: "Practical guides: building your first IoT project, cracking embedded systems interviews, writing a resume that gets callbacks, and understanding the AI/ML job market in 2026.", link: "Read Articles →", href: "#ai-assistant" },
 ];
 
@@ -527,19 +527,20 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-// ── AI/ML program curriculum (the 6-week ML pipeline, inspired by the housing-price end-to-end article) ──
+// ── AI/ML program curriculum (the 6-week ML pipeline, mapped to Shekhar Dube's
+//    in-portal end-to-end housing-price regression project at #shekhar-dube-ml) ──
 export const AIML_CURRICULUM = [
-  { week: "Week 1", title: "Python for ML · Data Ingestion", text: "NumPy / Pandas / Matplotlib, loading datasets (CSV, API, DB), handling missing values, basic EDA. You'll work with a real housing dataset as your sandbox." },
-  { week: "Week 2", title: "Exploratory Data Analysis & Visualisation", text: "Univariate & multivariate analysis, correlation heatmaps, geographical scatter (lat/long), feature-target relationships — the exact EDA flow used in the end-to-end housing-price regression project." },
-  { week: "Week 3", title: "Feature Engineering & Pipeline Design", text: "Handling categorical & numerical attributes, custom transformers, full Scikit-Learn pipeline, train/val stratified split — replicating the housing-price feature-engineering stage." },
-  { week: "Week 4", title: "Model Training & Tuning", text: "Linear Regression, Decision Tree, Random Forest, Gradient Boosting. Cross-validation, RMSE evaluation, RandomizedSearchCV hyperparameter tuning — the model zoo from the housing-price walkthrough." },
-  { week: "Week 5", title: "Model Evaluation & Explainability", text: "Feature importance, error analysis, SHAP/LIME interpretation, confidence intervals — understanding why your model makes the predictions it does." },
-  { week: "Week 6", title: "Deployment & Capstone Demo", text: "Flask/FastAPI serving, Streamlit dashboard, model versioning, presenting to an industry panel. You ship a working AI product, not just a notebook." },
+  { week: "Week 1", title: "Python for ML · Data Ingestion", text: "NumPy / Pandas / Matplotlib, loading datasets (CSV, API, DB), handling missing values, basic EDA. You'll work with the California Housing dataset — the exact sandbox used in Shekhar Dube's end-to-end ML project." },
+  { week: "Week 2", title: "Exploratory Data Analysis & Visualisation", text: "Univariate & multivariate analysis, correlation heatmaps, geographical scatter (lat/long), feature-target relationships — the same EDA flow used in Shekhar Dube's housing-price regression project (Stage 2)." },
+  { week: "Week 3", title: "Feature Engineering & Pipeline Design", text: "Handling categorical & numerical attributes, custom transformers, full Scikit-Learn pipeline, train/val stratified split — replicating Stage 3 of Shekhar Dube's ML project." },
+  { week: "Week 4", title: "Model Training & Tuning", text: "Linear Regression, Decision Tree, Random Forest, Gradient Boosting. Cross-validation, RMSE evaluation, RandomizedSearchCV hyperparameter tuning — the model zoo from Shekhar Dube's housing-price walkthrough (Stage 4)." },
+  { week: "Week 5", title: "Model Evaluation & Explainability", text: "Feature importance, error analysis, SHAP/LIME interpretation, confidence intervals — understanding why your model makes the predictions it does (Stage 5)." },
+  { week: "Week 6", title: "Deployment & Capstone Demo", text: "FastAPI serving, Streamlit dashboard, model versioning, presenting to an industry panel. You ship a working AI product, not just a notebook (Stage 6)." },
 ];
 
 export const AIML_FEATURES = [
   { icon: "🧠", title: "80+ Industry Projects", desc: "Pick from Gen-AI, Computer Vision, NLP, ML, Healthcare AI, Cybersecurity + AI, Recommendation Systems, Industry 4.0, Research AI, and more." },
-  { icon: "📊", title: "End-to-End ML Pipeline", desc: "Built around the complete ML lifecycle (data ingestion → EDA → feature engineering → modelling → tuning → deployment) using a real housing-price regression project as the reference architecture." },
+  { icon: "📊", title: "End-to-End ML Pipeline", desc: "Built around the complete ML lifecycle (data ingestion → EDA → feature engineering → modelling → tuning → deployment) using Shekhar Dube's housing-price regression project as the reference architecture." },
   { icon: "🎓", title: "PG-Depth Curriculum", desc: "Designed for BE / B.Tech final-year, M.Tech and MCA students. Project complexity and mentorship depth is calibrated for postgraduate learning outcomes." },
   { icon: "🏆", title: "Industry Mentor Reviews", desc: "Weekly code reviews by working ML engineers, capstone presentation to an industry panel, and a verifiable completion certificate with project GitHub link." },
 ];
