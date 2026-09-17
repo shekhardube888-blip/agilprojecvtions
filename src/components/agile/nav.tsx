@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, ChevronDown, Phone, Zap } from "lucide-react";
+import { Menu, ChevronDown, Phone, Zap, BarChart3 } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -44,6 +44,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { label: "Schedule", href: "#schedule" },
+  { label: "Reports", href: "#reports" },
   { label: "Benefits", href: "#benefits" },
   { label: "FAQ", href: "#faq" },
   { label: "About", href: "#about" },

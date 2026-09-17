@@ -15,6 +15,7 @@ import { Mentors } from "@/components/agile/mentors";
 import { FAQ } from "@/components/agile/faq";
 import { Resources } from "@/components/agile/resources";
 import { RegisterForm } from "@/components/agile/register-form";
+import { Reports } from "@/components/agile/reports";
 import { ITCourses } from "@/components/agile/it-courses";
 import { Instructors } from "@/components/agile/instructors";
 import { AIMLProgram } from "@/components/agile/aiml-program";
@@ -47,6 +48,8 @@ export default function Home() {
         <Resources />
         <div className="ap-divider" />
         <RegisterForm />
+        <div className="ap-divider" />
+        <Reports />
         <div className="ap-divider" />
         <ITCourses />
         <Instructors />

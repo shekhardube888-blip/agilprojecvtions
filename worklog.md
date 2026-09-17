@@ -102,3 +102,34 @@ Stage Summary:
 - Responsive (mobile hamburger + single-column) and sticky-footer behavior confirmed.
 - `bun run lint` clean; dev server returns HTTP 200 on `/` with no client-side exceptions.
 - DB has 3 real registrations; notifications log has the full email body for the latest.
+
+---
+Task ID: 5
+Agent: Z.ai Code (orchestrator) — Reports dashboard
+Task: Add a "Reports" dashboard showing how many students registered + graphs.
+
+Work Log:
+- Created `src/components/agile/reports.tsx` (client): fetches `GET /api/admin/registrations`, renders:
+  - 4 stat cards: Total Registrations, Degrees Enrolled, Colleges (recent, unique), AI/ML Domains (count of distinct categories).
+  - Vertical bar chart (recharts): "Registrations by Degree" — colored bars per degree (BE/B.Tech, ME/M.Tech, MCA, B.Sc Engg), with "Top degree" caption.
+  - Horizontal bar chart (recharts): "Registrations by AI/ML Domain" — 9 colored bars (Gen-AI, CV, ML, NLP, Industry, Healthcare, Cyber, Recom, Advanced), with "Top domain" caption.
+  - Recent registrations table (last 10): Student, Degree/Branch, College, Project, "X time ago" — in a scrollable container with sticky header.
+  - Refresh button + last-refreshed timestamp + loading skeleton + error/empty states.
+  - All charts use the navy/cyan theme (cyan/blue bars, slate axis labels, dark tooltips).
+- Wired `<Reports />` into `src/app/page.tsx` right after the RegisterForm section (so staff can see registrations populate after a student submits).
+- Added a "Reports" link to the desktop nav (`src/components/agile/nav.tsx`) between Schedule and Benefits — also appears in the mobile Sheet drawer automatically.
+- Seeded 10 diverse registrations across BE/B.Tech, ME/M.Tech, MCA degrees and 9 AI/ML domains (Computer Vision, Gen-AI, NLP, ML, Healthcare, Advanced, Cyber, Recommendation, Industry 4.0) to make the charts meaningful — DB now has 14 total registrations.
+- `bun run lint` is clean.
+
+Verification (Agent Browser + VLM):
+- Page loads HTTP 200; Reports section renders at `#reports`.
+- Stat cards show correct numbers: 14 Total Registrations, 3 Degrees Enrolled, 10 Colleges, 9 AI/ML Domains.
+- VLM confirmed both charts: vertical bar chart "Registrations by Degree" has 3 colored bars (BE/B.Tech cyan/tallest, ME/M.Tech blue/medium, MCA purple/shorter); horizontal bar chart "Registrations by AI/ML Domain" has 9 distinct colored bars each labeled with its domain name.
+- Recent registrations table renders all 10 rows with student, degree/branch, college, project, and relative timestamp.
+- Refresh button re-fetches data successfully (total stays 14).
+- Nav "Reports" link present between Schedule and Benefits (desktop + mobile).
+
+Stage Summary:
+- New `/api/admin/registrations` (already existed) is now visualised in a full dashboard at `#reports`.
+- Stat cards + 2 bar charts (recharts) + recent-registrations table, all in the AgileProjection navy/cyan theme.
+- Nav has a "Reports" link. Lint clean.
