@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Student registration record (covers BE / B.Tech / ME / M.Tech / MCA / B.Sc Engg students)
+model Student {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  mobile      String
+  degree      String
+  branch      String
+  semester    String
+  plan        String
+  college     String
+  state       String
+  source      String?
+  notes       String?
+  category    String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
+  categoryLabel String // human-readable category label
+  project     String   // selected project name
+  projectId   Int?     // selected project id
+  consentWa   Boolean  @default(true)
+  consentEm   Boolean  @default(true)
+  emailSent   Boolean  @default(false)
+  waSent      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([category])
+}
+
+// Newsletter subscribers
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+// AI assistant chat messages (for analytics / follow-up)
+model ChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String   // 'user' | 'assistant'
+  content   String
+  degree    String?  // student degree context (BE / MCA / M.Tech ...)
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+}

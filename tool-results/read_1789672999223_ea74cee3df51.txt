@@ -1,0 +1,2002 @@
+     1→<!DOCTYPE html>
+     2→<html lang="en">
+     3→<head>
+     4→<meta charset="UTF-8">
+     5→<meta name="viewport" content="width=device-width, initial-scale=1.0">
+     6→<title>Free Online Internships for Engineering Students | AgileProjection</title>
+     7→<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+     8→<style>
+     9→*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    10→:root {
+    11→  --navy:#0B1929; --navy2:#0F2340; --navy3:#0a1422;
+    12→  --blue:#2563EB; --blue2:#1d4ed8;
+    13→  --cyan:#06B6D4; --cyan2:#67E8F9;
+    14→  --green:#22c55e; --amber:#f59e0b;
+    15→  --white:#F8FAFC; --slate:#64748B; --slate2:#94A3B8;
+    16→  --card:#111f35; --card2:#0e1b2e;
+    17→  --border:rgba(6,182,212,.18); --border2:rgba(255,255,255,.06);
+    18→  --radius:14px; --radius2:10px;
+    19→}
+    20→html { scroll-behavior: smooth; }
+    21→body { font-family:'Inter',sans-serif; background:var(--navy); color:var(--white); line-height:1.6; }
+    22→
+    23→/* ── SCROLLBAR ── */
+    24→::-webkit-scrollbar { width:6px; }
+    25→::-webkit-scrollbar-track { background:var(--navy3); }
+    26→::-webkit-scrollbar-thumb { background:var(--blue); border-radius:3px; }
+    27→
+    28→/* ── NAV ── */
+    29→nav {
+    30→  position:fixed; top:0; left:0; right:0; z-index:200;
+    31→  display:flex; align-items:center; justify-content:space-between;
+    32→  padding:0 5%; height:68px;
+    33→  background:rgba(11,25,41,.95);
+    34→  backdrop-filter:blur(16px);
+    35→  border-bottom:1px solid var(--border);
+    36→}
+    37→.logo {
+    38→  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.35rem;
+    39→  letter-spacing:-.5px; color:var(--white); text-decoration:none;
+    40→  display:flex; align-items:center; gap:10px;
+    41→}
+    42→.logo-icon {
+    43→  width:36px; height:36px;
+    44→  background:linear-gradient(135deg,var(--blue),var(--cyan));
+    45→  border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+    46→}
+    47→.logo span { color:var(--cyan); }
+    48→.nav-links { display:flex; align-items:center; gap:1.6rem; list-style:none; }
+    49→.nav-links a { color:var(--slate2); text-decoration:none; font-size:.875rem; font-weight:500; transition:color .2s; }
+    50→.nav-links a:hover { color:var(--cyan); }
+    51→.nav-dropdown { position:relative; }
+    52→.nav-dropdown > a::after { content:' ▾'; font-size:.7rem; }
+    53→.dropdown-menu {
+    54→  display:none; position:absolute; top:calc(100% + 12px); left:-16px;
+    55→  background:var(--card2); border:1px solid var(--border); border-radius:var(--radius2);
+    56→  min-width:220px; padding:8px 0; box-shadow:0 16px 48px rgba(0,0,0,.4);
+    57→}
+    58→.nav-dropdown:hover .dropdown-menu { display:block; }
+    59→.dropdown-menu a {
+    60→  display:block; padding:9px 18px; color:var(--slate2); font-size:.85rem;
+    61→  text-decoration:none; transition:background .15s,color .15s;
+    62→}
+    63→.dropdown-menu a:hover { background:rgba(6,182,212,.08); color:var(--cyan); }
+    64→.nav-cta {
+    65→  background:linear-gradient(135deg,var(--blue),var(--cyan));
+    66→  color:#fff !important; padding:8px 20px; border-radius:8px;
+    67→  font-weight:600 !important; transition:opacity .2s !important;
+    68→}
+    69→.nav-cta:hover { opacity:.85; }
+    70→.nav-phone { color:var(--cyan2) !important; font-size:.8rem !important; }
+    71→.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+    72→.hamburger span { width:24px; height:2px; background:var(--slate2); border-radius:2px; }
+    73→
+    74→/* ── HERO ── */
+    75→.hero {
+    76→  min-height:100vh; display:flex; align-items:center;
+    77→  position:relative; overflow:hidden; padding:100px 5% 80px;
+    78→}
+    79→.hero::before {
+    80→  content:''; position:absolute; inset:0;
+    81→  background-image:linear-gradient(rgba(6,182,212,.06) 1px,transparent 1px),
+    82→    linear-gradient(90deg,rgba(6,182,212,.06) 1px,transparent 1px);
+    83→  background-size:52px 52px;
+    84→  mask-image:radial-gradient(ellipse 80% 90% at 55% 45%, black 20%, transparent 75%);
+    85→}
+    86→.beam {
+    87→  position:absolute; top:-20%; right:4%;
+    88→  width:560px; height:1000px;
+    89→  background:conic-gradient(from 180deg at 50% 0%, transparent 18deg, rgba(6,182,212,.13) 38deg, rgba(37,99,235,.09) 58deg, transparent 78deg);
+    90→  transform-origin:top center;
+    91→  animation:sweep 9s ease-in-out infinite alternate;
+    92→  pointer-events:none;
+    93→}
+    94→@keyframes sweep { from{transform:rotate(-10deg);opacity:.6} to{transform:rotate(10deg);opacity:1} }
+    95→.hero-inner { display:flex; align-items:center; justify-content:space-between; width:100%; gap:3rem; }
+    96→.hero-content { position:relative; z-index:2; max-width:600px; flex-shrink:0; }
+    97→.hero-eyebrow {
+    98→  display:inline-flex; align-items:center; gap:8px;
+    99→  background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.3);
+   100→  border-radius:100px; padding:5px 14px;
+   101→  font-size:.78rem; font-weight:600; color:var(--cyan);
+   102→  letter-spacing:.6px; text-transform:uppercase; margin-bottom:1.4rem;
+   103→}
+   104→.hero-eyebrow::before {
+   105→  content:''; width:7px; height:7px; background:var(--cyan);
+   106→  border-radius:50%; animation:pulse 2s ease-in-out infinite;
+   107→}
+   108→@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+   109→.hero h1 {
+   110→  font-family:'Space Grotesk',sans-serif;
+   111→  font-size:clamp(2.2rem,5vw,3.5rem); font-weight:700;
+   112→  line-height:1.13; margin-bottom:1.2rem; letter-spacing:-.6px;
+   113→}
+   114→.grad {
+   115→  background:linear-gradient(90deg,var(--cyan),var(--blue));
+   116→  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+   117→}
+   118→.hero-sub { font-size:1.05rem; color:var(--slate2); max-width:520px; margin-bottom:1.8rem; line-height:1.8; }
+   119→.hero-tracks { display:flex; flex-wrap:wrap; gap:.65rem; margin-bottom:2rem; }
+   120→.track-pill {
+   121→  background:rgba(37,99,235,.14); border:1px solid rgba(37,99,235,.32);
+   122→  border-radius:100px; padding:5px 15px; font-size:.8rem; font-weight:500; color:#a5c3ff;
+   123→}
+   124→.hero-buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+   125→.btn-primary {
+   126→  display:inline-flex; align-items:center; gap:8px;
+   127→  background:linear-gradient(135deg,var(--blue),var(--cyan));
+   128→  color:#fff; padding:13px 26px; border-radius:10px;
+   129→  font-weight:600; font-size:.92rem; text-decoration:none;
+   130→  transition:transform .2s,box-shadow .2s;
+   131→  box-shadow:0 4px 24px rgba(6,182,212,.25);
+   132→}
+   133→.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(6,182,212,.4); }
+   134→.btn-secondary {
+   135→  display:inline-flex; align-items:center; gap:8px;
+   136→  border:1.5px solid var(--border); color:var(--white);
+   137→  padding:13px 26px; border-radius:10px;
+   138→  font-weight:500; font-size:.92rem; text-decoration:none;
+   139→  transition:border-color .2s,background .2s;
+   140→}
+   141→.btn-secondary:hover { border-color:var(--cyan); background:rgba(6,182,212,.06); }
+   142→.hero-trust { display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+   143→.trust-item { display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--slate2); }
+   144→.trust-dot { color:var(--green); font-size:.65rem; }
+   145→
+   146→/* Hero visual */
+   147→.hero-visual { position:relative; z-index:2; flex-shrink:0; }
+   148→.stat-stack { display:flex; flex-direction:column; gap:1rem; }
+   149→.stat-card {
+   150→  background:rgba(15,35,64,.85); backdrop-filter:blur(12px);
+   151→  border:1px solid var(--border); border-radius:var(--radius);
+   152→  padding:18px 22px; min-width:215px;
+   153→  animation:floatCard 4s ease-in-out infinite;
+   154→}
+   155→.stat-card:nth-child(2) { animation-delay:-1.5s; margin-left:28px; }
+   156→.stat-card:nth-child(3) { animation-delay:-3s; }
+   157→@keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+   158→.stat-num {
+   159→  font-family:'Space Grotesk',sans-serif; font-size:1.85rem; font-weight:700;
+   160→  background:linear-gradient(90deg,var(--cyan),var(--blue));
+   161→  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+   162→}
+   163→.stat-label { font-size:.75rem; color:var(--slate2); margin-top:2px; }
+   164→.stat-sub { font-size:.7rem; color:var(--slate); margin-top:1px; }
+   165→
+   166→/* ── COUNTER STRIP ── */
+   167→.counter-strip {
+   168→  background:var(--navy2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+   169→  padding:40px 5%;
+   170→}
+   171→.counters { display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; text-align:center; }
+   172→.counter-item { }
+   173→.counter-num {
+   174→  font-family:'Space Grotesk',sans-serif; font-size:2.4rem; font-weight:700;
+   175→  background:linear-gradient(135deg,var(--cyan),var(--blue));
+   176→  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+   177→}
+   178→.counter-label { color:var(--slate2); font-size:.88rem; margin-top:.3rem; }
+   179→
+   180→/* ── SECTIONS ── */
+   181→section { padding:80px 5%; }
+   182→.section-label {
+   183→  font-size:.76rem; font-weight:600; letter-spacing:1.2px;
+   184→  text-transform:uppercase; color:var(--cyan); margin-bottom:.6rem;
+   185→}
+   186→.section-title {
+   187→  font-family:'Space Grotesk',sans-serif;
+   188→  font-size:clamp(1.7rem,3.5vw,2.4rem); font-weight:700;
+   189→  letter-spacing:-.3px; margin-bottom:1rem;
+   190→}
+   191→.section-desc { color:var(--slate2); font-size:1rem; max-width:650px; line-height:1.8; margin-bottom:2.5rem; }
+   192→.divider { border:none; border-top:1px solid var(--border); margin:0; }
+   193→.alt-bg { background:var(--navy2); }
+   194→
+   195→/* ── HOW IT WORKS ── */
+   196→.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0; position:relative; }
+   197→.steps::before {
+   198→  content:''; position:absolute; top:36px; left:10%; right:10%; height:1px;
+   199→  background:linear-gradient(90deg, transparent, var(--border), var(--cyan), var(--border), transparent);
+   200→}
+   201→.step { text-align:center; padding:24px 20px; position:relative; }
+   202→.step-num {
+   203→  width:72px; height:72px; border-radius:50%;
+   204→  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.15));
+   205→  border:2px solid rgba(6,182,212,.35);
+   206→  display:flex; align-items:center; justify-content:center;
+   207→  margin:0 auto 1.2rem;
+   208→  font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700;
+   209→  color:var(--cyan); position:relative; z-index:1;
+   210→}
+   211→.step h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+   212→.step p { color:var(--slate2); font-size:.85rem; line-height:1.65; }
+   213→
+   214→/* ── PROGRAM CARDS ── */
+   215→.cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.5rem; }
+   216→.prog-card {
+   217→  background:var(--card); border:1px solid var(--border);
+   218→  border-radius:var(--radius); overflow:hidden;
+   219→  transition:transform .25s,box-shadow .25s,border-color .25s;
+   220→  display:flex; flex-direction:column;
+   221→}
+   222→.prog-card:hover { transform:translateY(-6px); box-shadow:0 20px 54px rgba(6,182,212,.14); border-color:rgba(6,182,212,.35); }
+   223→.card-thumb {
+   224→  height:170px; display:flex; align-items:center; justify-content:center;
+   225→  font-size:3.6rem; position:relative; overflow:hidden;
+   226→}
+   227→.card-thumb::after {
+   228→  content:''; position:absolute; bottom:0; left:0; right:0; height:50%;
+   229→  background:linear-gradient(transparent,var(--card));
+   230→}
+   231→.thumb-embedded { background:linear-gradient(135deg,#0a1628,#112244); }
+   232→.thumb-iot       { background:linear-gradient(135deg,#071520,#083030); }
+   233→.thumb-cap       { background:linear-gradient(135deg,#0a1628,#1a1030); }
+   234→.thumb-fs        { background:linear-gradient(135deg,#071520,#162008); }
+   235→.card-badge {
+   236→  position:absolute; top:12px; left:12px; z-index:2;
+   237→  background:rgba(6,182,212,.15); border:1px solid rgba(6,182,212,.3);
+   238→  color:var(--cyan); font-size:.68rem; font-weight:600;
+   239→  padding:3px 10px; border-radius:100px; text-transform:uppercase; letter-spacing:.5px;
+   240→}
+   241→.card-badge.non-tech { background:rgba(168,85,247,.12); border-color:rgba(168,85,247,.3); color:#c084fc; }
+   242→.card-badge.soon { background:rgba(245,158,11,.1); border-color:rgba(245,158,11,.25); color:var(--amber); }
+   243→.card-body { padding:22px; flex:1; display:flex; flex-direction:column; }
+   244→.card-body h3 { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:600; margin-bottom:.6rem; }
+   245→.card-body p { color:var(--slate2); font-size:.875rem; line-height:1.7; flex:1; }
+   246→.card-tags { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:1rem; }
+   247→.card-tag {
+   248→  background:rgba(255,255,255,.05); border:1px solid var(--border2);
+   249→  border-radius:6px; padding:3px 9px; font-size:.72rem; color:var(--slate2);
+   250→}
+   251→.card-meta { display:flex; gap:1.2rem; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border2); }
+   252→.card-meta-item { font-size:.78rem; color:var(--slate); }
+   253→.card-meta-item strong { color:var(--white); display:block; font-size:.82rem; }
+   254→.card-footer { display:flex; gap:.8rem; padding:16px 22px; border-top:1px solid var(--border2); }
+   255→.card-link {
+   256→  font-size:.82rem; font-weight:600; text-decoration:none;
+   257→  padding:8px 16px; border-radius:8px; transition:opacity .2s;
+   258→}
+   259→.card-link.primary { background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#fff; }
+   260→.card-link.ghost { border:1px solid var(--border); color:var(--slate2); }
+   261→.card-link:hover { opacity:.82; }
+   262→
+   263→/* ── PROGRAM DETAIL TABS ── */
+   264→.tabs-section { }
+   265→.tab-nav {
+   266→  display:flex; gap:0; border-bottom:1px solid var(--border);
+   267→  overflow-x:auto; margin-bottom:2rem;
+   268→}
+   269→.tab-btn {
+   270→  background:none; border:none; color:var(--slate2);
+   271→  padding:12px 22px; font-size:.88rem; font-weight:500;
+   272→  cursor:pointer; border-bottom:2px solid transparent;
+   273→  white-space:nowrap; transition:color .2s,border-color .2s;
+   274→  font-family:'Inter',sans-serif;
+   275→}
+   276→.tab-btn.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+   277→.tab-btn:hover { color:var(--white); }
+   278→.tab-panel { display:none; }
+   279→.tab-panel.active { display:block; }
+   280→.program-detail { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+   281→.detail-left h3 { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; margin-bottom:.8rem; }
+   282→.detail-left p { color:var(--slate2); line-height:1.8; margin-bottom:1rem; }
+   283→.detail-left p strong { color:var(--white); }
+   284→.curriculum { list-style:none; }
+   285→.curriculum li {
+   286→  display:flex; align-items:flex-start; gap:.8rem;
+   287→  padding:10px 0; border-bottom:1px solid var(--border2);
+   288→  color:var(--slate2); font-size:.88rem;
+   289→}
+   290→.curriculum li:last-child { border-bottom:none; }
+   291→.curr-week {
+   292→  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.15));
+   293→  border:1px solid rgba(6,182,212,.25);
+   294→  border-radius:6px; padding:3px 9px;
+   295→  font-size:.7rem; font-weight:700; color:var(--cyan);
+   296→  white-space:nowrap; flex-shrink:0; margin-top:1px;
+   297→}
+   298→.detail-right { }
+   299→.detail-card {
+   300→  background:var(--card); border:1px solid var(--border);
+   301→  border-radius:var(--radius); padding:24px; margin-bottom:1.2rem;
+   302→}
+   303→.detail-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:1rem; color:var(--cyan); }
+   304→.check-list { list-style:none; }
+   305→.check-list li {
+   306→  display:flex; align-items:flex-start; gap:.7rem;
+   307→  padding:6px 0; color:var(--slate2); font-size:.85rem; line-height:1.5;
+   308→}
+   309→.check-list li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; margin-top:1px; }
+   310→.eligibility-list { list-style:none; }
+   311→.eligibility-list li {
+   312→  display:flex; align-items:center; gap:.7rem;
+   313→  padding:7px 0; color:var(--slate2); font-size:.85rem; border-bottom:1px solid var(--border2);
+   314→}
+   315→.eligibility-list li:last-child { border-bottom:none; }
+   316→.eligibility-list li::before { content:'›'; color:var(--cyan); font-size:1.1rem; }
+   317→
+   318→/* ── SCHEDULE TABLE ── */
+   319→.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); }
+   320→table { width:100%; border-collapse:collapse; font-size:.88rem; }
+   321→thead { background:rgba(6,182,212,.07); border-bottom:1px solid var(--border); }
+   322→thead th {
+   323→  padding:14px 20px; text-align:left;
+   324→  font-family:'Space Grotesk',sans-serif; font-weight:600;
+   325→  font-size:.78rem; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2);
+   326→}
+   327→tbody tr { border-bottom:1px solid rgba(255,255,255,.03); transition:background .15s; }
+   328→tbody tr:last-child { border-bottom:none; }
+   329→tbody tr:hover { background:rgba(6,182,212,.04); }
+   330→tbody td { padding:15px 20px; color:var(--slate2); }
+   331→tbody td:first-child { color:var(--white); font-weight:500; }
+   332→.badge-open {
+   333→  display:inline-block; background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.28);
+   334→  color:#4ade80; font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+   335→}
+   336→.badge-closed {
+   337→  display:inline-block; background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.22);
+   338→  color:var(--amber); font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+   339→}
+   340→.badge-soon {
+   341→  display:inline-block; background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.25);
+   342→  color:#818cf8; font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+   343→}
+   344→.reg-link {
+   345→  display:inline-block; background:linear-gradient(135deg,var(--blue),var(--cyan));
+   346→  color:#fff; font-size:.8rem; font-weight:600; padding:6px 14px;
+   347→  border-radius:7px; text-decoration:none; transition:opacity .2s;
+   348→}
+   349→.reg-link:hover { opacity:.82; }
+   350→
+   351→/* ── BENEFITS ── */
+   352→.benefits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.4rem; }
+   353→.benefit-card {
+   354→  background:var(--card); border:1px solid var(--border);
+   355→  border-radius:var(--radius); padding:26px 24px;
+   356→  transition:border-color .2s,transform .2s;
+   357→}
+   358→.benefit-card:hover { border-color:rgba(6,182,212,.4); transform:translateY(-3px); }
+   359→.benefit-icon {
+   360→  width:52px; height:52px;
+   361→  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.14));
+   362→  border:1px solid rgba(6,182,212,.22); border-radius:13px;
+   363→  display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:1.1rem;
+   364→}
+   365→.benefit-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.55rem; }
+   366→.benefit-card p { color:var(--slate2); font-size:.85rem; line-height:1.7; }
+   367→
+   368→/* ── TESTIMONIALS ── */
+   369→.testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.4rem; }
+   370→.testimonial-card {
+   371→  background:var(--card); border:1px solid var(--border);
+   372→  border-radius:var(--radius); padding:26px 24px;
+   373→  transition:transform .2s;
+   374→}
+   375→.testimonial-card:hover { transform:translateY(-3px); }
+   376→.stars { color:var(--amber); font-size:.9rem; margin-bottom:1rem; letter-spacing:2px; }
+   377→.quote-text { color:var(--slate2); font-size:.88rem; line-height:1.75; font-style:italic; margin-bottom:1.4rem; }
+   378→.quote-text::before { content:'"'; color:var(--cyan); font-size:1.4rem; line-height:0; vertical-align:-.4rem; margin-right:2px; }
+   379→.testimonial-author { display:flex; align-items:center; gap:.9rem; }
+   380→.author-avatar {
+   381→  width:42px; height:42px; border-radius:50%;
+   382→  background:linear-gradient(135deg,var(--blue),var(--cyan));
+   383→  display:flex; align-items:center; justify-content:center;
+   384→  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.95rem; color:#fff; flex-shrink:0;
+   385→}
+   386→.author-name { font-weight:600; font-size:.88rem; }
+   387→.author-info { font-size:.78rem; color:var(--slate); }
+   388→
+   389→/* ── TEAM ── */
+   390→.team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.4rem; }
+   391→.team-card {
+   392→  background:var(--card); border:1px solid var(--border);
+   393→  border-radius:var(--radius); padding:26px 20px; text-align:center;
+   394→  transition:transform .2s,border-color .2s;
+   395→}
+   396→.team-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+   397→.team-avatar {
+   398→  width:72px; height:72px; border-radius:50%; margin:0 auto 1rem;
+   399→  display:flex; align-items:center; justify-content:center;
+   400→  font-size:1.8rem; font-weight:700; font-family:'Space Grotesk',sans-serif; color:#fff;
+   401→}
+   402→.team-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:.3rem; }
+   403→.team-card .role { font-size:.78rem; color:var(--cyan); margin-bottom:.5rem; }
+   404→.team-card .exp { font-size:.78rem; color:var(--slate2); }
+   405→
+   406→/* ── FAQ ── */
+   407→.faq-list { max-width:780px; }
+   408→.faq-item {
+   409→  border:1px solid var(--border); border-radius:var(--radius2);
+   410→  margin-bottom:.8rem; overflow:hidden; transition:border-color .2s;
+   411→}
+   412→.faq-item.open { border-color:rgba(6,182,212,.35); }
+   413→.faq-q {
+   414→  display:flex; align-items:center; justify-content:space-between;
+   415→  padding:18px 22px; cursor:pointer;
+   416→  font-weight:500; font-size:.92rem;
+   417→  background:var(--card); transition:background .15s; gap:1rem;
+   418→}
+   419→.faq-q:hover { background:rgba(6,182,212,.05); }
+   420→.faq-icon {
+   421→  width:24px; height:24px; border-radius:50%;
+   422→  background:rgba(6,182,212,.12); border:1px solid rgba(6,182,212,.25);
+   423→  display:flex; align-items:center; justify-content:center;
+   424→  font-size:.75rem; color:var(--cyan); flex-shrink:0;
+   425→  transition:transform .25s;
+   426→}
+   427→.faq-item.open .faq-icon { transform:rotate(45deg); }
+   428→.faq-a {
+   429→  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+   430→  padding:0 22px; background:var(--card2); color:var(--slate2);
+   431→  font-size:.875rem; line-height:1.8;
+   432→}
+   433→.faq-item.open .faq-a { max-height:300px; padding:16px 22px 20px; }
+   434→
+   435→/* ── REGISTER FORM ── */
+   436→.register-section {
+   437→  background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(6,182,212,.05));
+   438→  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+   439→}
+   440→.register-inner { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+   441→.register-left h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; margin-bottom:1rem; }
+   442→.register-left p { color:var(--slate2); line-height:1.8; margin-bottom:1.5rem; }
+   443→.register-perks { list-style:none; }
+   444→.register-perks li {
+   445→  display:flex; align-items:center; gap:.75rem;
+   446→  padding:8px 0; color:var(--slate2); font-size:.88rem;
+   447→  border-bottom:1px solid var(--border2);
+   448→}
+   449→.register-perks li:last-child { border-bottom:none; }
+   450→.register-perks li span:first-child { font-size:1rem; }
+   451→.form-card {
+   452→  background:var(--card); border:1px solid var(--border);
+   453→  border-radius:var(--radius); padding:32px 28px;
+   454→}
+   455→.form-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; margin-bottom:1.5rem; }
+   456→.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+   457→.form-group { display:flex; flex-direction:column; gap:.45rem; }
+   458→.form-group.full { grid-column:1/-1; }
+   459→.form-group label { font-size:.78rem; font-weight:600; color:var(--slate2); letter-spacing:.3px; }
+   460→.form-group input,
+   461→.form-group select,
+   462→.form-group textarea {
+   463→  background:rgba(255,255,255,.05); border:1px solid var(--border);
+   464→  border-radius:9px; padding:10px 14px; color:var(--white);
+   465→  font-size:.88rem; font-family:'Inter',sans-serif;
+   466→  outline:none; transition:border-color .2s,background .2s;
+   467→  appearance:none;
+   468→}
+   469→.form-group input::placeholder,
+   470→.form-group textarea::placeholder { color:var(--slate); }
+   471→.form-group input:focus,
+   472→.form-group select:focus,
+   473→.form-group textarea:focus { border-color:var(--cyan); background:rgba(6,182,212,.05); }
+   474→.form-group select option { background:var(--card2); color:var(--white); }
+   475→.form-group textarea { resize:vertical; min-height:90px; }
+   476→.form-submit {
+   477→  width:100%; background:linear-gradient(135deg,var(--blue),var(--cyan));
+   478→  border:none; border-radius:10px; padding:13px;
+   479→  color:#fff; font-size:.95rem; font-weight:600;
+   480→  cursor:pointer; margin-top:1.2rem; font-family:'Inter',sans-serif;
+   481→  transition:opacity .2s,transform .2s;
+   482→}
+   483→.form-submit:hover { opacity:.88; transform:translateY(-1px); }
+   484→.form-consent { display:flex; align-items:flex-start; gap:.7rem; margin-top:.8rem; }
+   485→.form-consent input[type=checkbox] { margin-top:3px; accent-color:var(--cyan); flex-shrink:0; }
+   486→.form-consent label { font-size:.77rem; color:var(--slate2); line-height:1.5; }
+   487→.form-success {
+   488→  display:none; text-align:center; padding:2rem 0;
+   489→}
+   490→.form-success .success-icon { font-size:3rem; margin-bottom:1rem; }
+   491→.form-success h4 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; margin-bottom:.5rem; }
+   492→.form-success p { color:var(--slate2); font-size:.88rem; }
+   493→
+   494→/* ── RESOURCES ── */
+   495→.resources-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.4rem; }
+   496→.res-card {
+   497→  background:var(--card); border:1px solid var(--border);
+   498→  border-radius:var(--radius); padding:26px 24px;
+   499→  display:flex; flex-direction:column; transition:transform .2s;
+   500→}
+   501→.res-card:hover { transform:translateY(-3px); }
+   502→.res-icon { font-size:2rem; margin-bottom:1rem; }
+   503→.res-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+   504→.res-card p { color:var(--slate2); font-size:.85rem; line-height:1.65; flex:1; }
+   505→.res-link {
+   506→  display:inline-block; margin-top:1rem; color:var(--cyan);
+   507→  font-size:.82rem; font-weight:600; text-decoration:none;
+   508→  border-bottom:1px solid rgba(6,182,212,.3); padding-bottom:1px; transition:border-color .2s;
+   509→}
+   510→.res-link:hover { border-color:var(--cyan); }
+   511→
+   512→/* ── ABOUT ── */
+   513→.about-inner { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+   514→.about-text p { color:var(--slate2); line-height:1.8; margin-bottom:1rem; }
+   515→.about-text p strong { color:var(--white); }
+   516→.about-highlight {
+   517→  background:rgba(6,182,212,.07); border-left:3px solid var(--cyan);
+   518→  border-radius:0 8px 8px 0; padding:14px 18px;
+   519→  font-size:.9rem; color:var(--slate2); margin-top:1rem;
+   520→}
+   521→.about-highlight strong { color:var(--cyan); }
+   522→.about-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+   523→.about-stat-card {
+   524→  background:var(--card); border:1px solid var(--border);
+   525→  border-radius:var(--radius2); padding:18px 16px;
+   526→}
+   527→.about-stat-num {
+   528→  font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700;
+   529→  background:linear-gradient(90deg,var(--cyan),var(--blue));
+   530→  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+   531→}
+   532→.about-stat-label { font-size:.78rem; color:var(--slate2); margin-top:.2rem; }
+   533→
+   534→/* ── CTA STRIP ── */
+   535→.cta-strip {
+   536→  background:linear-gradient(135deg,rgba(37,99,235,.11),rgba(6,182,212,.07));
+   537→  border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;
+   538→}
+   539→.cta-strip h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.5rem,3vw,2.1rem); font-weight:700; margin-bottom:.8rem; }
+   540→.cta-strip p { color:var(--slate2); margin-bottom:2rem; }
+   541→
+   542→/* ── NEWSLETTER ── */
+   543→.newsletter { background:var(--navy3); border-top:1px solid var(--border); padding:50px 5%; }
+   544→.newsletter-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+   545→.newsletter h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; }
+   546→.newsletter p { color:var(--slate2); font-size:.88rem; }
+   547→.nl-form { display:flex; gap:.7rem; flex-wrap:wrap; }
+   548→.nl-form input {
+   549→  background:rgba(255,255,255,.06); border:1px solid var(--border);
+   550→  border-radius:9px; padding:11px 16px; color:var(--white);
+   551→  font-size:.88rem; outline:none; width:240px; font-family:'Inter',sans-serif;
+   552→  transition:border-color .2s;
+   553→}
+   554→.nl-form input::placeholder { color:var(--slate); }
+   555→.nl-form input:focus { border-color:var(--cyan); }
+   556→.nl-form button {
+   557→  background:linear-gradient(135deg,var(--blue),var(--cyan)); border:none;
+   558→  border-radius:9px; padding:11px 22px; color:#fff;
+   559→  font-weight:600; cursor:pointer; font-size:.88rem; font-family:'Inter',sans-serif;
+   560→}
+   561→
+   562→/* ── FOOTER ── */
+   563→footer { background:#060e18; border-top:1px solid var(--border); padding:64px 5% 28px; }
+   564→.footer-top { display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr; gap:3rem; margin-bottom:3rem; }
+   565→.footer-brand p { color:var(--slate); font-size:.83rem; line-height:1.72; margin-top:.8rem; }
+   566→.footer-col h4 {
+   567→  font-family:'Space Grotesk',sans-serif; font-size:.8rem; font-weight:600;
+   568→  color:var(--white); margin-bottom:1rem; text-transform:uppercase; letter-spacing:.5px;
+   569→}
+   570→.footer-col ul { list-style:none; }
+   571→.footer-col li { margin-bottom:.6rem; }
+   572→.footer-col a { color:var(--slate); text-decoration:none; font-size:.83rem; transition:color .2s; }
+   573→.footer-col a:hover { color:var(--cyan); }
+   574→.footer-contact { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
+   575→.footer-contact a { color:var(--cyan2); text-decoration:none; font-size:.82rem; }
+   576→.footer-contact a:hover { text-decoration:underline; }
+   577→.footer-bottom {
+   578→  border-top:1px solid var(--border); padding-top:1.5rem;
+   579→  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+   580→}
+   581→.footer-bottom p { color:var(--slate); font-size:.8rem; }
+   582→.footer-socials { display:flex; gap:.7rem; }
+   583→.social-btn {
+   584→  width:36px; height:36px; background:rgba(255,255,255,.04);
+   585→  border:1px solid var(--border); border-radius:8px;
+   586→  display:flex; align-items:center; justify-content:center;
+   587→  text-decoration:none; font-size:.85rem; transition:background .2s,border-color .2s;
+   588→}
+   589→.social-btn:hover { background:rgba(6,182,212,.12); border-color:rgba(6,182,212,.35); }
+   590→.footer-legal { display:flex; gap:1.2rem; }
+   591→.footer-legal a { color:var(--slate); font-size:.78rem; text-decoration:none; }
+   592→.footer-legal a:hover { color:var(--cyan); }
+   593→
+   594→/* ── MOBILE ── */
+   595→@media(max-width:1024px) {
+   596→  .hero-visual { display:none; }
+   597→  .register-inner { grid-template-columns:1fr; gap:2.5rem; }
+   598→  .program-detail { grid-template-columns:1fr; gap:2rem; }
+   599→  .footer-top { grid-template-columns:1fr 1fr; gap:2rem; }
+   600→}
+   601→@media(max-width:768px) {
+   602→  .nav-links { display:none; }
+   603→  .hamburger { display:flex; }
+   604→  .about-inner { grid-template-columns:1fr; gap:2rem; }
+   605→  .steps::before { display:none; }
+   606→  .counters { grid-template-columns:1fr 1fr; }
+   607→  .footer-top { grid-template-columns:1fr 1fr; }
+   608→  .form-grid { grid-template-columns:1fr; }
+   609→}
+   610→@media(max-width:520px) {
+   611→  .hero-buttons { flex-direction:column; }
+   612→  .footer-top { grid-template-columns:1fr; }
+   613→  .footer-bottom { flex-direction:column; align-items:flex-start; }
+   614→  .counters { grid-template-columns:1fr 1fr; gap:1rem; }
+   615→  .nl-form input { width:100%; }
+   616→}
+   617→
+   618→/* ══ IT COURSES & UNIVERSITY SECTION STYLES ══ */
+   619→.section-divider-banner {
+   620→  background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.1));
+   621→  border-top: 2px solid var(--cyan); border-bottom: 1px solid var(--border);
+   622→  padding: 36px 5%;
+   623→  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap:1.5rem;
+   624→}
+   625→.section-divider-banner h2 {
+   626→  font-family:'Space Grotesk',sans-serif; font-size:clamp(1.3rem,3vw,1.8rem); font-weight:700;
+   627→}
+   628→.section-divider-banner p { color:var(--slate2); font-size:.9rem; max-width:480px; line-height:1.7; }
+   629→.partner-badge {
+   630→  display:inline-flex; align-items:center; gap:10px;
+   631→  background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.25);
+   632→  border-radius:100px; padding:8px 20px;
+   633→  font-size:.82rem; font-weight:600; color:var(--cyan2); white-space:nowrap;
+   634→}
+   635→
+   636→/* Course category pills */
+   637→.course-cat-bar { display:flex; flex-wrap:wrap; gap:.7rem; margin-bottom:2.5rem; }
+   638→.cat-pill {
+   639→  display:flex; align-items:center; gap:.5rem;
+   640→  background:var(--card); border:1px solid var(--border);
+   641→  border-radius:100px; padding:8px 18px; font-size:.82rem; font-weight:500;
+   642→  color:var(--slate2); cursor:pointer; transition:all .2s;
+   643→}
+   644→.cat-pill:hover, .cat-pill.active {
+   645→  background:rgba(6,182,212,.1); border-color:rgba(6,182,212,.4); color:var(--cyan);
+   646→}
+   647→.cat-pill .cat-count {
+   648→  background:rgba(6,182,212,.15); color:var(--cyan);
+   649→  font-size:.7rem; font-weight:700; padding:1px 7px; border-radius:100px;
+   650→}
+   651→
+   652→/* IT Course cards */
+   653→.it-courses-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+   654→.it-course-card {
+   655→  background:var(--card); border:1px solid var(--border);
+   656→  border-radius:var(--radius); overflow:hidden;
+   657→  transition:transform .25s,box-shadow .25s,border-color .25s;
+   658→  display:flex; flex-direction:column;
+   659→}
+   660→.it-course-card:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(6,182,212,.13); border-color:rgba(6,182,212,.3); }
+   661→.it-course-thumb {
+   662→  height:140px; display:flex; align-items:center; justify-content:center;
+   663→  font-size:3rem; position:relative; overflow:hidden;
+   664→}
+   665→.it-badge-row { position:absolute; top:10px; left:10px; right:10px; display:flex; gap:.5rem; flex-wrap:wrap; }
+   666→.it-badge {
+   667→  font-size:.65rem; font-weight:700; padding:3px 9px; border-radius:100px;
+   668→  text-transform:uppercase; letter-spacing:.5px;
+   669→}
+   670→.badge-bestseller { background:rgba(245,158,11,.15); border:1px solid rgba(245,158,11,.3); color:var(--amber); }
+   671→.badge-free       { background:rgba(34,197,94,.12);  border:1px solid rgba(34,197,94,.28); color:#4ade80; }
+   672→.badge-new        { background:rgba(99,102,241,.12); border:1px solid rgba(99,102,241,.3); color:#818cf8; }
+   673→.badge-hot        { background:rgba(239,68,68,.1);   border:1px solid rgba(239,68,68,.25); color:#f87171; }
+   674→.badge-cert       { background:rgba(6,182,212,.12);  border:1px solid rgba(6,182,212,.28); color:var(--cyan); }
+   675→.it-course-body { padding:20px; flex:1; display:flex; flex-direction:column; }
+   676→.it-course-body h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; line-height:1.4; }
+   677→.it-course-body p { color:var(--slate2); font-size:.83rem; line-height:1.65; flex:1; }
+   678→.it-course-meta { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.9rem; }
+   679→.it-meta-item { font-size:.75rem; color:var(--slate); }
+   680→.it-meta-item strong { color:var(--slate2); }
+   681→.it-stars { color:var(--amber); font-size:.78rem; }
+   682→.it-course-footer {
+   683→  display:flex; align-items:center; justify-content:space-between;
+   684→  padding:12px 20px; border-top:1px solid var(--border2);
+   685→}
+   686→.it-price { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; }
+   687→.it-price .free { color:var(--green); }
+   688→.it-price .paid { color:var(--white); }
+   689→.it-price .original { font-size:.75rem; color:var(--slate); text-decoration:line-through; margin-left:4px; font-weight:400; }
+   690→.it-enroll-btn {
+   691→  background:linear-gradient(135deg,var(--blue),var(--cyan));
+   692→  color:#fff; border:none; border-radius:8px;
+   693→  padding:8px 16px; font-size:.8rem; font-weight:600;
+   694→  cursor:pointer; font-family:'Inter',sans-serif; text-decoration:none;
+   695→  transition:opacity .2s;
+   696→}
+   697→.it-enroll-btn:hover { opacity:.85; }
+   698→
+   699→/* SAP Track banner */
+   700→.sap-track-banner {
+   701→  background: linear-gradient(135deg, #0a1628, #071520);
+   702→  border: 1px solid rgba(6,182,212,.2);
+   703→  border-radius: var(--radius); padding: 32px;
+   704→  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;
+   705→  margin-bottom: 2rem;
+   706→}
+   707→.sap-track-banner h3 { font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:.5rem; }
+   708→.sap-track-banner p { color:var(--slate2); font-size:.9rem; max-width:560px; line-height:1.7; }
+   709→.sap-tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+   710→.sap-tag {
+   711→  background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.22);
+   712→  border-radius:6px; padding:3px 10px; font-size:.72rem; color:var(--cyan);
+   713→}
+   714→
+   715→/* Instructors */
+   716→.instructors-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.4rem; }
+   717→.instructor-card {
+   718→  background:var(--card); border:1px solid var(--border);
+   719→  border-radius:var(--radius); padding:24px 20px; text-align:center;
+   720→  transition:transform .2s, border-color .2s;
+   721→}
+   722→.instructor-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+   723→.instructor-avatar {
+   724→  width:76px; height:76px; border-radius:50%;
+   725→  margin:0 auto 1rem; display:flex; align-items:center; justify-content:center;
+   726→  font-family:'Space Grotesk',sans-serif; font-size:1.8rem; font-weight:700; color:#fff;
+   727→  border:2px solid rgba(6,182,212,.3);
+   728→}
+   729→.instructor-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:.25rem; }
+   730→.instructor-card .inst-title { font-size:.75rem; color:var(--cyan); margin-bottom:.5rem; }
+   731→.instructor-card .inst-exp { font-size:.75rem; color:var(--slate2); margin-bottom:1rem; }
+   732→.instructor-stats { display:flex; justify-content:center; gap:1.2rem; }
+   733→.inst-stat { text-align:center; }
+   734→.inst-stat strong { display:block; font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; color:var(--white); }
+   735→.inst-stat span { font-size:.68rem; color:var(--slate); }
+   736→
+   737→/* University programs */
+   738→.univ-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+   739→.univ-card {
+   740→  background:var(--card); border:1px solid var(--border);
+   741→  border-radius:var(--radius); padding:28px 24px;
+   742→  transition:transform .2s, border-color .2s;
+   743→  position:relative; overflow:hidden;
+   744→}
+   745→.univ-card::before {
+   746→  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+   747→}
+   748→.univ-card.uk::before    { background:linear-gradient(90deg,#012169,#C8102E); }
+   749→.univ-card.us::before    { background:linear-gradient(90deg,#002868,#BF0A30); }
+   750→.univ-card.au::before    { background:linear-gradient(90deg,#00008B,#FF0000); }
+   751→.univ-card.ca::before    { background:linear-gradient(90deg,#FF0000,#ffffff); }
+   752→.univ-card.eu::before    { background:linear-gradient(90deg,#003399,#FFCC00); }
+   753→.univ-card.sg::before    { background:linear-gradient(90deg,#EF3340,#ffffff); }
+   754→.univ-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+   755→.univ-flag { font-size:2rem; margin-bottom:.9rem; }
+   756→.univ-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.4rem; }
+   757→.univ-card .country { font-size:.75rem; color:var(--cyan); font-weight:600; margin-bottom:.6rem; }
+   758→.univ-card p { color:var(--slate2); font-size:.83rem; line-height:1.65; margin-bottom:1rem; }
+   759→.univ-details { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem; }
+   760→.univ-detail { font-size:.72rem; color:var(--slate2); background:var(--navy2); padding:3px 9px; border-radius:6px; }
+   761→.univ-link {
+   762→  display:inline-flex; align-items:center; gap:6px;
+   763→  color:var(--cyan); font-size:.82rem; font-weight:600;
+   764→  text-decoration:none; border-bottom:1px solid rgba(6,182,212,.3); padding-bottom:1px;
+   765→  transition:border-color .2s;
+   766→}
+   767→.univ-link:hover { border-color:var(--cyan); }
+   768→
+   769→/* Placement strip */
+   770→.placement-strip {
+   771→  background:linear-gradient(135deg, rgba(37,99,235,.1), rgba(6,182,212,.07));
+   772→  border:1px solid var(--border); border-radius:var(--radius);
+   773→  padding:32px; margin-top:2.5rem;
+   774→}
+   775→.placement-strip h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:.6rem; }
+   776→.placement-strip p { color:var(--slate2); font-size:.88rem; margin-bottom:1.5rem; }
+   777→.company-logos { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+   778→.company-logo {
+   779→  background:rgba(255,255,255,.05); border:1px solid var(--border2);
+   780→  border-radius:9px; padding:8px 18px;
+   781→  font-size:.82rem; font-weight:600; color:var(--slate2);
+   782→  transition:background .2s, color .2s;
+   783→}
+   784→.company-logo:hover { background:rgba(6,182,212,.08); color:var(--white); }
+   785→
+   786→/* IT testimonials */
+   787→.it-testimonials { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; margin-top:2rem; }
+   788→
+   789→@media(max-width:768px) {
+   790→  .sap-track-banner { flex-direction:column; }
+   791→  .section-divider-banner { flex-direction:column; }
+   792→}
+   793→
+   794→/* ══ AI/ML PROGRAM STYLES ══ */
+   795→.aiml-divider-banner {
+   796→  background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.08));
+   797→  border-top:2px solid #7c3aed; border-bottom:1px solid var(--border);
+   798→  padding:40px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;
+   799→}
+   800→.aiml-divider-banner h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.3rem,3vw,1.9rem); font-weight:700; }
+   801→.aiml-divider-banner p { color:var(--slate2); font-size:.9rem; max-width:520px; line-height:1.75; }
+   802→.aiml-badge {
+   803→  display:inline-flex; align-items:center; gap:10px;
+   804→  background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3);
+   805→  border-radius:100px; padding:8px 20px;
+   806→  font-size:.82rem; font-weight:600; color:#c084fc; white-space:nowrap;
+   807→}
+   808→
+   809→/* Plans grid */
+   810→.plans-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.4rem; }
+   811→.plan-card {
+   812→  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+   813→  padding:26px 22px; display:flex; flex-direction:column;
+   814→  transition:transform .25s,box-shadow .25s,border-color .25s; position:relative; overflow:hidden;
+   815→}
+   816→.plan-card:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(124,58,237,.15); }
+   817→.plan-card.popular { border-color:rgba(124,58,237,.5); }
+   818→.plan-card.popular::before {
+   819→  content:'⭐ Most Popular'; position:absolute; top:0; left:0; right:0;
+   820→  background:linear-gradient(135deg,#7c3aed,var(--cyan)); color:#fff;
+   821→  font-size:.7rem; font-weight:700; text-align:center; padding:5px; letter-spacing:.5px;
+   822→}
+   823→.plan-card.popular { padding-top:38px; }
+   824→.plan-icon { font-size:2rem; margin-bottom:.7rem; }
+   825→.plan-name { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:.3rem; }
+   826→.plan-tagline { font-size:.78rem; color:var(--slate2); margin-bottom:1rem; }
+   827→.plan-price .amount {
+   828→  font-family:'Space Grotesk',sans-serif; font-size:1.9rem; font-weight:700;
+   829→  background:linear-gradient(135deg,#7c3aed,var(--cyan));
+   830→  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+   831→}
+   832→.plan-price .period { font-size:.8rem; color:var(--slate2); }
+   833→.plan-launch { font-size:.75rem; color:#4ade80; font-weight:600; margin-top:.3rem; margin-bottom:1.2rem; }
+   834→.plan-features { list-style:none; flex:1; }
+   835→.plan-features li { display:flex; align-items:flex-start; gap:.6rem; padding:6px 0; font-size:.82rem; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); line-height:1.5; }
+   836→.plan-features li:last-child { border-bottom:none; }
+   837→.plan-features li::before { content:'✓'; color:var(--cyan); font-weight:700; flex-shrink:0; margin-top:1px; }
+   838→.plan-cta {
+   839→  display:block; text-align:center; margin-top:1.4rem;
+   840→  background:linear-gradient(135deg,#7c3aed,var(--cyan));
+   841→  color:#fff; padding:11px; border-radius:9px;
+   842→  font-weight:600; font-size:.88rem; text-decoration:none; transition:opacity .2s;
+   843→}
+   844→.plan-cta:hover { opacity:.85; }
+   845→.plan-cta.ghost {
+   846→  background:none; border:1.5px solid rgba(124,58,237,.4); color:#c084fc;
+   847→}
+   848→.plan-cta.ghost:hover { background:rgba(124,58,237,.12); }
+   849→
+   850→/* Curriculum table */
+   851→.curr-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin-bottom:2rem; }
+   852→.curr-table { width:100%; border-collapse:collapse; font-size:.84rem; }
+   853→.curr-table thead { background:rgba(124,58,237,.1); }
+   854→.curr-table th { padding:12px 16px; text-align:left; font-family:'Space Grotesk',sans-serif; font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2); border-bottom:1px solid var(--border); }
+   855→.curr-table td { padding:11px 16px; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); vertical-align:top; }
+   856→.curr-table tr:last-child td { border-bottom:none; }
+   857→.curr-table tr:hover td { background:rgba(124,58,237,.04); }
+   858→.curr-table td:first-child { color:var(--white); font-weight:600; white-space:nowrap; }
+   859→.curr-table td:nth-child(2) { color:#c084fc; font-weight:600; }
+   860→.phase-badge { display:inline-block; padding:2px 8px; border-radius:5px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.3px; margin-bottom:3px; }
+   861→.ph-1 { background:rgba(6,182,212,.15); color:var(--cyan); }
+   862→.ph-2 { background:rgba(124,58,237,.15); color:#c084fc; }
+   863→.ph-3 { background:rgba(245,158,11,.12); color:#fbbf24; }
+   864→.ph-4 { background:rgba(34,197,94,.12); color:#4ade80; }
+   865→.ph-5 { background:rgba(244,63,94,.1); color:#f87171; }
+   866→
+   867→/* Project catalogue */
+   868→.project-cats { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.2rem; }
+   869→.proj-cat-card {
+   870→  background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px 20px;
+   871→  transition:border-color .2s,transform .2s;
+   872→}
+   873→.proj-cat-card:hover { border-color:rgba(124,58,237,.4); transform:translateY(-3px); }
+   874→.proj-cat-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; margin-bottom:.7rem; display:flex; align-items:center; gap:.5rem; }
+   875→.proj-cat-card ul { list-style:none; }
+   876→.proj-cat-card li { font-size:.8rem; color:var(--slate2); padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:flex-start; gap:.5rem; }
+   877→.proj-cat-card li:last-child { border-bottom:none; }
+   878→.proj-cat-card li::before { content:'›'; color:#c084fc; font-size:.95rem; flex-shrink:0; margin-top:-1px; }
+   879→
+   880→/* Deliverables grid */
+   881→.deliverables-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+   882→.deliverable-card {
+   883→  background:rgba(124,58,237,.07); border:1px solid rgba(124,58,237,.2);
+   884→  border-radius:var(--radius2); padding:16px; text-align:center;
+   885→  transition:border-color .2s;
+   886→}
+   887→.deliverable-card:hover { border-color:rgba(124,58,237,.45); }
+   888→.deliverable-card .d-icon { font-size:1.6rem; margin-bottom:.6rem; }
+   889→.deliverable-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:600; color:var(--white); }
+   890→.deliverable-card p { font-size:.75rem; color:var(--slate2); margin-top:.3rem; line-height:1.5; }
+   891→
+   892→/* Bulk pricing table */
+   893→.bulk-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); }
+   894→.bulk-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+   895→.bulk-table thead { background:rgba(6,182,212,.08); }
+   896→.bulk-table th { padding:13px 20px; text-align:left; font-family:'Space Grotesk',sans-serif; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2); border-bottom:1px solid var(--border); }
+   897→.bulk-table td { padding:13px 20px; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); }
+   898→.bulk-table tr:last-child td { border-bottom:none; }
+   899→.bulk-table tr:hover td { background:rgba(6,182,212,.04); }
+   900→.bulk-table td:first-child { color:var(--white); font-weight:600; }
+   901→.bulk-table td:nth-child(2) { color:var(--cyan); font-weight:700; }
+   902→.bulk-table td:nth-child(3) { color:#4ade80; font-weight:600; }
+   903→
+   904→/* Flagship tracks */
+   905→.flagship-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+   906→.flagship-card {
+   907→  background:var(--card); border:1px solid var(--border); border-radius:var(--radius2);
+   908→  padding:18px 16px; text-align:center;
+   909→  transition:transform .2s,border-color .2s;
+   910→}
+   911→.flagship-card:hover { transform:translateY(-3px); border-color:rgba(124,58,237,.4); }
+   912→.flagship-card .f-icon { font-size:1.8rem; margin-bottom:.6rem; }
+   913→.flagship-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--white); }
+   914→.flagship-card p { font-size:.73rem; color:var(--slate2); margin-top:.3rem; }
+   915→
+   916→@media(max-width:768px) {
+   917→  .aiml-divider-banner { flex-direction:column; }
+   918→}
+   919→
+   920→/* ══ LOV ENROLLMENT FORM STYLES ══ */
+   921→.enroll-wrapper {
+   922→  background: var(--card2); border: 1px solid var(--border);
+   923→  border-radius: var(--radius); overflow: hidden;
+   924→}
+   925→.enroll-header {
+   926→  background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(6,182,212,.1));
+   927→  border-bottom: 1px solid var(--border);
+   928→  padding: 20px 24px;
+   929→  display: flex; align-items: center; gap: 12px;
+   930→}
+   931→.enroll-header h3 {
+   932→  font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin:0;
+   933→}
+   934→.enroll-header p { font-size:.78rem; color:var(--slate2); margin:0; }
+   935→.enroll-steps {
+   936→  display: flex; padding: 0 24px;
+   937→  border-bottom: 1px solid var(--border);
+   938→  overflow-x: auto;
+   939→}
+   940→.enroll-step {
+   941→  display: flex; align-items: center; gap: 8px;
+   942→  padding: 12px 16px; font-size:.78rem; font-weight:600;
+   943→  color: var(--slate); border-bottom: 2px solid transparent;
+   944→  white-space: nowrap; transition: all .2s;
+   945→}
+   946→.enroll-step.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+   947→.enroll-step.done   { color: #4ade80; border-bottom-color: #4ade80; }
+   948→.enroll-step-num {
+   949→  width: 22px; height: 22px; border-radius: 50%;
+   950→  display: flex; align-items: center; justify-content: center;
+   951→  font-size: .7rem; font-weight: 800; background: rgba(255,255,255,.08); flex-shrink:0;
+   952→}
+   953→.enroll-step.active .enroll-step-num { background: var(--cyan); color: #fff; }
+   954→.enroll-step.done   .enroll-step-num { background: #4ade80; color: #fff; }
+   955→
+   956→/* Step panels */
+   957→.enroll-panel { display: none; padding: 22px 24px; }
+   958→.enroll-panel.active { display: block; }
+   959→
+   960→/* Category cards */
+   961→.cat-select-grid {
+   962→  display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: .9rem;
+   963→  margin-bottom: 1.2rem;
+   964→}
+   965→.cat-select-card {
+   966→  background: rgba(255,255,255,.04); border: 1.5px solid var(--border);
+   967→  border-radius: var(--radius2); padding: 14px 16px; cursor: pointer;
+   968→  transition: all .2s; display: flex; align-items: flex-start; gap: 10px;
+   969→}
+   970→.cat-select-card:hover { border-color: rgba(124,58,237,.5); background: rgba(124,58,237,.07); }
+   971→.cat-select-card.selected { border-color: #7c3aed; background: rgba(124,58,237,.12); }
+   972→.cat-select-card input[type=radio] { display:none; }
+   973→.cat-icon { font-size: 1.5rem; flex-shrink:0; margin-top:2px; }
+   974→.cat-info h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--white); margin-bottom:2px; }
+   975→.cat-info span { font-size:.72rem; color:var(--slate2); }
+   976→.cat-select-card.selected .cat-info h4 { color: #c084fc; }
+   977→
+   978→/* Project LOV list */
+   979→.project-lov-header {
+   980→  display:flex; align-items:center; justify-content:space-between;
+   981→  margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;
+   982→}
+   983→.project-lov-header h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; }
+   984→.project-lov-header span { font-size:.75rem; color:var(--slate2); }
+   985→.project-lov-search {
+   986→  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+   987→  border-radius: 8px; padding: 9px 14px; color: var(--white);
+   988→  font-size:.84rem; font-family:'Inter',sans-serif; outline:none; width:100%;
+   989→  margin-bottom:1rem; transition:border-color .2s;
+   990→}
+   991→.project-lov-search:focus { border-color: var(--cyan); }
+   992→.project-lov-search::placeholder { color:var(--slate); }
+   993→.project-lov-list {
+   994→  max-height: 340px; overflow-y: auto; border: 1px solid var(--border);
+   995→  border-radius: var(--radius2);
+   996→}
+   997→.project-lov-list::-webkit-scrollbar { width:4px; }
+   998→.project-lov-list::-webkit-scrollbar-thumb { background:var(--cyan); border-radius:2px; }
+   999→.lov-item {
+  1000→  display:flex; align-items:center; gap:12px;
+  1001→  padding:11px 16px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,.04);
+  1002→  transition:background .15s;
+  1003→}
+  1004→.lov-item:last-child { border-bottom:none; }
+  1005→.lov-item:hover { background:rgba(6,182,212,.06); }
+  1006→.lov-item.selected { background:rgba(6,182,212,.1); border-left:3px solid var(--cyan); }
+  1007→.lov-item input[type=radio] { display:none; }
+  1008→.lov-num {
+  1009→  width:26px; height:26px; border-radius:7px; flex-shrink:0;
+  1010→  background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.25);
+  1011→  display:flex; align-items:center; justify-content:center;
+  1012→  font-size:.68rem; font-weight:700; color:#c084fc;
+  1013→}
+  1014→.lov-item.selected .lov-num { background:#7c3aed; color:#fff; border-color:#7c3aed; }
+  1015→.lov-text { flex:1; }
+  1016→.lov-text strong { display:block; font-size:.85rem; font-weight:600; color:var(--white); line-height:1.35; }
+  1017→.lov-text span { font-size:.72rem; color:var(--slate2); }
+  1018→.lov-check { font-size:.9rem; color:var(--cyan); opacity:0; transition:opacity .15s; flex-shrink:0; }
+  1019→.lov-item.selected .lov-check { opacity:1; }
+  1020→.lov-selected-badge {
+  1021→  display:inline-flex; align-items:center; gap:6px;
+  1022→  background:rgba(6,182,212,.12); border:1px solid rgba(6,182,212,.3);
+  1023→  border-radius:8px; padding:8px 14px; margin-top:.8rem;
+  1024→  font-size:.82rem; color:var(--cyan2); font-weight:600;
+  1025→}
+  1026→
+  1027→/* Step 3 — personal details */
+  1028→.enroll-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+  1029→.enroll-form-group { display:flex; flex-direction:column; gap:.4rem; }
+  1030→.enroll-form-group.full { grid-column:1/-1; }
+  1031→.enroll-form-group label { font-size:.74rem; font-weight:700; color:var(--slate2); letter-spacing:.3px; text-transform:uppercase; }
+  1032→.enroll-form-group input,
+  1033→.enroll-form-group select,
+  1034→.enroll-form-group textarea {
+  1035→  background:rgba(255,255,255,.05); border:1px solid var(--border);
+  1036→  border-radius:8px; padding:9px 13px; color:var(--white);
+  1037→  font-size:.86rem; font-family:'Inter',sans-serif; outline:none;
+  1038→  transition:border-color .2s,background .2s; appearance:none;
+  1039→}
+  1040→.enroll-form-group input:focus,
+  1041→.enroll-form-group select:focus,
+  1042→.enroll-form-group textarea:focus { border-color:var(--cyan); background:rgba(6,182,212,.05); }
+  1043→.enroll-form-group select option { background:var(--card2); color:var(--white); }
+  1044→.enroll-form-group textarea { resize:vertical; min-height:80px; }
+  1045→
+  1046→/* Summary card */
+  1047→.enroll-summary {
+  1048→  background: rgba(6,182,212,.06); border:1px solid rgba(6,182,212,.2);
+  1049→  border-radius: var(--radius2); padding:16px 18px; margin-bottom:1.2rem;
+  1050→}
+  1051→.enroll-summary h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--cyan); margin-bottom:.8rem; }
+  1052→.summary-row { display:flex; gap:.8rem; padding:5px 0; font-size:.8rem; border-bottom:1px solid rgba(255,255,255,.05); }
+  1053→.summary-row:last-child { border-bottom:none; }
+  1054→.summary-label { color:var(--slate2); min-width:110px; flex-shrink:0; }
+  1055→.summary-value { color:var(--white); font-weight:600; }
+  1056→
+  1057→/* Nav buttons */
+  1058→.enroll-nav { display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem; flex-wrap:wrap; gap:.8rem; }
+  1059→.enroll-nav-back {
+  1060→  background:none; border:1.5px solid var(--border); color:var(--slate2);
+  1061→  padding:9px 20px; border-radius:9px; font-size:.84rem; font-weight:600;
+  1062→  cursor:pointer; font-family:'Inter',sans-serif; transition:all .2s;
+  1063→}
+  1064→.enroll-nav-back:hover { border-color:var(--cyan); color:var(--white); }
+  1065→.enroll-nav-next {
+  1066→  background:linear-gradient(135deg,#7c3aed,var(--cyan)); border:none;
+  1067→  color:#fff; padding:10px 24px; border-radius:9px; font-size:.88rem; font-weight:700;
+  1068→  cursor:pointer; font-family:'Space Grotesk',sans-serif; transition:opacity .2s;
+  1069→  display:flex; align-items:center; gap:8px;
+  1070→}
+  1071→.enroll-nav-next:hover { opacity:.88; }
+  1072→.enroll-nav-next:disabled { opacity:.4; cursor:not-allowed; }
+  1073→.enroll-submit-btn {
+  1074→  width:100%; background:linear-gradient(135deg,#7c3aed,var(--cyan));
+  1075→  border:none; border-radius:10px; padding:13px;
+  1076→  color:#fff; font-size:.95rem; font-weight:700;
+  1077→  cursor:pointer; font-family:'Space Grotesk',sans-serif;
+  1078→  transition:opacity .2s,transform .2s; margin-top:.5rem;
+  1079→  box-shadow:0 4px 20px rgba(124,58,237,.3);
+  1080→}
+  1081→.enroll-submit-btn:hover { opacity:.9; transform:translateY(-1px); }
+  1082→.consent-row { display:flex; align-items:flex-start; gap:.7rem; margin-top:.8rem; }
+  1083→.consent-row input[type=checkbox] { margin-top:3px; accent-color:var(--cyan); flex-shrink:0; }
+  1084→.consent-row label { font-size:.75rem; color:var(--slate2); line-height:1.5; }
+  1085→
+  1086→/* Success */
+  1087→.enroll-success { text-align:center; padding:2rem 1rem; display:none; }
+  1088→.enroll-success .s-icon { font-size:3rem; margin-bottom:1rem; }
+  1089→.enroll-success h4 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:.5rem; }
+  1090→.enroll-success p { font-size:.86rem; color:var(--slate2); line-height:1.75; }
+  1091→.enroll-success .s-project {
+  1092→  background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
+  1093→  border-radius:10px; padding:14px 18px; margin:1rem 0; text-align:left;
+  1094→}
+  1095→
+  1096→@media(max-width:600px) {
+  1097→  .enroll-form-grid { grid-template-columns:1fr; }
+  1098→  .cat-select-grid { grid-template-columns:1fr; }
+  1099→}
+  1100→
+  1101→</style>
+  1102→</head>
+  1103→<body>
+  1104→
+  1105→<!-- ══ NAV ══ -->
+  1106→<nav>
+  1107→  <a href="#" class="logo">
+  1108→    <div class="logo-icon">⚡</div>
+  1109→    Agile<span>Projection</span>
+  1110→  </a>
+  1111→  <ul class="nav-links">
+  1112→    <li class="nav-dropdown">
+  1113→      <a href="#">Internships</a>
+  1114→      <div class="dropdown-menu">
+  1115→        <a href="#programs">Embedded Systems Internship</a>
+  1116→        <a href="#programs">IoT Internship</a>
+  1117→        <a href="#programs">Campus Ambassador Program</a>
+  1118→        <a href="#programs">Full Stack Track (Soon)</a>
+  1119→      </div>
+  1120→    </li>
+  1121→    <li class="nav-dropdown">
+  1122→      <a href="#it-courses">IT Courses</a>
+  1123→      <div class="dropdown-menu">
+  1124→        <a href="#it-courses">SAP Ariba & Procurement</a>
+  1125→        <a href="#it-courses">SAP BTP & Cloud</a>
+  1126→        <a href="#it-courses">AI & Machine Learning</a>
+  1127→        <a href="#it-courses">Full Stack Development</a>
+  1128→        <a href="#it-courses">Cloud & DevOps</a>
+  1129→        <a href="#univ-programs">International University</a>
+  1130→      </div>
+  1131→    </li>
+  1132→    <li><a href="#aiml-program">AI/ML Internship</a></li>
+  1133→    <li><a href="#schedule">Schedule</a></li>
+  1134→    <li><a href="#benefits">Benefits</a></li>
+  1135→    <li><a href="#testimonials">Reviews</a></li>
+  1136→    <li><a href="#faq">FAQs</a></li>
+  1137→    <li><a href="#resources">Resources</a></li>
+  1138→    <li><a href="tel:+918095557332" class="nav-phone">📞 +91 80955 57332</a></li>
+  1139→    <li><a href="#register" class="nav-cta">Register  →</a></li>
+  1140→  </ul>
+  1141→  <div class="hamburger" onclick="this.classList.toggle('open')">
+  1142→    <span></span><span></span><span></span>
+  1143→  </div>
+  1144→</nav>
+  1145→
+  1146→<!-- ══ HERO ══ -->
+  1147→<div class="hero">
+  1148→  <div class="beam"></div>
+  1149→  <div class="hero-inner">
+  1150→    <div class="hero-content">
+  1151→      <div class="hero-eyebrow">Free Online Internships · 2025–26 Batch Open</div>
+  1152→      <h1>
+  1153→        Launch Your Engineering<br>
+  1154→        Career with a <span class="grad">Real Internship</span>
+  1155→      </h1>
+  1156→      <p class="hero-sub">
+  1157→        AgileProjection offers free, live online internship programs for engineering college students across India. Build industry-grade skills, complete real projects, and earn a recognised certification — all from home.
+  1158→      </p>
+  1159→      <div class="hero-tracks">
+  1160→        <span class="track-pill">⚙️ Embedded Systems</span>
+  1161→        <span class="track-pill">🌐 Internet of Things</span>
+  1162→        <span class="track-pill">🎓 Campus Ambassador</span>
+  1163→        <span class="track-pill">🖥️ Full Stack (Soon)</span>
+  1164→      </div>
+  1165→      <div class="hero-buttons">
+  1166→        <a href="#register" class="btn-primary">Register Free — Apply Now →</a>
+  1167→        <a href="#programs" class="btn-secondary">Explore Programs</a>
+  1168→      </div>
+  1169→      <div class="hero-trust">
+  1170→        <div class="trust-item"><span class="trust-dot">●</span> No registration fee</div>
+  1171→        <div class="trust-item"><span class="trust-dot">●</span> AICTE-aligned</div>
+  1172→        <div class="trust-item"><span class="trust-dot">●</span> Credit-eligible</div>
+  1173→        <div class="trust-item"><span class="trust-dot">●</span> Certificate included</div>
+  1174→      </div>
+  1175→    </div>
+  1176→    <div class="hero-visual">
+  1177→      <div class="stat-stack">
+  1178→        <div class="stat-card">
+  1179→          <div class="stat-num">10,000+</div>
+  1180→          <div class="stat-label">Students Trained</div>
+  1181→          <div class="stat-sub">Across India since 2018</div>
+  1182→        </div>
+  1183→        <div class="stat-card">
+  1184→          <div class="stat-num">70 / 30</div>
+  1185→          <div class="stat-label">Practical vs Theory</div>
+  1186→          <div class="stat-sub">Industry-first pedagogy</div>
+  1187→        </div>
+  1188→        <div class="stat-card">
+  1189→          <div class="stat-num">4 Weeks</div>
+  1190→          <div class="stat-label">Live Online Program</div>
+  1191→          <div class="stat-sub">Daily mentor-led sessions</div>
+  1192→        </div>
+  1193→      </div>
+  1194→    </div>
+  1195→  </div>
+  1196→</div>
+  1197→
+  1198→<!-- ══ COUNTERS ══ -->
+  1199→<div class="counter-strip">
+  1200→  <div class="counters">
+  1201→    <div class="counter-item">
+  1202→      <div class="counter-num" data-target="10000">10,000+</div>
+  1203→      <div class="counter-label">Students Enrolled</div>
+  1204→    </div>
+  1205→    <div class="counter-item">
+  1206→      <div class="counter-num">98%</div>
+  1207→      <div class="counter-label">Completion Rate</div>
+  1208→    </div>
+  1209→    <div class="counter-item">
+  1210→      <div class="counter-num">500+</div>
+  1211→      <div class="counter-label">Colleges Represented</div>
+  1212→    </div>
+  1213→    <div class="counter-item">
+  1214→      <div class="counter-num">4.8 ★</div>
+  1215→      <div class="counter-label">Average Student Rating</div>
+  1216→    </div>
+  1217→  </div>
+  1218→</div>
+  1219→
+  1220→<!-- ══ HOW IT WORKS ══ -->
+  1221→<section class="alt-bg">
+  1222→  <div class="section-label">The Journey</div>
+  1223→  <h2 class="section-title">How It Works — In 5 Simple Steps</h2>
+  1224→  <p class="section-desc">From registration to certification, every step is designed to minimise friction and maximise learning.</p>
+  1225→  <div class="steps">
+  1226→    <div class="step">
+  1227→      <div class="step-num">01</div>
+  1228→      <h3>Choose Your Track</h3>
+  1229→      <p>Pick from Embedded Systems, IoT, or Campus Ambassador based on your interests and degree stream.</p>
+  1230→    </div>
+  1231→    <div class="step">
+  1232→      <div class="step-num">02</div>
+  1233→      <h3>Register Free</h3>
+  1234→      <p>Fill in the online form — no fee, no documents required. You'll receive a confirmation within 24 hours.</p>
+  1235→    </div>
+  1236→    <div class="step">
+  1237→      <div class="step-num">03</div>
+  1238→      <h3>Attend Live Sessions</h3>
+  1239→      <p>Join daily online classes with expert mentors. Ask questions, clear doubts, and track your progress.</p>
+  1240→    </div>
+  1241→    <div class="step">
+  1242→      <div class="step-num">04</div>
+  1243→      <h3>Build Your Project</h3>
+  1244→      <p>Complete a real-world project as your final deliverable — a working prototype you can showcase in interviews.</p>
+  1245→    </div>
+  1246→    <div class="step">
+  1247→      <div class="step-num">05</div>
+  1248→      <h3>Get Certified</h3>
+  1249→      <p>Earn a merit certificate recognised by hundreds of Indian engineering colleges for academic credit.</p>
+  1250→    </div>
+  1251→  </div>
+  1252→</section>
+  1253→
+  1254→<hr class="divider">
+  1255→
+  1256→<!-- ══ PROGRAMS ══ -->
+  1257→<section id="programs">
+  1258→  <div class="section-label">Internship Programs</div>
+  1259→  <h2 class="section-title">Choose Your Track</h2>
+  1260→  <p class="section-desc">All programs maintain a 70% practical and 30% theory ratio — so you leave with a tangible project, not just theoretical knowledge.</p>
+  1261→  <div class="cards-grid">
+  1262→
+  1263→    <div class="prog-card">
+  1264→      <div class="card-thumb thumb-embedded">
+  1265→        <div class="card-badge">Technical</div>
+  1266→        ⚙️
+  1267→      </div>
+  1268→      <div class="card-body">
+  1269→        <h3>Embedded Systems Internship</h3>
+  1270→        <p>A live online program where you'll master microcontrollers, real-time operating systems, and firmware development. Build a complete embedded project from scratch with expert mentoring at every step.</p>
+  1271→        <div class="card-tags">
+  1272→          <span class="card-tag">C / C++</span>
+  1273→          <span class="card-tag">ARM Cortex</span>
+  1274→          <span class="card-tag">RTOS</span>
+  1275→          <span class="card-tag">GPIO / UART / SPI</span>
+  1276→        </div>
+  1277→        <div class="card-meta">
+  1278→          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+  1279→          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+  1280→          <div class="card-meta-item"><strong>Daily</strong>Live Sessions</div>
+  1281→        </div>
+  1282→      </div>
+  1283→      <div class="card-footer">
+  1284→        <a href="#register" class="card-link primary">Register Now</a>
+  1285→        <a href="#detail-embedded" class="card-link ghost">View Details</a>
+  1286→      </div>
+  1287→    </div>
+  1288→
+  1289→    <div class="prog-card">
+  1290→      <div class="card-thumb thumb-iot">
+  1291→        <div class="card-badge">Technical</div>
+  1292→        🌐
+  1293→      </div>
+  1294→      <div class="card-body">
+  1295→        <h3>Internet of Things (IoT) Internship</h3>
+  1296→        <p>Design and build an end-to-end IoT solution — from sensors and microcontrollers to cloud dashboards. Perfect for students who want to work at the intersection of hardware, software, and connectivity.</p>
+  1297→        <div class="card-tags">
+  1298→          <span class="card-tag">Arduino / ESP32</span>
+  1299→          <span class="card-tag">MQTT</span>
+  1300→          <span class="card-tag">Cloud</span>
+  1301→          <span class="card-tag">Python</span>
+  1302→        </div>
+  1303→        <div class="card-meta">
+  1304→          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+  1305→          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+  1306→          <div class="card-meta-item"><strong>Daily</strong>Live Sessions</div>
+  1307→        </div>
+  1308→      </div>
+  1309→      <div class="card-footer">
+  1310→        <a href="#register" class="card-link primary">Register Now</a>
+  1311→        <a href="#detail-iot" class="card-link ghost">View Details</a>
+  1312→      </div>
+  1313→    </div>
+  1314→
+  1315→    <div class="prog-card">
+  1316→      <div class="card-thumb thumb-cap">
+  1317→        <div class="card-badge non-tech">Non-Technical</div>
+  1318→        🎓
+  1319→      </div>
+  1320→      <div class="card-body">
+  1321→        <h3>Campus Ambassador Program</h3>
+  1322→        <p>Be the face of AgileProjection at your engineering college. Drive awareness, host events, and build a community — while earning a stipend, developing leadership skills, and gaining a standout resume entry.</p>
+  1323→        <div class="card-tags">
+  1324→          <span class="card-tag">Marketing</span>
+  1325→          <span class="card-tag">Leadership</span>
+  1326→          <span class="card-tag">Event Mgmt</span>
+  1327→          <span class="card-tag">Stipend</span>
+  1328→        </div>
+  1329→        <div class="card-meta">
+  1330→          <div class="card-meta-item"><strong>1 Month</strong>Duration</div>
+  1331→          <div class="card-meta-item"><strong>Stipend</strong>Paid</div>
+  1332→          <div class="card-meta-item"><strong>Flexible</strong>Schedule</div>
+  1333→        </div>
+  1334→      </div>
+  1335→      <div class="card-footer">
+  1336→        <a href="#register" class="card-link primary">Apply Now</a>
+  1337→        <a href="#detail-cap" class="card-link ghost">View Details</a>
+  1338→      </div>
+  1339→    </div>
+  1340→
+  1341→    <div class="prog-card">
+  1342→      <div class="card-thumb thumb-fs">
+  1343→        <div class="card-badge soon">Coming Soon</div>
+  1344→        🖥️
+  1345→      </div>
+  1346→      <div class="card-body">
+  1347→        <h3>Full Stack Developer Track</h3>
+  1348→        <p>Master the MERN stack (MongoDB, Express, React, Node.js) plus core Data Structures & Algorithms. Build a production-ready capstone application that you can showcase in your portfolio and job interviews.</p>
+  1349→        <div class="card-tags">
+  1350→          <span class="card-tag">React</span>
+  1351→          <span class="card-tag">Node.js</span>
+  1352→          <span class="card-tag">MongoDB</span>
+  1353→          <span class="card-tag">DSA</span>
+  1354→        </div>
+  1355→        <div class="card-meta">
+  1356→          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+  1357→          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+  1358→          <div class="card-meta-item"><strong>TBA</strong>Batch Start</div>
+  1359→        </div>
+  1360→      </div>
+  1361→      <div class="card-footer">
+  1362→        <a href="#register" class="card-link primary">Get Notified</a>
+  1363→        <a href="#" class="card-link ghost">Learn More</a>
+  1364→      </div>
+  1365→    </div>
+  1366→  </div>
+  1367→</section>
+  1368→
+  1369→<!-- ══ PROGRAM DETAIL TABS ══ -->
+  1370→<section class="alt-bg tabs-section" id="detail-embedded">
+  1371→  <div class="section-label">Deep Dive</div>
+  1372→  <h2 class="section-title">Program Details & Curriculum</h2>
+  1373→
+  1374→  <div class="tab-nav">
+  1375→    <button class="tab-btn active" onclick="switchTab(this,'tab-emb')">⚙️ Embedded Systems</button>
+  1376→    <button class="tab-btn" onclick="switchTab(this,'tab-iot')">🌐 IoT Internship</button>
+  1377→    <button class="tab-btn" onclick="switchTab(this,'tab-cap')">🎓 Campus Ambassador</button>
+  1378→  </div>
+  1379→
+  1380→  <!-- Embedded Tab -->
+  1381→  <div class="tab-panel active" id="tab-emb">
+  1382→    <div class="program-detail">
+  1383→      <div class="detail-left">
+  1384→        <h3>Embedded Systems Internship</h3>
+  1385→        <p>This four-week live program gives engineering students a structured introduction to <strong>embedded firmware development</strong>. Starting from bare-metal C programming, you'll progress to peripheral interfacing and conclude with a complete RTOS-based project.</p>
+  1386→        <p>Sessions are held daily (2 hours) by industry mentors with hands-on lab assignments after every session. A doubt-clearing session is available every alternate day, plus recorded playbacks for revision.</p>
+  1387→        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Week-by-Week Curriculum</h4>
+  1388→        <ul class="curriculum">
+  1389→          <li><span class="curr-week">Week 1</span>C Programming Fundamentals, Memory Model, Bit Manipulation, GCC Toolchain setup</li>
+  1390→          <li><span class="curr-week">Week 2</span>Microcontroller Architecture (ARM Cortex-M), GPIO, UART, Timers & Interrupts</li>
+  1391→          <li><span class="curr-week">Week 3</span>SPI, I2C, ADC/DAC, Sensor interfacing, Debugging with Logic Analyser</li>
+  1392→          <li><span class="curr-week">Week 4</span>FreeRTOS fundamentals, Task scheduling, Semaphores, Final project integration & demo</li>
+  1393→        </ul>
+  1394→      </div>
+  1395→      <div class="detail-right">
+  1396→        <div class="detail-card">
+  1397→          <h4>✅ What You'll Build</h4>
+  1398→          <ul class="check-list">
+  1399→            <li>Sensor data logger with UART output</li>
+  1400→            <li>Real-time clock & display system</li>
+  1401→            <li>Multi-sensor IoT node with RTOS</li>
+  1402→            <li>Complete project documentation & demo video</li>
+  1403→          </ul>
+  1404→        </div>
+  1405→        <div class="detail-card">
+  1406→          <h4>🎁 Perks & Deliverables</h4>
+  1407→          <ul class="check-list">
+  1408→            <li>Merit-based digital certificate</li>
+  1409→            <li>Project source code on GitHub</li>
+  1410→            <li>Performance-based goodie packs & vouchers</li>
+  1411→            <li>LinkedIn recommendation from mentors</li>
+  1412→            <li>Access to recorded sessions for 3 months</li>
+  1413→          </ul>
+  1414→        </div>
+  1415→        <div class="detail-card">
+  1416→          <h4>📋 Eligibility</h4>
+  1417→          <ul class="eligibility-list">
+  1418→            <li>BE / B.Tech students (3rd – 8th semester)</li>
+  1419→            <li>Branches: ECE, EEE, EI, CSE, IT, Mech</li>
+  1420→            <li>Basic C programming knowledge preferred</li>
+  1421→            <li>Laptop with internet connection required</li>
+  1422→          </ul>
+  1423→        </div>
+  1424→      </div>
+  1425→    </div>
+  1426→  </div>
+  1427→
+  1428→  <!-- IoT Tab -->
+  1429→  <div class="tab-panel" id="tab-iot">
+  1430→    <div class="program-detail">
+  1431→      <div class="detail-left">
+  1432→        <h3>Internet of Things (IoT) Internship</h3>
+  1433→        <p>Build a <strong>complete end-to-end IoT solution</strong> from sensor to cloud. This four-week program bridges hardware and software — you'll wire up sensors, write firmware, connect to the cloud, and visualise data on a live dashboard.</p>
+  1434→        <p>Ideal for students who enjoy both electronics and software. No prior IoT experience required — just a willingness to build and experiment.</p>
+  1435→        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Week-by-Week Curriculum</h4>
+  1436→        <ul class="curriculum">
+  1437→          <li><span class="curr-week">Week 1</span>IoT ecosystem overview, Arduino / ESP32 basics, Python scripting, Breadboard prototyping</li>
+  1438→          <li><span class="curr-week">Week 2</span>Sensors & actuators, DHT22, LDR, PIR, Serial & Wi-Fi communication, MQTT protocol</li>
+  1439→          <li><span class="curr-week">Week 3</span>Cloud platforms (AWS IoT / Firebase), REST APIs, real-time data streaming, JSON payloads</li>
+  1440→          <li><span class="curr-week">Week 4</span>Dashboard creation, alert systems, final project build, demo & presentation to industry panel</li>
+  1441→        </ul>
+  1442→      </div>
+  1443→      <div class="detail-right">
+  1444→        <div class="detail-card">
+  1445→          <h4>✅ What You'll Build</h4>
+  1446→          <ul class="check-list">
+  1447→            <li>Smart environment monitor (temp / humidity / air)</li>
+  1448→            <li>Real-time cloud dashboard with charts</li>
+  1449→            <li>SMS / email alert system on threshold breach</li>
+  1450→            <li>End-to-end project report & demo</li>
+  1451→          </ul>
+  1452→        </div>
+  1453→        <div class="detail-card">
+  1454→          <h4>🎁 Perks & Deliverables</h4>
+  1455→          <ul class="check-list">
+  1456→            <li>Merit-based digital certificate</li>
+  1457→            <li>Complete project on GitHub</li>
+  1458→            <li>Cloud deployment walkthrough guide</li>
+  1459→            <li>Performance-based vouchers & goodies</li>
+  1460→            <li>90-day recorded session access</li>
+  1461→          </ul>
+  1462→        </div>
+  1463→        <div class="detail-card">
+  1464→          <h4>📋 Eligibility</h4>
+  1465→          <ul class="eligibility-list">
+  1466→            <li>BE / B.Tech students (3rd – 8th semester)</li>
+  1467→            <li>Branches: ECE, CSE, EEE, IT, Mech</li>
+  1468→            <li>Basic programming (any language) helpful</li>
+  1469→            <li>Laptop with internet + Arduino kit (optional)</li>
+  1470→          </ul>
+  1471→        </div>
+  1472→      </div>
+  1473→    </div>
+  1474→  </div>
+  1475→
+  1476→  <!-- CAP Tab -->
+  1477→  <div class="tab-panel" id="tab-cap">
+  1478→    <div class="program-detail">
+  1479→      <div class="detail-left">
+  1480→        <h3>Campus Ambassador Program (CAP)</h3>
+  1481→        <p>For students who are passionate about community building, marketing, and leadership. As an AgileProjection Campus Ambassador you'll represent the brand at your college, run awareness campaigns, and coordinate events — while receiving a monthly stipend and growing your professional network.</p>
+  1482→        <p>No technical background required. If you communicate well, take initiative, and want your resume to stand out, CAP is for you.</p>
+  1483→        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Month-by-Month Plan</h4>
+  1484→        <ul class="curriculum">
+  1485→          <li><span class="curr-week">Week 1</span>Onboarding, brand training, understanding the student audience, setting campaign goals</li>
+  1486→          <li><span class="curr-week">Week 2</span>Social media content creation, campus outreach, peer-to-peer recruitment drives</li>
+  1487→          <li><span class="curr-week">Week 3</span>Host a campus webinar or info session, collect feedback, coordinate with regional team</li>
+  1488→          <li><span class="curr-week">Week 4</span>Performance review, final report, referral tallying, certificate & stipend disbursement</li>
+  1489→        </ul>
+  1490→      </div>
+  1491→      <div class="detail-right">
+  1492→        <div class="detail-card">
+  1493→          <h4>✅ What You'll Achieve</h4>
+  1494→          <ul class="check-list">
+  1495→            <li>Verified ambassador badge on LinkedIn</li>
+  1496→            <li>Real event management experience</li>
+  1497→            <li>Monthly stipend based on performance</li>
+  1498→            <li>Letter of Recommendation from leadership</li>
+  1499→          </ul>
+  1500→        </div>
+  1501→        <div class="detail-card">
+  1502→          <h4>🎁 Perks</h4>
+  1503→          <ul class="check-list">
+  1504→            <li>Monthly stipend (performance-based)</li>
+  1505→            <li>Official CAP certificate</li>
+  1506→            <li>Free access to all AgileProjection technical resources</li>
+  1507→            <li>Priority referral for technical programs</li>
+  1508→            <li>Recognition in our national ambassador network</li>
+  1509→          </ul>
+  1510→        </div>
+  1511→        <div class="detail-card">
+  1512→          <h4>📋 Eligibility</h4>
+  1513→          <ul class="eligibility-list">
+  1514→            <li>Any engineering branch / year</li>
+  1515→            <li>Strong communication & interpersonal skills</li>
+  1516→            <li>Active on social media platforms</li>
+  1517→            <li>Minimum 1 semester remaining in college</li>
+  1518→          </ul>
+  1519→        </div>
+  1520→      </div>
+  1521→    </div>
+  1522→  </div>
+  1523→</section>
+  1524→
+  1525→<hr class="divider">
+  1526→
+  1527→<!-- ══ SCHEDULE ══ -->
+  1528→<section id="schedule">
+  1529→  <div class="section-label">Program Schedule</div>
+  1530→  <h2 class="section-title">Upcoming Internship Batches</h2>
+  1531→  <p class="section-desc">Register before the closing date. Seats are limited per batch. Each program runs as daily live sessions for one month.</p>
+  1532→  <div class="table-wrap">
+  1533→    <table>
+  1534→      <thead>
+  1535→        <tr>
+  1536→          <th>Internship Name</th>
+  1537→          <th>Batch Start</th>
+  1538→          <th>Last Date to Apply</th>
+  1539→          <th>Duration</th>
+  1540→          <th>Mode</th>
+  1541→          <th>Status</th>
+  1542→          <th>Apply</th>
+  1543→        </tr>
+  1544→      </thead>
+  1545→      <tbody>
+  1546→        <tr>
+  1547→          <td>Embedded Systems Internship</td>
+  1548→          <td>10 Aug 2026</td>
+  1549→          <td>01 Aug 2026</td>
+  1550→          <td>4 Weeks</td>
+  1551→          <td>Online Live</td>
+  1552→          <td><span class="badge-open">Open</span></td>
+  1553→          <td><a href="#register" class="reg-link">Register →</a></td>
+  1554→        </tr>
+  1555→        <tr>
+  1556→          <td>IoT Internship</td>
+  1557→          <td>01 Sep 2026</td>
+  1558→          <td>20 Aug 2026</td>
+  1559→          <td>4 Weeks</td>
+  1560→          <td>Online Live</td>
+  1561→          <td><span class="badge-open">Open</span></td>
+  1562→          <td><a href="#register" class="reg-link">Register →</a></td>
+  1563→        </tr>
+  1564→        <tr>
+  1565→          <td>Campus Ambassador Program</td>
+  1566→          <td>Rolling</td>
+  1567→          <td>05 Sep 2026</td>
+  1568→          <td>1 Month</td>
+  1569→          <td>Hybrid</td>
+  1570→          <td><span class="badge-open">Open</span></td>
+  1571→          <td><a href="#register" class="reg-link">Apply →</a></td>
+  1572→        </tr>
+  1573→        <tr>
+  1574→          <td>Full Stack Developer Track</td>
+  1575→          <td>TBA</td>
+  1576→          <td>TBA</td>
+  1577→          <td>4 Weeks</td>
+  1578→          <td>Online Live</td>
+  1579→          <td><span class="badge-soon">Coming Soon</span></td>
+  1580→          <td><a href="#register" class="reg-link">Notify Me →</a></td>
+  1581→        </tr>
+  1582→      </tbody>
+  1583→    </table>
+  1584→  </div>
+  1585→</section>
+  1586→
+  1587→<hr class="divider">
+  1588→
+  1589→<!-- ══ BENEFITS ══ -->
+  1590→<section id="benefits" class="alt-bg">
+  1591→  <div class="section-label">Why AgileProjection</div>
+  1592→  <h2 class="section-title">What Makes Us Different</h2>
+  1593→  <p class="section-desc">Our structured intervention mechanism — live sessions, doubt-clearing, feedback loops, and project evaluation — makes this a genuine learning experience, not a checkbox exercise.</p>
+  1594→  <div class="benefits-grid">
+  1595→    <div class="benefit-card">
+  1596→      <div class="benefit-icon">📡</div>
+  1597→      <h3>Live Online Delivery</h3>
+  1598→      <p>Every session is taught live — not pre-recorded. You interact with mentors in real time, ask questions, and get answers on the spot. Recorded playbacks are available within 2 hours for revision.</p>
+  1599→    </div>
+  1600→    <div class="benefit-card">
+  1601→      <div class="benefit-icon">👨‍🏫</div>
+  1602→      <h3>Expert Industry Mentors</h3>
+  1603→      <p>Our mentors are active professionals with 8–20 years of embedded, IoT, and software experience. They bring real-world context to every concept — not just textbook theory.</p>
+  1604→    </div>
+  1605→    <div class="benefit-card">
+  1606→      <div class="benefit-icon">🛠️</div>
+  1607→      <h3>Project-Based Learning</h3>
+  1608→      <p>Every program ends with a working project you can demo to recruiters and submit to your college. 70% of session time is hands-on lab work — debugging, building, testing.</p>
+  1609→    </div>
+  1610→    <div class="benefit-card">
+  1611→      <div class="benefit-icon">🔄</div>
+  1612→      <h3>Unlimited Doubt Clearing</h3>
+  1613→      <p>Doubt-clearing sessions every alternate day, plus a dedicated Slack channel for async questions. No question goes unanswered — mentors respond within 4 hours on weekdays.</p>
+  1614→    </div>
+  1615→    <div class="benefit-card">
+  1616→      <div class="benefit-icon">🎓</div>
+  1617→      <h3>AICTE-Aligned Certificate</h3>
+  1618→      <p>Our merit certificates are accepted by hundreds of engineering colleges for academic credit conversion, fulfilling AICTE and most university internship mandates.</p>
+  1619→    </div>
+  1620→    <div class="benefit-card">
+  1621→      <div class="benefit-icon">🏆</div>
+  1622→      <h3>Perks & Recognition</h3>
+  1623→      <p>Quizzes, weekly challenges, and leaderboard competitions. Top performers receive goodie packs, Amazon vouchers, LinkedIn endorsements, and featured profiles on our platform.</p>
+  1624→    </div>
+  1625→    <div class="benefit-card">
+  1626→      <div class="benefit-icon">🤝</div>
+  1627→      <h3>Career Support</h3>
+  1628→      <p>Resume review workshops (DISHA sessions), mock interview preparation, and job board access are included for all interns who complete the program successfully.</p>
+  1629→    </div>
+  1630→    <div class="benefit-card">
+  1631→      <div class="benefit-icon">💰</div>
+  1632→      <h3>100% Free — Always</h3>
+  1633→      <p>No registration fee. No course fee. No hidden charges — ever. AgileProjection is committed to democratising quality technical education for every engineering student in India.</p>
+  1634→    </div>
+  1635→  </div>
+  1636→</section>
+  1637→
+  1638→<hr class="divider">
+  1639→
+  1640→<!-- ══ TESTIMONIALS ══ -->
+  1641→<section id="testimonials">
+  1642→  <div class="section-label">Student Reviews</div>
+  1643→  <h2 class="section-title">What Our Interns Say</h2>
+  1644→  <p class="section-desc">Over 10,000 students have completed our programs. Here's what a few of them shared.</p>
+  1645→  <div class="testimonials-grid">
+  1646→    <div class="testimonial-card">
+  1647→      <div class="stars">★★★★★</div>
+  1648→      <p class="quote-text">The Embedded Systems internship was the best thing I did in my 3rd year. The mentors were incredibly patient and the project I built got me my first campus interview call. Completely free and genuinely worth every hour.</p>
+  1649→      <div class="testimonial-author">
+  1650→        <div class="author-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">A</div>
+  1651→        <div>
+  1652→          <div class="author-name">Aditya Sharma</div>
+  1653→          <div class="author-info">B.Tech ECE · VIT Vellore · Embedded Batch '25</div>
+  1654→        </div>
+  1655→      </div>
+  1656→    </div>
+  1657→    <div class="testimonial-card">
+  1658→      <div class="stars">★★★★★</div>
+  1659→      <p class="quote-text">I was sceptical about a free internship — thought it would be superficial. I was completely wrong. The IoT program had daily live sessions, real labs, and I ended up building a working smart home sensor. The certificate is on my CV and it gets noticed.</p>
+  1660→      <div class="testimonial-author">
+  1661→        <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">P</div>
+  1662→        <div>
+  1663→          <div class="author-name">Priya Menon</div>
+  1664→          <div class="author-info">B.Tech CSE · NIT Trichy · IoT Batch '25</div>
+  1665→        </div>
+  1666→      </div>
+  1667→    </div>
+  1668→    <div class="testimonial-card">
+  1669→      <div class="stars">★★★★★</div>
+  1670→      <p class="quote-text">The Campus Ambassador Program taught me more about marketing and event management than any college subject did. I organised two successful college events and the stipend was a nice bonus. Highly recommend for non-CS students who want a strong internship.</p>
+  1671→      <div class="testimonial-author">
+  1672→        <div class="author-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">R</div>
+  1673→        <div>
+  1674→          <div class="author-name">Rahul Joshi</div>
+  1675→          <div class="author-info">B.Tech Civil · BITS Pilani · CAP Batch '24</div>
+  1676→        </div>
+  1677→      </div>
+  1678→    </div>
+  1679→    <div class="testimonial-card">
+  1680→      <div class="stars">★★★★★</div>
+  1681→      <p class="quote-text">What I loved most was the doubt-clearing sessions — the mentors would stay back and explain until every student understood. That's rare. My project on an RTOS-based data logger was presented at my college tech fest and won first prize.</p>
+  1682→      <div class="testimonial-author">
+  1683→        <div class="author-avatar" style="background:linear-gradient(135deg,#dc2626,#f59e0b)">S</div>
+  1684→        <div>
+  1685→          <div class="author-name">Sneha Kulkarni</div>
+  1686→          <div class="author-info">B.Tech EEE · RVCE Bangalore · Embedded Batch '25</div>
+  1687→        </div>
+  1688→      </div>
+  1689→    </div>
+  1690→    <div class="testimonial-card">
+  1691→      <div class="stars">★★★★★</div>
+  1692→      <p class="quote-text">I joined the IoT program during my 5th semester summer break. In 4 weeks I went from barely knowing what ESP32 was to deploying a live cloud dashboard. The 70/30 practical split is real — we spent most time actually building, not listening to lectures.</p>
+  1693→      <div class="testimonial-author">
+  1694→        <div class="author-avatar" style="background:linear-gradient(135deg,#0891b2,#2563eb)">K</div>
+  1695→        <div>
+  1696→          <div class="author-name">Kartik Verma</div>
+  1697→          <div class="author-info">B.Tech Mech · Delhi Technological Univ. · IoT Batch '24</div>
+  1698→        </div>
+  1699→      </div>
+  1700→    </div>
+  1701→    <div class="testimonial-card">
+  1702→      <div class="stars">★★★★★</div>
+  1703→      <p class="quote-text">The DISHA career workshop alone was worth it. They reviewed my resume, did a mock HR round, and helped me understand what companies actually look for. I got my internship offer within 3 weeks of completing the program.</p>
+  1704→      <div class="testimonial-author">
+  1705→        <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">N</div>
+  1706→        <div>
+  1707→          <div class="author-name">Nidhi Patel</div>
+  1708→          <div class="author-info">B.Tech IT · Nirma University · Embedded Batch '24</div>
+  1709→        </div>
+  1710→      </div>
+  1711→    </div>
+  1712→  </div>
+  1713→</section>
+  1714→
+  1715→<hr class="divider">
+  1716→
+  1717→<!-- ══ ABOUT ══ -->
+  1718→<section class="alt-bg">
+  1719→  <div class="about-inner">
+  1720→    <div class="about-text">
+  1721→      <div class="section-label">About AgileProjection</div>
+  1722→      <h2 class="section-title">Built for the Next Generation of Engineers</h2>
+  1723→      <p>AgileProjection was founded on a single belief: <strong>every engineering student in India deserves access to quality, industry-aligned internship experience</strong> — regardless of which college they attend or how much money they have.</p>
+  1724→      <p>We offer <strong>free online internship programs</strong> specifically targeted at engineering college students. With internships now mandated by AICTE and most deemed universities, finding meaningful industry exposure shouldn't be a guessing game.</p>
+  1725→      <p>Our programs are built around <strong>live mentoring, real projects, and career support</strong> — not PDF handouts and attendance sheets. Every batch is kept small to ensure personalized attention.</p>
+  1726→      <div class="about-highlight"><strong>AICTE mandate compliance:</strong> Our certificates are recognised by 500+ engineering colleges across India for academic credit conversion under the internship mandate.</div>
+  1727→    </div>
+  1728→    <div>
+  1729→      <div class="about-stats">
+  1730→        <div class="about-stat-card">
+  1731→          <div class="about-stat-num">2018</div>
+  1732→          <div class="about-stat-label">Founded</div>
+  1733→        </div>
+  1734→        <div class="about-stat-card">
+  1735→          <div class="about-stat-num">10K+</div>
+  1736→          <div class="about-stat-label">Students Trained</div>
+  1737→        </div>
+  1738→        <div class="about-stat-card">
+  1739→          <div class="about-stat-num">500+</div>
+  1740→          <div class="about-stat-label">Partner Colleges</div>
+  1741→        </div>
+  1742→        <div class="about-stat-card">
+  1743→          <div class="about-stat-num">50+</div>
+  1744→          <div class="about-stat-label">Expert Mentors</div>
+  1745→        </div>
+  1746→        <div class="about-stat-card">
+  1747→          <div class="about-stat-num">4</div>
+  1748→          <div class="about-stat-label">Program Tracks</div>
+  1749→        </div>
+  1750→        <div class="about-stat-card">
+  1751→          <div class="about-stat-num">98%</div>
+  1752→          <div class="about-stat-label">Completion Rate</div>
+  1753→        </div>
+  1754→      </div>
+  1755→    </div>
+  1756→  </div>
+  1757→</section>
+  1758→
+  1759→<hr class="divider">
+  1760→
+  1761→<!-- ══ TEAM ══ -->
+  1762→<section>
+  1763→  <div class="section-label">Our Mentors</div>
+  1764→  <h2 class="section-title">Meet the Experts Behind the Programs</h2>
+  1765→  <p class="section-desc">AgileProjection has India's largest pool of embedded systems and IoT mentors — engineers who've shipped real products and now give back by teaching the next generation.</p>
+  1766→  <div class="team-grid">
+  1767→    <div class="team-card">
+  1768→      <div class="team-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">VK</div>
+  1769→      <h4>Vijay Kumar</h4>
+  1770→      <div class="role">Lead Mentor — Embedded</div>
+  1771→      <div class="exp">Ex-Texas Instruments · 14 yrs experience</div>
+  1772→    </div>
+  1773→    <div class="team-card">
+  1774→      <div class="team-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">SR</div>
+  1775→      <h4>Supriya Rao</h4>
+  1776→      <div class="role">IoT Program Lead</div>
+  1777→      <div class="exp">Ex-Bosch · 11 yrs in Industrial IoT</div>
+  1778→    </div>
+  1779→    <div class="team-card">
+  1780→      <div class="team-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">AM</div>
+  1781→      <h4>Anand Mehta</h4>
+  1782→      <div class="role">Firmware Engineer</div>
+  1783→      <div class="exp">Ex-Qualcomm · ARM Cortex specialist</div>
+  1784→    </div>
+  1785→    <div class="team-card">
+  1786→      <div class="team-avatar" style="background:linear-gradient(135deg,#dc2626,#f59e0b)">PN</div>
+  1787→      <h4>Preethi Nair</h4>
+  1788→      <div class="role">Career Coach & DISHA Lead</div>
+  1789→      <div class="exp">10 yrs in engineering placement</div>
+  1790→    </div>
+  1791→    <div class="team-card">
+  1792→      <div class="team-avatar" style="background:linear-gradient(135deg,#0891b2,#7c3aed)">RB</div>
+  1793→      <h4>Rahul Bose</h4>
+  1794→      <div class="role">Full Stack Track Lead</div>
+  1795→      <div class="exp">Ex-Infosys · MERN & DSA expert</div>
+  1796→    </div>
+  1797→  </div>
+  1798→</section>
+  1799→
+  1800→<hr class="divider">
+  1801→
+  1802→<!-- ══ FAQ ══ -->
+  1803→<section id="faq" class="alt-bg">
+  1804→  <div class="section-label">Frequently Asked Questions</div>
+  1805→  <h2 class="section-title">Got Questions? We've Got Answers.</h2>
+  1806→  <p class="section-desc">Everything you need to know before applying. If your question isn't here, reach out — we reply within 24 hours.</p>
+  1807→  <div class="faq-list">
+  1808→    <div class="faq-item">
+  1809→      <div class="faq-q" onclick="toggleFaq(this)">
+  1810→        Is the internship really free? Are there any hidden charges?
+  1811→        <div class="faq-icon">+</div>
+  1812→      </div>
+  1813→      <div class="faq-a">Yes, completely free. There is no registration fee, no course fee, no certificate fee, and no hidden charges of any kind. AgileProjection's mission is to make quality internship programs accessible to every engineering student in India, regardless of financial background.</div>
+  1814→    </div>
+  1815→    <div class="faq-item">
+  1816→      <div class="faq-q" onclick="toggleFaq(this)">
+  1817→        Will my college accept this certificate for the internship credit requirement?
+  1818→        <div class="faq-icon">+</div>
+  1819→      </div>
+  1820→      <div class="faq-a">Our certificates are accepted by 500+ engineering colleges across India and are designed to meet AICTE and most university internship mandate requirements. We recommend checking with your college's academic section first — most affiliated colleges accept them without any issue. We can also provide a letter of undertaking if your college needs one.</div>
+  1821→    </div>
+  1822→    <div class="faq-item">
+  1823→      <div class="faq-q" onclick="toggleFaq(this)">
+  1824→        What equipment or software do I need?
+  1825→        <div class="faq-icon">+</div>
+  1826→      </div>
+  1827→      <div class="faq-a">You need a laptop (Windows / Mac / Linux) with a stable internet connection. All software tools used (GCC toolchain, Arduino IDE, VS Code, etc.) are free and open-source. For IoT track, having an Arduino Uno or ESP32 kit is helpful but not mandatory — simulated environments are available for students who don't have hardware.</div>
+  1828→    </div>
+  1829→    <div class="faq-item">
+  1830→      <div class="faq-q" onclick="toggleFaq(this)">
+  1831→        What are the session timings? Can I attend if I have college classes?
+  1832→        <div class="faq-icon">+</div>
+  1833→      </div>
+  1834→      <div class="faq-a">Sessions are typically scheduled in the evenings (6 PM – 8 PM IST) on weekdays, and Saturday mornings for lab sessions. This is designed to accommodate students who have daytime college schedules. All sessions are recorded and available within 2 hours for those who can't attend live.</div>
+  1835→    </div>
+  1836→    <div class="faq-item">
+  1837→      <div class="faq-q" onclick="toggleFaq(this)">
+  1838→        I'm in my 2nd year. Can I still apply for the technical internships?
+  1839→        <div class="faq-icon">+</div>
+  1840→      </div>
+  1841→      <div class="faq-a">Our technical internships (Embedded and IoT) are recommended for students from 3rd semester onwards, as they assume basic programming knowledge. However, exceptionally motivated 2nd-year students with some C / Python exposure are welcome to apply — mention your programming background in the form and our team will assess your fit.</div>
+  1842→    </div>
+  1843→    <div class="faq-item">
+  1844→      <div class="faq-q" onclick="toggleFaq(this)">
+  1845→        How is the certificate issued? Is it digital or physical?
+  1846→        <div class="faq-icon">+</div>
+  1847→      </div>
+  1848→      <div class="faq-a">Certificates are issued digitally (PDF with a unique verification QR code) within 7 days of completing the program. They can be downloaded, printed, and shared on LinkedIn directly. A physical certificate can also be requested for a nominal courier charge. All certificates are verifiable online via our portal.</div>
+  1849→    </div>
+  1850→    <div class="faq-item">
+  1851→      <div class="faq-q" onclick="toggleFaq(this)">
+  1852→        What if I miss a few sessions? Will I still get the certificate?
+  1853→        <div class="faq-icon">+</div>
+  1854→      </div>
+  1855→      <div class="faq-a">Certificates are merit-based and require completing at least 80% of sessions (or watching recordings) and submitting the final project. Missing 1–2 sessions is fine as long as you catch up via recordings. If you anticipate a longer absence, reach out to your mentor early — we work with students to find solutions wherever possible.</div>
+  1856→    </div>
+  1857→    <div class="faq-item">
+  1858→      <div class="faq-q" onclick="toggleFaq(this)">
+  1859→        Can non-engineering students apply?
+  1860→        <div class="faq-icon">+</div>
+  1861→      </div>
+  1862→      <div class="faq-a">Our technical programs (Embedded, IoT) are designed specifically for engineering students. The Campus Ambassador Program is open to any college student who has strong communication skills and is passionate about outreach — engineering degree not required for CAP.</div>
+  1863→    </div>
+  1864→  </div>
+  1865→</section>
+  1866→
+  1867→<hr class="divider">
+  1868→
+  1869→<!-- ══ RESOURCES ══ -->
+  1870→<section id="resources">
+  1871→  <div class="section-label">Free Resources</div>
+  1872→  <h2 class="section-title">Learn Before You Apply</h2>
+  1873→  <p class="section-desc">We believe in sharing knowledge openly. These resources are free for everyone — no sign-up required.</p>
+  1874→  <div class="resources-grid">
+  1875→    <div class="res-card">
+  1876→      <div class="res-icon">📚</div>
+  1877→      <h3>Technical Resource Library</h3>
+  1878→      <p>Free course material covering Embedded C, Linux internals, IoT protocols, RTOS, ARM architecture, and more. Updated every quarter with new content from our mentors.</p>
+  1879→      <a href="#" class="res-link">Browse Library →</a>
+  1880→    </div>
+  1881→    <div class="res-card">
+  1882→      <div class="res-icon">💬</div>
+  1883→      <h3>Ask Us Anything (FAQ Hub)</h3>
+  1884→      <p>A searchable database of over 500 career and technical questions answered by our expert mentors. From "how to crack embedded interviews" to "which domain suits me".</p>
+  1885→      <a href="#faq" class="res-link">Explore FAQs →</a>
+  1886→    </div>
+  1887→    <div class="res-card">
+  1888→      <div class="res-icon">🎙️</div>
+  1889→      <h3>Free Masterclasses</h3>
+  1890→      <p>On-demand webinars from industry leaders — EV technology from a Texas Instruments director, AI/ML in edge computing from IBM Research, Linux internals from a Broadcom principal engineer.</p>
+  1891→      <a href="#" class="res-link">Watch Now →</a>
+  1892→    </div>
+  1893→    <div class="res-card">
+  1894→      <div class="res-icon">📝</div>
+  1895→      <h3>Career & Technical Blog</h3>
+  1896→      <p>Practical guides: building your first IoT project, cracking embedded systems interviews, writing a resume that gets callbacks, and understanding the embedded job market in 2026.</p>
+  1897→      <a href="#" class="res-link">Read Articles →</a>
+  1898→    </div>
+  1899→  </div>
+  1900→</section>
+  1901→
+  1902→<hr class="divider">
+  1903→
+  1904→<!-- ══ REGISTER FORM ══ -->
+  1905→<section class="register-section" id="register">
+  1906→  <div class="register-inner">
+  1907→    <div class="register-left">
+  1908→      <div class="section-label">Apply Now</div>
+  1909→      <h2>Register for a Free Internship</h2>
+  1910→      <p>Fill in the form and our team will reach out within 24 hours to confirm your spot. No commitment required — just curiosity and a desire to build something real.</p>
+  1911→      <ul class="register-perks">
+  1912→        <li><span>⚡</span><span>Instant confirmation — no waiting weeks to hear back</span></li>
+  1913→        <li><span>🎓</span><span>Certificate issued within 7 days of completion</span></li>
+  1914→        <li><span>📂</span><span>Your project stays yours — hosted on your own GitHub</span></li>
+  1915→        <li><span>🔒</span><span>Your data is never sold or shared with third parties</span></li>
+  1916→        <li><span>💬</span><span>WhatsApp & email updates throughout the program</span></li>
+  1917→        <li><span>🏆</span><span>Top performers featured in our alumni spotlight</span></li>
+  1918→      </ul>
+  1919→    </div>
+  1920→    <div class="enroll-wrapper" id="registerFormCard">
+  1921→
+  1922→      <!-- Header -->
+  1923→      <div class="enroll-header">
+  1924→        <div style="font-size:2rem;">🎓</div>
+  1925→        <div>
+  1926→          <h3>Enrol in AI/ML Industry Internship — Free</h3>
+  1927→          <p>Select your project category → choose your project → fill your details → submit</p>
+  1928→        </div>
+  1929→      </div>
+  1930→
+  1931→      <!-- Step indicators -->
+  1932→      <div class="enroll-steps">
+  1933→        <div class="enroll-step active" id="step-ind-1"><div class="enroll-step-num">1</div> Select Category</div>
+  1934→        <div class="enroll-step" id="step-ind-2"><div class="enroll-step-num">2</div> Choose Project</div>
+  1935→        <div class="enroll-step" id="step-ind-3"><div class="enroll-step-num">3</div> Your Details</div>
+  1936→        <div class="enroll-step" id="step-ind-4"><div class="enroll-step-num">4</div> Confirm &amp; Submit</div>
+  1937→      </div>
+  1938→
+  1939→      <!-- ══ STEP 1: Category Selection ══ -->
+  1940→      <div class="enroll-panel active" id="ep-1">
+  1941→        <p style="font-size:.85rem;color:var(--slate2);margin-bottom:1rem;">Choose the <strong style="color:var(--white);">AI/ML domain</strong> you want to build your final year project in:</p>
+  1942→        <div class="cat-select-grid" id="catGrid">
+  1943→
+  1944→          <label class="cat-select-card" onclick="selectCat(this,'gen-ai')">
+  1945→            <input type="radio" name="cat" value="gen-ai">
+  1946→            <div class="cat-icon">🤖</div>
+  1947→            <div class="cat-info"><h4>Generative AI &amp; LLM</h4><span>10 projects · RAG, Chatbots, LLMs</span></div>
+  1948→          </label>
+  1949→
+  1950→          <label class="cat-select-card" onclick="selectCat(this,'cv')">
+  1951→            <input type="radio" name="cat" value="cv">
+  1952→            <div class="cat-icon">👁️</div>
+  1953→            <div class="cat-info"><h4>Computer Vision</h4><span>10 projects · YOLO, Detection, Classification</span></div>
+  1954→          </label>
+  1955→
+  1956→          <label class="cat-select-card" onclick="selectCat(this,'ml')">
+  1957→            <input type="radio" name="cat" value="ml">
+  1958→            <div class="cat-icon">📊</div>
+  1959→            <div class="cat-info"><h4>ML &amp; Predictive Analytics</h4><span>10 projects · Churn, Fraud, Forecasting</span></div>
+  1960→          </label>
+  1961→
+  1962→          <label class="cat-select-card" onclick="selectCat(this,'nlp')">
+  1963→            <input type="radio" name="cat" value="nlp">
+  1964→            <div class="cat-icon">📝</div>
+  1965→            <div class="cat-info"><h4>NLP &amp; Transformers</h4><span>10 projects · BERT, Sentiment, Classification</span></div>
+  1966→          </label>
+  1967→
+  1968→          <label class="cat-select-card" onclick="selectCat(this,'industry')">
+  1969→            <input type="radio" name="cat" value="industry">
+  1970→            <div class="cat-icon">🏭</div>
+  1971→            <div class="cat-info"><h4>AI for Industry 4.0</h4><span>10 projects · Manufacturing, Smart Factory</span></div>
+  1972→          </label>
+  1973→
+  1974→          <label class="cat-select-card" onclick="selectCat(this,'healthcare')">
+  1975→            <input type="radio" name="cat" value="healthcare">
+  1976→            <div class="cat-icon">🏥</div>
+  1977→            <div class="cat-info"><h4>Healthcare AI</h4><span>8 projects · Medical Imaging, Disease Risk</span></div>
+  1978→          </label>
+  1979→
+  1980→          <label class="cat-select-card" onclick="selectCat(this,'cyber')">
+  1981→            <input type="radio" name="cat" value="cyber">
+  1982→            <div class="cat-icon">🔐</div>
+  1983→            <div class="cat-info"><h4>Cybersecurity + AI</h4><span>7 projects · Malware, Intrusion, Fraud</span></div>
+  1984→          </label>
+  1985→
+  1986→          <label class="cat-select-card" onclick="selectCat(this,'recom')">
+  1987→            <input type="radio" name="cat" value="recom">
+  1988→            <div class="cat-icon">🎯</div>
+  1989→            <div class="cat-info"><h4>Recommendation &amp; Personalisation</h4><span>7 projects · Movies, E-Commerce, Learning</span></div>
+  1990→          </label>
+  1991→
+  1992→          <label class="cat-select-card" onclick="selectCat(this,'advanced')">
+  1993→            <input type="radio" name="cat" value="advanced">
+  1994→            <div class="cat-icon">🔬</div>
+  1995→            <div class="cat-info"><h4>Advanced / Research AI</h4><span>8 projects · XAI, Federated Learning, Edge AI</span></div>
+  1996→          </label>
+  1997→
+  1998→          <label class="cat-select-card" onclick="selectCat(this,'other')">
+  1999→            <input type="radio" name="cat" value="other">
+  2000→            <div class="cat-icon">⚙️</div>
+
+[showing lines 1-2000 of 3405; use offset=2001 with limit to continue reading]

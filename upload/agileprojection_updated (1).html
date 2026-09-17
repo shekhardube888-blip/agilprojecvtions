@@ -1,0 +1,3404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Online Internships for Engineering Students | AgileProjection</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0B1929; --navy2:#0F2340; --navy3:#0a1422;
+  --blue:#2563EB; --blue2:#1d4ed8;
+  --cyan:#06B6D4; --cyan2:#67E8F9;
+  --green:#22c55e; --amber:#f59e0b;
+  --white:#F8FAFC; --slate:#64748B; --slate2:#94A3B8;
+  --card:#111f35; --card2:#0e1b2e;
+  --border:rgba(6,182,212,.18); --border2:rgba(255,255,255,.06);
+  --radius:14px; --radius2:10px;
+}
+html { scroll-behavior: smooth; }
+body { font-family:'Inter',sans-serif; background:var(--navy); color:var(--white); line-height:1.6; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--navy3); }
+::-webkit-scrollbar-thumb { background:var(--blue); border-radius:3px; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 5%; height:68px;
+  background:rgba(11,25,41,.95);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.logo {
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.35rem;
+  letter-spacing:-.5px; color:var(--white); text-decoration:none;
+  display:flex; align-items:center; gap:10px;
+}
+.logo-icon {
+  width:36px; height:36px;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+}
+.logo span { color:var(--cyan); }
+.nav-links { display:flex; align-items:center; gap:1.6rem; list-style:none; }
+.nav-links a { color:var(--slate2); text-decoration:none; font-size:.875rem; font-weight:500; transition:color .2s; }
+.nav-links a:hover { color:var(--cyan); }
+.nav-dropdown { position:relative; }
+.nav-dropdown > a::after { content:' ▾'; font-size:.7rem; }
+.dropdown-menu {
+  display:none; position:absolute; top:calc(100% + 12px); left:-16px;
+  background:var(--card2); border:1px solid var(--border); border-radius:var(--radius2);
+  min-width:220px; padding:8px 0; box-shadow:0 16px 48px rgba(0,0,0,.4);
+}
+.nav-dropdown:hover .dropdown-menu { display:block; }
+.dropdown-menu a {
+  display:block; padding:9px 18px; color:var(--slate2); font-size:.85rem;
+  text-decoration:none; transition:background .15s,color .15s;
+}
+.dropdown-menu a:hover { background:rgba(6,182,212,.08); color:var(--cyan); }
+.nav-cta {
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff !important; padding:8px 20px; border-radius:8px;
+  font-weight:600 !important; transition:opacity .2s !important;
+}
+.nav-cta:hover { opacity:.85; }
+.nav-phone { color:var(--cyan2) !important; font-size:.8rem !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+.hamburger span { width:24px; height:2px; background:var(--slate2); border-radius:2px; }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh; display:flex; align-items:center;
+  position:relative; overflow:hidden; padding:100px 5% 80px;
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background-image:linear-gradient(rgba(6,182,212,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(6,182,212,.06) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 80% 90% at 55% 45%, black 20%, transparent 75%);
+}
+.beam {
+  position:absolute; top:-20%; right:4%;
+  width:560px; height:1000px;
+  background:conic-gradient(from 180deg at 50% 0%, transparent 18deg, rgba(6,182,212,.13) 38deg, rgba(37,99,235,.09) 58deg, transparent 78deg);
+  transform-origin:top center;
+  animation:sweep 9s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes sweep { from{transform:rotate(-10deg);opacity:.6} to{transform:rotate(10deg);opacity:1} }
+.hero-inner { display:flex; align-items:center; justify-content:space-between; width:100%; gap:3rem; }
+.hero-content { position:relative; z-index:2; max-width:600px; flex-shrink:0; }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.3);
+  border-radius:100px; padding:5px 14px;
+  font-size:.78rem; font-weight:600; color:var(--cyan);
+  letter-spacing:.6px; text-transform:uppercase; margin-bottom:1.4rem;
+}
+.hero-eyebrow::before {
+  content:''; width:7px; height:7px; background:var(--cyan);
+  border-radius:50%; animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+.hero h1 {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2.2rem,5vw,3.5rem); font-weight:700;
+  line-height:1.13; margin-bottom:1.2rem; letter-spacing:-.6px;
+}
+.grad {
+  background:linear-gradient(90deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.hero-sub { font-size:1.05rem; color:var(--slate2); max-width:520px; margin-bottom:1.8rem; line-height:1.8; }
+.hero-tracks { display:flex; flex-wrap:wrap; gap:.65rem; margin-bottom:2rem; }
+.track-pill {
+  background:rgba(37,99,235,.14); border:1px solid rgba(37,99,235,.32);
+  border-radius:100px; padding:5px 15px; font-size:.8rem; font-weight:500; color:#a5c3ff;
+}
+.hero-buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+.btn-primary {
+  display:inline-flex; align-items:center; gap:8px;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff; padding:13px 26px; border-radius:10px;
+  font-weight:600; font-size:.92rem; text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(6,182,212,.25);
+}
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(6,182,212,.4); }
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:8px;
+  border:1.5px solid var(--border); color:var(--white);
+  padding:13px 26px; border-radius:10px;
+  font-weight:500; font-size:.92rem; text-decoration:none;
+  transition:border-color .2s,background .2s;
+}
+.btn-secondary:hover { border-color:var(--cyan); background:rgba(6,182,212,.06); }
+.hero-trust { display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap; }
+.trust-item { display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--slate2); }
+.trust-dot { color:var(--green); font-size:.65rem; }
+
+/* Hero visual */
+.hero-visual { position:relative; z-index:2; flex-shrink:0; }
+.stat-stack { display:flex; flex-direction:column; gap:1rem; }
+.stat-card {
+  background:rgba(15,35,64,.85); backdrop-filter:blur(12px);
+  border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px 22px; min-width:215px;
+  animation:floatCard 4s ease-in-out infinite;
+}
+.stat-card:nth-child(2) { animation-delay:-1.5s; margin-left:28px; }
+.stat-card:nth-child(3) { animation-delay:-3s; }
+@keyframes floatCard { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+.stat-num {
+  font-family:'Space Grotesk',sans-serif; font-size:1.85rem; font-weight:700;
+  background:linear-gradient(90deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.stat-label { font-size:.75rem; color:var(--slate2); margin-top:2px; }
+.stat-sub { font-size:.7rem; color:var(--slate); margin-top:1px; }
+
+/* ── COUNTER STRIP ── */
+.counter-strip {
+  background:var(--navy2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:40px 5%;
+}
+.counters { display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; text-align:center; }
+.counter-item { }
+.counter-num {
+  font-family:'Space Grotesk',sans-serif; font-size:2.4rem; font-weight:700;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.counter-label { color:var(--slate2); font-size:.88rem; margin-top:.3rem; }
+
+/* ── SECTIONS ── */
+section { padding:80px 5%; }
+.section-label {
+  font-size:.76rem; font-weight:600; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--cyan); margin-bottom:.6rem;
+}
+.section-title {
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(1.7rem,3.5vw,2.4rem); font-weight:700;
+  letter-spacing:-.3px; margin-bottom:1rem;
+}
+.section-desc { color:var(--slate2); font-size:1rem; max-width:650px; line-height:1.8; margin-bottom:2.5rem; }
+.divider { border:none; border-top:1px solid var(--border); margin:0; }
+.alt-bg { background:var(--navy2); }
+
+/* ── HOW IT WORKS ── */
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0; position:relative; }
+.steps::before {
+  content:''; position:absolute; top:36px; left:10%; right:10%; height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), var(--cyan), var(--border), transparent);
+}
+.step { text-align:center; padding:24px 20px; position:relative; }
+.step-num {
+  width:72px; height:72px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.15));
+  border:2px solid rgba(6,182,212,.35);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1.2rem;
+  font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700;
+  color:var(--cyan); position:relative; z-index:1;
+}
+.step h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+.step p { color:var(--slate2); font-size:.85rem; line-height:1.65; }
+
+/* ── PROGRAM CARDS ── */
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.5rem; }
+.prog-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  display:flex; flex-direction:column;
+}
+.prog-card:hover { transform:translateY(-6px); box-shadow:0 20px 54px rgba(6,182,212,.14); border-color:rgba(6,182,212,.35); }
+.card-thumb {
+  height:170px; display:flex; align-items:center; justify-content:center;
+  font-size:3.6rem; position:relative; overflow:hidden;
+}
+.card-thumb::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:50%;
+  background:linear-gradient(transparent,var(--card));
+}
+.thumb-embedded { background:linear-gradient(135deg,#0a1628,#112244); }
+.thumb-iot       { background:linear-gradient(135deg,#071520,#083030); }
+.thumb-cap       { background:linear-gradient(135deg,#0a1628,#1a1030); }
+.thumb-fs        { background:linear-gradient(135deg,#071520,#162008); }
+.card-badge {
+  position:absolute; top:12px; left:12px; z-index:2;
+  background:rgba(6,182,212,.15); border:1px solid rgba(6,182,212,.3);
+  color:var(--cyan); font-size:.68rem; font-weight:600;
+  padding:3px 10px; border-radius:100px; text-transform:uppercase; letter-spacing:.5px;
+}
+.card-badge.non-tech { background:rgba(168,85,247,.12); border-color:rgba(168,85,247,.3); color:#c084fc; }
+.card-badge.soon { background:rgba(245,158,11,.1); border-color:rgba(245,158,11,.25); color:var(--amber); }
+.card-body { padding:22px; flex:1; display:flex; flex-direction:column; }
+.card-body h3 { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:600; margin-bottom:.6rem; }
+.card-body p { color:var(--slate2); font-size:.875rem; line-height:1.7; flex:1; }
+.card-tags { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:1rem; }
+.card-tag {
+  background:rgba(255,255,255,.05); border:1px solid var(--border2);
+  border-radius:6px; padding:3px 9px; font-size:.72rem; color:var(--slate2);
+}
+.card-meta { display:flex; gap:1.2rem; margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border2); }
+.card-meta-item { font-size:.78rem; color:var(--slate); }
+.card-meta-item strong { color:var(--white); display:block; font-size:.82rem; }
+.card-footer { display:flex; gap:.8rem; padding:16px 22px; border-top:1px solid var(--border2); }
+.card-link {
+  font-size:.82rem; font-weight:600; text-decoration:none;
+  padding:8px 16px; border-radius:8px; transition:opacity .2s;
+}
+.card-link.primary { background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#fff; }
+.card-link.ghost { border:1px solid var(--border); color:var(--slate2); }
+.card-link:hover { opacity:.82; }
+
+/* ── PROGRAM DETAIL TABS ── */
+.tabs-section { }
+.tab-nav {
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  overflow-x:auto; margin-bottom:2rem;
+}
+.tab-btn {
+  background:none; border:none; color:var(--slate2);
+  padding:12px 22px; font-size:.88rem; font-weight:500;
+  cursor:pointer; border-bottom:2px solid transparent;
+  white-space:nowrap; transition:color .2s,border-color .2s;
+  font-family:'Inter',sans-serif;
+}
+.tab-btn.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+.tab-btn:hover { color:var(--white); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.program-detail { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+.detail-left h3 { font-family:'Space Grotesk',sans-serif; font-size:1.5rem; font-weight:700; margin-bottom:.8rem; }
+.detail-left p { color:var(--slate2); line-height:1.8; margin-bottom:1rem; }
+.detail-left p strong { color:var(--white); }
+.curriculum { list-style:none; }
+.curriculum li {
+  display:flex; align-items:flex-start; gap:.8rem;
+  padding:10px 0; border-bottom:1px solid var(--border2);
+  color:var(--slate2); font-size:.88rem;
+}
+.curriculum li:last-child { border-bottom:none; }
+.curr-week {
+  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.15));
+  border:1px solid rgba(6,182,212,.25);
+  border-radius:6px; padding:3px 9px;
+  font-size:.7rem; font-weight:700; color:var(--cyan);
+  white-space:nowrap; flex-shrink:0; margin-top:1px;
+}
+.detail-right { }
+.detail-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:24px; margin-bottom:1.2rem;
+}
+.detail-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:1rem; color:var(--cyan); }
+.check-list { list-style:none; }
+.check-list li {
+  display:flex; align-items:flex-start; gap:.7rem;
+  padding:6px 0; color:var(--slate2); font-size:.85rem; line-height:1.5;
+}
+.check-list li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; margin-top:1px; }
+.eligibility-list { list-style:none; }
+.eligibility-list li {
+  display:flex; align-items:center; gap:.7rem;
+  padding:7px 0; color:var(--slate2); font-size:.85rem; border-bottom:1px solid var(--border2);
+}
+.eligibility-list li:last-child { border-bottom:none; }
+.eligibility-list li::before { content:'›'; color:var(--cyan); font-size:1.1rem; }
+
+/* ── SCHEDULE TABLE ── */
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); }
+table { width:100%; border-collapse:collapse; font-size:.88rem; }
+thead { background:rgba(6,182,212,.07); border-bottom:1px solid var(--border); }
+thead th {
+  padding:14px 20px; text-align:left;
+  font-family:'Space Grotesk',sans-serif; font-weight:600;
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2);
+}
+tbody tr { border-bottom:1px solid rgba(255,255,255,.03); transition:background .15s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:rgba(6,182,212,.04); }
+tbody td { padding:15px 20px; color:var(--slate2); }
+tbody td:first-child { color:var(--white); font-weight:500; }
+.badge-open {
+  display:inline-block; background:rgba(34,197,94,.1); border:1px solid rgba(34,197,94,.28);
+  color:#4ade80; font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+}
+.badge-closed {
+  display:inline-block; background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.22);
+  color:var(--amber); font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+}
+.badge-soon {
+  display:inline-block; background:rgba(99,102,241,.1); border:1px solid rgba(99,102,241,.25);
+  color:#818cf8; font-size:.72rem; font-weight:600; padding:3px 10px; border-radius:100px;
+}
+.reg-link {
+  display:inline-block; background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff; font-size:.8rem; font-weight:600; padding:6px 14px;
+  border-radius:7px; text-decoration:none; transition:opacity .2s;
+}
+.reg-link:hover { opacity:.82; }
+
+/* ── BENEFITS ── */
+.benefits-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.4rem; }
+.benefit-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:26px 24px;
+  transition:border-color .2s,transform .2s;
+}
+.benefit-card:hover { border-color:rgba(6,182,212,.4); transform:translateY(-3px); }
+.benefit-icon {
+  width:52px; height:52px;
+  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(6,182,212,.14));
+  border:1px solid rgba(6,182,212,.22); border-radius:13px;
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin-bottom:1.1rem;
+}
+.benefit-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.55rem; }
+.benefit-card p { color:var(--slate2); font-size:.85rem; line-height:1.7; }
+
+/* ── TESTIMONIALS ── */
+.testimonials-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.4rem; }
+.testimonial-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:26px 24px;
+  transition:transform .2s;
+}
+.testimonial-card:hover { transform:translateY(-3px); }
+.stars { color:var(--amber); font-size:.9rem; margin-bottom:1rem; letter-spacing:2px; }
+.quote-text { color:var(--slate2); font-size:.88rem; line-height:1.75; font-style:italic; margin-bottom:1.4rem; }
+.quote-text::before { content:'"'; color:var(--cyan); font-size:1.4rem; line-height:0; vertical-align:-.4rem; margin-right:2px; }
+.testimonial-author { display:flex; align-items:center; gap:.9rem; }
+.author-avatar {
+  width:42px; height:42px; border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.95rem; color:#fff; flex-shrink:0;
+}
+.author-name { font-weight:600; font-size:.88rem; }
+.author-info { font-size:.78rem; color:var(--slate); }
+
+/* ── TEAM ── */
+.team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.4rem; }
+.team-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:26px 20px; text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.team-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+.team-avatar {
+  width:72px; height:72px; border-radius:50%; margin:0 auto 1rem;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; font-weight:700; font-family:'Space Grotesk',sans-serif; color:#fff;
+}
+.team-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:.3rem; }
+.team-card .role { font-size:.78rem; color:var(--cyan); margin-bottom:.5rem; }
+.team-card .exp { font-size:.78rem; color:var(--slate2); }
+
+/* ── FAQ ── */
+.faq-list { max-width:780px; }
+.faq-item {
+  border:1px solid var(--border); border-radius:var(--radius2);
+  margin-bottom:.8rem; overflow:hidden; transition:border-color .2s;
+}
+.faq-item.open { border-color:rgba(6,182,212,.35); }
+.faq-q {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px; cursor:pointer;
+  font-weight:500; font-size:.92rem;
+  background:var(--card); transition:background .15s; gap:1rem;
+}
+.faq-q:hover { background:rgba(6,182,212,.05); }
+.faq-icon {
+  width:24px; height:24px; border-radius:50%;
+  background:rgba(6,182,212,.12); border:1px solid rgba(6,182,212,.25);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; color:var(--cyan); flex-shrink:0;
+  transition:transform .25s;
+}
+.faq-item.open .faq-icon { transform:rotate(45deg); }
+.faq-a {
+  max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s;
+  padding:0 22px; background:var(--card2); color:var(--slate2);
+  font-size:.875rem; line-height:1.8;
+}
+.faq-item.open .faq-a { max-height:300px; padding:16px 22px 20px; }
+
+/* ── REGISTER FORM ── */
+.register-section {
+  background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(6,182,212,.05));
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+.register-inner { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+.register-left h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; margin-bottom:1rem; }
+.register-left p { color:var(--slate2); line-height:1.8; margin-bottom:1.5rem; }
+.register-perks { list-style:none; }
+.register-perks li {
+  display:flex; align-items:center; gap:.75rem;
+  padding:8px 0; color:var(--slate2); font-size:.88rem;
+  border-bottom:1px solid var(--border2);
+}
+.register-perks li:last-child { border-bottom:none; }
+.register-perks li span:first-child { font-size:1rem; }
+.form-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:32px 28px;
+}
+.form-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; margin-bottom:1.5rem; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-group { display:flex; flex-direction:column; gap:.45rem; }
+.form-group.full { grid-column:1/-1; }
+.form-group label { font-size:.78rem; font-weight:600; color:var(--slate2); letter-spacing:.3px; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background:rgba(255,255,255,.05); border:1px solid var(--border);
+  border-radius:9px; padding:10px 14px; color:var(--white);
+  font-size:.88rem; font-family:'Inter',sans-serif;
+  outline:none; transition:border-color .2s,background .2s;
+  appearance:none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color:var(--slate); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color:var(--cyan); background:rgba(6,182,212,.05); }
+.form-group select option { background:var(--card2); color:var(--white); }
+.form-group textarea { resize:vertical; min-height:90px; }
+.form-submit {
+  width:100%; background:linear-gradient(135deg,var(--blue),var(--cyan));
+  border:none; border-radius:10px; padding:13px;
+  color:#fff; font-size:.95rem; font-weight:600;
+  cursor:pointer; margin-top:1.2rem; font-family:'Inter',sans-serif;
+  transition:opacity .2s,transform .2s;
+}
+.form-submit:hover { opacity:.88; transform:translateY(-1px); }
+.form-consent { display:flex; align-items:flex-start; gap:.7rem; margin-top:.8rem; }
+.form-consent input[type=checkbox] { margin-top:3px; accent-color:var(--cyan); flex-shrink:0; }
+.form-consent label { font-size:.77rem; color:var(--slate2); line-height:1.5; }
+.form-success {
+  display:none; text-align:center; padding:2rem 0;
+}
+.form-success .success-icon { font-size:3rem; margin-bottom:1rem; }
+.form-success h4 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; margin-bottom:.5rem; }
+.form-success p { color:var(--slate2); font-size:.88rem; }
+
+/* ── RESOURCES ── */
+.resources-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.4rem; }
+.res-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:26px 24px;
+  display:flex; flex-direction:column; transition:transform .2s;
+}
+.res-card:hover { transform:translateY(-3px); }
+.res-icon { font-size:2rem; margin-bottom:1rem; }
+.res-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; }
+.res-card p { color:var(--slate2); font-size:.85rem; line-height:1.65; flex:1; }
+.res-link {
+  display:inline-block; margin-top:1rem; color:var(--cyan);
+  font-size:.82rem; font-weight:600; text-decoration:none;
+  border-bottom:1px solid rgba(6,182,212,.3); padding-bottom:1px; transition:border-color .2s;
+}
+.res-link:hover { border-color:var(--cyan); }
+
+/* ── ABOUT ── */
+.about-inner { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; }
+.about-text p { color:var(--slate2); line-height:1.8; margin-bottom:1rem; }
+.about-text p strong { color:var(--white); }
+.about-highlight {
+  background:rgba(6,182,212,.07); border-left:3px solid var(--cyan);
+  border-radius:0 8px 8px 0; padding:14px 18px;
+  font-size:.9rem; color:var(--slate2); margin-top:1rem;
+}
+.about-highlight strong { color:var(--cyan); }
+.about-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.about-stat-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius2); padding:18px 16px;
+}
+.about-stat-num {
+  font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700;
+  background:linear-gradient(90deg,var(--cyan),var(--blue));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.about-stat-label { font-size:.78rem; color:var(--slate2); margin-top:.2rem; }
+
+/* ── CTA STRIP ── */
+.cta-strip {
+  background:linear-gradient(135deg,rgba(37,99,235,.11),rgba(6,182,212,.07));
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;
+}
+.cta-strip h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.5rem,3vw,2.1rem); font-weight:700; margin-bottom:.8rem; }
+.cta-strip p { color:var(--slate2); margin-bottom:2rem; }
+
+/* ── NEWSLETTER ── */
+.newsletter { background:var(--navy3); border-top:1px solid var(--border); padding:50px 5%; }
+.newsletter-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+.newsletter h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:600; }
+.newsletter p { color:var(--slate2); font-size:.88rem; }
+.nl-form { display:flex; gap:.7rem; flex-wrap:wrap; }
+.nl-form input {
+  background:rgba(255,255,255,.06); border:1px solid var(--border);
+  border-radius:9px; padding:11px 16px; color:var(--white);
+  font-size:.88rem; outline:none; width:240px; font-family:'Inter',sans-serif;
+  transition:border-color .2s;
+}
+.nl-form input::placeholder { color:var(--slate); }
+.nl-form input:focus { border-color:var(--cyan); }
+.nl-form button {
+  background:linear-gradient(135deg,var(--blue),var(--cyan)); border:none;
+  border-radius:9px; padding:11px 22px; color:#fff;
+  font-weight:600; cursor:pointer; font-size:.88rem; font-family:'Inter',sans-serif;
+}
+
+/* ── FOOTER ── */
+footer { background:#060e18; border-top:1px solid var(--border); padding:64px 5% 28px; }
+.footer-top { display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr; gap:3rem; margin-bottom:3rem; }
+.footer-brand p { color:var(--slate); font-size:.83rem; line-height:1.72; margin-top:.8rem; }
+.footer-col h4 {
+  font-family:'Space Grotesk',sans-serif; font-size:.8rem; font-weight:600;
+  color:var(--white); margin-bottom:1rem; text-transform:uppercase; letter-spacing:.5px;
+}
+.footer-col ul { list-style:none; }
+.footer-col li { margin-bottom:.6rem; }
+.footer-col a { color:var(--slate); text-decoration:none; font-size:.83rem; transition:color .2s; }
+.footer-col a:hover { color:var(--cyan); }
+.footer-contact { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
+.footer-contact a { color:var(--cyan2); text-decoration:none; font-size:.82rem; }
+.footer-contact a:hover { text-decoration:underline; }
+.footer-bottom {
+  border-top:1px solid var(--border); padding-top:1.5rem;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+}
+.footer-bottom p { color:var(--slate); font-size:.8rem; }
+.footer-socials { display:flex; gap:.7rem; }
+.social-btn {
+  width:36px; height:36px; background:rgba(255,255,255,.04);
+  border:1px solid var(--border); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  text-decoration:none; font-size:.85rem; transition:background .2s,border-color .2s;
+}
+.social-btn:hover { background:rgba(6,182,212,.12); border-color:rgba(6,182,212,.35); }
+.footer-legal { display:flex; gap:1.2rem; }
+.footer-legal a { color:var(--slate); font-size:.78rem; text-decoration:none; }
+.footer-legal a:hover { color:var(--cyan); }
+
+/* ── MOBILE ── */
+@media(max-width:1024px) {
+  .hero-visual { display:none; }
+  .register-inner { grid-template-columns:1fr; gap:2.5rem; }
+  .program-detail { grid-template-columns:1fr; gap:2rem; }
+  .footer-top { grid-template-columns:1fr 1fr; gap:2rem; }
+}
+@media(max-width:768px) {
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .about-inner { grid-template-columns:1fr; gap:2rem; }
+  .steps::before { display:none; }
+  .counters { grid-template-columns:1fr 1fr; }
+  .footer-top { grid-template-columns:1fr 1fr; }
+  .form-grid { grid-template-columns:1fr; }
+}
+@media(max-width:520px) {
+  .hero-buttons { flex-direction:column; }
+  .footer-top { grid-template-columns:1fr; }
+  .footer-bottom { flex-direction:column; align-items:flex-start; }
+  .counters { grid-template-columns:1fr 1fr; gap:1rem; }
+  .nl-form input { width:100%; }
+}
+
+/* ══ IT COURSES & UNIVERSITY SECTION STYLES ══ */
+.section-divider-banner {
+  background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.1));
+  border-top: 2px solid var(--cyan); border-bottom: 1px solid var(--border);
+  padding: 36px 5%;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap:1.5rem;
+}
+.section-divider-banner h2 {
+  font-family:'Space Grotesk',sans-serif; font-size:clamp(1.3rem,3vw,1.8rem); font-weight:700;
+}
+.section-divider-banner p { color:var(--slate2); font-size:.9rem; max-width:480px; line-height:1.7; }
+.partner-badge {
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.25);
+  border-radius:100px; padding:8px 20px;
+  font-size:.82rem; font-weight:600; color:var(--cyan2); white-space:nowrap;
+}
+
+/* Course category pills */
+.course-cat-bar { display:flex; flex-wrap:wrap; gap:.7rem; margin-bottom:2.5rem; }
+.cat-pill {
+  display:flex; align-items:center; gap:.5rem;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:100px; padding:8px 18px; font-size:.82rem; font-weight:500;
+  color:var(--slate2); cursor:pointer; transition:all .2s;
+}
+.cat-pill:hover, .cat-pill.active {
+  background:rgba(6,182,212,.1); border-color:rgba(6,182,212,.4); color:var(--cyan);
+}
+.cat-pill .cat-count {
+  background:rgba(6,182,212,.15); color:var(--cyan);
+  font-size:.7rem; font-weight:700; padding:1px 7px; border-radius:100px;
+}
+
+/* IT Course cards */
+.it-courses-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+.it-course-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  display:flex; flex-direction:column;
+}
+.it-course-card:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(6,182,212,.13); border-color:rgba(6,182,212,.3); }
+.it-course-thumb {
+  height:140px; display:flex; align-items:center; justify-content:center;
+  font-size:3rem; position:relative; overflow:hidden;
+}
+.it-badge-row { position:absolute; top:10px; left:10px; right:10px; display:flex; gap:.5rem; flex-wrap:wrap; }
+.it-badge {
+  font-size:.65rem; font-weight:700; padding:3px 9px; border-radius:100px;
+  text-transform:uppercase; letter-spacing:.5px;
+}
+.badge-bestseller { background:rgba(245,158,11,.15); border:1px solid rgba(245,158,11,.3); color:var(--amber); }
+.badge-free       { background:rgba(34,197,94,.12);  border:1px solid rgba(34,197,94,.28); color:#4ade80; }
+.badge-new        { background:rgba(99,102,241,.12); border:1px solid rgba(99,102,241,.3); color:#818cf8; }
+.badge-hot        { background:rgba(239,68,68,.1);   border:1px solid rgba(239,68,68,.25); color:#f87171; }
+.badge-cert       { background:rgba(6,182,212,.12);  border:1px solid rgba(6,182,212,.28); color:var(--cyan); }
+.it-course-body { padding:20px; flex:1; display:flex; flex-direction:column; }
+.it-course-body h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.5rem; line-height:1.4; }
+.it-course-body p { color:var(--slate2); font-size:.83rem; line-height:1.65; flex:1; }
+.it-course-meta { display:flex; flex-wrap:wrap; gap:.8rem; margin-top:.9rem; }
+.it-meta-item { font-size:.75rem; color:var(--slate); }
+.it-meta-item strong { color:var(--slate2); }
+.it-stars { color:var(--amber); font-size:.78rem; }
+.it-course-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 20px; border-top:1px solid var(--border2);
+}
+.it-price { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; }
+.it-price .free { color:var(--green); }
+.it-price .paid { color:var(--white); }
+.it-price .original { font-size:.75rem; color:var(--slate); text-decoration:line-through; margin-left:4px; font-weight:400; }
+.it-enroll-btn {
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff; border:none; border-radius:8px;
+  padding:8px 16px; font-size:.8rem; font-weight:600;
+  cursor:pointer; font-family:'Inter',sans-serif; text-decoration:none;
+  transition:opacity .2s;
+}
+.it-enroll-btn:hover { opacity:.85; }
+
+/* SAP Track banner */
+.sap-track-banner {
+  background: linear-gradient(135deg, #0a1628, #071520);
+  border: 1px solid rgba(6,182,212,.2);
+  border-radius: var(--radius); padding: 32px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;
+  margin-bottom: 2rem;
+}
+.sap-track-banner h3 { font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:.5rem; }
+.sap-track-banner p { color:var(--slate2); font-size:.9rem; max-width:560px; line-height:1.7; }
+.sap-tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+.sap-tag {
+  background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.22);
+  border-radius:6px; padding:3px 10px; font-size:.72rem; color:var(--cyan);
+}
+
+/* Instructors */
+.instructors-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.4rem; }
+.instructor-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:24px 20px; text-align:center;
+  transition:transform .2s, border-color .2s;
+}
+.instructor-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+.instructor-avatar {
+  width:76px; height:76px; border-radius:50%;
+  margin:0 auto 1rem; display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-size:1.8rem; font-weight:700; color:#fff;
+  border:2px solid rgba(6,182,212,.3);
+}
+.instructor-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:600; margin-bottom:.25rem; }
+.instructor-card .inst-title { font-size:.75rem; color:var(--cyan); margin-bottom:.5rem; }
+.instructor-card .inst-exp { font-size:.75rem; color:var(--slate2); margin-bottom:1rem; }
+.instructor-stats { display:flex; justify-content:center; gap:1.2rem; }
+.inst-stat { text-align:center; }
+.inst-stat strong { display:block; font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; color:var(--white); }
+.inst-stat span { font-size:.68rem; color:var(--slate); }
+
+/* University programs */
+.univ-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+.univ-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:28px 24px;
+  transition:transform .2s, border-color .2s;
+  position:relative; overflow:hidden;
+}
+.univ-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+}
+.univ-card.uk::before    { background:linear-gradient(90deg,#012169,#C8102E); }
+.univ-card.us::before    { background:linear-gradient(90deg,#002868,#BF0A30); }
+.univ-card.au::before    { background:linear-gradient(90deg,#00008B,#FF0000); }
+.univ-card.ca::before    { background:linear-gradient(90deg,#FF0000,#ffffff); }
+.univ-card.eu::before    { background:linear-gradient(90deg,#003399,#FFCC00); }
+.univ-card.sg::before    { background:linear-gradient(90deg,#EF3340,#ffffff); }
+.univ-card:hover { transform:translateY(-4px); border-color:rgba(6,182,212,.35); }
+.univ-flag { font-size:2rem; margin-bottom:.9rem; }
+.univ-card h3 { font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:600; margin-bottom:.4rem; }
+.univ-card .country { font-size:.75rem; color:var(--cyan); font-weight:600; margin-bottom:.6rem; }
+.univ-card p { color:var(--slate2); font-size:.83rem; line-height:1.65; margin-bottom:1rem; }
+.univ-details { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem; }
+.univ-detail { font-size:.72rem; color:var(--slate2); background:var(--navy2); padding:3px 9px; border-radius:6px; }
+.univ-link {
+  display:inline-flex; align-items:center; gap:6px;
+  color:var(--cyan); font-size:.82rem; font-weight:600;
+  text-decoration:none; border-bottom:1px solid rgba(6,182,212,.3); padding-bottom:1px;
+  transition:border-color .2s;
+}
+.univ-link:hover { border-color:var(--cyan); }
+
+/* Placement strip */
+.placement-strip {
+  background:linear-gradient(135deg, rgba(37,99,235,.1), rgba(6,182,212,.07));
+  border:1px solid var(--border); border-radius:var(--radius);
+  padding:32px; margin-top:2.5rem;
+}
+.placement-strip h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:.6rem; }
+.placement-strip p { color:var(--slate2); font-size:.88rem; margin-bottom:1.5rem; }
+.company-logos { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+.company-logo {
+  background:rgba(255,255,255,.05); border:1px solid var(--border2);
+  border-radius:9px; padding:8px 18px;
+  font-size:.82rem; font-weight:600; color:var(--slate2);
+  transition:background .2s, color .2s;
+}
+.company-logo:hover { background:rgba(6,182,212,.08); color:var(--white); }
+
+/* IT testimonials */
+.it-testimonials { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; margin-top:2rem; }
+
+@media(max-width:768px) {
+  .sap-track-banner { flex-direction:column; }
+  .section-divider-banner { flex-direction:column; }
+}
+
+/* ══ AI/ML PROGRAM STYLES ══ */
+.aiml-divider-banner {
+  background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.08));
+  border-top:2px solid #7c3aed; border-bottom:1px solid var(--border);
+  padding:40px 5%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;
+}
+.aiml-divider-banner h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(1.3rem,3vw,1.9rem); font-weight:700; }
+.aiml-divider-banner p { color:var(--slate2); font-size:.9rem; max-width:520px; line-height:1.75; }
+.aiml-badge {
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(124,58,237,.1); border:1px solid rgba(124,58,237,.3);
+  border-radius:100px; padding:8px 20px;
+  font-size:.82rem; font-weight:600; color:#c084fc; white-space:nowrap;
+}
+
+/* Plans grid */
+.plans-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.4rem; }
+.plan-card {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:26px 22px; display:flex; flex-direction:column;
+  transition:transform .25s,box-shadow .25s,border-color .25s; position:relative; overflow:hidden;
+}
+.plan-card:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(124,58,237,.15); }
+.plan-card.popular { border-color:rgba(124,58,237,.5); }
+.plan-card.popular::before {
+  content:'⭐ Most Popular'; position:absolute; top:0; left:0; right:0;
+  background:linear-gradient(135deg,#7c3aed,var(--cyan)); color:#fff;
+  font-size:.7rem; font-weight:700; text-align:center; padding:5px; letter-spacing:.5px;
+}
+.plan-card.popular { padding-top:38px; }
+.plan-icon { font-size:2rem; margin-bottom:.7rem; }
+.plan-name { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:.3rem; }
+.plan-tagline { font-size:.78rem; color:var(--slate2); margin-bottom:1rem; }
+.plan-price .amount {
+  font-family:'Space Grotesk',sans-serif; font-size:1.9rem; font-weight:700;
+  background:linear-gradient(135deg,#7c3aed,var(--cyan));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.plan-price .period { font-size:.8rem; color:var(--slate2); }
+.plan-launch { font-size:.75rem; color:#4ade80; font-weight:600; margin-top:.3rem; margin-bottom:1.2rem; }
+.plan-features { list-style:none; flex:1; }
+.plan-features li { display:flex; align-items:flex-start; gap:.6rem; padding:6px 0; font-size:.82rem; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); line-height:1.5; }
+.plan-features li:last-child { border-bottom:none; }
+.plan-features li::before { content:'✓'; color:var(--cyan); font-weight:700; flex-shrink:0; margin-top:1px; }
+.plan-cta {
+  display:block; text-align:center; margin-top:1.4rem;
+  background:linear-gradient(135deg,#7c3aed,var(--cyan));
+  color:#fff; padding:11px; border-radius:9px;
+  font-weight:600; font-size:.88rem; text-decoration:none; transition:opacity .2s;
+}
+.plan-cta:hover { opacity:.85; }
+.plan-cta.ghost {
+  background:none; border:1.5px solid rgba(124,58,237,.4); color:#c084fc;
+}
+.plan-cta.ghost:hover { background:rgba(124,58,237,.12); }
+
+/* Curriculum table */
+.curr-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin-bottom:2rem; }
+.curr-table { width:100%; border-collapse:collapse; font-size:.84rem; }
+.curr-table thead { background:rgba(124,58,237,.1); }
+.curr-table th { padding:12px 16px; text-align:left; font-family:'Space Grotesk',sans-serif; font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2); border-bottom:1px solid var(--border); }
+.curr-table td { padding:11px 16px; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); vertical-align:top; }
+.curr-table tr:last-child td { border-bottom:none; }
+.curr-table tr:hover td { background:rgba(124,58,237,.04); }
+.curr-table td:first-child { color:var(--white); font-weight:600; white-space:nowrap; }
+.curr-table td:nth-child(2) { color:#c084fc; font-weight:600; }
+.phase-badge { display:inline-block; padding:2px 8px; border-radius:5px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.3px; margin-bottom:3px; }
+.ph-1 { background:rgba(6,182,212,.15); color:var(--cyan); }
+.ph-2 { background:rgba(124,58,237,.15); color:#c084fc; }
+.ph-3 { background:rgba(245,158,11,.12); color:#fbbf24; }
+.ph-4 { background:rgba(34,197,94,.12); color:#4ade80; }
+.ph-5 { background:rgba(244,63,94,.1); color:#f87171; }
+
+/* Project catalogue */
+.project-cats { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.2rem; }
+.proj-cat-card {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px 20px;
+  transition:border-color .2s,transform .2s;
+}
+.proj-cat-card:hover { border-color:rgba(124,58,237,.4); transform:translateY(-3px); }
+.proj-cat-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; margin-bottom:.7rem; display:flex; align-items:center; gap:.5rem; }
+.proj-cat-card ul { list-style:none; }
+.proj-cat-card li { font-size:.8rem; color:var(--slate2); padding:4px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; align-items:flex-start; gap:.5rem; }
+.proj-cat-card li:last-child { border-bottom:none; }
+.proj-cat-card li::before { content:'›'; color:#c084fc; font-size:.95rem; flex-shrink:0; margin-top:-1px; }
+
+/* Deliverables grid */
+.deliverables-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; }
+.deliverable-card {
+  background:rgba(124,58,237,.07); border:1px solid rgba(124,58,237,.2);
+  border-radius:var(--radius2); padding:16px; text-align:center;
+  transition:border-color .2s;
+}
+.deliverable-card:hover { border-color:rgba(124,58,237,.45); }
+.deliverable-card .d-icon { font-size:1.6rem; margin-bottom:.6rem; }
+.deliverable-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:600; color:var(--white); }
+.deliverable-card p { font-size:.75rem; color:var(--slate2); margin-top:.3rem; line-height:1.5; }
+
+/* Bulk pricing table */
+.bulk-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); }
+.bulk-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+.bulk-table thead { background:rgba(6,182,212,.08); }
+.bulk-table th { padding:13px 20px; text-align:left; font-family:'Space Grotesk',sans-serif; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--slate2); border-bottom:1px solid var(--border); }
+.bulk-table td { padding:13px 20px; color:var(--slate2); border-bottom:1px solid rgba(255,255,255,.04); }
+.bulk-table tr:last-child td { border-bottom:none; }
+.bulk-table tr:hover td { background:rgba(6,182,212,.04); }
+.bulk-table td:first-child { color:var(--white); font-weight:600; }
+.bulk-table td:nth-child(2) { color:var(--cyan); font-weight:700; }
+.bulk-table td:nth-child(3) { color:#4ade80; font-weight:600; }
+
+/* Flagship tracks */
+.flagship-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+.flagship-card {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius2);
+  padding:18px 16px; text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.flagship-card:hover { transform:translateY(-3px); border-color:rgba(124,58,237,.4); }
+.flagship-card .f-icon { font-size:1.8rem; margin-bottom:.6rem; }
+.flagship-card h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--white); }
+.flagship-card p { font-size:.73rem; color:var(--slate2); margin-top:.3rem; }
+
+@media(max-width:768px) {
+  .aiml-divider-banner { flex-direction:column; }
+}
+
+/* ══ LOV ENROLLMENT FORM STYLES ══ */
+.enroll-wrapper {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.enroll-header {
+  background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(6,182,212,.1));
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.enroll-header h3 {
+  font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; margin:0;
+}
+.enroll-header p { font-size:.78rem; color:var(--slate2); margin:0; }
+.enroll-steps {
+  display: flex; padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+.enroll-step {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; font-size:.78rem; font-weight:600;
+  color: var(--slate); border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: all .2s;
+}
+.enroll-step.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+.enroll-step.done   { color: #4ade80; border-bottom-color: #4ade80; }
+.enroll-step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; font-weight: 800; background: rgba(255,255,255,.08); flex-shrink:0;
+}
+.enroll-step.active .enroll-step-num { background: var(--cyan); color: #fff; }
+.enroll-step.done   .enroll-step-num { background: #4ade80; color: #fff; }
+
+/* Step panels */
+.enroll-panel { display: none; padding: 22px 24px; }
+.enroll-panel.active { display: block; }
+
+/* Category cards */
+.cat-select-grid {
+  display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: .9rem;
+  margin-bottom: 1.2rem;
+}
+.cat-select-card {
+  background: rgba(255,255,255,.04); border: 1.5px solid var(--border);
+  border-radius: var(--radius2); padding: 14px 16px; cursor: pointer;
+  transition: all .2s; display: flex; align-items: flex-start; gap: 10px;
+}
+.cat-select-card:hover { border-color: rgba(124,58,237,.5); background: rgba(124,58,237,.07); }
+.cat-select-card.selected { border-color: #7c3aed; background: rgba(124,58,237,.12); }
+.cat-select-card input[type=radio] { display:none; }
+.cat-icon { font-size: 1.5rem; flex-shrink:0; margin-top:2px; }
+.cat-info h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--white); margin-bottom:2px; }
+.cat-info span { font-size:.72rem; color:var(--slate2); }
+.cat-select-card.selected .cat-info h4 { color: #c084fc; }
+
+/* Project LOV list */
+.project-lov-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1rem; flex-wrap:wrap; gap:.5rem;
+}
+.project-lov-header h4 { font-family:'Space Grotesk',sans-serif; font-size:.95rem; font-weight:700; }
+.project-lov-header span { font-size:.75rem; color:var(--slate2); }
+.project-lov-search {
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 14px; color: var(--white);
+  font-size:.84rem; font-family:'Inter',sans-serif; outline:none; width:100%;
+  margin-bottom:1rem; transition:border-color .2s;
+}
+.project-lov-search:focus { border-color: var(--cyan); }
+.project-lov-search::placeholder { color:var(--slate); }
+.project-lov-list {
+  max-height: 340px; overflow-y: auto; border: 1px solid var(--border);
+  border-radius: var(--radius2);
+}
+.project-lov-list::-webkit-scrollbar { width:4px; }
+.project-lov-list::-webkit-scrollbar-thumb { background:var(--cyan); border-radius:2px; }
+.lov-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 16px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,.04);
+  transition:background .15s;
+}
+.lov-item:last-child { border-bottom:none; }
+.lov-item:hover { background:rgba(6,182,212,.06); }
+.lov-item.selected { background:rgba(6,182,212,.1); border-left:3px solid var(--cyan); }
+.lov-item input[type=radio] { display:none; }
+.lov-num {
+  width:26px; height:26px; border-radius:7px; flex-shrink:0;
+  background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.25);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.68rem; font-weight:700; color:#c084fc;
+}
+.lov-item.selected .lov-num { background:#7c3aed; color:#fff; border-color:#7c3aed; }
+.lov-text { flex:1; }
+.lov-text strong { display:block; font-size:.85rem; font-weight:600; color:var(--white); line-height:1.35; }
+.lov-text span { font-size:.72rem; color:var(--slate2); }
+.lov-check { font-size:.9rem; color:var(--cyan); opacity:0; transition:opacity .15s; flex-shrink:0; }
+.lov-item.selected .lov-check { opacity:1; }
+.lov-selected-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(6,182,212,.12); border:1px solid rgba(6,182,212,.3);
+  border-radius:8px; padding:8px 14px; margin-top:.8rem;
+  font-size:.82rem; color:var(--cyan2); font-weight:600;
+}
+
+/* Step 3 — personal details */
+.enroll-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+.enroll-form-group { display:flex; flex-direction:column; gap:.4rem; }
+.enroll-form-group.full { grid-column:1/-1; }
+.enroll-form-group label { font-size:.74rem; font-weight:700; color:var(--slate2); letter-spacing:.3px; text-transform:uppercase; }
+.enroll-form-group input,
+.enroll-form-group select,
+.enroll-form-group textarea {
+  background:rgba(255,255,255,.05); border:1px solid var(--border);
+  border-radius:8px; padding:9px 13px; color:var(--white);
+  font-size:.86rem; font-family:'Inter',sans-serif; outline:none;
+  transition:border-color .2s,background .2s; appearance:none;
+}
+.enroll-form-group input:focus,
+.enroll-form-group select:focus,
+.enroll-form-group textarea:focus { border-color:var(--cyan); background:rgba(6,182,212,.05); }
+.enroll-form-group select option { background:var(--card2); color:var(--white); }
+.enroll-form-group textarea { resize:vertical; min-height:80px; }
+
+/* Summary card */
+.enroll-summary {
+  background: rgba(6,182,212,.06); border:1px solid rgba(6,182,212,.2);
+  border-radius: var(--radius2); padding:16px 18px; margin-bottom:1.2rem;
+}
+.enroll-summary h4 { font-family:'Space Grotesk',sans-serif; font-size:.85rem; font-weight:700; color:var(--cyan); margin-bottom:.8rem; }
+.summary-row { display:flex; gap:.8rem; padding:5px 0; font-size:.8rem; border-bottom:1px solid rgba(255,255,255,.05); }
+.summary-row:last-child { border-bottom:none; }
+.summary-label { color:var(--slate2); min-width:110px; flex-shrink:0; }
+.summary-value { color:var(--white); font-weight:600; }
+
+/* Nav buttons */
+.enroll-nav { display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem; flex-wrap:wrap; gap:.8rem; }
+.enroll-nav-back {
+  background:none; border:1.5px solid var(--border); color:var(--slate2);
+  padding:9px 20px; border-radius:9px; font-size:.84rem; font-weight:600;
+  cursor:pointer; font-family:'Inter',sans-serif; transition:all .2s;
+}
+.enroll-nav-back:hover { border-color:var(--cyan); color:var(--white); }
+.enroll-nav-next {
+  background:linear-gradient(135deg,#7c3aed,var(--cyan)); border:none;
+  color:#fff; padding:10px 24px; border-radius:9px; font-size:.88rem; font-weight:700;
+  cursor:pointer; font-family:'Space Grotesk',sans-serif; transition:opacity .2s;
+  display:flex; align-items:center; gap:8px;
+}
+.enroll-nav-next:hover { opacity:.88; }
+.enroll-nav-next:disabled { opacity:.4; cursor:not-allowed; }
+.enroll-submit-btn {
+  width:100%; background:linear-gradient(135deg,#7c3aed,var(--cyan));
+  border:none; border-radius:10px; padding:13px;
+  color:#fff; font-size:.95rem; font-weight:700;
+  cursor:pointer; font-family:'Space Grotesk',sans-serif;
+  transition:opacity .2s,transform .2s; margin-top:.5rem;
+  box-shadow:0 4px 20px rgba(124,58,237,.3);
+}
+.enroll-submit-btn:hover { opacity:.9; transform:translateY(-1px); }
+.consent-row { display:flex; align-items:flex-start; gap:.7rem; margin-top:.8rem; }
+.consent-row input[type=checkbox] { margin-top:3px; accent-color:var(--cyan); flex-shrink:0; }
+.consent-row label { font-size:.75rem; color:var(--slate2); line-height:1.5; }
+
+/* Success */
+.enroll-success { text-align:center; padding:2rem 1rem; display:none; }
+.enroll-success .s-icon { font-size:3rem; margin-bottom:1rem; }
+.enroll-success h4 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:.5rem; }
+.enroll-success p { font-size:.86rem; color:var(--slate2); line-height:1.75; }
+.enroll-success .s-project {
+  background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
+  border-radius:10px; padding:14px 18px; margin:1rem 0; text-align:left;
+}
+
+@media(max-width:600px) {
+  .enroll-form-grid { grid-template-columns:1fr; }
+  .cat-select-grid { grid-template-columns:1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">⚡</div>
+    Agile<span>Projection</span>
+  </a>
+  <ul class="nav-links">
+    <li class="nav-dropdown">
+      <a href="#">Internships</a>
+      <div class="dropdown-menu">
+        <a href="#programs">Embedded Systems Internship</a>
+        <a href="#programs">IoT Internship</a>
+        <a href="#programs">Campus Ambassador Program</a>
+        <a href="#programs">Full Stack Track (Soon)</a>
+      </div>
+    </li>
+    <li class="nav-dropdown">
+      <a href="#it-courses">IT Courses</a>
+      <div class="dropdown-menu">
+        <a href="#it-courses">SAP Ariba & Procurement</a>
+        <a href="#it-courses">SAP BTP & Cloud</a>
+        <a href="#it-courses">AI & Machine Learning</a>
+        <a href="#it-courses">Full Stack Development</a>
+        <a href="#it-courses">Cloud & DevOps</a>
+        <a href="#univ-programs">International University</a>
+      </div>
+    </li>
+    <li><a href="#aiml-program">AI/ML Internship</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#faq">FAQs</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="tel:+918095557332" class="nav-phone">📞 +91 80955 57332</a></li>
+    <li><a href="#register" class="nav-cta">Register  →</a></li>
+  </ul>
+  <div class="hamburger" onclick="this.classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="beam"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Free Online Internships · 2025–26 Batch Open</div>
+      <h1>
+        Launch Your Engineering<br>
+        Career with a <span class="grad">Real Internship</span>
+      </h1>
+      <p class="hero-sub">
+        AgileProjection offers free, live online internship programs for engineering college students across India. Build industry-grade skills, complete real projects, and earn a recognised certification — all from home.
+      </p>
+      <div class="hero-tracks">
+        <span class="track-pill">⚙️ Embedded Systems</span>
+        <span class="track-pill">🌐 Internet of Things</span>
+        <span class="track-pill">🎓 Campus Ambassador</span>
+        <span class="track-pill">🖥️ Full Stack (Soon)</span>
+      </div>
+      <div class="hero-buttons">
+        <a href="#register" class="btn-primary">Register Free — Apply Now →</a>
+        <a href="#programs" class="btn-secondary">Explore Programs</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><span class="trust-dot">●</span> No registration fee</div>
+        <div class="trust-item"><span class="trust-dot">●</span> AICTE-aligned</div>
+        <div class="trust-item"><span class="trust-dot">●</span> Credit-eligible</div>
+        <div class="trust-item"><span class="trust-dot">●</span> Certificate included</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="stat-stack">
+        <div class="stat-card">
+          <div class="stat-num">10,000+</div>
+          <div class="stat-label">Students Trained</div>
+          <div class="stat-sub">Across India since 2018</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">70 / 30</div>
+          <div class="stat-label">Practical vs Theory</div>
+          <div class="stat-sub">Industry-first pedagogy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">4 Weeks</div>
+          <div class="stat-label">Live Online Program</div>
+          <div class="stat-sub">Daily mentor-led sessions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COUNTERS ══ -->
+<div class="counter-strip">
+  <div class="counters">
+    <div class="counter-item">
+      <div class="counter-num" data-target="10000">10,000+</div>
+      <div class="counter-label">Students Enrolled</div>
+    </div>
+    <div class="counter-item">
+      <div class="counter-num">98%</div>
+      <div class="counter-label">Completion Rate</div>
+    </div>
+    <div class="counter-item">
+      <div class="counter-num">500+</div>
+      <div class="counter-label">Colleges Represented</div>
+    </div>
+    <div class="counter-item">
+      <div class="counter-num">4.8 ★</div>
+      <div class="counter-label">Average Student Rating</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="alt-bg">
+  <div class="section-label">The Journey</div>
+  <h2 class="section-title">How It Works — In 5 Simple Steps</h2>
+  <p class="section-desc">From registration to certification, every step is designed to minimise friction and maximise learning.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Choose Your Track</h3>
+      <p>Pick from Embedded Systems, IoT, or Campus Ambassador based on your interests and degree stream.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Register Free</h3>
+      <p>Fill in the online form — no fee, no documents required. You'll receive a confirmation within 24 hours.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Attend Live Sessions</h3>
+      <p>Join daily online classes with expert mentors. Ask questions, clear doubts, and track your progress.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Build Your Project</h3>
+      <p>Complete a real-world project as your final deliverable — a working prototype you can showcase in interviews.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <h3>Get Certified</h3>
+      <p>Earn a merit certificate recognised by hundreds of Indian engineering colleges for academic credit.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ PROGRAMS ══ -->
+<section id="programs">
+  <div class="section-label">Internship Programs</div>
+  <h2 class="section-title">Choose Your Track</h2>
+  <p class="section-desc">All programs maintain a 70% practical and 30% theory ratio — so you leave with a tangible project, not just theoretical knowledge.</p>
+  <div class="cards-grid">
+
+    <div class="prog-card">
+      <div class="card-thumb thumb-embedded">
+        <div class="card-badge">Technical</div>
+        ⚙️
+      </div>
+      <div class="card-body">
+        <h3>Embedded Systems Internship</h3>
+        <p>A live online program where you'll master microcontrollers, real-time operating systems, and firmware development. Build a complete embedded project from scratch with expert mentoring at every step.</p>
+        <div class="card-tags">
+          <span class="card-tag">C / C++</span>
+          <span class="card-tag">ARM Cortex</span>
+          <span class="card-tag">RTOS</span>
+          <span class="card-tag">GPIO / UART / SPI</span>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+          <div class="card-meta-item"><strong>Daily</strong>Live Sessions</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="#register" class="card-link primary">Register Now</a>
+        <a href="#detail-embedded" class="card-link ghost">View Details</a>
+      </div>
+    </div>
+
+    <div class="prog-card">
+      <div class="card-thumb thumb-iot">
+        <div class="card-badge">Technical</div>
+        🌐
+      </div>
+      <div class="card-body">
+        <h3>Internet of Things (IoT) Internship</h3>
+        <p>Design and build an end-to-end IoT solution — from sensors and microcontrollers to cloud dashboards. Perfect for students who want to work at the intersection of hardware, software, and connectivity.</p>
+        <div class="card-tags">
+          <span class="card-tag">Arduino / ESP32</span>
+          <span class="card-tag">MQTT</span>
+          <span class="card-tag">Cloud</span>
+          <span class="card-tag">Python</span>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+          <div class="card-meta-item"><strong>Daily</strong>Live Sessions</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="#register" class="card-link primary">Register Now</a>
+        <a href="#detail-iot" class="card-link ghost">View Details</a>
+      </div>
+    </div>
+
+    <div class="prog-card">
+      <div class="card-thumb thumb-cap">
+        <div class="card-badge non-tech">Non-Technical</div>
+        🎓
+      </div>
+      <div class="card-body">
+        <h3>Campus Ambassador Program</h3>
+        <p>Be the face of AgileProjection at your engineering college. Drive awareness, host events, and build a community — while earning a stipend, developing leadership skills, and gaining a standout resume entry.</p>
+        <div class="card-tags">
+          <span class="card-tag">Marketing</span>
+          <span class="card-tag">Leadership</span>
+          <span class="card-tag">Event Mgmt</span>
+          <span class="card-tag">Stipend</span>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-item"><strong>1 Month</strong>Duration</div>
+          <div class="card-meta-item"><strong>Stipend</strong>Paid</div>
+          <div class="card-meta-item"><strong>Flexible</strong>Schedule</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="#register" class="card-link primary">Apply Now</a>
+        <a href="#detail-cap" class="card-link ghost">View Details</a>
+      </div>
+    </div>
+
+    <div class="prog-card">
+      <div class="card-thumb thumb-fs">
+        <div class="card-badge soon">Coming Soon</div>
+        🖥️
+      </div>
+      <div class="card-body">
+        <h3>Full Stack Developer Track</h3>
+        <p>Master the MERN stack (MongoDB, Express, React, Node.js) plus core Data Structures & Algorithms. Build a production-ready capstone application that you can showcase in your portfolio and job interviews.</p>
+        <div class="card-tags">
+          <span class="card-tag">React</span>
+          <span class="card-tag">Node.js</span>
+          <span class="card-tag">MongoDB</span>
+          <span class="card-tag">DSA</span>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-item"><strong>4 Weeks</strong>Duration</div>
+          <div class="card-meta-item"><strong>Free</strong>Cost</div>
+          <div class="card-meta-item"><strong>TBA</strong>Batch Start</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="#register" class="card-link primary">Get Notified</a>
+        <a href="#" class="card-link ghost">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROGRAM DETAIL TABS ══ -->
+<section class="alt-bg tabs-section" id="detail-embedded">
+  <div class="section-label">Deep Dive</div>
+  <h2 class="section-title">Program Details & Curriculum</h2>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(this,'tab-emb')">⚙️ Embedded Systems</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-iot')">🌐 IoT Internship</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-cap')">🎓 Campus Ambassador</button>
+  </div>
+
+  <!-- Embedded Tab -->
+  <div class="tab-panel active" id="tab-emb">
+    <div class="program-detail">
+      <div class="detail-left">
+        <h3>Embedded Systems Internship</h3>
+        <p>This four-week live program gives engineering students a structured introduction to <strong>embedded firmware development</strong>. Starting from bare-metal C programming, you'll progress to peripheral interfacing and conclude with a complete RTOS-based project.</p>
+        <p>Sessions are held daily (2 hours) by industry mentors with hands-on lab assignments after every session. A doubt-clearing session is available every alternate day, plus recorded playbacks for revision.</p>
+        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Week-by-Week Curriculum</h4>
+        <ul class="curriculum">
+          <li><span class="curr-week">Week 1</span>C Programming Fundamentals, Memory Model, Bit Manipulation, GCC Toolchain setup</li>
+          <li><span class="curr-week">Week 2</span>Microcontroller Architecture (ARM Cortex-M), GPIO, UART, Timers & Interrupts</li>
+          <li><span class="curr-week">Week 3</span>SPI, I2C, ADC/DAC, Sensor interfacing, Debugging with Logic Analyser</li>
+          <li><span class="curr-week">Week 4</span>FreeRTOS fundamentals, Task scheduling, Semaphores, Final project integration & demo</li>
+        </ul>
+      </div>
+      <div class="detail-right">
+        <div class="detail-card">
+          <h4>✅ What You'll Build</h4>
+          <ul class="check-list">
+            <li>Sensor data logger with UART output</li>
+            <li>Real-time clock & display system</li>
+            <li>Multi-sensor IoT node with RTOS</li>
+            <li>Complete project documentation & demo video</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>🎁 Perks & Deliverables</h4>
+          <ul class="check-list">
+            <li>Merit-based digital certificate</li>
+            <li>Project source code on GitHub</li>
+            <li>Performance-based goodie packs & vouchers</li>
+            <li>LinkedIn recommendation from mentors</li>
+            <li>Access to recorded sessions for 3 months</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>📋 Eligibility</h4>
+          <ul class="eligibility-list">
+            <li>BE / B.Tech students (3rd – 8th semester)</li>
+            <li>Branches: ECE, EEE, EI, CSE, IT, Mech</li>
+            <li>Basic C programming knowledge preferred</li>
+            <li>Laptop with internet connection required</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IoT Tab -->
+  <div class="tab-panel" id="tab-iot">
+    <div class="program-detail">
+      <div class="detail-left">
+        <h3>Internet of Things (IoT) Internship</h3>
+        <p>Build a <strong>complete end-to-end IoT solution</strong> from sensor to cloud. This four-week program bridges hardware and software — you'll wire up sensors, write firmware, connect to the cloud, and visualise data on a live dashboard.</p>
+        <p>Ideal for students who enjoy both electronics and software. No prior IoT experience required — just a willingness to build and experiment.</p>
+        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Week-by-Week Curriculum</h4>
+        <ul class="curriculum">
+          <li><span class="curr-week">Week 1</span>IoT ecosystem overview, Arduino / ESP32 basics, Python scripting, Breadboard prototyping</li>
+          <li><span class="curr-week">Week 2</span>Sensors & actuators, DHT22, LDR, PIR, Serial & Wi-Fi communication, MQTT protocol</li>
+          <li><span class="curr-week">Week 3</span>Cloud platforms (AWS IoT / Firebase), REST APIs, real-time data streaming, JSON payloads</li>
+          <li><span class="curr-week">Week 4</span>Dashboard creation, alert systems, final project build, demo & presentation to industry panel</li>
+        </ul>
+      </div>
+      <div class="detail-right">
+        <div class="detail-card">
+          <h4>✅ What You'll Build</h4>
+          <ul class="check-list">
+            <li>Smart environment monitor (temp / humidity / air)</li>
+            <li>Real-time cloud dashboard with charts</li>
+            <li>SMS / email alert system on threshold breach</li>
+            <li>End-to-end project report & demo</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>🎁 Perks & Deliverables</h4>
+          <ul class="check-list">
+            <li>Merit-based digital certificate</li>
+            <li>Complete project on GitHub</li>
+            <li>Cloud deployment walkthrough guide</li>
+            <li>Performance-based vouchers & goodies</li>
+            <li>90-day recorded session access</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>📋 Eligibility</h4>
+          <ul class="eligibility-list">
+            <li>BE / B.Tech students (3rd – 8th semester)</li>
+            <li>Branches: ECE, CSE, EEE, IT, Mech</li>
+            <li>Basic programming (any language) helpful</li>
+            <li>Laptop with internet + Arduino kit (optional)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP Tab -->
+  <div class="tab-panel" id="tab-cap">
+    <div class="program-detail">
+      <div class="detail-left">
+        <h3>Campus Ambassador Program (CAP)</h3>
+        <p>For students who are passionate about community building, marketing, and leadership. As an AgileProjection Campus Ambassador you'll represent the brand at your college, run awareness campaigns, and coordinate events — while receiving a monthly stipend and growing your professional network.</p>
+        <p>No technical background required. If you communicate well, take initiative, and want your resume to stand out, CAP is for you.</p>
+        <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:600;color:var(--cyan);margin:1.5rem 0 .7rem;">Month-by-Month Plan</h4>
+        <ul class="curriculum">
+          <li><span class="curr-week">Week 1</span>Onboarding, brand training, understanding the student audience, setting campaign goals</li>
+          <li><span class="curr-week">Week 2</span>Social media content creation, campus outreach, peer-to-peer recruitment drives</li>
+          <li><span class="curr-week">Week 3</span>Host a campus webinar or info session, collect feedback, coordinate with regional team</li>
+          <li><span class="curr-week">Week 4</span>Performance review, final report, referral tallying, certificate & stipend disbursement</li>
+        </ul>
+      </div>
+      <div class="detail-right">
+        <div class="detail-card">
+          <h4>✅ What You'll Achieve</h4>
+          <ul class="check-list">
+            <li>Verified ambassador badge on LinkedIn</li>
+            <li>Real event management experience</li>
+            <li>Monthly stipend based on performance</li>
+            <li>Letter of Recommendation from leadership</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>🎁 Perks</h4>
+          <ul class="check-list">
+            <li>Monthly stipend (performance-based)</li>
+            <li>Official CAP certificate</li>
+            <li>Free access to all AgileProjection technical resources</li>
+            <li>Priority referral for technical programs</li>
+            <li>Recognition in our national ambassador network</li>
+          </ul>
+        </div>
+        <div class="detail-card">
+          <h4>📋 Eligibility</h4>
+          <ul class="eligibility-list">
+            <li>Any engineering branch / year</li>
+            <li>Strong communication & interpersonal skills</li>
+            <li>Active on social media platforms</li>
+            <li>Minimum 1 semester remaining in college</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ SCHEDULE ══ -->
+<section id="schedule">
+  <div class="section-label">Program Schedule</div>
+  <h2 class="section-title">Upcoming Internship Batches</h2>
+  <p class="section-desc">Register before the closing date. Seats are limited per batch. Each program runs as daily live sessions for one month.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Internship Name</th>
+          <th>Batch Start</th>
+          <th>Last Date to Apply</th>
+          <th>Duration</th>
+          <th>Mode</th>
+          <th>Status</th>
+          <th>Apply</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Embedded Systems Internship</td>
+          <td>10 Aug 2026</td>
+          <td>01 Aug 2026</td>
+          <td>4 Weeks</td>
+          <td>Online Live</td>
+          <td><span class="badge-open">Open</span></td>
+          <td><a href="#register" class="reg-link">Register →</a></td>
+        </tr>
+        <tr>
+          <td>IoT Internship</td>
+          <td>01 Sep 2026</td>
+          <td>20 Aug 2026</td>
+          <td>4 Weeks</td>
+          <td>Online Live</td>
+          <td><span class="badge-open">Open</span></td>
+          <td><a href="#register" class="reg-link">Register →</a></td>
+        </tr>
+        <tr>
+          <td>Campus Ambassador Program</td>
+          <td>Rolling</td>
+          <td>05 Sep 2026</td>
+          <td>1 Month</td>
+          <td>Hybrid</td>
+          <td><span class="badge-open">Open</span></td>
+          <td><a href="#register" class="reg-link">Apply →</a></td>
+        </tr>
+        <tr>
+          <td>Full Stack Developer Track</td>
+          <td>TBA</td>
+          <td>TBA</td>
+          <td>4 Weeks</td>
+          <td>Online Live</td>
+          <td><span class="badge-soon">Coming Soon</span></td>
+          <td><a href="#register" class="reg-link">Notify Me →</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ BENEFITS ══ -->
+<section id="benefits" class="alt-bg">
+  <div class="section-label">Why AgileProjection</div>
+  <h2 class="section-title">What Makes Us Different</h2>
+  <p class="section-desc">Our structured intervention mechanism — live sessions, doubt-clearing, feedback loops, and project evaluation — makes this a genuine learning experience, not a checkbox exercise.</p>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">📡</div>
+      <h3>Live Online Delivery</h3>
+      <p>Every session is taught live — not pre-recorded. You interact with mentors in real time, ask questions, and get answers on the spot. Recorded playbacks are available within 2 hours for revision.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">👨‍🏫</div>
+      <h3>Expert Industry Mentors</h3>
+      <p>Our mentors are active professionals with 8–20 years of embedded, IoT, and software experience. They bring real-world context to every concept — not just textbook theory.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🛠️</div>
+      <h3>Project-Based Learning</h3>
+      <p>Every program ends with a working project you can demo to recruiters and submit to your college. 70% of session time is hands-on lab work — debugging, building, testing.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🔄</div>
+      <h3>Unlimited Doubt Clearing</h3>
+      <p>Doubt-clearing sessions every alternate day, plus a dedicated Slack channel for async questions. No question goes unanswered — mentors respond within 4 hours on weekdays.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🎓</div>
+      <h3>AICTE-Aligned Certificate</h3>
+      <p>Our merit certificates are accepted by hundreds of engineering colleges for academic credit conversion, fulfilling AICTE and most university internship mandates.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🏆</div>
+      <h3>Perks & Recognition</h3>
+      <p>Quizzes, weekly challenges, and leaderboard competitions. Top performers receive goodie packs, Amazon vouchers, LinkedIn endorsements, and featured profiles on our platform.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">🤝</div>
+      <h3>Career Support</h3>
+      <p>Resume review workshops (DISHA sessions), mock interview preparation, and job board access are included for all interns who complete the program successfully.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon">💰</div>
+      <h3>100% Free — Always</h3>
+      <p>No registration fee. No course fee. No hidden charges — ever. AgileProjection is committed to democratising quality technical education for every engineering student in India.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ TESTIMONIALS ══ -->
+<section id="testimonials">
+  <div class="section-label">Student Reviews</div>
+  <h2 class="section-title">What Our Interns Say</h2>
+  <p class="section-desc">Over 10,000 students have completed our programs. Here's what a few of them shared.</p>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">The Embedded Systems internship was the best thing I did in my 3rd year. The mentors were incredibly patient and the project I built got me my first campus interview call. Completely free and genuinely worth every hour.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">A</div>
+        <div>
+          <div class="author-name">Aditya Sharma</div>
+          <div class="author-info">B.Tech ECE · VIT Vellore · Embedded Batch '25</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">I was sceptical about a free internship — thought it would be superficial. I was completely wrong. The IoT program had daily live sessions, real labs, and I ended up building a working smart home sensor. The certificate is on my CV and it gets noticed.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">P</div>
+        <div>
+          <div class="author-name">Priya Menon</div>
+          <div class="author-info">B.Tech CSE · NIT Trichy · IoT Batch '25</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">The Campus Ambassador Program taught me more about marketing and event management than any college subject did. I organised two successful college events and the stipend was a nice bonus. Highly recommend for non-CS students who want a strong internship.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">R</div>
+        <div>
+          <div class="author-name">Rahul Joshi</div>
+          <div class="author-info">B.Tech Civil · BITS Pilani · CAP Batch '24</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">What I loved most was the doubt-clearing sessions — the mentors would stay back and explain until every student understood. That's rare. My project on an RTOS-based data logger was presented at my college tech fest and won first prize.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#dc2626,#f59e0b)">S</div>
+        <div>
+          <div class="author-name">Sneha Kulkarni</div>
+          <div class="author-info">B.Tech EEE · RVCE Bangalore · Embedded Batch '25</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">I joined the IoT program during my 5th semester summer break. In 4 weeks I went from barely knowing what ESP32 was to deploying a live cloud dashboard. The 70/30 practical split is real — we spent most time actually building, not listening to lectures.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#0891b2,#2563eb)">K</div>
+        <div>
+          <div class="author-name">Kartik Verma</div>
+          <div class="author-info">B.Tech Mech · Delhi Technological Univ. · IoT Batch '24</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">The DISHA career workshop alone was worth it. They reviewed my resume, did a mock HR round, and helped me understand what companies actually look for. I got my internship offer within 3 weeks of completing the program.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">N</div>
+        <div>
+          <div class="author-name">Nidhi Patel</div>
+          <div class="author-info">B.Tech IT · Nirma University · Embedded Batch '24</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ ABOUT ══ -->
+<section class="alt-bg">
+  <div class="about-inner">
+    <div class="about-text">
+      <div class="section-label">About AgileProjection</div>
+      <h2 class="section-title">Built for the Next Generation of Engineers</h2>
+      <p>AgileProjection was founded on a single belief: <strong>every engineering student in India deserves access to quality, industry-aligned internship experience</strong> — regardless of which college they attend or how much money they have.</p>
+      <p>We offer <strong>free online internship programs</strong> specifically targeted at engineering college students. With internships now mandated by AICTE and most deemed universities, finding meaningful industry exposure shouldn't be a guessing game.</p>
+      <p>Our programs are built around <strong>live mentoring, real projects, and career support</strong> — not PDF handouts and attendance sheets. Every batch is kept small to ensure personalized attention.</p>
+      <div class="about-highlight"><strong>AICTE mandate compliance:</strong> Our certificates are recognised by 500+ engineering colleges across India for academic credit conversion under the internship mandate.</div>
+    </div>
+    <div>
+      <div class="about-stats">
+        <div class="about-stat-card">
+          <div class="about-stat-num">2018</div>
+          <div class="about-stat-label">Founded</div>
+        </div>
+        <div class="about-stat-card">
+          <div class="about-stat-num">10K+</div>
+          <div class="about-stat-label">Students Trained</div>
+        </div>
+        <div class="about-stat-card">
+          <div class="about-stat-num">500+</div>
+          <div class="about-stat-label">Partner Colleges</div>
+        </div>
+        <div class="about-stat-card">
+          <div class="about-stat-num">50+</div>
+          <div class="about-stat-label">Expert Mentors</div>
+        </div>
+        <div class="about-stat-card">
+          <div class="about-stat-num">4</div>
+          <div class="about-stat-label">Program Tracks</div>
+        </div>
+        <div class="about-stat-card">
+          <div class="about-stat-num">98%</div>
+          <div class="about-stat-label">Completion Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ TEAM ══ -->
+<section>
+  <div class="section-label">Our Mentors</div>
+  <h2 class="section-title">Meet the Experts Behind the Programs</h2>
+  <p class="section-desc">AgileProjection has India's largest pool of embedded systems and IoT mentors — engineers who've shipped real products and now give back by teaching the next generation.</p>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">VK</div>
+      <h4>Vijay Kumar</h4>
+      <div class="role">Lead Mentor — Embedded</div>
+      <div class="exp">Ex-Texas Instruments · 14 yrs experience</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">SR</div>
+      <h4>Supriya Rao</h4>
+      <div class="role">IoT Program Lead</div>
+      <div class="exp">Ex-Bosch · 11 yrs in Industrial IoT</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">AM</div>
+      <h4>Anand Mehta</h4>
+      <div class="role">Firmware Engineer</div>
+      <div class="exp">Ex-Qualcomm · ARM Cortex specialist</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#dc2626,#f59e0b)">PN</div>
+      <h4>Preethi Nair</h4>
+      <div class="role">Career Coach & DISHA Lead</div>
+      <div class="exp">10 yrs in engineering placement</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#0891b2,#7c3aed)">RB</div>
+      <h4>Rahul Bose</h4>
+      <div class="role">Full Stack Track Lead</div>
+      <div class="exp">Ex-Infosys · MERN & DSA expert</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ FAQ ══ -->
+<section id="faq" class="alt-bg">
+  <div class="section-label">Frequently Asked Questions</div>
+  <h2 class="section-title">Got Questions? We've Got Answers.</h2>
+  <p class="section-desc">Everything you need to know before applying. If your question isn't here, reach out — we reply within 24 hours.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Is the internship really free? Are there any hidden charges?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Yes, completely free. There is no registration fee, no course fee, no certificate fee, and no hidden charges of any kind. AgileProjection's mission is to make quality internship programs accessible to every engineering student in India, regardless of financial background.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Will my college accept this certificate for the internship credit requirement?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Our certificates are accepted by 500+ engineering colleges across India and are designed to meet AICTE and most university internship mandate requirements. We recommend checking with your college's academic section first — most affiliated colleges accept them without any issue. We can also provide a letter of undertaking if your college needs one.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What equipment or software do I need?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">You need a laptop (Windows / Mac / Linux) with a stable internet connection. All software tools used (GCC toolchain, Arduino IDE, VS Code, etc.) are free and open-source. For IoT track, having an Arduino Uno or ESP32 kit is helpful but not mandatory — simulated environments are available for students who don't have hardware.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What are the session timings? Can I attend if I have college classes?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Sessions are typically scheduled in the evenings (6 PM – 8 PM IST) on weekdays, and Saturday mornings for lab sessions. This is designed to accommodate students who have daytime college schedules. All sessions are recorded and available within 2 hours for those who can't attend live.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        I'm in my 2nd year. Can I still apply for the technical internships?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Our technical internships (Embedded and IoT) are recommended for students from 3rd semester onwards, as they assume basic programming knowledge. However, exceptionally motivated 2nd-year students with some C / Python exposure are welcome to apply — mention your programming background in the form and our team will assess your fit.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How is the certificate issued? Is it digital or physical?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Certificates are issued digitally (PDF with a unique verification QR code) within 7 days of completing the program. They can be downloaded, printed, and shared on LinkedIn directly. A physical certificate can also be requested for a nominal courier charge. All certificates are verifiable online via our portal.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What if I miss a few sessions? Will I still get the certificate?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Certificates are merit-based and require completing at least 80% of sessions (or watching recordings) and submitting the final project. Missing 1–2 sessions is fine as long as you catch up via recordings. If you anticipate a longer absence, reach out to your mentor early — we work with students to find solutions wherever possible.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can non-engineering students apply?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">Our technical programs (Embedded, IoT) are designed specifically for engineering students. The Campus Ambassador Program is open to any college student who has strong communication skills and is passionate about outreach — engineering degree not required for CAP.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ RESOURCES ══ -->
+<section id="resources">
+  <div class="section-label">Free Resources</div>
+  <h2 class="section-title">Learn Before You Apply</h2>
+  <p class="section-desc">We believe in sharing knowledge openly. These resources are free for everyone — no sign-up required.</p>
+  <div class="resources-grid">
+    <div class="res-card">
+      <div class="res-icon">📚</div>
+      <h3>Technical Resource Library</h3>
+      <p>Free course material covering Embedded C, Linux internals, IoT protocols, RTOS, ARM architecture, and more. Updated every quarter with new content from our mentors.</p>
+      <a href="#" class="res-link">Browse Library →</a>
+    </div>
+    <div class="res-card">
+      <div class="res-icon">💬</div>
+      <h3>Ask Us Anything (FAQ Hub)</h3>
+      <p>A searchable database of over 500 career and technical questions answered by our expert mentors. From "how to crack embedded interviews" to "which domain suits me".</p>
+      <a href="#faq" class="res-link">Explore FAQs →</a>
+    </div>
+    <div class="res-card">
+      <div class="res-icon">🎙️</div>
+      <h3>Free Masterclasses</h3>
+      <p>On-demand webinars from industry leaders — EV technology from a Texas Instruments director, AI/ML in edge computing from IBM Research, Linux internals from a Broadcom principal engineer.</p>
+      <a href="#" class="res-link">Watch Now →</a>
+    </div>
+    <div class="res-card">
+      <div class="res-icon">📝</div>
+      <h3>Career & Technical Blog</h3>
+      <p>Practical guides: building your first IoT project, cracking embedded systems interviews, writing a resume that gets callbacks, and understanding the embedded job market in 2026.</p>
+      <a href="#" class="res-link">Read Articles →</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ REGISTER FORM ══ -->
+<section class="register-section" id="register">
+  <div class="register-inner">
+    <div class="register-left">
+      <div class="section-label">Apply Now</div>
+      <h2>Register for a Free Internship</h2>
+      <p>Fill in the form and our team will reach out within 24 hours to confirm your spot. No commitment required — just curiosity and a desire to build something real.</p>
+      <ul class="register-perks">
+        <li><span>⚡</span><span>Instant confirmation — no waiting weeks to hear back</span></li>
+        <li><span>🎓</span><span>Certificate issued within 7 days of completion</span></li>
+        <li><span>📂</span><span>Your project stays yours — hosted on your own GitHub</span></li>
+        <li><span>🔒</span><span>Your data is never sold or shared with third parties</span></li>
+        <li><span>💬</span><span>WhatsApp & email updates throughout the program</span></li>
+        <li><span>🏆</span><span>Top performers featured in our alumni spotlight</span></li>
+      </ul>
+    </div>
+    <div class="enroll-wrapper" id="registerFormCard">
+
+      <!-- Header -->
+      <div class="enroll-header">
+        <div style="font-size:2rem;">🎓</div>
+        <div>
+          <h3>Enrol in AI/ML Industry Internship — Free</h3>
+          <p>Select your project category → choose your project → fill your details → submit</p>
+        </div>
+      </div>
+
+      <!-- Step indicators -->
+      <div class="enroll-steps">
+        <div class="enroll-step active" id="step-ind-1"><div class="enroll-step-num">1</div> Select Category</div>
+        <div class="enroll-step" id="step-ind-2"><div class="enroll-step-num">2</div> Choose Project</div>
+        <div class="enroll-step" id="step-ind-3"><div class="enroll-step-num">3</div> Your Details</div>
+        <div class="enroll-step" id="step-ind-4"><div class="enroll-step-num">4</div> Confirm &amp; Submit</div>
+      </div>
+
+      <!-- ══ STEP 1: Category Selection ══ -->
+      <div class="enroll-panel active" id="ep-1">
+        <p style="font-size:.85rem;color:var(--slate2);margin-bottom:1rem;">Choose the <strong style="color:var(--white);">AI/ML domain</strong> you want to build your final year project in:</p>
+        <div class="cat-select-grid" id="catGrid">
+
+          <label class="cat-select-card" onclick="selectCat(this,'gen-ai')">
+            <input type="radio" name="cat" value="gen-ai">
+            <div class="cat-icon">🤖</div>
+            <div class="cat-info"><h4>Generative AI &amp; LLM</h4><span>10 projects · RAG, Chatbots, LLMs</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'cv')">
+            <input type="radio" name="cat" value="cv">
+            <div class="cat-icon">👁️</div>
+            <div class="cat-info"><h4>Computer Vision</h4><span>10 projects · YOLO, Detection, Classification</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'ml')">
+            <input type="radio" name="cat" value="ml">
+            <div class="cat-icon">📊</div>
+            <div class="cat-info"><h4>ML &amp; Predictive Analytics</h4><span>10 projects · Churn, Fraud, Forecasting</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'nlp')">
+            <input type="radio" name="cat" value="nlp">
+            <div class="cat-icon">📝</div>
+            <div class="cat-info"><h4>NLP &amp; Transformers</h4><span>10 projects · BERT, Sentiment, Classification</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'industry')">
+            <input type="radio" name="cat" value="industry">
+            <div class="cat-icon">🏭</div>
+            <div class="cat-info"><h4>AI for Industry 4.0</h4><span>10 projects · Manufacturing, Smart Factory</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'healthcare')">
+            <input type="radio" name="cat" value="healthcare">
+            <div class="cat-icon">🏥</div>
+            <div class="cat-info"><h4>Healthcare AI</h4><span>8 projects · Medical Imaging, Disease Risk</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'cyber')">
+            <input type="radio" name="cat" value="cyber">
+            <div class="cat-icon">🔐</div>
+            <div class="cat-info"><h4>Cybersecurity + AI</h4><span>7 projects · Malware, Intrusion, Fraud</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'recom')">
+            <input type="radio" name="cat" value="recom">
+            <div class="cat-icon">🎯</div>
+            <div class="cat-info"><h4>Recommendation &amp; Personalisation</h4><span>7 projects · Movies, E-Commerce, Learning</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'advanced')">
+            <input type="radio" name="cat" value="advanced">
+            <div class="cat-icon">🔬</div>
+            <div class="cat-info"><h4>Advanced / Research AI</h4><span>8 projects · XAI, Federated Learning, Edge AI</span></div>
+          </label>
+
+          <label class="cat-select-card" onclick="selectCat(this,'other')">
+            <input type="radio" name="cat" value="other">
+            <div class="cat-icon">⚙️</div>
+            <div class="cat-info"><h4>Embedded / IoT / Full Stack</h4><span>Classic AgileProjection tracks</span></div>
+          </label>
+
+        </div>
+        <div class="enroll-nav">
+          <div style="font-size:.78rem;color:var(--slate2);">80+ projects across 9 AI/ML domains</div>
+          <button class="enroll-nav-next" id="btn-next-1" onclick="goStep(2)" disabled>Next: Choose Project →</button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 2: Project Selection (LOV) ══ -->
+      <div class="enroll-panel" id="ep-2">
+        <div class="project-lov-header">
+          <h4 id="lov-title">🤖 Select Your Project</h4>
+          <span id="lov-count"></span>
+        </div>
+        <input type="text" class="project-lov-search" id="lovSearch" placeholder="🔍  Search projects..." oninput="filterLov(this.value)">
+        <div class="project-lov-list" id="lovList"></div>
+        <div id="selectedProjectBadge" style="display:none;" class="lov-selected-badge">
+          ✅ Selected: <span id="selectedProjectName" style="color:var(--white);font-weight:700;"></span>
+        </div>
+        <div class="enroll-nav">
+          <button class="enroll-nav-back" onclick="goStep(1)">← Back</button>
+          <button class="enroll-nav-next" id="btn-next-2" onclick="goStep(3)" disabled>Next: Your Details →</button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 3: Personal Details ══ -->
+      <div class="enroll-panel" id="ep-3">
+        <div class="enroll-form-grid">
+          <div class="enroll-form-group">
+            <label>First Name *</label>
+            <input type="text" id="ef-fname" placeholder="Rahul">
+          </div>
+          <div class="enroll-form-group">
+            <label>Last Name *</label>
+            <input type="text" id="ef-lname" placeholder="Sharma">
+          </div>
+          <div class="enroll-form-group">
+            <label>Email Address *</label>
+            <input type="email" id="ef-email" placeholder="rahul@college.edu">
+          </div>
+          <div class="enroll-form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="ef-mobile" placeholder="+91 98765 43210">
+          </div>
+          <div class="enroll-form-group">
+            <label>Degree *</label>
+            <select id="ef-degree">
+              <option value="">— Select —</option>
+              <option>BE / B.Tech</option>
+              <option>ME / M.Tech</option>
+              <option>MCA</option>
+              <option>B.Sc Engineering</option>
+            </select>
+          </div>
+          <div class="enroll-form-group">
+            <label>Branch / Department *</label>
+            <select id="ef-branch">
+              <option value="">— Select Branch —</option>
+              <option>Computer Science Engineering</option>
+              <option>Information Technology</option>
+              <option>AI &amp; Data Science</option>
+              <option>AI &amp; Machine Learning</option>
+              <option>Electronics &amp; Communication</option>
+              <option>Electrical &amp; Electronics</option>
+              <option>Mechanical Engineering</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="enroll-form-group">
+            <label>Current Semester *</label>
+            <select id="ef-sem">
+              <option value="">— Select —</option>
+              <option>3rd Semester</option><option>4th Semester</option>
+              <option>5th Semester</option><option>6th Semester</option>
+              <option>7th Semester</option><option>8th Semester</option>
+            </select>
+          </div>
+          <div class="enroll-form-group">
+            <label>Plan / Package *</label>
+            <select id="ef-plan">
+              <option value="">— Select Plan —</option>
+              <option>Basic — ₹1,499</option>
+              <option>Standard — ₹2,499</option>
+              <option>Professional — ₹3,999</option>
+              <option>Premium / Job-Oriented — ₹4,999</option>
+            </select>
+          </div>
+          <div class="enroll-form-group full">
+            <label>College / University *</label>
+            <input type="text" id="ef-college" placeholder="e.g. VIT Vellore, NIT Trichy, RVCE Bangalore">
+          </div>
+          <div class="enroll-form-group full">
+            <label>State *</label>
+            <select id="ef-state">
+              <option value="">— Select State —</option>
+              <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option>
+              <option>Chhattisgarh</option><option>Delhi</option><option>Goa</option>
+              <option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option>
+              <option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+              <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option>
+              <option>Odisha</option><option>Punjab</option><option>Rajasthan</option>
+              <option>Tamil Nadu</option><option>Telangana</option><option>Uttar Pradesh</option>
+              <option>Uttarakhand</option><option>West Bengal</option><option>Other</option>
+            </select>
+          </div>
+          <div class="enroll-form-group full">
+            <label>How did you hear about us?</label>
+            <select id="ef-source">
+              <option value="">— Select —</option>
+              <option>Social Media (Instagram / LinkedIn)</option>
+              <option>Google Search</option>
+              <option>Friend / Classmate Referral</option>
+              <option>College Notice Board</option>
+              <option>Email</option><option>YouTube</option><option>Other</option>
+            </select>
+          </div>
+          <div class="enroll-form-group full">
+            <label>Any background or notes (optional)</label>
+            <textarea id="ef-notes" placeholder="e.g. I have Python experience and want to build a fraud detection system..."></textarea>
+          </div>
+        </div>
+        <div class="enroll-nav">
+          <button class="enroll-nav-back" onclick="goStep(2)">← Back</button>
+          <button class="enroll-nav-next" onclick="goStep(4)">Review &amp; Confirm →</button>
+        </div>
+      </div>
+
+      <!-- ══ STEP 4: Confirm & Submit ══ -->
+      <div class="enroll-panel" id="ep-4">
+        <div class="enroll-summary">
+          <h4>📋 Your Enrolment Summary</h4>
+          <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
+          <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
+          <div class="summary-row"><span class="summary-label">Mobile</span><span class="summary-value" id="sum-mobile">—</span></div>
+          <div class="summary-row"><span class="summary-label">College</span><span class="summary-value" id="sum-college">—</span></div>
+          <div class="summary-row"><span class="summary-label">Degree / Branch</span><span class="summary-value" id="sum-degree">—</span></div>
+          <div class="summary-row"><span class="summary-label">Semester</span><span class="summary-value" id="sum-sem">—</span></div>
+          <div class="summary-row" style="border-top:1px solid rgba(6,182,212,.2);padding-top:8px;margin-top:4px;">
+            <span class="summary-label">📂 Domain</span><span class="summary-value" id="sum-cat" style="color:var(--cyan);">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">🔬 Project</span><span class="summary-value" id="sum-project" style="color:var(--cyan2);">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">📦 Plan</span><span class="summary-value" id="sum-plan" style="color:#c084fc;">—</span>
+          </div>
+        </div>
+        <div class="consent-row">
+          <input type="checkbox" id="consent-wa" checked>
+          <label for="consent-wa">Allow WhatsApp and phone call communications from AgileProjection regarding my application and program updates.</label>
+        </div>
+        <div class="consent-row">
+          <input type="checkbox" id="consent-em" checked>
+          <label for="consent-em">Allow emails regarding new batches, resources, and career opportunities.</label>
+        </div>
+        <button class="enroll-submit-btn" onclick="submitEnrolment()">🚀 Submit Enrolment — It's Free →</button>
+        <div class="enroll-nav" style="margin-top:.5rem;">
+          <button class="enroll-nav-back" onclick="goStep(3)">← Back to Edit</button>
+          <div style="font-size:.72rem;color:var(--slate2);">Your data is never sold or shared</div>
+        </div>
+      </div>
+
+      <!-- ══ SUCCESS ══ -->
+      <div class="enroll-success" id="enroll-success">
+        <div class="s-icon">🎉</div>
+        <h4>Enrolment Submitted!</h4>
+        <div class="s-project">
+          <div style="font-size:.72rem;color:var(--cyan);font-weight:700;margin-bottom:4px;">YOUR SELECTED PROJECT</div>
+          <div id="success-project" style="font-weight:700;font-size:.95rem;color:var(--white);"></div>
+          <div id="success-cat" style="font-size:.75rem;color:var(--slate2);margin-top:2px;"></div>
+        </div>
+        <p>Our team will reach out within <strong>24 hours</strong> on WhatsApp and email to confirm your project assignment, share onboarding details, and schedule your first session.</p>
+        <p style="margin-top:.8rem;font-size:.78rem;color:var(--slate);">Meanwhile, explore the project catalogue above to deepen your understanding of your chosen domain.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION DIVIDER BANNER ══ -->
+<div class="section-divider-banner">
+  <div>
+    <div class="section-label" style="margin-bottom:.5rem;">Powered by SkillGorila Partnership</div>
+    <h2>🌐 International University Studies &amp; IT Online Courses</h2>
+    <p>Expand beyond internships — access globally recognised IT certifications, SAP professional training, and international university pathway programs, now on AgileProjection.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:.8rem;align-items:flex-end;">
+    <div class="partner-badge">🤝 In Partnership with SkillGorila</div>
+    <div style="font-size:.78rem;color:var(--slate2);text-align:right;">50,000+ learners · 95% placement rate · 50+ countries</div>
+  </div>
+</div>
+
+<!-- ══ IT ONLINE COURSES ══ -->
+<section id="it-courses" style="padding-bottom:40px;">
+  <div class="section-label">IT Online Courses</div>
+  <h2 class="section-title">Professional IT Certifications &amp; SAP Training</h2>
+  <p class="section-desc">Industry-driven courses with real-world projects, expert mentorship, and 95% placement support. Learn from the top 1% of SAP &amp; technology professionals — and earn globally recognised certifications.</p>
+
+  <!-- SAP Feature Banner -->
+  <div class="sap-track-banner">
+    <div>
+      <h3>⚙️ Master SAP — India's #1 SAP Training Platform</h3>
+      <p>SAP skills are among the highest-paid in the IT industry. Our SAP programs cover Ariba, BTP, MM, ABAP, HANA, AI Core, and more — with live S/4HANA sandbox access, real project scenarios, and placement support until you land your offer.</p>
+      <div class="sap-tags">
+        <span class="sap-tag">SAP Ariba</span>
+        <span class="sap-tag">SAP BTP</span>
+        <span class="sap-tag">SAP HANA</span>
+        <span class="sap-tag">SAP MM</span>
+        <span class="sap-tag">SAP ABAP</span>
+        <span class="sap-tag">SAP AI Core</span>
+        <span class="sap-tag">SAP Fiori</span>
+        <span class="sap-tag">SAP Security</span>
+      </div>
+    </div>
+    <div style="text-align:center;flex-shrink:0;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">95%</div>
+      <div style="font-size:.8rem;color:var(--slate2);">Placement Rate</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:var(--white);margin-top:.6rem;">4.9 ★</div>
+      <div style="font-size:.8rem;color:var(--slate2);">from 12,000+ reviews</div>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="course-cat-bar">
+    <div class="cat-pill active">🔍 All Courses <span class="cat-count">86</span></div>
+    <div class="cat-pill">⚙️ SAP Modules <span class="cat-count">18</span></div>
+    <div class="cat-pill">☁️ SAP Cloud &amp; BTP <span class="cat-count">12</span></div>
+    <div class="cat-pill">💻 Programming <span class="cat-count">15</span></div>
+    <div class="cat-pill">🤖 AI &amp; ML <span class="cat-count">9</span></div>
+    <div class="cat-pill">📊 Data &amp; Analytics <span class="cat-count">7</span></div>
+    <div class="cat-pill">🔧 Cloud &amp; DevOps <span class="cat-count">11</span></div>
+    <div class="cat-pill">🔐 Cybersecurity <span class="cat-count">6</span></div>
+    <div class="cat-pill">📈 Business &amp; Marketing <span class="cat-count">8</span></div>
+  </div>
+
+  <!-- Course Cards -->
+  <div class="it-courses-grid">
+
+    <!-- SAP Ariba Complete -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#0a2a20);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-bestseller">Bestseller</span>
+          <span class="it-badge badge-cert">SAP Certified</span>
+        </div>
+        ⚙️
+      </div>
+      <div class="it-course-body">
+        <h3>SAP Ariba: Complete Procurement &amp; Supply Chain Mastery</h3>
+        <p>Hands-on training covering sourcing, contracts, supplier collaboration, and buying with real-world enterprise project scenarios. Includes live Ariba sandbox access.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>48 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.9 (3.2K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- SAP BTP -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#1a0a30);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-hot">Hot</span>
+          <span class="it-badge badge-cert">Cloud</span>
+        </div>
+        ☁️
+      </div>
+      <div class="it-course-body">
+        <h3>SAP BTP: Business Technology Platform — Complete Guide</h3>
+        <p>Master SAP's cloud platform for application development, integration, and AI services. Covers CAP framework, Fiori, KYMA, and real BTP system access throughout.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>36 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.8 (2.1K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- SAP MM -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#1a1500);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-cert">S/4HANA</span>
+        </div>
+        📦
+      </div>
+      <div class="it-course-body">
+        <h3>SAP MM: Materials Management Complete Guide</h3>
+        <p>Master procurement cycles, inventory management, and materials planning with live S/4HANA system access. Covers P2P, vendor evaluation, invoice verification, and more.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>40 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.7 (1.8K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- AI & ML -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#1a0020);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-new">New</span>
+          <span class="it-badge badge-hot">AI</span>
+        </div>
+        🤖
+      </div>
+      <div class="it-course-body">
+        <h3>AI &amp; Machine Learning for SAP — SAP AI Core &amp; Launchpad</h3>
+        <p>Build and deploy AI models on SAP's enterprise stack. Covers Generative AI, NLP, ML pipelines, SAP AI Core, and real enterprise AI use cases with Python and SAP tools.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>32 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.9 (980)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- Full Stack -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#102000);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-bestseller">Popular</span>
+          <span class="it-badge badge-free">Free</span>
+        </div>
+        🖥️
+      </div>
+      <div class="it-course-body">
+        <h3>Full Stack Web Development — MERN Stack + DSA</h3>
+        <p>Complete full-stack bootcamp: React, Node.js, Express, MongoDB, REST APIs, authentication, cloud deployment, and interview-ready DSA preparation in one comprehensive program.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>60 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.8 (2.4K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- Cloud & DevOps -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#001a2a);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-cert">AWS + Azure</span>
+        </div>
+        🔧
+      </div>
+      <div class="it-course-body">
+        <h3>Cloud &amp; DevOps: AWS, Azure, Docker, Kubernetes &amp; CI/CD</h3>
+        <p>From cloud fundamentals to deploying containerised microservices — covers AWS core services, Azure fundamentals, Docker, Kubernetes, Jenkins CI/CD, and Terraform IaC.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>44 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.7 (1.5K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- Cybersecurity -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#200a00);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-new">New 2026</span>
+        </div>
+        🔐
+      </div>
+      <div class="it-course-body">
+        <h3>Cybersecurity Fundamentals — Ethical Hacking &amp; SOC Analyst</h3>
+        <p>Network security, penetration testing, vulnerability assessment, SIEM tools, and SOC operations. Aligned with CompTIA Security+ and CEH certification objectives.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>38 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Cert-aligned</strong></span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.8 (760)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+    <!-- Data Analytics -->
+    <div class="it-course-card">
+      <div class="it-course-thumb" style="background:linear-gradient(135deg,#071a30,#001020);">
+        <div class="it-badge-row">
+          <span class="it-badge badge-bestseller">Trending</span>
+        </div>
+        📊
+      </div>
+      <div class="it-course-body">
+        <h3>Data Analytics &amp; Business Intelligence — Python, Power BI &amp; SQL</h3>
+        <p>End-to-end data analytics: SQL querying, Python (Pandas, NumPy, Matplotlib), Power BI dashboards, and storytelling with data for business decision-making.</p>
+        <div class="it-course-meta">
+          <span class="it-meta-item"><strong>42 hrs</strong> content</span>
+          <span class="it-meta-item"><strong>Live</strong> sessions</span>
+          <span class="it-meta-item"><strong>Certificate</strong> included</span>
+          <span class="it-stars">★★★★★ <span style="color:var(--slate2);">4.8 (1.9K)</span></span>
+        </div>
+      </div>
+      <div class="it-course-footer">
+        <div class="it-price"><span class="free">FREE</span></div>
+        <a href="https://www.skillgorila.com/s/store" target="_blank" class="it-enroll-btn">Enroll Now →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;">
+    <a href="https://www.skillgorila.com/s/store" target="_blank" class="btn-primary">View All 86 Courses on SkillGorila →</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ EXPERT INSTRUCTORS ══ -->
+<section class="alt-bg">
+  <div class="section-label">Expert Instructors</div>
+  <h2 class="section-title">Learn from the Top 1% of Industry Professionals</h2>
+  <p class="section-desc">Our instructors are active professionals — not just educators — with real-world experience at SAP, Google, AWS, Deloitte, and IBM.</p>
+  <div class="instructors-grid">
+    <div class="instructor-card">
+      <div class="instructor-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">VP</div>
+      <h4>Vinod Patil</h4>
+      <div class="inst-title">SAP Certified Solution Architect</div>
+      <div class="inst-exp">15+ yrs · Ex-SAP Labs &amp; Deloitte</div>
+      <div class="instructor-stats">
+        <div class="inst-stat"><strong>20K+</strong><span>Students</span></div>
+        <div class="inst-stat"><strong>6</strong><span>Courses</span></div>
+        <div class="inst-stat"><strong>4.9★</strong><span>Rating</span></div>
+      </div>
+    </div>
+    <div class="instructor-card">
+      <div class="instructor-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">PS</div>
+      <h4>Priya Sharma</h4>
+      <div class="inst-title">SAP BTP &amp; Integration Expert</div>
+      <div class="inst-exp">12 yrs · Ex-SAP Labs Bangalore</div>
+      <div class="instructor-stats">
+        <div class="inst-stat"><strong>12K+</strong><span>Students</span></div>
+        <div class="inst-stat"><strong>4</strong><span>Courses</span></div>
+        <div class="inst-stat"><strong>4.7★</strong><span>Rating</span></div>
+      </div>
+    </div>
+    <div class="instructor-card">
+      <div class="instructor-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">AK</div>
+      <h4>Amrit Kumar</h4>
+      <div class="inst-title">SAP MM &amp; SRM Specialist</div>
+      <div class="inst-exp">10 yrs · Ex-WNS Global Services</div>
+      <div class="instructor-stats">
+        <div class="inst-stat"><strong>9K+</strong><span>Students</span></div>
+        <div class="inst-stat"><strong>3</strong><span>Courses</span></div>
+        <div class="inst-stat"><strong>4.6★</strong><span>Rating</span></div>
+      </div>
+    </div>
+    <div class="instructor-card">
+      <div class="instructor-avatar" style="background:linear-gradient(135deg,#dc2626,#f59e0b)">RB</div>
+      <h4>Rohit Bansal</h4>
+      <div class="inst-title">AI &amp; ML Engineer</div>
+      <div class="inst-exp">8 yrs · Ex-Microsoft AI Research</div>
+      <div class="instructor-stats">
+        <div class="inst-stat"><strong>7K+</strong><span>Students</span></div>
+        <div class="inst-stat"><strong>2</strong><span>Courses</span></div>
+        <div class="inst-stat"><strong>4.9★</strong><span>Rating</span></div>
+      </div>
+    </div>
+    <div class="instructor-card">
+      <div class="instructor-avatar" style="background:linear-gradient(135deg,#0891b2,#7c3aed)">SK</div>
+      <h4>Sunita Kaur</h4>
+      <div class="inst-title">Cloud &amp; DevOps Architect</div>
+      <div class="inst-exp">11 yrs · Ex-Amazon Web Services</div>
+      <div class="instructor-stats">
+        <div class="inst-stat"><strong>11K+</strong><span>Students</span></div>
+        <div class="inst-stat"><strong>3</strong><span>Courses</span></div>
+        <div class="inst-stat"><strong>4.8★</strong><span>Rating</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Placement Companies -->
+  <div class="placement-strip">
+    <h3>🏢 Our Learners Work At</h3>
+    <p>Students who completed our IT certification programs have been placed at leading global companies across consulting, technology, and finance.</p>
+    <div class="company-logos">
+      <div class="company-logo">Deloitte</div>
+      <div class="company-logo">Amazon</div>
+      <div class="company-logo">Microsoft</div>
+      <div class="company-logo">Google</div>
+      <div class="company-logo">Accenture</div>
+      <div class="company-logo">JPMorgan</div>
+      <div class="company-logo">Capgemini</div>
+      <div class="company-logo">Infosys</div>
+      <div class="company-logo">IBM</div>
+      <div class="company-logo">SAP</div>
+      <div class="company-logo">TCS</div>
+      <div class="company-logo">Wipro</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ INTERNATIONAL UNIVERSITY PROGRAMS ══ -->
+<section id="univ-programs">
+  <div class="section-label">International University Studies</div>
+  <h2 class="section-title">Study Abroad — University Pathway Programs</h2>
+  <p class="section-desc">AgileProjection partners with internationally recognised universities across the UK, USA, Australia, Canada, Europe, and Singapore to help Indian engineering graduates access world-class postgraduate education. Our counsellors guide you from shortlisting to visa — at no consultation fee.</p>
+
+  <div class="univ-grid">
+
+    <div class="univ-card uk">
+      <div class="univ-flag">🇬🇧</div>
+      <h3>United Kingdom</h3>
+      <div class="country">Top Destinations: London · Manchester · Edinburgh</div>
+      <p>1-year MSc programs in Computer Science, AI, Data Science, Embedded Systems, and Electrical Engineering from Russell Group universities. PSW visa allows 2 years of post-study work.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MSc · MEng · MBA</span>
+        <span class="univ-detail">1–2 Years</span>
+        <span class="univ-detail">2-yr PSW Visa</span>
+        <span class="univ-detail">IELTS 6.5+</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+    <div class="univ-card us">
+      <div class="univ-flag">🇺🇸</div>
+      <h3>United States</h3>
+      <div class="country">Top Destinations: California · Texas · New York</div>
+      <p>MS programs at top US universities in CS, ECE, Data Science, Cybersecurity, and MBA. 3-year OPT extension for STEM graduates. Highest average salaries globally for tech roles.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MS · PhD · MBA</span>
+        <span class="univ-detail">1.5–2 Years</span>
+        <span class="univ-detail">3-yr OPT STEM</span>
+        <span class="univ-detail">GRE + TOEFL</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+    <div class="univ-card au">
+      <div class="univ-flag">🇦🇺</div>
+      <h3>Australia</h3>
+      <div class="country">Top Destinations: Sydney · Melbourne · Brisbane</div>
+      <p>2-year Master's programs in Engineering, IT, and Business from Group of Eight universities. Post-study work rights of 2–4 years. Australia actively recruits skilled tech graduates via skilled migration.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MEngSc · MIT · MBA</span>
+        <span class="univ-detail">1.5–2 Years</span>
+        <span class="univ-detail">2–4 yr PSW</span>
+        <span class="univ-detail">IELTS 6.5+</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+    <div class="univ-card ca">
+      <div class="univ-flag">🇨🇦</div>
+      <h3>Canada</h3>
+      <div class="country">Top Destinations: Toronto · Vancouver · Montreal</div>
+      <p>Master's programs in Engineering and CS with a clear PR pathway via Express Entry and PNP. Co-op programs give you paid work experience during your degree at top Canadian companies.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MEng · MASc · MBA</span>
+        <span class="univ-detail">1–2 Years</span>
+        <span class="univ-detail">3-yr PGWP</span>
+        <span class="univ-detail">IELTS 6.5+</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+    <div class="univ-card eu">
+      <div class="univ-flag">🇩🇪</div>
+      <h3>Germany &amp; Europe</h3>
+      <div class="country">Top Destinations: Berlin · Munich · Amsterdam</div>
+      <p>Tuition-free or low-cost MSc programs at TU Munich, RWTH Aachen, TU Berlin in Embedded Systems, Robotics, AI, and Mechatronics. Taught programs available in English across Germany and the Netherlands.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MSc · MEng</span>
+        <span class="univ-detail">2 Years</span>
+        <span class="univ-detail">Job Seeker Visa</span>
+        <span class="univ-detail">TestDaF / IELTS</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+    <div class="univ-card sg">
+      <div class="univ-flag">🇸🇬</div>
+      <h3>Singapore</h3>
+      <div class="country">NUS · NTU · SMU · SUTD</div>
+      <p>World-ranked universities in Asia's tech hub. 1-year MSc programs in CS, AI, Fintech, and Electrical Engineering. Excellent internship opportunities with ASEAN's top tech ecosystem.</p>
+      <div class="univ-details">
+        <span class="univ-detail">MSc · MComp</span>
+        <span class="univ-detail">1–1.5 Years</span>
+        <span class="univ-detail">EP Work Pass</span>
+        <span class="univ-detail">IELTS / TOEFL</span>
+      </div>
+      <a href="#register" class="univ-link">Get Free Counselling →</a>
+    </div>
+
+  </div>
+
+  <!-- University CTA -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;">
+    <div>
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:.5rem;">🎓 Free University Counselling Session</h3>
+      <p style="color:var(--slate2);font-size:.88rem;max-width:540px;line-height:1.75;">Our overseas education counsellors — specialists in UK, US, Australia, Canada, Germany, and Singapore — will help you shortlist universities, strengthen your SOP, and navigate the visa process. Zero fees, always.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.8rem;">
+      <a href="#register" class="btn-primary">Book Free Consultation →</a>
+      <a href="https://wa.me/918095557334" class="btn-secondary" style="text-align:center;">💬 WhatsApp Us</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ IT TESTIMONIALS ══ -->
+<section class="alt-bg" style="padding-top:70px;padding-bottom:70px;">
+  <div class="section-label">Success Stories</div>
+  <h2 class="section-title">From Our IT &amp; University Program Alumni</h2>
+  <div class="it-testimonials">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">The SAP Ariba program on AgileProjection completely changed my career trajectory. Within 8 months of completing the course I moved from junior consultant to leading Ariba implementations at Deloitte. The hands-on sandbox labs were exactly what recruiters wanted to see.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">AV</div>
+        <div>
+          <div class="author-name">Amit Verma</div>
+          <div class="author-info">SAP Ariba Consultant · Deloitte · SAP Ariba Batch '25</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">I applied for my UK Master's through AgileProjection's university counselling — got into the University of Edinburgh's MSc AI program. The counsellors helped me fix my SOP and prepare for interviews. Free service that was genuinely life-changing.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#7c3aed,#06b6d4)">MR</div>
+        <div>
+          <div class="author-name">Meera Rajput</div>
+          <div class="author-info">MSc AI · University of Edinburgh · UK Pathway '25</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="quote-text">Started with zero SAP knowledge. The SAP BTP course gave me real cloud development skills and I now work as an integration developer at SAP itself. The course quality rivals paid bootcamps costing ₹2–3 lakhs. Remarkable that it's free.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:linear-gradient(135deg,#059669,#06b6d4)">RK</div>
+        <div>
+          <div class="author-name">Ravi Krishnan</div>
+          <div class="author-info">Integration Developer · SAP · BTP Course '24</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+
+<hr class="divider">
+
+<!-- ══ AI/ML INTERNSHIP PROGRAM ══ -->
+<div class="aiml-divider-banner" id="aiml-program">
+  <div>
+    <div class="section-label" style="margin-bottom:.5rem;">New Program · B.Tech CSE / IT / AI-DS / AI-ML</div>
+    <h2>🤖 45-Day AI/ML Industry Internship &amp; Final Year Project Program</h2>
+    <p>A structured, project-based industry internship for final-semester B.Tech students. Combines practical AI/ML training with a working industry-oriented project, GitHub portfolio, deployment, mock viva, and placement-oriented preparation.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:.8rem;align-items:flex-end;">
+    <div class="aiml-badge">🎓 Final Year / Final Semester Students</div>
+    <div style="font-size:.78rem;color:var(--slate2);text-align:right;">45 Days · Live Mentoring · Industry Projects · Certificates</div>
+  </div>
+</div>
+
+<!-- ── PRICING PLANS ── -->
+<section style="padding:70px 5% 50px;">
+  <div class="section-label">Program Packages</div>
+  <h2 class="section-title">Choose Your AI/ML Internship Plan</h2>
+  <p class="section-desc">All packages include 45-day training, a working AI/ML project, and certificates. Select the level of depth, portfolio development, and placement support that suits your goals.</p>
+  <div class="plans-grid">
+
+    <div class="plan-card">
+      <div class="plan-icon">🌱</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-tagline">Entry-level · Get started with AI/ML</div>
+      <div class="plan-price"><span class="amount">₹1,499</span><span class="period"> / student</span></div>
+      <div class="plan-launch">Recommended launch price: ₹2,999</div>
+      <ul class="plan-features">
+        <li>45-day live AI/ML training</li>
+        <li>Working AI/ML project</li>
+        <li>45-Day Internship Certificate</li>
+        <li>Project Completion Certificate</li>
+        <li>Access to recorded sessions</li>
+      </ul>
+      <a href="#register" class="plan-cta ghost">Enrol — Basic →</a>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-icon">⚡</div>
+      <div class="plan-name">Standard</div>
+      <div class="plan-tagline">Recommended for colleges</div>
+      <div class="plan-price"><span class="amount">₹2,499</span><span class="period"> / student</span></div>
+      <div class="plan-launch">Best value for most colleges</div>
+      <ul class="plan-features">
+        <li>Everything in Basic</li>
+        <li>GitHub repository setup &amp; portfolio</li>
+        <li>Project Report (documentation)</li>
+        <li>Project Presentation (PPT)</li>
+        <li>Mock Viva &amp; technical evaluation</li>
+        <li>Placement-oriented preparation</li>
+      </ul>
+      <a href="#register" class="plan-cta ghost">Enrol — Standard →</a>
+    </div>
+
+    <div class="plan-card popular">
+      <div class="plan-icon">🚀</div>
+      <div class="plan-name">Professional</div>
+      <div class="plan-tagline">Industry-oriented · Full stack AI</div>
+      <div class="plan-price"><span class="amount">₹3,999</span><span class="period"> / student</span></div>
+      <div class="plan-launch">Most comprehensive technical package</div>
+      <ul class="plan-features">
+        <li>Everything in Standard</li>
+        <li>API / FastAPI / Flask integration</li>
+        <li>Web Dashboard &amp; UI development</li>
+        <li>Cloud / local deployment</li>
+        <li>Technical interview preparation</li>
+        <li>AI/ML interview Q&amp;A sessions</li>
+        <li>Project demo &amp; explanation practice</li>
+      </ul>
+      <a href="#register" class="plan-cta">Enrol — Professional →</a>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-icon">🏆</div>
+      <div class="plan-name">Premium / Job-Oriented</div>
+      <div class="plan-tagline">Placement-focused · Full career prep</div>
+      <div class="plan-price"><span class="amount">₹4,999</span><span class="period"> / student</span></div>
+      <div class="plan-launch">Maximum placement support</div>
+      <ul class="plan-features">
+        <li>Everything in Professional</li>
+        <li>Resume writing &amp; ATS optimisation</li>
+        <li>Coding &amp; aptitude practice</li>
+        <li>1-on-1 mock interviews (HR + Tech)</li>
+        <li>Placement assistance (eligibility-based)</li>
+        <li>LinkedIn profile optimisation</li>
+        <li>Industry mentor feedback</li>
+      </ul>
+      <a href="#register" class="plan-cta ghost">Enrol — Premium →</a>
+    </div>
+
+  </div>
+  <div style="background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.2);border-radius:var(--radius);padding:18px 22px;margin-top:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div style="font-size:1.4rem;">💡</div>
+    <div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:.2rem;color:var(--white);">Recommended Market Price: ₹2,999 / student</div>
+      <div style="font-size:.82rem;color:var(--slate2);">₹2,999 is recommended as the standard price when the program includes structured mentoring, major project, GitHub portfolio, documentation, mock viva, and placement-oriented preparation.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── 45-DAY CURRICULUM ── -->
+<section class="alt-bg" style="padding:70px 5%;">
+  <div class="section-label">45-Day Training Plan</div>
+  <h2 class="section-title">Day-by-Day Curriculum</h2>
+  <p class="section-desc">A structured 45-day program from Python fundamentals to a fully deployed, documented, and demo-ready AI/ML project — with placement preparation built in.</p>
+
+  <div class="curr-table-wrap">
+    <table class="curr-table">
+      <thead>
+        <tr>
+          <th>Days</th>
+          <th>Module</th>
+          <th>Key Topics</th>
+          <th>Student Deliverable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Days 1–5</td><td><span class="phase-badge ph-1">Phase 1</span><br>Python for AI/ML + Git/GitHub</td><td>Python basics, NumPy/Pandas introduction, Git, GitHub</td><td>Python exercises + GitHub repository</td></tr>
+        <tr><td>Days 6–10</td><td><span class="phase-badge ph-1">Phase 1</span><br>Data Handling &amp; Visualization</td><td>NumPy, Pandas, data cleaning, EDA, visualization</td><td>Dataset analysis report</td></tr>
+        <tr><td>Days 11–15</td><td><span class="phase-badge ph-2">Phase 2</span><br>Machine Learning Fundamentals</td><td>Regression, classification, train/test split, evaluation metrics</td><td>First working ML model</td></tr>
+        <tr><td>Days 16–20</td><td><span class="phase-badge ph-2">Phase 2</span><br>ML Algorithms Deep Dive</td><td>Classification, regression, clustering algorithms</td><td>2–3 trained ML models</td></tr>
+        <tr><td>Days 21–25</td><td><span class="phase-badge ph-2">Phase 2</span><br>Advanced ML &amp; Optimisation</td><td>Feature engineering, Random Forest, XGBoost, hyperparameter tuning</td><td>Optimized &amp; tuned model</td></tr>
+        <tr><td>Days 26–30</td><td><span class="phase-badge ph-3">Phase 3</span><br>Generative AI &amp; LLMs</td><td>LLMs, prompt engineering, embeddings, RAG, AI APIs</td><td>GenAI mini-project</td></tr>
+        <tr><td>Days 31–35</td><td><span class="phase-badge ph-3">Phase 3</span><br>Major Project Development</td><td>Architecture design, coding, database integration</td><td>Working prototype</td></tr>
+        <tr><td>Days 36–40</td><td><span class="phase-badge ph-4">Phase 4</span><br>API &amp; Dashboard Development</td><td>FastAPI / Flask, database integration, frontend / dashboard UI</td><td>Deployable web application</td></tr>
+        <tr><td>Days 41–43</td><td><span class="phase-badge ph-4">Phase 4</span><br>Testing &amp; Documentation</td><td>Testing, documentation, GitHub README, project report</td><td>Final project package</td></tr>
+        <tr><td>Day 44</td><td><span class="phase-badge ph-5">Phase 5</span><br>Presentation &amp; Mock Viva</td><td>Project presentation, technical Q&amp;A, viva practice</td><td>Viva-ready presentation</td></tr>
+        <tr><td>Day 45</td><td><span class="phase-badge ph-5">Phase 5</span><br>Final Evaluation &amp; Certificates</td><td>Project demo, assessment, panel feedback</td><td>Final submission + Certificates</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── PROJECT CATALOGUE ── -->
+<section style="padding:70px 5%;">
+  <div class="section-label">Project Catalogue · 80+ Projects</div>
+  <h2 class="section-title">International AI/ML Project Tracks</h2>
+  <p class="section-desc">Students select from 80+ real-world industry projects across 9 domain categories. All projects follow the standard completion framework — problem → data → model → API → dashboard → GitHub → report → demo → viva.</p>
+
+  <div class="project-cats">
+    <div class="proj-cat-card">
+      <h4>🤖 Generative AI &amp; LLM</h4>
+      <ul>
+        <li>Enterprise RAG-Based AI Knowledge Assistant</li>
+        <li>AI Customer Support Chatbot (LLM + RAG)</li>
+        <li>AI Resume Screening &amp; Job Recommendation</li>
+        <li>Multilingual AI Chatbot for Global Customer Service</li>
+        <li>AI Document Question-Answering System</li>
+        <li>Intelligent PDF Research Assistant</li>
+        <li>AI Meeting Summarization &amp; Action-Item Generator</li>
+        <li>LLM-Based Legal Document Analysis Assistant</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>👁️ Computer Vision</h4>
+      <ul>
+        <li>Real-Time Object Detection &amp; Tracking (YOLO)</li>
+        <li>AI-Based Industrial Defect Detection</li>
+        <li>Smart Traffic Monitoring &amp; Vehicle Detection</li>
+        <li>Automatic Number Plate Recognition</li>
+        <li>Driver Drowsiness Detection System</li>
+        <li>PPE Safety Compliance Detection</li>
+        <li>AI Face Recognition Attendance System</li>
+        <li>AI Retail Shelf Monitoring System</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>📊 ML &amp; Predictive Analytics</h4>
+      <ul>
+        <li>Customer Churn Prediction System</li>
+        <li>Credit Risk Prediction using ML</li>
+        <li>Fraud Detection &amp; Anomaly Detection</li>
+        <li>Sales Forecasting System</li>
+        <li>Student Placement Prediction</li>
+        <li>Employee Attrition Prediction</li>
+        <li>Loan Default Prediction</li>
+        <li>Predictive Maintenance System</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>📝 NLP &amp; Transformers</h4>
+      <ul>
+        <li>Multilingual Customer Support Ticket Classification</li>
+        <li>Fake News Detection using Transformers</li>
+        <li>Sentiment Analysis of Product Reviews</li>
+        <li>Spam &amp; Phishing Email Detection (BERT)</li>
+        <li>Named Entity Recognition System</li>
+        <li>AI Complaint Classification System</li>
+        <li>Voice-to-Text + NLP Analysis System</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>🏭 AI for Industry 4.0</h4>
+      <ul>
+        <li>AI Predictive Maintenance for Machines</li>
+        <li>AI Manufacturing Defect Detection</li>
+        <li>Machine Failure Prediction (Sensor Data)</li>
+        <li>Smart Factory Anomaly Detection</li>
+        <li>AI Inventory Demand Forecasting</li>
+        <li>AI Supply Chain Optimization</li>
+        <li>Industrial Safety Violation Detection</li>
+        <li>AI Energy Consumption Prediction</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>🏥 Healthcare AI</h4>
+      <ul>
+        <li>Disease Risk Prediction using ML</li>
+        <li>Medical Image Classification</li>
+        <li>Pneumonia Detection from X-Ray Images</li>
+        <li>Patient Readmission Prediction</li>
+        <li>Medical Report Classification (NLP)</li>
+        <li>AI-Based Symptom Analysis Assistant</li>
+        <li>Hospital Resource Demand Forecasting</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>🔐 Cybersecurity + AI</h4>
+      <ul>
+        <li>AI-Based Malware Classification</li>
+        <li>Phishing Email Detection (BERT)</li>
+        <li>Network Intrusion Detection (ML)</li>
+        <li>Anomaly Detection in Network Traffic</li>
+        <li>AI-Based Fraud Transaction Detection</li>
+        <li>Bot Detection using Machine Learning</li>
+        <li>Malicious URL Classification</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>🎯 Recommendation &amp; Personalisation</h4>
+      <ul>
+        <li>AI Movie Recommendation System</li>
+        <li>E-Commerce Product Recommendation</li>
+        <li>Job Recommendation Engine</li>
+        <li>Personalized Learning Recommendation</li>
+        <li>AI Travel Recommendation System</li>
+        <li>Music Recommendation System</li>
+      </ul>
+    </div>
+    <div class="proj-cat-card">
+      <h4>🔬 Advanced / Research-Level AI</h4>
+      <ul>
+        <li>Explainable AI using SHAP / LIME</li>
+        <li>Federated Learning for Privacy-Preserving ML</li>
+        <li>Edge AI / TinyML Model Deployment</li>
+        <li>Vision Transformer for Image Classification</li>
+        <li>Multimodal Vision-Language AI Assistant</li>
+        <li>Reinforcement Learning for Autonomous Decisions</li>
+        <li>AI Agent for Automated Business Processes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── 10 FLAGSHIP TRACKS ── -->
+<section class="alt-bg" style="padding:60px 5%;">
+  <div class="section-label">Recommended Tracks</div>
+  <h2 class="section-title">10 Flagship Internship Tracks</h2>
+  <p class="section-desc">Colleges can choose one or more flagship tracks to run as a cohort — making project mentoring structured and domain-focused.</p>
+  <div class="flagship-grid">
+    <div class="flagship-card"><div class="f-icon">🤖</div><h4>GenAI / RAG</h4><p>LLMs, Retrieval-Augmented Generation, AI APIs</p></div>
+    <div class="flagship-card"><div class="f-icon">📄</div><h4>AI Resume &amp; Recruitment</h4><p>HR AI, screening, job matching systems</p></div>
+    <div class="flagship-card"><div class="f-icon">👁️</div><h4>Computer Vision</h4><p>YOLO, image classification, defect detection</p></div>
+    <div class="flagship-card"><div class="f-icon">🏭</div><h4>Industrial AI</h4><p>Industry 4.0, smart factory, IoT + ML</p></div>
+    <div class="flagship-card"><div class="f-icon">🔧</div><h4>Predictive Maintenance</h4><p>Sensor data, machine failure prediction</p></div>
+    <div class="flagship-card"><div class="f-icon">🔐</div><h4>Cybersecurity AI</h4><p>Malware, intrusion, fraud detection</p></div>
+    <div class="flagship-card"><div class="f-icon">🌐</div><h4>NLP / Multilingual AI</h4><p>BERT, Transformers, multilingual systems</p></div>
+    <div class="flagship-card"><div class="f-icon">🏥</div><h4>Healthcare AI</h4><p>Medical imaging, disease prediction, NLP reports</p></div>
+    <div class="flagship-card"><div class="f-icon">🚚</div><h4>AI Supply Chain</h4><p>Demand forecasting, risk prediction, optimisation</p></div>
+    <div class="flagship-card"><div class="f-icon">☁️</div><h4>MLOps &amp; AI Deployment</h4><p>FastAPI, Docker, cloud deployment, pipelines</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── DELIVERABLES ── -->
+<section style="padding:70px 5%;">
+  <div class="section-label">Student Deliverables</div>
+  <h2 class="section-title">What Every Student Gets at the End</h2>
+  <p class="section-desc">Every intern completes the program with a comprehensive set of tangible, portfolio-ready outputs — not just a certificate.</p>
+  <div class="deliverables-grid">
+    <div class="deliverable-card"><div class="d-icon">💻</div><h4>Working AI/ML Project</h4><p>End-to-end, industry-oriented project with real dataset</p></div>
+    <div class="deliverable-card"><div class="d-icon">📂</div><h4>Complete Source Code</h4><p>Clean, documented, production-quality codebase</p></div>
+    <div class="deliverable-card"><div class="d-icon">🐙</div><h4>GitHub Repository</h4><p>Public portfolio-ready repository with README</p></div>
+    <div class="deliverable-card"><div class="d-icon">🌐</div><h4>API + Dashboard</h4><p>FastAPI / Flask backend + web UI / dashboard</p></div>
+    <div class="deliverable-card"><div class="d-icon">📝</div><h4>Project Report</h4><p>Full technical documentation in IEEE / industry format</p></div>
+    <div class="deliverable-card"><div class="d-icon">📊</div><h4>Project PPT</h4><p>Professional presentation ready for viva &amp; college submission</p></div>
+    <div class="deliverable-card"><div class="d-icon">🎥</div><h4>Demo Video</h4><p>Recorded project demonstration for portfolio &amp; LinkedIn</p></div>
+    <div class="deliverable-card"><div class="d-icon">🎓</div><h4>2 Certificates</h4><p>45-Day Internship Certificate + Project Completion Certificate</p></div>
+    <div class="deliverable-card"><div class="d-icon">🏅</div><h4>Mock Viva &amp; Evaluation</h4><p>Technical Q&amp;A practice with industry-standard panel feedback</p></div>
+    <div class="deliverable-card"><div class="d-icon">💼</div><h4>Placement Prep</h4><p>Resume, interview Q&amp;A, coding aptitude (Professional &amp; Premium)</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── COLLEGE BULK PRICING ── -->
+<section class="alt-bg" style="padding:70px 5%;">
+  <div class="section-label">College Bulk Pricing</div>
+  <h2 class="section-title">Volume Discounts for Colleges</h2>
+  <p class="section-desc">Partner with AgileProjection to offer the 45-Day AI/ML Internship to your entire batch. Significant per-student discounts apply for bulk enrolments.</p>
+  <div class="bulk-table-wrap">
+    <table class="bulk-table">
+      <thead>
+        <tr>
+          <th>Students Enrolled</th>
+          <th>Fee / Student</th>
+          <th>Estimated Gross Revenue</th>
+          <th>Savings vs Standard</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>50 Students</td><td>₹2,499</td><td>₹1,24,950</td><td>Standard rate</td></tr>
+        <tr><td>100 Students</td><td>₹2,499</td><td>₹2,49,900</td><td>Standard rate</td></tr>
+        <tr><td>200 Students</td><td>₹2,299</td><td>₹4,59,800</td><td>Save ₹200/student</td></tr>
+        <tr><td>300 Students</td><td>₹1,999</td><td>₹5,99,700</td><td>Save ₹500/student</td></tr>
+        <tr><td>500 Students</td><td>₹1,799</td><td>₹8,99,500</td><td>Save ₹700/student</td></tr>
+        <tr><td>1,000 Students</td><td>₹1,499</td><td>₹14,99,000</td><td>Save ₹1,000/student</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.5rem;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:18px;">
+      <div style="font-size:1.3rem;margin-bottom:.5rem;">📋</div>
+      <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:.4rem;">Define Mentor Ratio</h4>
+      <p style="font-size:.8rem;color:var(--slate2);">Specify mentor-to-student ratio before accepting large college batches to ensure quality.</p>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:18px;">
+      <div style="font-size:1.3rem;margin-bottom:.5rem;">⏱️</div>
+      <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:.4rem;">Live Hours Included</h4>
+      <p style="font-size:.8rem;color:var(--slate2);">Specify number of live training and mentoring hours per package before agreement.</p>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:18px;">
+      <div style="font-size:1.3rem;margin-bottom:.5rem;">👥</div>
+      <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:.4rem;">Individual or Team</h4>
+      <p style="font-size:.8rem;color:var(--slate2);">Define whether projects are individual or team-based before the program begins.</p>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:18px;">
+      <div style="font-size:1.3rem;margin-bottom:.5rem;">☁️</div>
+      <h4 style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:.4rem;">Cloud Resources</h4>
+      <p style="font-size:.8rem;color:var(--slate2);">Define API, cloud, and database resources included in the program upfront.</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <a href="#register" class="btn-primary" style="background:linear-gradient(135deg,#7c3aed,var(--cyan));">Partner with Us — College Bulk Enquiry →</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ CTA STRIP ══ -->
+<section class="cta-strip" style="padding:70px 5%;">
+  <div class="section-label" style="margin-bottom:.8rem;">Still Thinking?</div>
+  <h2>The Best Time to Start Was Yesterday.<br>The Second Best Is Right Now.</h2>
+  <p>Batches fill up fast. Secure your seat in the upcoming batch before registrations close.</p>
+  <div class="hero-buttons" style="justify-content:center;">
+    <a href="#register" class="btn-primary">Apply for Free — Takes 2 Minutes →</a>
+    <a href="https://wa.me/918095557334" class="btn-secondary">💬 Chat on WhatsApp</a>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<div class="newsletter">
+  <div class="newsletter-inner">
+    <div>
+      <h3>Stay in the Loop</h3>
+      <p>New batches, free webinars, and career resources — delivered to your inbox.</p>
+    </div>
+    <div class="nl-form">
+      <input type="email" placeholder="your@email.com">
+      <button type="button">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <div class="logo-icon">⚡</div>
+        Agile<span>Projection</span>
+      </a>
+      <p>We're on a mission to empower a million engineers to find their career paths — by making quality technical internship programs freely accessible to every student in India.</p>
+      <div class="footer-contact">
+        <a href="mailto:training@agileprojection.com">✉️ training@agileprojection.com</a>
+        <a href="tel:+918095557332">📞 +91 80955 57332</a>
+        <a href="https://wa.me/918095557334">💬 WhatsApp: +91 80955 57334</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Internships</h4>
+      <ul>
+        <li><a href="#programs">Embedded Systems</a></li>
+        <li><a href="#programs">IoT Internship</a></li>
+        <li><a href="#programs">Campus Ambassador</a></li>
+        <li><a href="#programs">Full Stack (Soon)</a></li>
+        <li><a href="#schedule">Batch Schedule</a></li>
+        <li><a href="#testimonials">Student Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Technical Library</a></li>
+        <li><a href="#">Free Masterclasses</a></li>
+        <li><a href="#">Career Blog</a></li>
+        <li><a href="#faq">FAQs</a></li>
+        <li><a href="#">Student Login</a></li>
+        <li><a href="#">Interview Prep Guide</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">Careers at AP</a></li>
+        <li><a href="#">Hire Our Graduates</a></li>
+        <li><a href="#">Corporate Training</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 AgileProjection.com · All Rights Reserved</p>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Disclaimer</a>
+    </div>
+    <div class="footer-socials">
+      <a href="#" class="social-btn" title="Instagram">📸</a>
+      <a href="#" class="social-btn" title="LinkedIn">💼</a>
+      <a href="#" class="social-btn" title="YouTube">▶️</a>
+      <a href="#" class="social-btn" title="Facebook">👤</a>
+      <a href="#" class="social-btn" title="Twitter / X">🐦</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Tab switcher
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// FAQ accordion
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Form submit
+// ══ LOV ENROLLMENT SYSTEM ══
+const lovData = {
+  'gen-ai': {
+    label: '🤖 Generative AI & LLM',
+    projects: [
+      {id:1, name:'Enterprise RAG-Based AI Knowledge Assistant', tags:'RAG · LLM · Vector DB'},
+      {id:2, name:'AI Customer Support Chatbot using LLM + RAG', tags:'Chatbot · LangChain · FastAPI'},
+      {id:3, name:'AI Resume Screening & Job Recommendation System', tags:'NLP · Matching · HR AI'},
+      {id:4, name:'Multilingual AI Chatbot for Global Customer Service', tags:'Multilingual · LLM · APIs'},
+      {id:5, name:'AI Document Question-Answering System', tags:'QA · Embeddings · RAG'},
+      {id:6, name:'Intelligent PDF Research Assistant using RAG', tags:'PDF · RAG · LangChain'},
+      {id:7, name:'AI Meeting Summarization & Action-Item Generator', tags:'NLP · Summarization · Audio'},
+      {id:8, name:'AI Email Classification & Smart Reply Assistant', tags:'Email · NLP · BERT'},
+      {id:9, name:'LLM-Based Legal Document Analysis Assistant', tags:'Legal AI · NLP · Document'},
+      {id:10, name:'AI Research Paper Summarization System', tags:'Summarization · Transformers'}
+    ]
+  },
+  'cv': {
+    label: '👁️ Computer Vision',
+    projects: [
+      {id:11, name:'Real-Time Object Detection & Tracking using YOLO', tags:'YOLO · OpenCV · Real-time'},
+      {id:12, name:'AI-Based Industrial Defect Detection', tags:'CNN · Quality Control · Vision'},
+      {id:13, name:'Smart Traffic Monitoring & Vehicle Detection', tags:'YOLO · Traffic · Analytics'},
+      {id:14, name:'Automatic Number Plate Recognition System', tags:'OCR · ANPR · OpenCV'},
+      {id:15, name:'Driver Drowsiness Detection System', tags:'Face Detection · Alert · Safety'},
+      {id:16, name:'PPE Safety Compliance Detection', tags:'YOLO · Safety · Industrial'},
+      {id:17, name:'AI-Based Face Recognition Attendance System', tags:'Face Recognition · Attendance'},
+      {id:18, name:'AI Retail Shelf Monitoring System', tags:'Object Detection · Retail · CV'},
+      {id:19, name:'AI-Based Crowd Density Detection', tags:'Density · Crowd · Vision'},
+      {id:20, name:'Satellite Image Classification using Deep Learning', tags:'CNN · Remote Sensing · GIS'}
+    ]
+  },
+  'ml': {
+    label: '📊 ML & Predictive Analytics',
+    projects: [
+      {id:21, name:'Customer Churn Prediction System', tags:'Classification · CRM · Business'},
+      {id:22, name:'Credit Risk Prediction using Machine Learning', tags:'Risk · Finance · XGBoost'},
+      {id:23, name:'Fraud Detection & Anomaly Detection System', tags:'Anomaly · Banking · ML'},
+      {id:24, name:'Sales Forecasting System', tags:'Time Series · Forecasting · ARIMA'},
+      {id:25, name:'Demand Forecasting for Retail', tags:'Retail · Inventory · ML'},
+      {id:26, name:'Student Placement Prediction System', tags:'Classification · Education · HR'},
+      {id:27, name:'Employee Attrition Prediction', tags:'HR Analytics · Classification'},
+      {id:28, name:'Loan Default Prediction', tags:'Finance · Risk · XGBoost'},
+      {id:29, name:'Predictive Maintenance System', tags:'IoT · Sensors · Maintenance'},
+      {id:30, name:'AI-Based Supply Chain Risk Prediction', tags:'Supply Chain · Risk · ML'}
+    ]
+  },
+  'nlp': {
+    label: '📝 NLP & Transformers',
+    projects: [
+      {id:31, name:'Multilingual Customer Support Ticket Classification', tags:'NLP · BERT · Multilingual'},
+      {id:32, name:'Fake News Detection using Transformers', tags:'NLP · BERT · Classification'},
+      {id:33, name:'Sentiment Analysis of Product Reviews', tags:'Sentiment · NLP · E-commerce'},
+      {id:34, name:'AI News Article Summarizer', tags:'Summarization · NLP · Transformers'},
+      {id:35, name:'Spam & Phishing Email Detection using BERT', tags:'BERT · Email · Security'},
+      {id:36, name:'Text Classification using BERT', tags:'BERT · Classification · NLP'},
+      {id:37, name:'Named Entity Recognition System', tags:'NER · spaCy · Information Extraction'},
+      {id:38, name:'Multilingual Document Classification', tags:'Multilingual · NLP · BERT'},
+      {id:39, name:'AI Complaint Classification System', tags:'Classification · CRM · NLP'},
+      {id:40, name:'Voice-to-Text + NLP Analysis System', tags:'ASR · NLP · Speech AI'}
+    ]
+  },
+  'industry': {
+    label: '🏭 AI for Industry 4.0',
+    projects: [
+      {id:41, name:'AI Predictive Maintenance for Industrial Machines', tags:'IoT · Sensors · ML'},
+      {id:42, name:'AI Manufacturing Defect Detection', tags:'Computer Vision · Quality'},
+      {id:43, name:'Machine Failure Prediction using Sensor Data', tags:'Time Series · IoT · ML'},
+      {id:44, name:'AI Production Quality Prediction', tags:'Quality · Manufacturing · ML'},
+      {id:45, name:'Smart Factory Anomaly Detection', tags:'Anomaly · IIoT · Real-time'},
+      {id:46, name:'AI-Based Inventory Demand Forecasting', tags:'Inventory · Forecasting · ML'},
+      {id:47, name:'AI Supply Chain Optimization', tags:'Optimization · Logistics · ML'},
+      {id:48, name:'Industrial Safety Violation Detection', tags:'CV · Safety · PPE · YOLO'},
+      {id:49, name:'Digital Twin Analytics using AI', tags:'Digital Twin · Simulation · ML'},
+      {id:50, name:'AI Energy Consumption Prediction', tags:'Energy · IoT · Forecasting'}
+    ]
+  },
+  'healthcare': {
+    label: '🏥 Healthcare AI',
+    projects: [
+      {id:51, name:'Disease Risk Prediction using ML', tags:'Healthcare · Classification · Risk'},
+      {id:52, name:'Medical Image Classification', tags:'CNN · Medical · Imaging'},
+      {id:53, name:'Pneumonia Detection from X-Ray Images', tags:'CNN · X-Ray · Medical AI'},
+      {id:54, name:'Patient Readmission Prediction', tags:'Healthcare · ML · Hospital'},
+      {id:55, name:'Healthcare Appointment Prediction', tags:'ML · Hospital · Scheduling'},
+      {id:56, name:'Medical Report Classification using NLP', tags:'NLP · Medical · BERT'},
+      {id:57, name:'AI-Based Symptom Analysis Assistant', tags:'Healthcare AI · NLP · Chatbot'},
+      {id:58, name:'Hospital Resource Demand Forecasting', tags:'Forecasting · Hospital · ML'}
+    ]
+  },
+  'cyber': {
+    label: '🔐 Cybersecurity + AI',
+    projects: [
+      {id:59, name:'AI-Based Malware Classification', tags:'Security · ML · Malware'},
+      {id:60, name:'Phishing Email Detection using BERT', tags:'BERT · Phishing · NLP'},
+      {id:61, name:'Network Intrusion Detection using ML', tags:'IDS · Network · ML'},
+      {id:62, name:'Anomaly Detection in Network Traffic', tags:'Anomaly · Security · ML'},
+      {id:63, name:'AI-Based Fraud Transaction Detection', tags:'Fraud · Finance · ML'},
+      {id:64, name:'Bot Detection using Machine Learning', tags:'Bot · Security · Classification'},
+      {id:65, name:'Malicious URL Classification', tags:'URL · Security · NLP'}
+    ]
+  },
+  'recom': {
+    label: '🎯 Recommendation & Personalisation',
+    projects: [
+      {id:66, name:'AI Movie Recommendation System', tags:'Collaborative Filtering · ML'},
+      {id:67, name:'E-Commerce Product Recommendation', tags:'Recommendation · Retail · ML'},
+      {id:68, name:'Job Recommendation Engine', tags:'NLP · Jobs · Matching'},
+      {id:69, name:'Personalized Learning Recommendation System', tags:'EdTech · NLP · ML'},
+      {id:70, name:'AI Travel Recommendation System', tags:'Travel · NLP · Filtering'},
+      {id:71, name:'News Recommendation Engine', tags:'NLP · News · Personalisation'},
+      {id:72, name:'Music Recommendation System', tags:'Audio · ML · Collaborative Filtering'}
+    ]
+  },
+  'advanced': {
+    label: '🔬 Advanced / Research-Level AI',
+    projects: [
+      {id:73, name:'Explainable AI using SHAP/LIME', tags:'XAI · Interpretability · ML'},
+      {id:74, name:'Federated Learning for Privacy-Preserving ML', tags:'Federated · Privacy · ML'},
+      {id:75, name:'Edge AI / TinyML Model Deployment', tags:'Edge · TinyML · IoT'},
+      {id:76, name:'Vision Transformer for Image Classification', tags:'ViT · Transformers · CV'},
+      {id:77, name:'Multimodal Vision-Language AI Assistant', tags:'Multimodal · LLM · Vision'},
+      {id:78, name:'Reinforcement Learning for Autonomous Decision Making', tags:'RL · Agent · Decision'},
+      {id:79, name:'AI-Based Semantic Image Search', tags:'Embeddings · CLIP · Search'},
+      {id:80, name:'AI Agent for Automated Business Processes', tags:'Agent · Automation · LLM'}
+    ]
+  },
+  'other': {
+    label: '⚙️ Embedded / IoT / Full Stack',
+    projects: [
+      {id:81, name:'Embedded Systems Internship', tags:'C/C++ · ARM · RTOS · Firmware'},
+      {id:82, name:'Internet of Things (IoT) Internship', tags:'ESP32 · MQTT · Cloud · Sensors'},
+      {id:83, name:'Full Stack Developer Track', tags:'MERN · React · Node.js · MongoDB'},
+      {id:84, name:'Campus Ambassador Program', tags:'Leadership · Marketing · Non-Tech'}
+    ]
+  }
+};
+
+let selectedCat = null;
+let selectedProject = null;
+
+function selectCat(el, catKey) {
+  document.querySelectorAll('.cat-select-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCat = catKey;
+  document.getElementById('btn-next-1').disabled = false;
+}
+
+function buildLov(catKey, filter) {
+  const data = lovData[catKey];
+  const list = document.getElementById('lovList');
+  document.getElementById('lov-title').textContent = data.label;
+  const projects = filter
+    ? data.projects.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) || p.tags.toLowerCase().includes(filter.toLowerCase()))
+    : data.projects;
+  document.getElementById('lov-count').textContent = projects.length + ' projects';
+  list.innerHTML = projects.map(p => `
+    <div class="lov-item" id="lov-${p.id}" onclick="selectProject(${p.id},'${p.name.replace(/'/g,"\'")}','${data.label}')">
+      <div class="lov-num">${p.id}</div>
+      <div class="lov-text">
+        <strong>${p.name}</strong>
+        <span>${p.tags}</span>
+      </div>
+      <div class="lov-check">✓</div>
+    </div>`).join('');
+  if (selectedProject) {
+    const el = document.getElementById('lov-' + selectedProject.id);
+    if (el) el.classList.add('selected');
+  }
+}
+
+function filterLov(val) {
+  if (selectedCat) buildLov(selectedCat, val);
+}
+
+function selectProject(id, name, catLabel) {
+  selectedProject = { id, name, catLabel };
+  document.querySelectorAll('.lov-item').forEach(el => el.classList.remove('selected'));
+  const el = document.getElementById('lov-' + id);
+  if (el) el.classList.add('selected');
+  document.getElementById('selectedProjectName').textContent = name;
+  document.getElementById('selectedProjectBadge').style.display = 'flex';
+  document.getElementById('btn-next-2').disabled = false;
+}
+
+function goStep(n) {
+  // Populate LOV when moving to step 2
+  if (n === 2 && selectedCat) {
+    buildLov(selectedCat, '');
+    document.getElementById('lovSearch').value = '';
+    if (selectedProject) {
+      document.getElementById('selectedProjectName').textContent = selectedProject.name;
+      document.getElementById('selectedProjectBadge').style.display = 'flex';
+      document.getElementById('btn-next-2').disabled = false;
+    } else {
+      document.getElementById('selectedProjectBadge').style.display = 'none';
+      document.getElementById('btn-next-2').disabled = true;
+    }
+  }
+  // Populate summary when moving to step 4
+  if (n === 4) {
+    const fname = document.getElementById('ef-fname').value || '—';
+    const lname = document.getElementById('ef-lname').value || '—';
+    document.getElementById('sum-name').textContent = fname + ' ' + lname;
+    document.getElementById('sum-email').textContent = document.getElementById('ef-email').value || '—';
+    document.getElementById('sum-mobile').textContent = document.getElementById('ef-mobile').value || '—';
+    document.getElementById('sum-college').textContent = document.getElementById('ef-college').value || '—';
+    const deg = document.getElementById('ef-degree').value;
+    const br = document.getElementById('ef-branch').value;
+    document.getElementById('sum-degree').textContent = (deg && br) ? deg + ' · ' + br : (deg || br || '—');
+    document.getElementById('sum-sem').textContent = document.getElementById('ef-sem').value || '—';
+    document.getElementById('sum-cat').textContent = selectedCat ? lovData[selectedCat].label : '—';
+    document.getElementById('sum-project').textContent = selectedProject ? selectedProject.name : '—';
+    document.getElementById('sum-plan').textContent = document.getElementById('ef-plan').value || '—';
+  }
+  // Update step indicators
+  for (let i = 1; i <= 4; i++) {
+    const ind = document.getElementById('step-ind-' + i);
+    ind.classList.remove('active','done');
+    if (i < n) ind.classList.add('done');
+    else if (i === n) ind.classList.add('active');
+  }
+  // Show correct panel
+  document.querySelectorAll('.enroll-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('ep-' + n);
+  if (panel) panel.classList.add('active');
+  // Scroll to form
+  document.getElementById('registerFormCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function submitEnrolment() {
+  if (selectedProject) {
+    document.getElementById('success-project').textContent = selectedProject.name;
+    document.getElementById('success-cat').textContent = selectedProject.catLabel;
+  }
+  document.querySelectorAll('.enroll-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.enroll-steps, .enroll-header').forEach(el => el.style.opacity = '.4');
+  document.getElementById('enroll-success').style.display = 'block';
+}
+
+// Keep old submitForm for compatibility
+function submitForm() { submitEnrolment(); }
+
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
+</body>
+</html>

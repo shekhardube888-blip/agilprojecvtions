@@ -1,0 +1,202 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* AgileProjection brand colors */
+  --color-navy: #0B1929;
+  --color-navy2: #0F2340;
+  --color-navy3: #0a1422;
+  --color-apblue: #2563EB;
+  --color-apcyan: #06B6D4;
+  --color-apcyan2: #67E8F9;
+}
+
+/* ── Default theme: AgileProjection navy/cyan (dark) ── */
+:root {
+  --radius: 0.75rem;
+  --background: #0B1929;
+  --foreground: #F8FAFC;
+  --card: #111f35;
+  --card-foreground: #F8FAFC;
+  --popover: #0e1b2e;
+  --popover-foreground: #F8FAFC;
+  --primary: #06B6D4;
+  --primary-foreground: #0B1929;
+  --secondary: #0F2340;
+  --secondary-foreground: #94A3B8;
+  --muted: #0a1422;
+  --muted-foreground: #94A3B8;
+  --accent: #0F2340;
+  --accent-foreground: #67E8F9;
+  --destructive: #ef4444;
+  --border: rgba(6,182,212,0.18);
+  --input: rgba(255,255,255,0.05);
+  --ring: #06B6D4;
+  --chart-1: #06B6D4;
+  --chart-2: #2563EB;
+  --chart-3: #7c3aed;
+  --chart-4: #f59e0b;
+  --chart-5: #22c55e;
+  --sidebar: #0B1929;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #06B6D4;
+  --sidebar-primary-foreground: #0B1929;
+  --sidebar-accent: #0F2340;
+  --sidebar-accent-foreground: #67E8F9;
+  --sidebar-border: rgba(6,182,212,0.18);
+  --sidebar-ring: #06B6D4;
+}
+
+.dark {
+  --background: #0B1929;
+  --foreground: #F8FAFC;
+  --card: #111f35;
+  --card-foreground: #F8FAFC;
+  --popover: #0e1b2e;
+  --popover-foreground: #F8FAFC;
+  --primary: #06B6D4;
+  --primary-foreground: #0B1929;
+  --secondary: #0F2340;
+  --secondary-foreground: #94A3B8;
+  --muted: #0a1422;
+  --muted-foreground: #94A3B8;
+  --accent: #0F2340;
+  --accent-foreground: #67E8F9;
+  --destructive: #ef4444;
+  --border: rgba(6,182,212,0.18);
+  --input: rgba(255,255,255,0.05);
+  --ring: #06B6D4;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* ── Custom scrollbar (navy theme) ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a1422;
+}
+::-webkit-scrollbar-thumb {
+  background: #2563EB;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #06B6D4;
+}
+
+/* ── Utility classes ── */
+.ap-gradient-text {
+  background: linear-gradient(90deg, #06B6D4, #2563EB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ap-gradient-cyan {
+  background: linear-gradient(135deg, #2563EB, #06B6D4);
+}
+
+.ap-grid-pattern {
+  background-image:
+    linear-gradient(rgba(6,182,212,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6,182,212,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Hero animated beam */
+@keyframes beamSweep {
+  0% { transform: translateX(-50%) rotate(8deg); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateX(150%) rotate(8deg); opacity: 0; }
+}
+.ap-beam {
+  animation: beamSweep 8s ease-in-out infinite;
+}
+
+/* Soft pulse for badges */
+@keyframes apPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.ap-pulse {
+  animation: apPulse 2.4s ease-in-out infinite;
+}
+
+/* Card hover lift */
+.ap-lift {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.ap-lift:hover {
+  transform: translateY(-4px);
+  border-color: rgba(6,182,212,0.35);
+  box-shadow: 0 16px 48px rgba(6,182,212,0.13);
+}
+
+/* Soft fade-in for sections */
+@keyframes apFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ap-fade-up {
+  animation: apFadeUp 0.7s ease-out both;
+}
+
+/* Section divider */
+.ap-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(6,182,212,0.28), transparent);
+  margin: 0 auto;
+  max-width: 1100px;
+}
