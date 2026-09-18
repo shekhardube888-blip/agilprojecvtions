@@ -315,3 +315,23 @@ Verification (Agent Browser):
 Stage Summary:
 - All "Shekhar Dube" branding replaced with "NT-AI" (text, section id, file name, export name, avatar initials).
 - Contact email (hr@agileprojection.com) and WhatsApp (+91 83199 85622) from the previous task are retained.
+
+---
+Task ID: 12
+Agent: Z.ai Code (orchestrator) — admin credentials + LinkedIn profile link
+Task: Share admin password only (no auto-login); add the LinkedIn profile link for jobs.
+
+Work Log:
+- Admin credentials: shared directly with the user (admin / admin123). NO auto-login, no saved-session shortcut, no credential-sharing UI built — the login dialog still requires manual username+password entry every time. (The demo-credential chips in the login dialog remain as click-to-autofill helpers, but they don't auto-submit.)
+- LinkedIn profile link added to `src/components/agile/footer.tsx`:
+  1. The LinkedIn social icon now points to `https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/` (was a generic linkedin.com).
+  2. Added a new "Jobs on LinkedIn →" link in the Contact column (next to the WhatsApp number) pointing to the same profile, so visitors can find jobs posted on AgileProjection.
+  Both links use `target="_blank" rel="noopener noreferrer"`.
+
+Verification:
+- `bun run lint` clean. Page loads HTTP 200.
+- Browser eval of `footer a[href*="linkedin.com"]` → 2 links, both pointing to the provided profile URL (the social icon + the "Jobs on LinkedIn →" text link).
+
+Stage Summary:
+- Admin password shared with the user only (admin / admin123); no auto-login feature added.
+- LinkedIn profile (https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/) now linked from the footer social icons + a dedicated "Jobs on LinkedIn" link in the Contact column.

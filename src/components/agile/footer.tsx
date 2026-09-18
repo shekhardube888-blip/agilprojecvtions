@@ -79,7 +79,7 @@ export function Footer() {
             </div>
             <div className="mt-5 flex items-center gap-2">
               {[
-                { label: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com" },
+                { label: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/" },
                 { label: "Twitter", icon: Twitter, href: "https://twitter.com" },
                 { label: "YouTube", icon: Youtube, href: "https://www.youtube.com" },
                 { label: "Instagram", icon: Instagram, href: "https://www.instagram.com" },
@@ -145,6 +145,17 @@ export function Footer() {
                 >
                   <MessageCircle className="size-4 text-cyan-400 shrink-0" />
                   +91 83199 85622
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2"
+                >
+                  <Linkedin className="size-4 text-cyan-400 shrink-0" />
+                  Jobs on LinkedIn →
                 </a>
               </li>
             </ul>
