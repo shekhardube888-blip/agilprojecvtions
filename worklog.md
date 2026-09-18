@@ -290,3 +290,28 @@ Stage Summary:
 - Registration notifications now go to hr@agileprojection.com (email) and 918319985622 (WhatsApp).
 - Every UI surface (footer, AI assistant, reports, auth-menu expired-guest CTA, Shekhar Dube ML project section) shows the new contact details.
 - Name "Shekhar Dube" retained. Lint clean.
+
+---
+Task ID: 11
+Agent: Z.ai Code (orchestrator) — Shekhar Dube → NT-AI rebrand
+Task: Replace "Shekhar Dube" with "NT-AI" everywhere.
+
+Work Log:
+- `sed -i 's/Shekhar Dube/NT-AI/g'` across all 6 files containing the text (api/ai-assistant/route.ts, lib/data.ts, components/agile/{aiml-program,nav,footer,shekhar-dube-ml-project}.tsx) — handles display text, comments, string literals, the LLM system prompt, the AUTHOR.name, and the "Curated by" / "Founder" labels.
+- Renamed the section id `#shekhar-dube-ml` → `#nt-ai-ml` everywhere (nav.tsx href, aiml-program.tsx HOUSING_URL, data.ts RESOURCES href, ai-assistant/route.ts system prompt, the component's id, data.ts comment).
+- Renamed the file `src/components/agile/shekhar-dube-ml-project.tsx` → `src/components/agile/nt-ai-ml-project.tsx`.
+- Renamed the export `ShekharDubeMLProject` → `NTAIMLProject` and updated `src/app/page.tsx` (import path + import name + JSX usage).
+- Updated the author avatar initials "SD" → "NT" to match the new "NT-AI" name.
+
+Verification (Agent Browser):
+- Nav Internships dropdown now lists "NT-AI's ML Project — End-to-end housing-price regression" (href #nt-ai-ml).
+- ML project section H2 renders "🏠 NT-AI's End-to-End ML Project — Housing Price Prediction"; avatar shows "NT".
+- aiml-program links read "NT-AI's end-to-end housing-price regression project" + "Open NT-AI's full housing-price ML walkthrough".
+- Footer Contact column shows "NT-AI / Founder & Lead Mentor / hr@agileprojection.com / +91 83199 85622".
+- AI assistant disclaimer: "…email hr@agileprojection.com or WhatsApp +91 83199 85622." (contact unchanged from the previous task; the AI prompt now references "NT-AI's walkthrough" at #nt-ai-ml).
+- `grep -rin "shekhar dube\|shekhar-dube\|ShekharDube" src/` → none remaining.
+- `bun run lint` clean. Page loads HTTP 200.
+
+Stage Summary:
+- All "Shekhar Dube" branding replaced with "NT-AI" (text, section id, file name, export name, avatar initials).
+- Contact email (hr@agileprojection.com) and WhatsApp (+91 83199 85622) from the previous task are retained.

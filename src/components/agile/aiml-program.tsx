@@ -12,9 +12,9 @@ import {
 import { AIML_CURRICULUM, AIML_FEATURES } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 
-// Internal reference — Shekhar Dube's end-to-end ML project lives on this portal
-// at #shekhar-dube-ml (replaces the external Medium article link).
-const HOUSING_URL = "#shekhar-dube-ml";
+// Internal reference — NT-AI's end-to-end ML project lives on this portal
+// at #nt-ai-ml (replaces the external Medium article link).
+const HOUSING_URL = "#nt-ai-ml";
 
 const PIPELINE = [
   { icon: Database, step: "Data Ingestion", note: "Housing CSV → Pandas DataFrame" },
@@ -47,7 +47,7 @@ export function AIMLProgram() {
               href={HOUSING_URL}
               className="text-cyan-300 underline underline-offset-4 inline-flex items-center gap-1"
             >
-              Shekhar Dube&apos;s end-to-end housing-price regression project
+              NT-AI&apos;s end-to-end housing-price regression project
               <ArrowUpRight className="size-3" />
             </a>{" "}
             as the reference architecture, and ship a working AI product by week 6.
@@ -144,7 +144,7 @@ export function AIMLProgram() {
                     href={HOUSING_URL}
                     className="mt-2 inline-flex items-center gap-1 text-[11px] text-cyan-300 hover:text-cyan-200"
                   >
-                    <ArrowUpRight className="size-3" /> Open Shekhar Dube&apos;s full housing-price ML walkthrough
+                    <ArrowUpRight className="size-3" /> Open NT-AI&apos;s full housing-price ML walkthrough
                   </a>
                 )}
               </div>

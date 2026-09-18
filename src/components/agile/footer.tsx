@@ -125,7 +125,7 @@ export function Footer() {
               Contact
             </h3>
             <ul className="flex flex-col gap-2 text-sm">
-              <li className="text-slate-400">Shekhar Dube</li>
+              <li className="text-slate-400">NT-AI</li>
               <li className="text-slate-500 text-xs">Founder &amp; Lead Mentor</li>
               <li>
                 <a

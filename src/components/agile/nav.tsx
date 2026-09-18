@@ -29,7 +29,7 @@ const NAV_LINKS: NavLink[] = [
       { label: "Internet of Things (IoT)", href: "#detail-iot", desc: "ESP32 · MQTT · Cloud" },
       { label: "Campus Ambassador", href: "#detail-cap", desc: "Leadership · Marketing" },
       { label: "AI / ML Industry Internship", href: "#aiml-program", desc: "80+ Projects · 6 Weeks" },
-      { label: "Shekhar Dube's ML Project", href: "#shekhar-dube-ml", desc: "End-to-end housing-price regression" },
+      { label: "NT-AI's ML Project", href: "#nt-ai-ml", desc: "End-to-end housing-price regression" },
       { label: "Full Stack Track", href: "#programs", desc: "MERN + DSA (Coming Soon)" },
     ],
   },

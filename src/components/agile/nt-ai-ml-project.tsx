@@ -14,13 +14,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// ── Shekhar Dube — End-to-End ML Project: Housing Price Prediction ──
+// ── NT-AI — End-to-End ML Project: Housing Price Prediction ──
 // This is the in-portal reference architecture that replaces the external
-// Medium article link. Authored & curated by Shekhar Dube for the
+// Medium article link. Authored & curated by NT-AI for the
 // AgileProjection · NT-AI Network AI/ML internship.
 
 const AUTHOR = {
-  name: "Shekhar Dube",
+  name: "NT-AI",
   role: "AI/ML Lead Mentor · AgileProjection NT-AI Network",
   email: "hr@agileprojection.com",
 };
@@ -234,10 +234,10 @@ def predict(f: Features):
   },
 ];
 
-export function ShekharDubeMLProject() {
+export function NTAIMLProject() {
   return (
     <section
-      id="shekhar-dube-ml"
+      id="nt-ai-ml"
       className="py-16 md:py-24 px-5 md:px-[5%] max-w-7xl mx-auto scroll-mt-20"
       aria-labelledby="sdml-h2"
     >
@@ -246,7 +246,7 @@ export function ShekharDubeMLProject() {
         <div className="rounded-2xl bg-gradient-to-br from-[#1a1400] via-[#071a30] to-[#0a2a30] p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center gap-5">
             <div className="size-16 rounded-full ap-gradient-cyan grid place-items-center text-navy shrink-0 font-bold text-2xl">
-              SD
+              NT
             </div>
             <div className="flex-1">
               <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-1.5">
