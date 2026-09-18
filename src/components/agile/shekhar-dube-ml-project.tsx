@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 const AUTHOR = {
   name: "Shekhar Dube",
   role: "AI/ML Lead Mentor · AgileProjection NT-AI Network",
-  email: "shekhar.dube@agileprojection.com",
+  email: "hr@agileprojection.com",
 };
 
 const TECH = [

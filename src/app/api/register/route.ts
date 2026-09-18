@@ -63,7 +63,7 @@ export async function POST(req: Request) {
     });
 
     // 2) Compose + persist + (optionally) send email & WhatsApp notifications
-    //    destined for shekhar.dube@agileprojection.com and WhatsApp 9644084473.
+    //    destined for hr@agileprojection.com and WhatsApp 8319985622.
     const notify = await notifyRegistration(record, { to: SITE.email, whatsapp: SITE.whatsapp });
 
     // Mark the DB row with whether notifications were dispatched.

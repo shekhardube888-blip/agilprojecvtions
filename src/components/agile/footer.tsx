@@ -129,22 +129,22 @@ export function Footer() {
               <li className="text-slate-500 text-xs">Founder &amp; Lead Mentor</li>
               <li>
                 <a
-                  href="mailto:shekhar.dube@agileprojection.com"
+                  href="mailto:hr@agileprojection.com"
                   className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2 break-all"
                 >
                   <Mail className="size-4 text-cyan-400 shrink-0" />
-                  shekhar.dube@agileprojection.com
+                  hr@agileprojection.com
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/919644084473"
+                  href="https://wa.me/918319985622"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2"
                 >
                   <MessageCircle className="size-4 text-cyan-400 shrink-0" />
-                  +91 96440 84473
+                  +91 83199 85622
                 </a>
               </li>
             </ul>

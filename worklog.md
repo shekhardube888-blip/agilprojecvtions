@@ -263,3 +263,30 @@ Stage Summary:
 - Server-configuration audit: COMPLIANT (relative URLs only, SDK backend-only, single port-3000 instance, API routes not server actions, gateway-safe cookies).
 - Reports now defaults to Today (24h) so the newest registrations are front-and-center.
 - Server-config status strip added to the Reports section for transparency.
+
+---
+Task ID: 10
+Agent: Z.ai Code (orchestrator) — contact email + phone update
+Task: Replace shekhar.dube@agileprojection.com → hr@agileprojection.com and WhatsApp 9644084473 → 8319985622 everywhere.
+
+Work Log:
+- Grepped the whole `src/` tree for both the email and every phone-format variant (plain `9644084473`, `919644084473`, `+91 96440 84473`).
+- Bulk `sed -i` replacement across all 9 affected files (ordered long-string-first to avoid partial matches):
+  1. `919644084473` → `918319985622`  (wa.me / SITE.whatsapp format)
+  2. `9644084473`   → `8319985622`    (plain 10-digit, in comments)
+  3. `+91 96440 84473` → `+91 83199 85622`  (display format)
+  4. `shekhar.dube@agileprojection.com` → `hr@agileprojection.com`
+- Files updated: `src/lib/data.ts` (SITE config: email, whatsapp, whatsappDisplay), `src/lib/notify.ts` (comments + the mailto/wa.me builders use SITE values), `src/app/api/register/route.ts`, `src/app/api/ai-assistant/route.ts` (system prompt + fallback replies), `src/components/agile/{auth-menu,ai-assistant,reports,footer,shekhar-dube-ml-project}.tsx`.
+- Kept the name "Shekhar Dube" everywhere (ML project author, footer Contact column) — only the contact email + phone were changed, per the request.
+- Verified: `grep` for any old value in `src/` → none remaining.
+
+Verification (curl + Agent Browser):
+- `POST /api/register` (fresh "ContactTest Update" registration) → `{to:"hr@agileprojection.com", whatsappNumber:"918319985622", whatsappUrl:"https://wa.me/918319985622?text=…", mailtoUrl:"mailto:hr@agileprojection.com?subject=…"}` ✓
+- Browser: footer Contact column renders "Shekhar Dube / Founder & Lead Mentor / hr@agileprojection.com / +91 83199 85622" ✓
+- Browser: AI assistant disclaimer renders "…email hr@agileprojection.com or WhatsApp +91 83199 85622." ✓
+- `bun run lint` clean.
+
+Stage Summary:
+- Registration notifications now go to hr@agileprojection.com (email) and 918319985622 (WhatsApp).
+- Every UI surface (footer, AI assistant, reports, auth-menu expired-guest CTA, Shekhar Dube ML project section) shows the new contact details.
+- Name "Shekhar Dube" retained. Lint clean.

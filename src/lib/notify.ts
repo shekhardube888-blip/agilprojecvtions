@@ -1,5 +1,5 @@
 // Notification helper: composes + persists email & WhatsApp payloads
-// destined for shekhar.dube@agileprojection.com and WhatsApp 9644084473.
+// destined for hr@agileprojection.com and WhatsApp 8319985622.
 //
 // In a sandboxed environment we cannot rely on a live SMTP relay being
 // configured, so this module:
@@ -112,7 +112,7 @@ export function buildEmailHtml(s: StudentRecord): string {
   </div></body></html>`;
 }
 
-// Build a wa.me URL with a pre-filled message for the staff WhatsApp (9644084473).
+// Build a wa.me URL with a pre-filled message for the staff WhatsApp (8319985622).
 export function buildWhatsAppUrl(s: StudentRecord, whatsappNumber: string): string {
   const msg =
     `*New AgileProjection Registration*\n\n` +
@@ -130,7 +130,7 @@ export function buildWhatsAppUrl(s: StudentRecord, whatsappNumber: string): stri
   return `${base}?text=${encodeURIComponent(msg)}`;
 }
 
-// Build a mailto: URL pre-addressed to shekhar.dube@agileprojection.com.
+// Build a mailto: URL pre-addressed to hr@agileprojection.com.
 export function buildMailtoUrl(to: string, subject: string, text: string): string {
   return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
 }

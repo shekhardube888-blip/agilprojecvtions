@@ -335,8 +335,8 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
               <div className="font-semibold text-rose-300">Access expired</div>
               <p className="text-sm text-slate-400 mt-1 leading-relaxed">
                 Your 2-day access window has ended. Please contact the admin to renew —
-                email <a className="text-cyan-300 underline underline-offset-4" href="mailto:shekhar.dube@agileprojection.com">shekhar.dube@agileprojection.com</a>{" "}
-                or WhatsApp <a className="text-cyan-300 underline underline-offset-4" href="https://wa.me/919644084473">+91 96440 84473</a>.
+                email <a className="text-cyan-300 underline underline-offset-4" href="mailto:hr@agileprojection.com">hr@agileprojection.com</a>{" "}
+                or WhatsApp <a className="text-cyan-300 underline underline-offset-4" href="https://wa.me/918319985622">+91 83199 85622</a>.
               </p>
             </div>
           </div>

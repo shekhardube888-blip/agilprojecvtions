@@ -4,11 +4,11 @@
 export const SITE = {
   brand: "AgileProjection",
   network: "NT-AI Network",
-  email: "shekhar.dube@agileprojection.com", // notifications destination
+  email: "hr@agileprojection.com", // notifications destination
   trainingEmail: "training@agileprojection.com",
   phone: "+91 80955 57332",
-  whatsapp: "919644084473", // WhatsApp number per request (9644084473)
-  whatsappDisplay: "+91 96440 84473",
+  whatsapp: "918319985622", // WhatsApp number per request (8319985622)
+  whatsappDisplay: "+91 83199 85622",
   founded: 2018,
 };
 

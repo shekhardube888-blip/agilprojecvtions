@@ -100,7 +100,7 @@ export function AIAssistant() {
         {
           role: "assistant",
           content:
-            "I couldn't reach the AI service right now. Please try again, or email shekhar.dube@agileprojection.com — our team replies within 24 hours.",
+            "I couldn't reach the AI service right now. Please try again, or email hr@agileprojection.com — our team replies within 24 hours.",
         },
       ]);
     } finally {
@@ -227,12 +227,12 @@ export function AIAssistant() {
 
         <p className="px-4 py-2 text-[10px] text-slate-500 border-t border-[rgba(6,182,212,0.08)] bg-[#0a1422]/60">
           AP-AI Mentor can make mistakes. For official program details, email{" "}
-          <a href="mailto:shekhar.dube@agileprojection.com" className="text-cyan-300 underline underline-offset-4">
-            shekhar.dube@agileprojection.com
+          <a href="mailto:hr@agileprojection.com" className="text-cyan-300 underline underline-offset-4">
+            hr@agileprojection.com
           </a>{" "}
           or WhatsApp{" "}
-          <a href="https://wa.me/919644084473" className="text-cyan-300 underline underline-offset-4">
-            +91 96440 84473
+          <a href="https://wa.me/918319985622" className="text-cyan-300 underline underline-offset-4">
+            +91 83199 85622
           </a>
           .
         </p>

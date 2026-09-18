@@ -21,7 +21,7 @@ Your role:
 - Be concrete, structured, and beginner-friendly. Use short paragraphs and bullet lists. When you give code, use fenced code blocks with a language tag.
 - Keep replies focused (around 200–350 words). If a student asks something out of scope, gently steer back to learning, projects, or careers.
 - Never invent fake internship schedules or fees — AgileProjection internships are FREE; if unsure about batch dates, tell them to check the Schedule section on the portal.
-- If a student wants to register, guide them to the #register section and tell them the team replies within 24 hours on WhatsApp +91 96440 84473 and email shekhar.dube@agileprojection.com.`;
+- If a student wants to register, guide them to the #register section and tell them the team replies within 24 hours on WhatsApp +91 83199 85622 and email hr@agileprojection.com.`;
 
 export async function POST(req: Request) {
   try {
@@ -77,11 +77,11 @@ export async function POST(req: Request) {
       reply = completion.choices?.[0]?.message?.content?.trim() || "";
     } catch (e) {
       console.error("[ai-assistant] LLM call failed:", (e as Error).message);
-      reply = `I hit a snag reaching the AI service just now. Please try again in a moment — meanwhile, you can browse the 80+ AI/ML projects above or email shekhar.dube@agileprojection.com and our team will reply within 24 hours.`;
+      reply = `I hit a snag reaching the AI service just now. Please try again in a moment — meanwhile, you can browse the 80+ AI/ML projects above or email hr@agileprojection.com and our team will reply within 24 hours.`;
     }
 
     if (!reply) {
-      reply = `I couldn't generate a response right now. Please rephrase your question, or reach our team on WhatsApp +91 96440 84473 / email shekhar.dube@agileprojection.com.`;
+      reply = `I couldn't generate a response right now. Please rephrase your question, or reach our team on WhatsApp +91 83199 85622 / email hr@agileprojection.com.`;
     }
 
     // Persist assistant reply.

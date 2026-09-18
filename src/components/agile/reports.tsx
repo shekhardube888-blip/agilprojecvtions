@@ -456,10 +456,10 @@ export function Reports() {
           <p className="text-center text-xs text-slate-500 mt-6">
             Reports auto-update. For a CSV export or batch-wise breakdown, email{" "}
             <a
-              href="mailto:shekhar.dube@agileprojection.com"
+              href="mailto:hr@agileprojection.com"
               className="text-cyan-300 underline underline-offset-4"
             >
-              shekhar.dube@agileprojection.com
+              hr@agileprojection.com
             </a>
             .
           </p>
