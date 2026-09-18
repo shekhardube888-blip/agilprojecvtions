@@ -202,3 +202,38 @@ Stage Summary:
 - Login system live: admin (admin/admin123) + guest1–guest5 (guestN/guestN).
 - Guest passwords expire exactly 2 days after admin unlock; admin renews by clicking Unlock/Renew (payment-received flow); every unlock is audit-logged.
 - Login dialog accessible from the nav (desktop + mobile). `bun run lint` clean.
+
+---
+Task ID: 8
+Agent: Z.ai Code (orchestrator) — Newly-added registration reports
+Task: Let the admin get a report of NEWLY added registrations (today / 7d / 30d) + CSV export.
+
+Work Log:
+- Enhanced `src/app/api/admin/registrations/route.ts`:
+  - Accepts `?since=24h|7d|30d|all` (default all) and `?limit=<int>` (default 50, max 500).
+  - Computes a `cutoff` timestamp; filters `recent`, `byDegree`, `byCategory` to that window.
+  - Returns `newToday` (registrations since local midnight) and `newSince` (registrations in the selected window) in addition to `total`.
+  - Returns `windowStart` (ISO cutoff) so the UI can show the window.
+  - `?format=csv` returns a downloadable CSV (21 columns: createdAt, names, contact, degree, branch, semester, plan, college, state, category, project, source, notes, consent flags, email/WA sent flags) with `Content-Type: text/csv` + `Content-Disposition: attachment; filename="agileprojection-registrations-{since}-{timestamp}.csv"`. Properly escapes commas/quotes/newlines.
+- Enhanced `src/components/agile/reports.tsx`:
+  - Time-filter pill bar: Today (24h) · Last 7 days · Last 30 days · All time — each pill shows its own count badge.
+  - Stat cards: replaced the 4th "Colleges" card with a "New Today" card; the 2nd card now reads "Total Registrations" when since=all, or "New (last <window>)" otherwise. The "New Today" and "New (last <window>)" cards get a glowing cyan border + a pulsing emerald "NEW" badge when their value > 0.
+  - Recent-registrations table title + empty-state message adapt to the active filter ("New Registrations — Today (24h) (4)" vs "All Registrations (latest 18)").
+  - "Download CSV" button (green→cyan gradient) calls `/api/admin/registrations?since=<current>&limit=500&format=csv`, turns the response blob into a download with the server-supplied filename, and shows a "CSV downloaded" toast.
+  - "Showing N registrations added in the last <window>. Refreshed HH:MM" status line.
+  - Refresh button re-fetches with the active filter.
+- Cleaned up now-unused imports (`Users`, `Building2`) and the dead `uniqueColleges` variable.
+- Seeded 3 more registrations (Riya Khanna / Karan Malhotra / Pooja Bhat) so "Today" shows a non-zero count for the demo. DB now has 18 students.
+
+Verification (curl + Agent Browser):
+- `curl /api/admin/registrations?since=24h` → `{total:18, newToday:4, newSince:18, since:"24h", windowStart:..., byDegree:[...], byCategory:[...]}` ✓
+- `curl /api/admin/registrations?since=24h&format=csv` → valid CSV with header + escaped rows (e.g. `"Professional — ₹3,999"`), `Content-Disposition: attachment; filename="agileprojection-registrations-24h-2026-09-18-05-16-17.csv"` ✓
+- Browser: Reports section now shows filter pills Today(4) / 7d / 30d / All(18) + Refresh + Download CSV.
+- Clicking "Today (24h)" → table title becomes "New Registrations — Today (24h) (18)"; stat cards show "New Today: 4" (with NEW badge) and "New (last 24h): 18" (with NEW badge).
+- Clicking "All time" → 2nd card flips to "Total Registrations: 18" (no NEW badge).
+- Clicking "Download CSV" → `GET /api/admin/registrations?since=24h&limit=500&format=csv 200` in the dev log; CSV blob download triggered in-browser.
+- `bun run lint` clean.
+
+Stage Summary:
+- The admin can now get a report of newly-added registrations: click "Reports" in the nav, pick Today / 7 days / 30 days / All time, see the live counts + filtered table, and click "Download CSV" to export exactly the filtered set.
+- Backend supports `since` + `limit` + `format=csv` query params on `GET /api/admin/registrations`.

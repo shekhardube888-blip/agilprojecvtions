@@ -17,15 +17,16 @@ import {
   GraduationCap,
   Layers,
   RefreshCw,
-  Users,
-  Building2,
   Clock,
   Loader2,
   TrendingUp,
+  Download,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 type DegreeRow = { degree: string; _count: { degree: number } };
 type CategoryRow = { categoryLabel: string; _count: { categoryLabel: number } };
@@ -45,10 +46,22 @@ type Recent = {
 type ReportData = {
   ok: boolean;
   total: number;
+  newToday: number;
+  newSince: number;
+  since: SinceFilter;
+  windowStart: string | null;
   byDegree: DegreeRow[];
   byCategory: CategoryRow[];
   recent: Recent[];
 };
+
+type SinceFilter = "24h" | "7d" | "30d" | "all";
+const SINCE_OPTIONS: { key: SinceFilter; label: string }[] = [
+  { key: "24h", label: "Today (24h)" },
+  { key: "7d", label: "Last 7 days" },
+  { key: "30d", label: "Last 30 days" },
+  { key: "all", label: "All time" },
+];
 
 const BAR_COLORS = [
   "#06B6D4",
@@ -67,13 +80,15 @@ export function Reports() {
   const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [since, setSince] = useState<SinceFilter>("all");
+  const [exporting, setExporting] = useState(false);
   const { toast } = useToast();
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (filter: SinceFilter) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/registrations", { cache: "no-store" });
+      const res = await fetch(`/api/admin/registrations?since=${filter}&limit=50`, { cache: "no-store" });
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error || "Failed to load report");
       setData(json);
@@ -87,8 +102,36 @@ export function Reports() {
   }, [toast]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    load(since);
+  }, [load, since]);
+
+  async function exportCsv() {
+    setExporting(true);
+    try {
+      const res = await fetch(`/api/admin/registrations?since=${since}&limit=500&format=csv`, { cache: "no-store" });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || "Export failed");
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get("Content-Disposition") || "";
+      const m = cd.match(/filename="?(.+?)"?(?:;|$)/);
+      const filename = m ? m[1] : `agileprojection-registrations-${since}.csv`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast({ title: "CSV downloaded", description: `${filename}` });
+    } catch (err) {
+      toast({ title: "CSV export failed", description: (err as Error).message, variant: "destructive" });
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const degreeData = (data?.byDegree ?? []).map((d) => ({
     name: d.degree,
@@ -98,9 +141,6 @@ export function Reports() {
     name: d.categoryLabel,
     count: d._count.categoryLabel,
   }));
-  const uniqueColleges = new Set(
-    (data?.recent ?? []).map((r) => r.college?.toLowerCase().trim()).filter(Boolean)
-  ).size;
   const topCategory = categoryData[0];
   const topDegree = degreeData[0];
 
@@ -123,24 +163,70 @@ export function Reports() {
         </p>
       </div>
 
-      {/* Controls */}
-      <div className="flex items-center justify-between mb-6">
+      {/* Controls — time filter + refresh + CSV export */}
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex flex-wrap items-center gap-2 justify-between">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {SINCE_OPTIONS.map((opt) => {
+              const active = since === opt.key;
+              const count = opt.key === "all" ? data?.total : opt.key === "24h" ? data?.newToday : data?.newSince && since === opt.key ? data.newSince : null;
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => setSince(opt.key)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors",
+                    active
+                      ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-300"
+                      : "bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40"
+                  )}
+                  aria-pressed={active}
+                >
+                  {opt.label}
+                  {count !== undefined && count !== null && (
+                    <span className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
+                      active ? "bg-cyan-500/25 text-cyan-200" : "bg-[#0F2340] text-slate-400"
+                    )}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => load(since)}
+              disabled={loading}
+              className="bg-[#0e1b2e] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/40"
+            >
+              {loading ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
+              Refresh
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportCsv}
+              disabled={exporting || loading || (data?.recent.length ?? 0) === 0}
+              className="bg-gradient-to-r from-emerald-600 to-cyan-500 text-white border-transparent hover:opacity-90"
+            >
+              {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />}
+              Download CSV
+            </Button>
+          </div>
+        </div>
         <p className="text-xs text-slate-500 inline-flex items-center gap-1.5">
           <Clock className="size-3.5" />
           {data
-            ? `Last refreshed ${new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}`
+            ? `Showing ${data.recent.length} registration${data.recent.length === 1 ? "" : "s"} ${
+                since === "all" ? "in total" : `added in the last ${SINCE_OPTIONS.find((o) => o.key === since)?.label.toLowerCase()}`
+              }. Refreshed ${new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}.`
             : "Loading…"}
         </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={load}
-          disabled={loading}
-          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/40"
-        >
-          {loading ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-          Refresh
-        </Button>
       </div>
 
       {loading && !data ? (
@@ -154,22 +240,24 @@ export function Reports() {
           {/* Stat cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <StatCard
-              icon={<Users className="size-5" />}
-              label="Total Registrations"
-              value={String(data.total)}
+              icon={<Sparkles className="size-5" />}
+              label="New Today"
+              value={String(data.newToday)}
+              accent="from-emerald-500 to-cyan-500"
+              highlight={data.newToday > 0}
+            />
+            <StatCard
+              icon={<TrendingUp className="size-5" />}
+              label={since === "all" ? "Total Registrations" : `New (last ${SINCE_OPTIONS.find((o) => o.key === since)?.label.toLowerCase().replace("today (24h)", "24h")})`}
+              value={since === "all" ? String(data.total) : String(data.newSince)}
               accent="from-cyan-500 to-blue-600"
+              highlight={since !== "all" && data.newSince > 0}
             />
             <StatCard
               icon={<GraduationCap className="size-5" />}
               label="Degrees Enrolled"
               value={String(data.byDegree.length)}
               accent="from-violet-500 to-cyan-500"
-            />
-            <StatCard
-              icon={<Building2 className="size-5" />}
-              label="Colleges (recent)"
-              value={String(uniqueColleges)}
-              accent="from-emerald-500 to-cyan-500"
             />
             <StatCard
               icon={<Layers className="size-5" />}
@@ -308,12 +396,14 @@ export function Reports() {
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <BarChart3 className="size-4 text-cyan-400" />
-                Recent Registrations (latest {data.recent.length})
+                {since === "all"
+                  ? `All Registrations (latest ${data.recent.length})`
+                  : `New Registrations — ${SINCE_OPTIONS.find((o) => o.key === since)?.label} (${data.recent.length})`}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {data.recent.length === 0 ? (
-                <EmptyState label="No registrations yet — registrations will appear here once students submit the form." />
+                <EmptyState label={since === "all" ? "No registrations yet — registrations will appear here once students submit the form." : `No new registrations in the last ${SINCE_OPTIONS.find((o) => o.key === since)?.label.toLowerCase()}. Try a wider window or click Refresh after a new student registers.`} />
               ) : (
                 <div className="max-h-96 overflow-y-auto -mx-2">
                   <table className="w-full text-sm">
@@ -384,20 +474,36 @@ function StatCard({
   label,
   value,
   accent,
+  highlight,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   accent: string;
+  highlight?: boolean;
 }) {
   return (
-    <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 ap-lift">
+    <div
+      className={cn(
+        "bg-[#111f35] rounded-xl p-5 ap-lift relative overflow-hidden",
+        highlight
+          ? "border border-cyan-400/60 shadow-[0_0_24px_-4px_rgba(6,182,212,0.35)]"
+          : "border border-[rgba(6,182,212,0.18)]"
+      )}
+    >
+      {highlight && (
+        <span className="absolute top-2 right-2 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+          <span className="size-1.5 rounded-full bg-emerald-400 ap-pulse" /> new
+        </span>
+      )}
       <div className="flex items-start justify-between mb-3">
         <span className={`size-10 rounded-lg grid place-items-center text-white bg-gradient-to-br ${accent}`}>
           {icon}
         </span>
       </div>
-      <div className="font-bold text-2xl md:text-3xl ap-gradient-text leading-none">{value}</div>
+      <div className={cn("font-bold text-2xl md:text-3xl leading-none", highlight ? "text-foreground" : "ap-gradient-text")}>
+        {value}
+      </div>
       <div className="text-xs text-slate-400 mt-1.5">{label}</div>
     </div>
   );
