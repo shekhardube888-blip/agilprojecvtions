@@ -60,6 +60,7 @@ function BrandLogo() {
       </span>
       <span className="text-foreground">
         Agile<span className="text-cyan-400">Projection</span>
+        <span className="text-slate-400 text-xs font-semibold ml-0.5 hidden sm:inline">(NT-AI)</span>
       </span>
     </Link>
   );
@@ -157,7 +158,7 @@ export function Nav() {
                   <span className="size-6 rounded-md ap-gradient-cyan grid place-items-center text-navy">
                     <Zap className="size-3.5" fill="currentColor" />
                   </span>
-                  <span>Agile<span className="text-cyan-400">Projection</span></span>
+                  <span>Agile<span className="text-cyan-400">Projection</span> <span className="text-slate-400 text-xs font-semibold">(NT-AI)</span></span>
                 </SheetTitle>
               </SheetHeader>
               <div className="px-2 pb-6 overflow-y-auto flex-1">

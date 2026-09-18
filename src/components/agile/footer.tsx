@@ -41,18 +41,28 @@ export function Footer() {
         <div className="grid lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-10">
           {/* Brand */}
           <div className="lg:pr-6">
-            <Link href="#top" className="flex items-center gap-1.5 font-bold text-xl mb-3">
+            <Link href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 font-bold text-xl mb-3">
               <span className="size-7 rounded-md ap-gradient-cyan grid place-items-center text-navy">
                 <Zap className="size-4" fill="currentColor" />
               </span>
               <span>
                 Agile<span className="text-cyan-400">Projection</span>
+                <span className="text-slate-400 text-xs font-semibold ml-0.5">(NT-AI)</span>
               </span>
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-md">
               AgileProjection (NT-AI Network) is a free engineering internship platform serving BE / B.Tech / ME / M.Tech / MCA students across India. Live mentoring, real projects, AICTE-aligned certificates — at zero cost, always.
             </p>
             <div className="mt-5 flex flex-col gap-2 text-sm">
+              <a
+                href="https://agileprojection.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
+              >
+                <Zap className="size-4 text-cyan-400" />
+                agileprojection.com
+              </a>
               <a
                 href="mailto:training@agileprojection.com"
                 className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
@@ -164,7 +174,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-[rgba(6,182,212,0.12)] flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div>© 2026 AgileProjection.com · All Rights Reserved.</div>
+          <div>© 2026 <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-300">AgileProjection.com</a> · All Rights Reserved.</div>
           <div className="flex items-center gap-4">
             <Link href="#" className="hover:text-cyan-300">Privacy Policy</Link>
             <Link href="#" className="hover:text-cyan-300">Terms</Link>

@@ -335,3 +335,27 @@ Verification:
 Stage Summary:
 - Admin password shared with the user only (admin / admin123); no auto-login feature added.
 - LinkedIn profile (https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/) now linked from the footer social icons + a dedicated "Jobs on LinkedIn" link in the Contact column.
+
+---
+Task ID: 13
+Agent: Z.ai Code (orchestrator) — logo + company URL update
+Task: Update the company URL to agileprojection.com (clickable) and rebrand the logo to "AgileProjection (NT-AI)".
+
+Work Log:
+- Logo rebrand to "AgileProjection (NT-AI)" in `src/components/agile/nav.tsx` (desktop BrandLogo + mobile SheetTitle) and `src/components/agile/footer.tsx` (footer brand). Rendered as `Agile` (white) + `Projection` (cyan) + ` (NT-AI)` (slate-400, `text-xs font-semibold ml-0.5`) — the (NT-AI) suffix is smaller/subtler so the AgileProjection wordmark stays the visual focus. On desktop nav, the (NT-AI) is `hidden sm:inline` so it doesn't crowd the mobile hamburger layout.
+- Company URL `https://agileprojection.com` wired as a clickable link in three footer places:
+  1. Footer brand logo — now links to `https://agileprojection.com` (was `#top`), opens in a new tab.
+  2. A new "agileprojection.com" link (⚡ Zap icon) added at the top of the footer contact list.
+  3. The copyright "AgileProjection.com" in the bottom bar is now a clickable link (was plain text).
+  All use `target="_blank" rel="noopener noreferrer"`.
+- Fixed a div-boundary issue introduced by the MultiEdit (the contact-links `</div>` + social-row `<div>` opening got merged); restored the correct structure.
+
+Verification (curl + Agent Browser + VLM):
+- `bun run lint` clean. Page loads HTTP 200.
+- Browser: nav logo `innerText` = "AgileProjection(NT-AI)"; footer brand logo text = "AgileProjection(NT-AI)" with `href="https://agileprojection.com"`.
+- Footer has 3 distinct `agileprojection.com` links (brand logo, website link, copyright) — all openable.
+- VLM screenshot analysis: "the logo reads AgileProjection (NT-AI) — AgileProjection in white/cyan, (NT-AI) in a smaller, subtler grey font, exactly as described."
+
+Stage Summary:
+- Logo now displays "AgileProjection (NT-AI)" in nav (desktop + mobile) and footer.
+- Company URL agileprojection.com is clickable from the footer brand logo, the contact list, and the copyright line.
