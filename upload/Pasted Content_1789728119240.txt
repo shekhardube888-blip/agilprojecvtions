@@ -1,0 +1,1106 @@
+Launch Your Engineering Career with Free Industry Internships
+AgileProjection · NT-AI Network runs live, mentor-led, project-based internship programs for BE / B.Tech / ME / M.Tech / MCA students — in Embedded, IoT, AI/ML, Full Stack & Campus Ambassador tracks. Build a real project, earn a verifiable certificate, and get career support — at zero cost.
+
+Embedded Systems
+Internet of Things
+Campus Ambassador
+Full Stack Dev
+Register Free — Apply Now
+Explore Programs
+No Fee · 100% Free
+AICTE-Aligned Certificate
+Credit-Eligible
+Live Daily Sessions
+10,000+
+Students Trained
+Across 500+ colleges
+01
+70 / 30
+Practical / Theory
+Hands-on lab split
+02
+4 Weeks
+Per Program
+Project-end capstone
+03
+10,000+
+Students Enrolled
+98%
+Completion Rate
+500+
+Colleges Represented
+4.8 ★
+Average Student Rating
+How It Works
+Your path from enrolment to certificate
+Five clear steps — no fee, no documents, no friction. Pick a track, register free, attend live sessions, build your project, and earn your certificate.
+
+01
+Choose Your Track
+Pick from Embedded Systems, IoT, Campus Ambassador, Full Stack or AI/ML based on your interests and degree stream.
+
+02
+Register Free
+Fill in the online form — no fee, no documents required. You'll receive a confirmation within 24 hours.
+
+03
+Attend Live Sessions
+Join daily online classes with expert mentors. Ask questions, clear doubts, and track your progress.
+
+04
+Build Your Project
+Complete a real-world project as your final deliverable — a working prototype you can showcase in interviews.
+
+05
+Get Certified
+Earn a merit certificate recognised by hundreds of Indian engineering colleges for academic credit.
+
+Internship Programs
+Choose your free internship track
+Four tracks covering the entire engineering landscape — from hardware (Embedded / IoT) to software (Full Stack / AI/ML), plus a non-technical leadership track. All live, all project-based, all free.
+
+⚙️
+Technical
+Embedded Systems Internship
+A live online program where you'll master microcontrollers, real-time operating systems, and firmware development. Build a complete embedded project from scratch with expert mentoring at every step.
+
+C / C++
+ARM Cortex
+RTOS
+GPIO / UART / SPI
+4 Weeks
+Duration
+Free
+Cost
+Daily
+Live Sessions
+Register Now
+Details
+🌐
+Technical
+Internet of Things (IoT) Internship
+Design and build an end-to-end IoT solution — from sensors and microcontrollers to cloud dashboards. Perfect for students who want to work at the intersection of hardware, software, and connectivity.
+
+Arduino / ESP32
+MQTT
+Cloud
+Python
+4 Weeks
+Duration
+Free
+Cost
+Daily
+Live Sessions
+Register Now
+Details
+🎓
+Non-Technical
+Campus Ambassador Program
+Be the face of AgileProjection at your engineering college. Drive awareness, host events, and build a community — while earning a stipend, developing leadership skills, and gaining a standout resume entry.
+
+Marketing
+Leadership
+Event Mgmt
+Stipend
+1 Month
+Duration
+Stipend
+Paid
+Flexible
+Schedule
+Apply Now
+Details
+🖥️
+Coming Soon
+Full Stack Developer Track
+Master the MERN stack (MongoDB, Express, React, Node.js) plus core Data Structures & Algorithms. Build a production-ready capstone application that you can showcase in your portfolio and job interviews.
+
+React
+Node.js
+MongoDB
+DSA
+4 Weeks
+Duration
+Free
+Cost
+TBA
+Batch Start
+Get Notified
+Details
+Curriculum & Outcomes
+What you'll build & learn
+Weekly curriculum, deliverables, perks and eligibility — for each program. Click a tab to switch tracks.
+
+Embedded Systems
+Internet of Things
+Campus Ambassador
+Embedded Systems Internship
+This four-week live program gives engineering students a structured introduction to embedded firmware development. Starting from bare-metal C programming, you'll progress to peripheral interfacing and conclude with a complete RTOS-based project.
+
+Sessions are held daily (2 hours) by industry mentors with hands-on lab assignments after every session. A doubt-clearing session is available every alternate day, plus recorded playbacks for revision.
+
+Weekly Curriculum
+Week 1
+C Programming Fundamentals, Memory Model, Bit Manipulation, GCC Toolchain setup
+Week 2
+Microcontroller Architecture (ARM Cortex-M), GPIO, UART, Timers & Interrupts
+Week 3
+SPI, I2C, ADC/DAC, Sensor interfacing, Debugging with Logic Analyser
+Week 4
+FreeRTOS fundamentals, Task scheduling, Semaphores, Final project integration & demo
+What You'll Build
+Sensor data logger with UART output
+Real-time clock & display system
+Multi-sensor IoT node with RTOS
+Complete project documentation & demo video
+Perks & Recognition
+Merit-based digital certificate
+Project source code on GitHub
+Performance-based goodie packs & vouchers
+LinkedIn recommendation from mentors
+Access to recorded sessions for 3 months
+Eligibility
+BE / B.Tech students (3rd – 8th semester)
+Branches: ECE, EEE, EI, CSE, IT, Mech
+Basic C programming knowledge preferred
+Laptop with internet connection required
+Batch Schedule
+Upcoming internship batches
+All sessions are online live. Seats are limited per batch — register early to confirm your spot.
+
+Embedded Systems Internship
+Online Live
+Open
+Start
+10 Aug 2026
+Last Date
+01 Aug 2026
+Duration
+4 Weeks
+Apply Now
+IoT Internship
+Online Live
+Open
+Start
+01 Sep 2026
+Last Date
+20 Aug 2026
+Duration
+4 Weeks
+Apply Now
+Campus Ambassador Program
+Hybrid
+Open
+Start
+Rolling
+Last Date
+05 Sep 2026
+Duration
+1 Month
+Apply Now
+AI / ML Industry Internship
+Online Live
+Open
+Start
+15 Sep 2026
+Last Date
+05 Sep 2026
+Duration
+6 Weeks
+Apply Now
+Full Stack Developer Track
+Online Live
+Coming Soon
+Start
+TBA
+Last Date
+TBA
+Duration
+4 Weeks
+Apply Now
+Why AgileProjection
+The benefits that make us different
+Free doesn't mean low-quality. We invest in live mentoring, project work, and career support so you graduate ready for real industry jobs.
+
+📡
+Live Online Delivery
+Every session is taught live — not pre-recorded. You interact with mentors in real time, ask questions, and get answers on the spot. Recorded playbacks are available within 2 hours for revision.
+
+👨‍🏫
+Expert Industry Mentors
+Our mentors are active professionals with 8–20 years of embedded, IoT, and software experience. They bring real-world context to every concept — not just textbook theory.
+
+🛠️
+Project-Based Learning
+Every program ends with a working project you can demo to recruiters and submit to your college. 70% of session time is hands-on lab work — debugging, building, testing.
+
+🔄
+Unlimited Doubt Clearing
+Doubt-clearing sessions every alternate day, plus a dedicated Slack channel for async questions. No question goes unanswered — mentors respond within 4 hours on weekdays.
+
+🎓
+AICTE-Aligned Certificate
+Our merit certificates are accepted by hundreds of engineering colleges for academic credit conversion, fulfilling AICTE and most university internship mandates.
+
+🏆
+Perks & Recognition
+Quizzes, weekly challenges, and leaderboard competitions. Top performers receive goodie packs, Amazon vouchers, LinkedIn endorsements, and featured profiles on our platform.
+
+🤝
+Career Support
+Resume review workshops (DISHA sessions), mock interview preparation, and job board access are included for all interns who complete the program successfully.
+
+💰
+100% Free — Always
+No registration fee. No course fee. No hidden charges — ever. AgileProjection is committed to democratising quality technical education for every engineering student in India.
+
+Student Stories
+What our interns say
+Real students, real projects, real career outcomes. 10,000+ engineering students trained across 500+ colleges.
+
+“The Embedded Systems internship was the best thing I did in my 3rd year. The mentors were incredibly patient and the project I built got me my first campus interview call. Completely free and genuinely worth every hour.”
+AS
+Aditya Sharma
+B.Tech ECE · VIT Vellore · Embedded Batch '25
+“I was sceptical about a free internship — thought it would be superficial. I was completely wrong. The IoT program had daily live sessions, real labs, and I ended up building a working smart home sensor. The certificate is on my CV and it gets noticed.”
+PM
+Priya Menon
+B.Tech CSE · NIT Trichy · IoT Batch '25
+“The Campus Ambassador Program taught me more about marketing and event management than any college subject did. I organised two successful college events and the stipend was a nice bonus. Highly recommend for non-CS students who want a strong internship.”
+RJ
+Rahul Joshi
+B.Tech Civil · BITS Pilani · CAP Batch '24
+“What I loved most was the doubt-clearing sessions — the mentors would stay back and explain until every student understood. That's rare. My project on an RTOS-based data logger was presented at my college tech fest and won first prize.”
+SK
+Sneha Kulkarni
+B.Tech EEE · RVCE Bangalore · Embedded Batch '25
+“I joined the IoT program during my 5th semester summer break. In 4 weeks I went from barely knowing what ESP32 was to deploying a live cloud dashboard. The 70/30 practical split is real — we spent most time actually building, not listening to lectures.”
+KV
+Kartik Verma
+B.Tech Mech · Delhi Technological Univ. · IoT Batch '24
+“The DISHA career workshop alone was worth it. They reviewed my resume, did a mock HR round, and helped me understand what companies actually look for. I got my internship offer within 3 weeks of completing the program.”
+NP
+Nidhi Patel
+B.Tech IT · Nirma University · Embedded Batch '24
+About AgileProjection
+A mission to make quality engineering internships free for every Indian student
+AgileProjection (NT-AI Network) was founded in 2018 with a single conviction: every engineering student in India deserves access to industry-grade mentorship, real projects, and a verifiable certificate — regardless of their financial background or college tier.
+
+Over 10,000 students across 500+ colleges have completed our live, project-based internship programs in Embedded Systems, IoT, Full Stack, AI/ML and Campus Ambassador tracks. Our mentors are working professionals from companies like Texas Instruments, Bosch, Qualcomm, and Infosys.
+
+We are 100% free — always. No registration fee, no course fee, no certificate fee. No hidden charges of any kind. We are committed to democratising quality technical education for the next generation of Indian engineers.
+
+AICTE mandate compliance: our merit certificates are accepted by 500+ engineering colleges across India and are designed to meet AICTE & most university internship-mandate requirements for academic credit conversion.
+
+2018
+Founded
+10K+
+Students Trained
+500+
+Partner Colleges
+50+
+Expert Mentors
+4
+Program Tracks
+98%
+Completion Rate
+Meet the Mentors
+Learn from industry veterans
+Our mentors are active professionals with 8–20 years of experience at companies like Texas Instruments, Bosch, Qualcomm & Infosys. They bring real-world context to every session.
+
+VK
+Vijay Kumar
+Lead Mentor — Embedded
+Ex-Texas Instruments · 14 yrs experience
+
+SR
+Supriya Rao
+IoT Program Lead
+Ex-Bosch · 11 yrs in Industrial IoT
+
+AM
+Anand Mehta
+Firmware Engineer
+Ex-Qualcomm · ARM Cortex specialist
+
+PN
+Preethi Nair
+Career Coach & DISHA Lead
+10 yrs in engineering placement
+
+RB
+Rahul Bose
+Full Stack Track Lead
+Ex-Infosys · MERN & DSA expert
+
+Frequently Asked
+Everything you want to know
+Still have a question? Ask the AI Mentor below, or WhatsApp +91 80955 57334 — our team replies within 24 hours.
+
+Is the internship really free? Are there any hidden charges?
+Yes, completely free. There is no registration fee, no course fee, no certificate fee, and no hidden charges of any kind. AgileProjection's mission is to make quality internship programs accessible to every engineering student in India, regardless of financial background.
+Will my college accept this certificate for the internship credit requirement?
+What equipment or software do I need?
+What are the session timings? Can I attend if I have college classes?
+I'm a B.E / B.Tech / MCA / M.Tech student. Which program is right for me?
+How is the certificate issued? Is it digital or physical?
+What if I miss a few sessions? Will I still get the certificate?
+Can non-engineering students apply?
+Free Resources
+Tools to keep you learning
+Beyond the internship programs — a free library, an AI mentor, an end-to-end ML project guide, and our career blog.
+
+📚
+Technical Resource Library
+Free course material covering Embedded C, Linux internals, IoT protocols, RTOS, ARM architecture, and more. Updated every quarter with new content from our mentors.
+
+Explore Library
+💬
+AI Learning Assistant
+Ask our AI-powered assistant any technical or career question — from 'how do I start my final year AI project' to 'which domain suits my branch'. Built specifically for BE / B.Tech / MCA / M.Tech students.
+
+Ask the AI →
+📝
+Shekhar Dube's End-to-End ML Project
+A complete, in-portal walkthrough by Shekhar Dube — building a Housing Price Prediction regression model from raw CSV to deployed API. Covers data ingestion, EDA, feature engineering, modelling, evaluation and deployment with real Python/Scikit-Learn code at every stage.
+
+Open the walkthrough →
+🎓
+Career & Technical Blog
+Practical guides: building your first IoT project, cracking embedded systems interviews, writing a resume that gets callbacks, and understanding the AI/ML job market in 2026.
+
+Read Articles →
+Free Enrolment · 4 Steps
+Register for your free internship
+Pick a track, choose a project, enter your details, and confirm. No fee, no documents, no friction — your seat is reserved the moment you submit.
+
+1
+Category
+2
+Project
+3
+Details
+4
+Confirm
+Step 1
+Select your internship category
+Pick the AI/ML domain or classic track you want to intern in. You can change this any time before submitting.
+
+
+🤖
+Generative AI & LLM
+10 projects · RAG, Chatbots, LLMs
+
+👁️
+Computer Vision
+10 projects · YOLO, Detection, Classification
+
+📊
+ML & Predictive Analytics
+10 projects · Churn, Fraud, Forecasting
+
+📝
+NLP & Transformers
+10 projects · BERT, Sentiment, Classification
+
+🏭
+AI for Industry 4.0
+10 projects · Manufacturing, Smart Factory
+
+🏥
+Healthcare AI
+8 projects · Medical Imaging, Disease Risk
+
+🔐
+Cybersecurity + AI
+7 projects · Malware, Intrusion, Fraud
+
+🎯
+Recommendation & Personalisation
+7 projects · Movies, E-Commerce, Learning
+
+🔬
+Advanced / Research AI
+8 projects · XAI, Federated Learning, Edge AI
+
+⚙️
+Embedded / IoT / Full Stack
+Classic AgileProjection tracks
+Next: Choose Project
+Need help choosing? Ask AP-AI Mentor or WhatsApp +91 80955 57334.
+
+Staff Dashboard · Live Insights
+Registration Reports & Analytics
+Live counts of students registered for AgileProjection internships — broken down by degree (BE / B.Tech / MCA / M.Tech) and by AI/ML project domain. Data refreshes from the database in real time.
+
+Today (24h)
+4
+Last 7 days
+Last 30 days
+All time
+18
+Refresh
+Download CSV
+Showing 18 registrations in total. Refreshed 04:11 pm.
+
+new
+4
+New Today
+18
+Total Registrations
+3
+Degrees Enrolled
+9
+AI/ML Domains
+Registrations by Degree
+BE / B.Tech
+ME / M.Tech
+MCA
+0
+3
+6
+9
+12
+Top degree:
+BE / B.Tech
+· 9 students
+Registrations by AI/ML Domain
+0
+2
+4
+6
+8
+ML & PredictiveAnalytics
+Generative AI & LLM
+Computer Vision
+Recommendation &Personalisation
+NLP & Transformers
+Healthcare AI
+Cybersecurity + AI
+Advanced / Research AI
+AI for Industry 4.0
+Top domain:
+ML & Predictive Analytics
+· 5 students
+All Registrations (latest 18)
+Student	Degree / Branch	Project	When
+Pooja Bhat
+pooja@bit.edu
+MCA
+Information Technology
+AI Customer Support Chatbot using LLM + RAG
+Generative AI & LLM
+5h ago
+Karan Malhotra
+karan@manipal.edu
+ME / M.Tech
+AI & Machine Learning
+Fraud Detection & Anomaly Detection System
+ML & Predictive Analytics
+5h ago
+Riya Khanna
+riya@srm.edu
+BE / B.Tech
+AI & Data Science
+Smart Traffic Monitoring & Vehicle Detection
+Computer Vision
+5h ago
+Shekhar Dube
+shekhardube888@gmail.com
+ME / M.Tech
+AI & Machine Learning
+Enterprise RAG-Based AI Knowledge Assistant
+Generative AI & LLM
+6h ago
+Vikram Singh
+vikram@thapar.edu
+ME / M.Tech
+AI & Machine Learning
+Driver Drowsiness Detection System
+Computer Vision
+14h ago
+Ananya Iyer
+ananya@ssn.edu
+BE / B.Tech
+Computer Science Engineering
+AI Predictive Maintenance for Industrial Machines
+AI for Industry 4.0
+14h ago
+Manish Gupta
+manish@coep.ac.in
+MCA
+Information Technology
+AI Movie Recommendation System
+Recommendation & Personalisation
+14h ago
+Divya Reddy
+divya@jntuh.ac.in
+BE / B.Tech
+AI & Data Science
+Phishing Email Detection using BERT
+Cybersecurity + AI
+14h ago
+Arjun Nair
+arjun@vit.ac.in
+ME / M.Tech
+AI & Data Science
+Explainable AI using SHAP/LIME
+Advanced / Research AI
+14h ago
+Nidhi Patel
+nidhi@nirma.ac.in
+MCA
+Computer Science Engineering
+Disease Risk Prediction using ML
+Healthcare AI
+14h ago
+Kartik Verma
+kartik@dtu.ac.in
+BE / B.Tech
+Mechanical Engineering
+Customer Churn Prediction System
+ML & Predictive Analytics
+14h ago
+Sneha Kulkarni
+sneha@rvce.edu
+BE / B.Tech
+Electronics & Communication
+Fake News Detection using Transformers
+NLP & Transformers
+14h ago
+Rahul Joshi
+rahul@bits.ac.in
+MCA
+Information Technology
+Enterprise RAG-Based AI Knowledge Assistant
+Generative AI & LLM
+14h ago
+Priya Menon
+priya@nitt.edu
+ME / M.Tech
+AI & Machine Learning
+Real-Time Object Detection & Tracking using YOLO
+Computer Vision
+14h ago
+Shekhar Dube
+shekhardube888@gmail.com
+BE / B.Tech
+Information Technology
+Customer Churn Prediction System
+ML & Predictive Analytics
+14h ago
+Aditya Sharma
+aditya.sharma@vit.ac.in
+BE / B.Tech
+Computer Science Engineering
+Housing Price Prediction using Regression (End-to-End ML)
+ML & Predictive Analytics
+14h ago
+Verify Test
+verify@test.com
+BE / B.Tech
+Computer Science Engineering
+Housing Price Prediction using Regression (End-to-End ML)
+ML & Predictive Analytics
+14h ago
+Test User
+testuser@example.com
+BE / B.Tech
+Computer Science Engineering
+Enterprise RAG-Based AI Knowledge Assistant
+Generative AI & LLM
+14h ago
+Reports auto-update. For a CSV export or batch-wise breakdown, email shekhar.dube@agileprojection.com.
+
+Powered by SkillGorila Partnership
+86 industry-ready IT courses on SkillGorila — every one free for AgileProjection students.
+Master SAP
+India's #1 SAP Training Platform
+SAP Ariba, BTP, S/4HANA MM, and SAP AI Core — with real sandbox access, live mentor-led sessions, and certification aligned with SAP's official curriculum. The fastest path to a high-paying SAP consultant role in India.
+
+SAP Ariba
+SAP BTP
+SAP S/4HANA MM
+SAP AI Core
+Generative AI for SAP
+95%
+Placement Rate
+SAP-certified alumni placed across 200+ Indian enterprises
+All
+SAP Modules
+Cloud & BTP
+Programming
+AI & ML
+Data & Analytics
+Cloud & DevOps
+Cybersecurity
+Business
+⚙️
+Bestseller
+SAP Certified
+SAP Ariba: Complete Procurement & Supply Chain Mastery
+Hands-on training covering sourcing, contracts, supplier collaboration, and buying with real-world enterprise project scenarios. Includes live Ariba sandbox access.
+
+48 hrs content
+Live sessions
+Certificate included
+4.9
+· 3.2K
+Price
+FREE
+Enroll Now
+☁️
+Hot
+Cloud
+SAP BTP: Business Technology Platform — Complete Guide
+Master SAP's cloud platform for application development, integration, and AI services. Covers CAP framework, Fiori, KYMA, and real BTP system access throughout.
+
+36 hrs content
+Live sessions
+Certificate included
+4.8
+· 2.1K
+Price
+FREE
+Enroll Now
+📦
+S/4HANA
+SAP MM: Materials Management Complete Guide
+Master procurement cycles, inventory management, and materials planning with live S/4HANA system access. Covers P2P, vendor evaluation, invoice verification, and more.
+
+40 hrs content
+Live sessions
+Certificate included
+4.7
+· 1.8K
+Price
+FREE
+Enroll Now
+🤖
+New
+AI
+AI & Machine Learning for SAP — SAP AI Core & Launchpad
+Build and deploy AI models on SAP's enterprise stack. Covers Generative AI, NLP, ML pipelines, SAP AI Core, and real enterprise AI use cases with Python and SAP tools.
+
+32 hrs content
+Live sessions
+Certificate included
+4.9
+· 980
+Price
+FREE
+Enroll Now
+🖥️
+Popular
+Free
+Full Stack Web Development — MERN Stack + DSA
+Complete full-stack bootcamp: React, Node.js, Express, MongoDB, REST APIs, authentication, cloud deployment, and interview-ready DSA preparation in one comprehensive program.
+
+60 hrs content
+Live sessions
+Certificate included
+4.8
+· 2.4K
+Price
+FREE
+Enroll Now
+🔧
+AWS + Azure
+Cloud & DevOps: AWS, Azure, Docker, Kubernetes & CI/CD
+From cloud fundamentals to deploying containerised microservices — covers AWS core services, Azure fundamentals, Docker, Kubernetes, Jenkins CI/CD, and Terraform IaC.
+
+44 hrs content
+Live sessions
+Certificate included
+4.7
+· 1.5K
+Price
+FREE
+Enroll Now
+🔐
+New 2026
+Cybersecurity Fundamentals — Ethical Hacking & SOC Analyst
+Network security, penetration testing, vulnerability assessment, SIEM tools, and SOC operations. Aligned with CompTIA Security+ and CEH certification objectives.
+
+38 hrs content
+Live sessions
+Cert-aligned
+4.8
+· 760
+Price
+FREE
+Enroll Now
+📊
+Trending
+Data Analytics & Business Intelligence — Python, Power BI & SQL
+End-to-end data analytics: SQL querying, Python (Pandas, NumPy, Matplotlib), Power BI dashboards, and storytelling with data for business decision-making.
+
+42 hrs content
+Live sessions
+Certificate included
+4.8
+· 1.9K
+Price
+FREE
+Enroll Now
+View All 86 Courses on SkillGorila
+SkillGorila Faculty
+Learn from the Top 1% of Industry Professionals
+Every IT course on SkillGorila is taught by working practitioners — SAP consultants, cloud architects, full-stack leads, ML engineers & security researchers — not just full-time trainers.
+
+VK
+Vijay Kumar
+Lead Mentor — Embedded
+Ex-Texas Instruments · 14 yrs experience
+
+SR
+Supriya Rao
+IoT Program Lead
+Ex-Bosch · 11 yrs in Industrial IoT
+
+AM
+Anand Mehta
+Firmware Engineer
+Ex-Qualcomm · ARM Cortex specialist
+
+PN
+Preethi Nair
+Career Coach & DISHA Lead
+10 yrs in engineering placement
+
+RB
+Rahul Bose
+Full Stack Track Lead
+Ex-Infosys · MERN & DSA expert
+
+Flagship Internship
+🚀 AI/ML Industry Internship — 80+ Industry Projects
+A 6-week, project-based ML internship designed for BE / B.Tech final-year, M.Tech and MCA students. You'll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using Shekhar Dube's end-to-end housing-price regression project as the reference architecture, and ship a working AI product by week 6.
+
+🧠
+80+ Industry Projects
+Pick from Gen-AI, Computer Vision, NLP, ML, Healthcare AI, Cybersecurity + AI, Recommendation Systems, Industry 4.0, Research AI, and more.
+
+📊
+End-to-End ML Pipeline
+Built around the complete ML lifecycle (data ingestion → EDA → feature engineering → modelling → tuning → deployment) using Shekhar Dube's housing-price regression project as the reference architecture.
+
+🎓
+PG-Depth Curriculum
+Designed for BE / B.Tech final-year, M.Tech and MCA students. Project complexity and mentorship depth is calibrated for postgraduate learning outcomes.
+
+🏆
+Industry Mentor Reviews
+Weekly code reviews by working ML engineers, capstone presentation to an industry panel, and a verifiable completion certificate with project GitHub link.
+
+ML Pipeline (worked example: housing-price regression)
+Data Ingestion
+Housing CSV → Pandas DataFrame
+EDA
+Geo scatter · correlation heatmap
+Feature Engineering
+Custom transformers · pipelines
+Modelling
+LinReg · DT · RF · GB
+Evaluation
+RMSE · CV · SHAP
+Deployment
+FastAPI + Streamlit
+The same 6-stage pipeline you'll follow across all 80+ projects — adapted to the dataset and domain of your choice.
+
+6-Week Curriculum
+From Pandas notebook to deployed AI product
+Week 1
+Python for ML · Data Ingestion
+Reference architecture
+NumPy / Pandas / Matplotlib, loading datasets (CSV, API, DB), handling missing values, basic EDA. You'll work with the California Housing dataset — the exact sandbox used in Shekhar Dube's end-to-end ML project.
+
+Open Shekhar Dube's full housing-price ML walkthrough
+Week 2
+Exploratory Data Analysis & Visualisation
+Univariate & multivariate analysis, correlation heatmaps, geographical scatter (lat/long), feature-target relationships — the same EDA flow used in Shekhar Dube's housing-price regression project (Stage 2).
+
+Week 3
+Feature Engineering & Pipeline Design
+Reference architecture
+Handling categorical & numerical attributes, custom transformers, full Scikit-Learn pipeline, train/val stratified split — replicating Stage 3 of Shekhar Dube's ML project.
+
+Week 4
+Model Training & Tuning
+Reference architecture
+Linear Regression, Decision Tree, Random Forest, Gradient Boosting. Cross-validation, RMSE evaluation, RandomizedSearchCV hyperparameter tuning — the model zoo from Shekhar Dube's housing-price walkthrough (Stage 4).
+
+Week 5
+Model Evaluation & Explainability
+Feature importance, error analysis, SHAP/LIME interpretation, confidence intervals — understanding why your model makes the predictions it does (Stage 5).
+
+Week 6
+Deployment & Capstone Demo
+FastAPI serving, Streamlit dashboard, model versioning, presenting to an industry panel. You ship a working AI product, not just a notebook (Stage 6).
+
+Register for AI/ML Internship
+SD
+Reference Project · Curated by Shekhar Dube
+🏠 Shekhar Dube's End-to-End ML Project — Housing Price Prediction
+A complete, production-style Machine Learning walkthrough — from raw CSV to a deployed prediction API. This is the reference architecture every AgileProjection AI/ML intern follows across all 80+ projects. Build it, own it, ship it.
+
+AI/ML Lead Mentor · AgileProjection NT-AI Network
+✉️ shekhar.dube@agileprojection.com
+Dataset
+California Housing
+20,640 rows · 10 features
+Target
+Median House Value
+Regression (USD)
+Eval Metric
+RMSE
++ cross-validation
+Best Model
+Random Forest
+tuned via RandomizedSearchCV
+Tech Stack
+Python 3.11
+Pandas
+NumPy
+Scikit-Learn
+Matplotlib
+Seaborn
+Jupyter
+FastAPI
+Streamlit
+Why this project?
+Housing-price regression is the single best "first end-to-end ML project" — it's tabular, has a clear target, mixes numeric + geographic features, and rewards every stage of the pipeline (EDA matters, feature engineering matters, tuning matters). Master this, and the same 6-stage recipe transfers to churn, fraud, forecasting, even vision and NLP.
+
+Week 1
+Stage 1
+Data Ingestion & Setup
+Pull the California Housing dataset from Scikit-Learn, load it into a Pandas DataFrame, and set up the project structure (notebooks, src/, data/, models/).
+
+Load fetch_california_housing() into a DataFrame
+Inspect shape, dtypes, head(), describe()
+Train/validation stratified split (80/20)
+Project layout: notebooks/ · src/ · models/ · data/
+from sklearn.datasets import fetch_california_housing
+import pandas as pd
+
+housing = fetch_california_housing(as_frame=True)
+df = housing.frame
+print(df.shape)        # (20640, 9)
+print(df.info())       # dtypes + nulls
+print(df.describe())  # median, IQR, outliers
+
+# Stratified split on median income (binned)
+import numpy as np
+from sklearn.model_selection import train_test_split
+df["income_cat"] = pd.cut(df.MedInc, bins=[0,1.5,3,4.5,6,np.inf], labels=[1,2,3,4,5])
+train, test = train_test_split(df, test_size=0.2, stratify=df.income_cat, random_state=42)
+Week 2
+Stage 2
+Exploratory Data Analysis (EDA)
+Understand the data before modelling. Plot distributions, correlations, and a geographical scatter to see how location drives price.
+
+Histograms of every numeric feature (spot skew)
+Correlation heatmap — rank features vs. target
+Geographical scatter (lat/long, colour = price)
+Log-transform long-tailed features if needed
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 1. Distributions
+df.hist(bins=40, figsize=(12, 8))
+plt.tight_layout(); plt.show()
+
+# 2. Correlation with target
+corr = df.corr(numeric_only=True)["MedHouseVal"].sort_values(ascending=False)
+print(corr)
+
+# 3. Geo scatter — coastal density matters
+df.plot(kind="scatter", x="Longitude", y="Latitude",
+        alpha=0.4, s=df.Population/100, c="MedHouseVal",
+        cmap="jet", colorbar=True, figsize=(9,7))
+plt.show()
+Week 3
+Stage 3
+Feature Engineering & Pipeline
+Build a Scikit-Learn Pipeline so preprocessing is reproducible and deploy-safe. Combine numeric imputation + scaling with categorical one-hot in one transformer.
+
+Feature engineering: rooms_per_household, bedrooms_per_room, population_per_household
+Pipeline: SimpleImputer → StandardScaler (numeric)
+ColumnTransformer to handle mixed types at once
+Full Pipeline wrapping preprocess + model
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.base import BaseEstimator, TransformerMixin
+
+class FeatureAdder(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None): return self
+    def transform(self, X):
+        rooms, hh, pop = X[:, 3], X[:, 4], X[:, 5]
+        return np.c_[X, rooms / hh, pop / hh, rooms / pop]
+
+num_pipe = Pipeline([
+    ("impute", SimpleImputer(strategy="median")),
+    ("add_feats", FeatureAdder()),
+    ("scale", StandardScaler()),
+])
+cat_pipe = Pipeline([
+    ("impute", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore")),
+])
+prep = ColumnTransformer([("num", num_pipe, num_cols), ("cat", cat_pipe, cat_cols)])
+Week 4
+Stage 4
+Model Training & Tuning
+Train several regression baselines, then tune the best with cross-validated random search. Always compare against a dummy baseline.
+
+Baselines: LinearRegression, DecisionTree, RandomForest, GradientBoosting
+K-fold (5) cross-validation with RMSE scoring
+RandomizedSearchCV over n_estimators, max_depth, max_features
+Persist the tuned model with joblib
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import RandomizedSearchCV
+from scipy.stats import randint
+
+param_dist = {
+    "n_estimators": randint(low=30, high=200),
+    "max_features": [2, 4, 6, 8],
+    "max_depth": [None, 5, 10, 20],
+}
+search = RandomizedSearchCV(
+    RandomForestRegressor(random_state=42),
+    param_distributions=param_dist,
+    n_iter=20, cv=5, scoring="neg_root_mean_squared_error",
+    n_jobs=-1, random_state=42,
+)
+search.fit(prep.fit_transform(X_train), y_train)
+print("Best RMSE:", -search.best_score_)
+import joblib; joblib.dump(search.best_estimator_, "models/rf_housing.pkl")
+Week 5
+Stage 5
+Evaluation & Explainability
+Score on the held-out test set, analyse residuals, and use SHAP to explain which features drive each prediction.
+
+Test-set RMSE / MAE / R² on untouched data
+Residual plot & prediction-vs-actual scatter
+Permutation importance for global explainability
+SHAP summary plot for local + global insights
+from sklearn.metrics import mean_squared_error, r2_score
+import shap
+
+preds = model.predict(prep.transform(X_test))
+rmse = mean_squared_error(y_test, preds, squared=False)
+print(f"Test RMSE: {rmse:.2f}  R²: {r2_score(y_test, preds):.3f}")
+
+explainer = shap.TreeExplainer(model)
+shap_values = explainer(prep.transform(X_test))
+shap.plots.beeswarm(shap_values)            # global
+shap.plots.waterfall(shap_values[0])        # local — one prediction
+Week 6
+Stage 6
+Deployment & Capstone Demo
+Wrap the model behind a FastAPI endpoint and build a Streamlit dashboard so stakeholders can interact with predictions live.
+
+FastAPI POST /predict endpoint with Pydantic schema
+Streamlit dashboard: sliders for inputs, live prediction
+Dockerfile + docker-compose for reproducible deploys
+Capstone demo to an industry panel + GitHub handoff
+# app.py  — FastAPI serving
+from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib, numpy as np
+
+model = joblib.load("models/rf_housing.pkl")
+app = FastAPI()
+
+class Features(BaseModel):
+    MedInc: float; HouseAge: float; AveRooms: float
+    AveBedrms: float; Population: float; AveOccup: float
+    Latitude: float; Longitude: float
+
+@app.post("/predict")
+def predict(f: Features):
+    x = np.array([[f.MedInc, f.HouseAge, f.AveRooms, f.AveBedrms,
+                   f.Population, f.AveOccup, f.Latitude, f.Longitude]])
+    return {"predicted_price_usd": float(model.predict(x)[0])}
+"Don't just run a notebook — ship a model. The day you deploy your first predictor behind a real API is the day you stop being a student and start being an engineer."
+
+Shekhar Dube
+AI/ML Lead Mentor · AgileProjection NT-AI Network
+Build this project with a mentor
+Ask the AI Mentor about this project
+Starter repo
+AI Learning Assistant
+🤖 AP-AI Mentor — Your Learning Assistant
+Ask anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships & careers. Built for BE / B.Tech / MCA / M.Tech students.
+
+AP-AI Mentor
+online
+Powered by AgileProjection · NT-AI Network
+Your degree (optional — improves context)
+
+— None —
+Hi! I'm AP-AI Mentor, your AI learning assistant for AgileProjection. Ask me anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships or careers. Pick a degree (optional) below to tailor my answers, then type your question or tap a suggestion chip. 🚀
+
+How do I start my final-year AI project?
+Explain the end-to-end ML pipeline
+Recommend a project for CSE final year
+Which internship fits an MCA student?
+What's RAG?
+Ask AP-AI Mentor anything… (e.g. 'Recommend a final-year AI project')
+
+AP-AI Mentor can make mistakes. For official program details, email shekhar.dube@agileprojection.com or WhatsApp +91 96440 84473.
+
+Stay in the Loop
+Get notified when new batches & projects drop
+New internship batches open every month. Subscribe to get alerts 24 hours before the public announcement — plus free AI/ML project guides from our mentors.
+
+you@college.edu.in
+Subscribe
+Ready to launch your engineering career?
+Register free in under 4 minutes. No fee, no documents. Your seat in the next batch is reserved the moment you submit.
+
+Register Free — Apply Now
+AgileProjection
+AgileProjection (NT-AI Network) is a free engineering internship platform serving BE / B.Tech / ME / M.Tech / MCA students across India. Live mentoring, real projects, AICTE-aligned certificates — at zero cost, always.
+
+training@agileprojection.com
++91 80955 57332
+WhatsApp +91 80955 57334
+Internships
+Embedded Systems
+Internet of Things (IoT)
+Campus Ambassador
+AI / ML Industry Internship
+Full Stack Track
+Resources
+AI Learning Assistant
+IT Courses (SkillGorila)
+Schedule & Batches
+End-to-End ML Guide
+FAQ
+Company
+About Us
+Meet the Mentors
+Student Stories
+Why AgileProjection
+How It Works
+Contact
+Shekhar Dube
+Founder & Lead Mentor
+shekhar.dube@agileprojection.com
++91 96440 84473
+© 2026 AgileProjection.com · All Rights Reserved.
+Privacy Policy
+Terms
+Refund Policy
+
+1/1
+
+Next.js 16.1.3 (stale)
+Turbopack
+Console Error
+
+
+A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:

@@ -237,3 +237,29 @@ Verification (curl + Agent Browser):
 Stage Summary:
 - The admin can now get a report of newly-added registrations: click "Reports" in the nav, pick Today / 7 days / 30 days / All time, see the live counts + filtered table, and click "Download CSV" to export exactly the filtered set.
 - Backend supports `since` + `limit` + `format=csv` query params on `GET /api/admin/registrations`.
+
+---
+Task ID: 9
+Agent: Z.ai Code (orchestrator) — server-configuration audit + Reports default
+Task: User uploaded a rendered-page text dump and asked to "update issue as your server configuration".
+
+Work Log:
+- Audited the codebase against the server-configuration rules in the system prompt:
+  1. **No absolute-URL fetches** — `grep -rn "http://localhost\|http://127.0.0.1" src/` returns nothing; every fetch uses a relative path (`/api/...`), so they work through the Caddy gateway (`:81 → :3000`) without `XTransformPort`.
+  2. **z-ai-web-dev-sdk is backend-only** — the only import is in `src/app/api/ai-assistant/route.ts` (a `runtime = "nodejs"` API route); no client component imports it.
+  3. **Single dev-server instance on port 3000** — `pgrep -af "next dev"` shows exactly one process (bash wrapper + its node child); the earlier `EADDRINUSE` log line was transient from a mid-session restart and has cleared.
+  4. **No `'use server'` server actions** — all mutations go through API routes (per the "use api instead of server action" rule).
+  5. **Auth cookie** is `HttpOnly; SameSite=Lax` — same-origin-safe through the gateway.
+  6. **No absolute WebSocket URLs** — no `io("http://...")` anywhere.
+- Changed the Reports dashboard default time-filter from "all" to "24h" (`src/components/agile/reports.tsx`) so newly-added registrations are shown first when the section opens — directly continuing the previous task (newly-added registration reports). "New Today: 4" and "New (last 24h): 18" stat cards now glow with the NEW badge on load.
+- Added a server-config status strip at the bottom of the Reports section showing the live environment: `server: next.js 16 · port 3000 · runtime: nodejs · db: sqlite · prisma · gateway: caddy :81 → :3000 · api: /api/admin/registrations` (with a pulsing emerald health dot).
+- `bun run lint` clean. Page loads HTTP 200 in 327 ms.
+
+Verification (curl + Agent Browser):
+- `curl /api/admin/registrations?since=24h` → `{total:18, newToday:4, newSince:18}` ✓
+- Browser: Reports section opens with "Today (24h)" pill active (count 4); "New Today: 4" (NEW badge) + "New (last 24h): 18" (NEW badge) cards show; server-config status line renders.
+
+Stage Summary:
+- Server-configuration audit: COMPLIANT (relative URLs only, SDK backend-only, single port-3000 instance, API routes not server actions, gateway-safe cookies).
+- Reports now defaults to Today (24h) so the newest registrations are front-and-center.
+- Server-config status strip added to the Reports section for transparency.

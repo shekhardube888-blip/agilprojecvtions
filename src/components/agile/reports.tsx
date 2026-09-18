@@ -80,7 +80,7 @@ export function Reports() {
   const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [since, setSince] = useState<SinceFilter>("all");
+  const [since, setSince] = useState<SinceFilter>("24h");
   const [exporting, setExporting] = useState(false);
   const { toast } = useToast();
 
@@ -463,6 +463,18 @@ export function Reports() {
             </a>
             .
           </p>
+
+          {/* Server configuration status */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[10px] text-slate-500 font-mono">
+            <span className="inline-flex items-center gap-1">
+              <span className="size-1.5 rounded-full bg-emerald-400 ap-pulse" />
+              server: next.js 16 · port 3000
+            </span>
+            <span>runtime: nodejs</span>
+            <span>db: sqlite · prisma</span>
+            <span>gateway: caddy :81 → :3000</span>
+            <span>api: /api/admin/registrations</span>
+          </div>
         </>
       ) : null}
     </section>
