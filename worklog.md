@@ -359,3 +359,20 @@ Verification (curl + Agent Browser + VLM):
 Stage Summary:
 - Logo now displays "AgileProjection (NT-AI)" in nav (desktop + mobile) and footer.
 - Company URL agileprojection.com is clickable from the footer brand logo, the contact list, and the copyright line.
+
+---
+Task ID: 14
+Agent: Z.ai Code (orchestrator) — Windows portability
+Task: Make the project runnable on Windows (was hardcoded Linux paths).
+
+Work Log:
+- `src/lib/notify.ts`: changed `NOTIFICATIONS_DIR` from the hardcoded Linux absolute path `/home/z/my-project/notifications` to `path.join(process.cwd(), "notifications")` — now the audit-log folder is created inside the project root on any OS (Windows/macOS/Linux) with no path edits needed. The `ensureDir()` and `appendFile()` calls already had try/catch so a failure never crashed the request, but now the log actually gets written on Windows too.
+- `.env`: changed `DATABASE_URL` from the hardcoded Linux absolute path `file:/home/z/my-project/db/custom.db` to the portable relative path `file:../db/custom.db`. Prisma resolves relative paths from the schema file location (`prisma/schema.prisma`), so `../db/custom.db` → project-root `db/custom.db` — the SAME file, so no data loss. Verified: `bun run db:push` reports `SQLite database "custom.db" at "file:/home/z/my-project/db/custom.db"` and "already in sync"; the existing 20 student records are intact.
+
+Verification:
+- `bun run db:push` → "already in sync" (no destructive changes).
+- Dev server restarted; `curl /` → HTTP 200; `curl /api/admin/registrations` → `{total:20, newToday:6}` (data intact).
+- `bun run lint` clean.
+
+Stage Summary:
+- Removed the two hardcoded Linux paths (notifications log dir + DATABASE_URL) — the project is now cross-platform: clone + `bun install` + `bun run db:push` + `bun run dev` works the same on Windows, macOS, and Linux.

@@ -4,7 +4,7 @@
 // In a sandboxed environment we cannot rely on a live SMTP relay being
 // configured, so this module:
 //   1. Composes a full HTML + plain-text email body
-//   2. Persists it to /home/z/my-project/notifications/emails.log (audit trail)
+//   2. Persists it to ./notifications/emails.log (audit trail, project-relative)
 //   3. Logs it to stdout (visible in dev.log)
 //   4. Returns a mailto: link and a wa.me link so the portal can surface
 //      "Send now" buttons to the user, AND a flag indicating whether a real
@@ -37,7 +37,9 @@ export type StudentRecord = {
   projectId?: number | null;
 };
 
-const NOTIFICATIONS_DIR = "/home/z/my-project/notifications";
+// Audit-log directory — relative to the project root so it works on
+// Windows, macOS, and Linux without any path changes.
+const NOTIFICATIONS_DIR = path.join(process.cwd(), "notifications");
 
 function ensureDir() {
   // Best-effort directory creation
