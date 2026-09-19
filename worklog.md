@@ -376,3 +376,24 @@ Verification:
 
 Stage Summary:
 - Removed the two hardcoded Linux paths (notifications log dir + DATABASE_URL) — the project is now cross-platform: clone + `bun install` + `bun run db:push` + `bun run dev` works the same on Windows, macOS, and Linux.
+
+---
+Task ID: 15
+Agent: Z.ai Code (orchestrator) — Supabase deployment prep
+Task: Prepare the project for deployment on Supabase (Postgres backend) + Vercel (frontend), without breaking local SQLite dev.
+
+Work Log:
+- Created `prisma/schema.postgres.prisma` — identical models to `schema.prisma` (SQLite) but `provider = "postgresql"` for Supabase. All models (Student, Subscriber, ChatMessage, Account, UnlockLog) and indexes/relations are portable as-is (only the provider line differs). Validated: `bun run db:generate:supabase` succeeds with no errors.
+- Added three npm scripts to `package.json`:
+  - `db:push:supabase` → `prisma db push --schema=prisma/schema.postgres.prisma` (creates/migrates tables on Supabase Postgres)
+  - `db:generate:supabase` → `prisma generate --schema=prisma/schema.postgres.prisma` (regenerates the Postgres Prisma client)
+  - `build:supabase` → `prisma generate --schema=prisma/schema.postgres.prisma && next build` (the Vercel build)
+- Created `.env.example` documenting every env var: `DATABASE_URL` (with both the SQLite local line and the Supabase Postgres template `postgresql://postgres.gpyllfkrblmgmmwyxjuw:[PASSWORD]@aws-0-[region].pooler.supabase.com:6543/postgres`), `SESSION_SECRET`, optional `SMTP_*` for real email sending, and optional `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY` for a future Supabase Auth switch.
+- Created `vercel.json` — tells Vercel to use the `bun install` install command and `prisma generate --schema=prisma/schema.postgres.prisma && next build` as the build command, so the deployed app generates the Postgres Prisma client automatically.
+- Restored `.env` to the portable relative SQLite path `file:../db/custom.db` (had reverted to the absolute Linux path).
+- Local dev (SQLite) is untouched and still works — `curl /` → HTTP 200, 20 student records intact. The preview panel keeps working.
+
+Stage Summary:
+- The project is now Supabase-ready: a Postgres schema, supabase npm scripts, a vercel.json build config, and a documented .env.example.
+- Local SQLite dev + the preview panel keep working (no disruption).
+- To go live: (1) GitHub push, (2) Supabase → copy DB connection string, (3) Vercel → import repo + set DATABASE_URL + SESSION_SECRET env vars + Deploy. vercel.json handles the build automatically.
