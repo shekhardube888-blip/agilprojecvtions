@@ -422,3 +422,24 @@ Stage Summary:
   - Database on Supabase Postgres (the user sets DATABASE_URL to their Supabase pooled connection string).
   - Local SQLite preview keeps working.
 - The user only needs to: (1) push to GitHub, (2) import to Vercel, (3) set DATABASE_URL + SESSION_SECRET env vars on Vercel, (4) deploy.
+
+---
+Task ID: 16
+Agent: Z.ai Code (orchestrator) — Bun-free Windows run
+Task: Make the project runnable on Windows without Bun installed.
+
+Work Log:
+- Identified the blocker: the `dev` script was `next dev -p 3000 2>&1 | tee dev.log` — `tee` is a Unix command not available on Windows by default (PowerShell has `Tee-Object`, cmd.exe has nothing), so `npm run dev` would fail on a Bun-less Windows machine.
+- Changed `dev` in `package.json` to `next dev -p 3000` (cross-platform — works with both `npm run dev` and `bun run dev` on Windows/macOS/Linux, no `tee` dependency).
+- Kept a `dev:logged` script (`next dev -p 3000 2>&1 | tee dev.log`) for the Unix sandbox/orchestrator log monitoring.
+- The orchestrator now starts the dev server with shell-level redirection (`bun run dev > dev.log 2>&1 &`) instead of relying on the script's internal `tee`, so dev.log monitoring continues on the sandbox.
+- All other scripts (`db:push`, `lint`, `db:generate`, `db:push:supabase`, etc.) already use plain `prisma`/`eslint`/`next` commands that work identically under `npm` on Windows — no change needed.
+- Note: `start` script still uses `bun` (production standalone) and `build` uses `cp -r` (Unix) — but neither is needed for local dev; Windows users only need `npm run dev`. Vercel builds use `vercel.json` (which calls `next build` directly, no `cp`/`bun`).
+
+Verification:
+- Restarted dev server with `bun run dev > dev.log 2>&1 &` → HTTP 200, dev.log written ("Ready in 859ms", "GET / 200"), `bun run lint` clean.
+- The project now runs on Windows with only Node.js (npm) installed — no Bun required.
+
+Stage Summary:
+- `dev` script is now `next dev -p 3000` (cross-platform).
+- Windows users can run the project with just Node.js + npm: `npm install` → `npm run db:push` → `npm run dev` → http://localhost:3000. No Bun, no Git Bash, no WSL needed.
