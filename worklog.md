@@ -397,3 +397,28 @@ Stage Summary:
 - The project is now Supabase-ready: a Postgres schema, supabase npm scripts, a vercel.json build config, and a documented .env.example.
 - Local SQLite dev + the preview panel keep working (no disruption).
 - To go live: (1) GitHub push, (2) Supabase → copy DB connection string, (3) Vercel → import repo + set DATABASE_URL + SESSION_SECRET env vars + Deploy. vercel.json handles the build automatically.
+
+---
+Task ID: 15
+Agent: Z.ai Code (orchestrator) — Supabase deployment readiness
+Task: Prepare the project for deployment on Supabase (Postgres) + Vercel (frontend).
+
+Work Log:
+- Found existing Supabase-ready files from a prior step and verified/consolidated them:
+  1. `prisma/schema.postgres.prisma` — identical to the SQLite schema but `provider = "postgresql"`; all models/relations/indexes/`@default(cuid())`/`@updatedAt`/`onDelete: Cascade` are Postgres-compatible. Validated with `DATABASE_URL=postgresql://... bunx prisma validate --schema=prisma/schema.postgres.prisma` → "The schema is valid 🚀".
+  2. `vercel.json` — sets `framework: nextjs`, `installCommand: bun install`, and `buildCommand: prisma generate --schema=prisma/schema.postgres.prisma && next build` so Vercel builds against the Postgres schema automatically.
+  3. `.env.example` — full template with: local SQLite URL, Supabase Postgres URL (placeholder with the user's project ref `gpyllfkrblmgmmwyxjuw`), `SESSION_SECRET`, optional SMTP vars for real email sending, and optional `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY` for a future Supabase-Auth switch.
+  4. `package.json` scripts — `db:push:supabase` (create tables on Supabase), `db:generate:supabase` (regenerate Postgres client), `build:supabase` (generate + next build).
+- Removed a duplicate `schema.supabase.prisma` I created in favour of the already-wired `schema.postgres.prisma`.
+- Kept local SQLite dev intact: `prisma/schema.prisma` (SQLite) + `.env` with `DATABASE_URL="file:../db/custom.db"` — the in-portal preview keeps working with all 20 student records.
+
+Verification:
+- `bunx prisma validate --schema=prisma/schema.postgres.prisma` (with a dummy postgres URL) → "valid 🚀".
+- Local dev: `curl /` → HTTP 200; `/api/admin/registrations` → `{total:20}`; `bun run lint` clean.
+
+Stage Summary:
+- The project is now deploy-ready for Supabase + Vercel:
+  - Frontend hosted on Vercel (vercel.json auto-uses the Postgres schema on build).
+  - Database on Supabase Postgres (the user sets DATABASE_URL to their Supabase pooled connection string).
+  - Local SQLite preview keeps working.
+- The user only needs to: (1) push to GitHub, (2) import to Vercel, (3) set DATABASE_URL + SESSION_SECRET env vars on Vercel, (4) deploy.
