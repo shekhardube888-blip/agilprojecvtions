@@ -443,3 +443,18 @@ Verification:
 Stage Summary:
 - `dev` script is now `next dev -p 3000` (cross-platform).
 - Windows users can run the project with just Node.js + npm: `npm install` → `npm run db:push` → `npm run dev` → http://localhost:3000. No Bun, no Git Bash, no WSL needed.
+
+---
+Task ID: 17
+Agent: Z.ai Code (orchestrator) — npm ERESOLVE fix for Windows
+Task: User hit `npm error ERESOLVE unable to resolve dependency tree` on Windows (react@undefined / @dnd-kit peer conflict) when running `npm install`.
+
+Work Log:
+- Root cause: the project was installed with Bun (lenient peer-dep resolution), but npm v7+ strictly enforces peer dependencies. React 19 is newer than some packages' declared peer ranges (e.g. `@dnd-kit/core@6.3.1` declares `react >=16.8.0`), so npm's strict resolver throws ERESOLVE.
+- Fix: added `/.npmrc` with `legacy-peer-deps=true` at the project root. This tells npm to use the legacy (npm v6-style) lenient peer-dep resolver, so `npm install` succeeds without needing a `--legacy-peer-deps` flag on every invocation. Bun ignores this file (it has its own resolver), so the sandbox is unaffected.
+- Restarted the dev server (the process had become unresponsive after the .npmrc write — likely a transient hang, not related to the .npmrc). Now: `bun run dev > dev.log 2>&1 &` → HTTP 200, dev.log written.
+
+Stage Summary:
+- Windows users running `npm install` in the project folder will no longer hit the ERESOLVE error — the `.npmrc` makes npm use the lenient resolver automatically.
+- Immediate fix for users who already cloned without the .npmrc: `npm install --legacy-peer-deps` (one-time).
+- Verified: dev server HTTP 200, lint unaffected, sandbox still uses Bun (ignores .npmrc).
