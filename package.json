@@ -12,9 +12,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "db:push:supabase": "prisma db push --schema=prisma/schema.postgres.prisma --accept-data-loss",
-    "db:generate:supabase": "prisma generate --schema=prisma/schema.postgres.prisma",
-    "build:supabase": "prisma generate --schema=prisma/schema.postgres.prisma && next build"
+    "db:push:sqlite": "prisma db push --schema=prisma/schema.sqlite.prisma --accept-data-loss",
+    "db:generate:sqlite": "prisma generate --schema=prisma/schema.sqlite.prisma"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

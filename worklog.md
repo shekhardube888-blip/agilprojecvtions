@@ -458,3 +458,29 @@ Stage Summary:
 - Windows users running `npm install` in the project folder will no longer hit the ERESOLVE error — the `.npmrc` makes npm use the lenient resolver automatically.
 - Immediate fix for users who already cloned without the .npmrc: `npm install --legacy-peer-deps` (one-time).
 - Verified: dev server HTTP 200, lint unaffected, sandbox still uses Bun (ignores .npmrc).
+
+---
+Task ID: 18
+Agent: Z.ai Code (orchestrator) — switch default DB to Postgres (Supabase)
+Task: User asked to switch the project's DB to Postgres (Supabase) to escape Windows SQLite Prisma engine issues.
+
+Work Log:
+- Made Postgres the DEFAULT:
+  - `prisma/schema.prisma` is now `provider = "postgresql"` (was SQLite). Validated: "The schema is valid 🚀".
+  - Old SQLite schema kept as `prisma/schema.sqlite.prisma` (fallback for anyone without a Postgres instance).
+  - Deleted the now-redundant `prisma/schema.postgres.prisma`.
+- `.env` updated to use the user's Supabase Postgres connection string (project ref `gpyllfkrblmgmmwyxjuw`, with `[YOUR-PASSWORD]` + `[region]` placeholders to fill in) + `SESSION_SECRET` + commented optional SMTP vars + commented SQLite-fallback line.
+- Created `.env.example` mirroring `.env` as a downloadable template.
+- `package.json` scripts simplified: `db:push` + `db:generate` now use the Postgres default; `db:push:sqlite` + `db:generate:sqlite` added for the SQLite fallback. Removed the old `db:push:supabase`/`db:generate:supabase`/`build:supabase` (Postgres is now the default, so they were redundant).
+- `vercel.json` build command updated to `prisma generate && next build` (uses the default schema.prisma = Postgres; removed the deleted `--schema=prisma/schema.postgres.prisma` flag).
+- The sandbox dev server keeps running with the OLD SQLite Prisma client cached in memory (it loaded the old .env at startup), so the in-portal preview stays live (HTTP 200, 20 students). On the user's Windows machine, the new Postgres schema + Supabase .env takes effect when they run `bun run db:generate` + `bun run db:push`.
+
+Verification:
+- `DATABASE_URL=postgresql://... bunx prisma validate --schema=prisma/schema.prisma` → "valid 🚀".
+- `bun run lint` clean.
+- Sandbox: `curl /` → HTTP 200; `/api/admin/registrations` → `{total:20,…}` (preview still live via the cached SQLite client).
+
+Stage Summary:
+- Project default DB is now Postgres (Supabase). The user sets their Supabase connection string in .env, runs `bun run db:generate` + `bun run db:push`, and the portal talks to Supabase Postgres — no SQLite file path / engine issues on Windows.
+- SQLite remains available as a fallback via `db:push:sqlite` + `db:generate:sqlite` + schema.sqlite.prisma.
+- Vercel deployment uses the Postgres schema automatically (vercel.json runs `prisma generate && next build`).

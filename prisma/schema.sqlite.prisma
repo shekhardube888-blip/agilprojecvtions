@@ -1,47 +1,40 @@
-// ── SUPABASE / POSTGRES schema (for production deployment) ──
-// Identical to schema.prisma (SQLite) but provider = "postgresql".
-// Use this for Supabase + Vercel deployment.
-//
-// Local dev uses prisma/schema.prisma (SQLite). This file is for production:
-//   bun run db:push:supabase   → create/migrate tables on Supabase Postgres
-//   bun run db:generate:supabase → regenerate the Postgres Prisma client
-//
-// On Vercel, vercel.json runs: prisma generate --schema=prisma/schema.postgres.prisma && next build
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 // Student registration record (covers BE / B.Tech / ME / M.Tech / MCA / B.Sc Engg students)
 model Student {
-  id           String   @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String
-  mobile       String
-  degree       String
-  branch       String
-  semester     String
-  plan         String
-  college      String
-  state        String
-  source       String?
-  notes        String?
-  category     String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
-  categoryLabel String  // human-readable category label
-  project      String   // selected project name
-  projectId    Int?     // selected project id
-  consentWa    Boolean  @default(true)
-  consentEm    Boolean  @default(true)
-  emailSent    Boolean  @default(false)
-  waSent       Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  mobile      String
+  degree      String
+  branch      String
+  semester    String
+  plan        String
+  college     String
+  state       String
+  source      String?
+  notes       String?
+  category    String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
+  categoryLabel String // human-readable category label
+  project     String   // selected project name
+  projectId   Int?     // selected project id
+  consentWa   Boolean  @default(true)
+  consentEm   Boolean  @default(true)
+  emailSent   Boolean  @default(false)
+  waSent      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([email])
   @@index([category])
