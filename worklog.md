@@ -484,3 +484,32 @@ Stage Summary:
 - Project default DB is now Postgres (Supabase). The user sets their Supabase connection string in .env, runs `bun run db:generate` + `bun run db:push`, and the portal talks to Supabase Postgres — no SQLite file path / engine issues on Windows.
 - SQLite remains available as a fallback via `db:push:sqlite` + `db:generate:sqlite` + schema.sqlite.prisma.
 - Vercel deployment uses the Postgres schema automatically (vercel.json runs `prisma generate && next build`).
+
+---
+Task ID: 21
+Agent: Z.ai Code (orchestrator) — portal recovery + schema consolidation
+Task: User said "Portal" — verify it's live. Found the dev server had stopped + 5 API routes + the Visitor model + Student lifecycle fields had been lost during prior schema-file shuffling.
+
+Work Log:
+- Diagnosis: dev server stopped; on restart the @prisma/client postinstall regenerated against the Postgres default schema.prisma, but the sandbox .env had a SQLite URL → "URL must start with postgresql://" error on every API route. Also discovered 5 API route files were missing (track/view, track/stats, student/lookup, admin/student/start, admin/student/advance, sales-chat) + the Visitor model and Student lifecycle fields had been dropped from both schemas during the schema.prisma/schema.sqlite.prisma/schema.postgres.prisma rename churn.
+- Schema consolidation (clean two-file setup):
+  - `prisma/schema.prisma` (DEFAULT) = SQLite — for local dev + the sandbox preview. Re-added the Visitor model + Student lifecycle fields (paymentStatus, internshipStatus, currentStage, startedAt, completedAt) + `@@index([email, mobile])`.
+  - `prisma/schema.postgres.prisma` = Postgres — for Supabase/Vercel. Same Visitor + lifecycle fields added.
+  - Deleted the redundant `prisma/schema.sqlite.prisma` (the default IS the SQLite one now).
+- package.json: `db:push`/`db:generate` use the SQLite default; `db:push:pg`/`db:generate:pg` use `prisma/schema.postgres.prisma` (for Supabase local dev).
+- vercel.json: `buildCommand` = `prisma generate --schema=prisma/schema.postgres.prisma && next build` (Vercel builds against the Postgres schema for Supabase).
+- `.env` set to `DATABASE_URL="file:../db/custom.db"` + a SESSION_SECRET (sandbox SQLite).
+- Recreated the 5 missing API routes (track/view POST, track/stats GET, student/lookup GET, admin/student/start POST, admin/student/advance POST, sales-chat POST) from the conversation history.
+- Regenerated the SQLite client + pushed the schema → "Your database is now in sync" (all 20 student records intact).
+- Restarted the dev server cleanly.
+
+Verification:
+- Page loads HTTP 200.
+- `POST /api/track/view` → `{ok:true, uid:"test-v-rebuild"}` ✓
+- `GET /api/track/stats` → `{ok:true, totalViews:1, uniqueVisitors:1, onlineNow:1}` ✓
+- `GET /api/student/lookup` → `{ok:true, student:{firstName:"Shekhar",…}}` ✓
+- `GET /api/admin/registrations` → `{total:20}` ✓
+- `bun run lint` clean.
+
+Stage Summary:
+- Portal fully recovered and live. Clean two-schema setup: SQLite default (works everywhere out of the box) + Postgres (schema.postgres.prisma) for Supabase/Vercel. All API routes + DB models restored. 20 student records intact. Lint clean.

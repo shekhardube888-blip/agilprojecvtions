@@ -1,58 +1,55 @@
-// ── AgileProjection · NT-AI Network — DEFAULT schema (Postgres / Supabase) ──
-// This is the default schema. The project connects to Postgres (Supabase)
-// via DATABASE_URL.
+// ── AgileProjection · NT-AI Network — DEFAULT schema (SQLite) ──
+// This is the default schema, used for local dev + the sandbox preview.
+// DATABASE_URL should point at a local SQLite file, e.g. file:../db/custom.db
 //
-// Setup (one-time):
-//   1. Create a Supabase project → Project Settings → Database → Connection string
-//      Copy the "Transaction" (pooled) URL, port 6543.
-//   2. Set DATABASE_URL in .env to that URL (replace [YOUR-PASSWORD]).
-//   3. bun run db:generate   → download the Prisma engine + generate the client
-//   4. bun run db:push       → create all tables on Supabase Postgres
-//   5. bun run dev           → start the portal on http://localhost:3000
-//
-// SQLite fallback (if you have no Postgres available): use prisma/schema.sqlite.prisma
-//   bun run db:push:sqlite   and   bun run db:generate:sqlite
-//   (and set DATABASE_URL="file:../db/custom.db" in .env)
-//
-// On Vercel: vercel.json runs `prisma generate --schema=prisma/schema.prisma && next build` automatically.
+// For Supabase / Postgres deployment (Vercel + Supabase): use prisma/schema.postgres.prisma
+//   - Local: bun run db:generate:pg && bun run db:push:pg  (with DATABASE_URL = your Supabase URL)
+//   - Vercel: vercel.json runs `prisma generate --schema=prisma/schema.postgres.prisma && next build`
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 // Student registration record (covers BE / B.Tech / ME / M.Tech / MCA / B.Sc Engg students)
 model Student {
-  id           String   @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String
-  mobile       String
-  degree       String
-  branch       String
-  semester     String
-  plan         String
-  college      String
-  state        String
-  source       String?
-  notes        String?
-  category     String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
-  categoryLabel String  // human-readable category label
-  project      String   // selected project name
-  projectId    Int?     // selected project id
-  consentWa    Boolean  @default(true)
-  consentEm    Boolean  @default(true)
-  emailSent    Boolean  @default(false)
-  waSent       Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  mobile      String
+  degree      String
+  branch      String
+  semester    String
+  plan        String
+  college     String
+  state       String
+  source      String?
+  notes       String?
+  category    String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
+  categoryLabel String // human-readable category label
+  project     String   // selected project name
+  projectId   Int?     // selected project id
+  consentWa   Boolean  @default(true)
+  consentEm   Boolean  @default(true)
+  emailSent   Boolean  @default(false)
+  waSent      Boolean  @default(false)
+  // ── Internship lifecycle (admin-controlled) ──
+  paymentStatus    String   @default("pending")     // pending | confirmed
+  internshipStatus String   @default("not_started")  // not_started | in_progress | completed
+  currentStage     Int      @default(0)              // 0 = not started, 1-6 = stage in progress, 7 = all done
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([email])
   @@index([category])
+  @@index([email, mobile])
 }
 
 // Newsletter subscribers
@@ -60,6 +57,17 @@ model Subscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+// ── Visitor analytics (page views + unique visitors) ──
+model Visitor {
+  id        String   @id @default(cuid())
+  uniqueId  String   @unique              // cookie-based stable ID
+  firstSeen DateTime @default(now())
+  lastSeen  DateTime @default(now())
+  views     Int      @default(1)          // page-view count from this visitor
+
+  @@index([lastSeen])
 }
 
 // AI assistant chat messages (for analytics / follow-up)
