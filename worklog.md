@@ -549,3 +549,38 @@ Stage Summary:
 - Enterprise Admin Dashboard is live as a popup (single-route constraint respected — no /admin route, opened from the admin console). 13-item sidebar with 5 fully-working tabs (Dashboard KPIs, Students management, Applications approval center, Certificates auto-generation+verification, Reports breakdowns) + 8 scaffolded stub tabs (Payments, Internships, Mentors, Projects, Attendance, AI Analytics, Notifications, Settings) showing planned features.
 - Complete student lifecycle now works end-to-end: register → admin approves payment → start internship → advance 6 stages → completed → admin generates verifiable certificate (AP-YYYY-XXXXXX) → anyone verifies at /api/certificate/[number].
 - Certificate model + generation + public verification all working. Lint clean.
+
+---
+Task ID: 26
+Agent: Z.ai Code (orchestrator) — email-based student login + professional panels
+Task: Update guest login to email-based student login (email + mobile); rename Guest→Student in UI; professional post-login panels with Student Dashboard + Admin Dashboard links.
+
+Work Log:
+- `src/lib/auth.ts`: changed `isExpired(null)` → `false` (null = no expiry = never expires). Registered students (expiresAt=null) get permanent access; the 2-day expiry now applies ONLY to admin-unlocked demo accounts (guest1-5).
+- `src/app/api/register/route.ts`: after saving the Student + sending notifications, auto-creates a Student LOGIN account (idempotent upsert by username=email):
+  - username = registration email (lowercased)
+  - password = mobile (normalized: strip spaces/+, strip leading 91)
+  - role = "guest" (labeled "Student" in the UI)
+  - status = "unlocked" (permanent — no 2-day expiry for registered students)
+  - fullName = "firstName lastName"
+  - note = "Auto-created at registration — login with email + mobile"
+  - Non-fatal (wrapped in try/catch) so registration never fails if account creation has an issue.
+- `src/components/agile/auth-menu.tsx`:
+  - Login form description: "Students: use your registration email + mobile number. Admin: admin / admin123."
+  - Username placeholder: "your email / admin"
+  - Help note: "Registered students log in with their email + mobile (auto-created at registration)."
+  - Renamed the GuestPanel → "Student panel" (UI labels "Student" not "Guest"; role label shows "Student").
+  - Student panel now shows quick-access links: **"Open Student Dashboard"** button (renders the StudentDashboard popup) + **"Track Project"** link (#project-tracker) + **"Register for another project"** link (#register).
+  - Access status: registered students (no expiry) see "Access active ✓" (permanent); demo accounts with expiry see the live countdown; expired accounts see the renew CTA.
+- Recreated `student-dashboard.tsx` + `custom-pages.tsx` + re-added `PROJECT_STAGES` to `data.ts` (all lost during recovery churn).
+
+Verification (curl + Agent Browser):
+- `bun run lint` clean. Page HTTP 200.
+- Register fresh student (email-student@example.com / 9999900066) → `POST /api/auth/login {username:email, password:mobile}` → `{ok:true, username:"email-student@example.com", role:"guest", status:"unlocked", fullName:"Email Student"}` ✓
+- Browser: login as the student → student panel shows "Welcome, Email Student (Student)" + "Open Student Dashboard" button + "Track Project" link + "Access active ✓" ✓
+
+Stage Summary:
+- Students now log in with their REGISTRATION EMAIL + MOBILE (auto-created at registration — no manual account setup needed).
+- "Guest" is relabeled "Student" throughout the UI (panel title, role label, login help).
+- Student panel is professional: quick-access to Student Dashboard + Track Project + Register, plus a clear access-status card (permanent for registered students; 2-day countdown for demo accounts).
+- Admin panel already has "Open Admin Dashboard". Lint clean.

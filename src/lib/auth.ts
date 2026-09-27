@@ -81,7 +81,9 @@ export function readSession(cookieHeader: string | null): SessionPayload | null 
 
 // ── Account helpers ──
 export function isExpired(expiresAt: Date | null): boolean {
-  if (!expiresAt) return true;
+  // null = no expiry set → never expires (used for registered students + admin).
+  // The 2-day expiry only applies to demo accounts the admin explicitly unlocks.
+  if (!expiresAt) return false;
   return Date.now() > expiresAt.getTime();
 }
 

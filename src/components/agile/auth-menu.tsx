@@ -16,6 +16,9 @@ import {
   RefreshCw,
   Copy,
   Check,
+  Search,
+  Rocket,
+  LayoutDashboard,
 } from "lucide-react";
 import {
   Dialog,
@@ -31,6 +34,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { AdminDashboard } from "@/components/agile/admin-dashboard";
+import { StudentDashboard } from "@/components/agile/student-dashboard";
+import Link from "next/link";
 
 type Role = "admin" | "guest";
 type User = {
@@ -194,7 +199,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           <LogIn className="size-5 text-cyan-400" /> Portal Login
         </DialogTitle>
         <DialogDescription className="text-slate-400">
-          Sign in with your account. Guest access expires 2 days after the admin unlocks it.
+          Sign in with your account. <strong className="text-slate-200">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
         </DialogDescription>
       </DialogHeader>
 
@@ -206,7 +211,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
             autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="admin / guest1 / guest2…"
+            placeholder="your email  /  admin"
             className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
             required
           />
@@ -254,7 +259,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           <CredentialButton label="guest3" sub="guest3" onClick={() => fill("guest3", "guest3")} onCopy={() => copy("guest3", "guest3")} copied={copied === "guest3"} />
         </div>
         <p className="text-[11px] text-slate-500 mt-2.5 leading-relaxed">
-          Guests start <span className="text-amber-300">locked</span>. Sign in as <span className="text-cyan-300 font-semibold">admin</span> and click <span className="text-cyan-300">Unlock (payment received)</span> to grant a guest 2 days of access.
+          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-slate-200">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
         </p>
       </div>
     </div>
@@ -303,16 +308,20 @@ function CredentialButton({
   );
 }
 
-// ── Guest panel ──
+// ── Student panel (was "Guest panel"; role=guest is labeled "Student" in the UI) ──
 function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
-  const expired = user.expired || !user.expiresAt || Date.now() > new Date(user.expiresAt).getTime();
+  // Registered students have expiresAt=null (permanent access). Demo accounts
+  // have expiresAt set by the admin (2-day window). Only treat as expired if
+  // the server said so OR there's an expiry date that has passed.
+  const expired = user.expired || (!!user.expiresAt && Date.now() > new Date(user.expiresAt).getTime());
+  const hasExpiry = !!user.expiresAt;
   const remaining = useMemo(() => msRemaining(user.expiresAt), [user.expiresAt]);
   const [, force] = useState(0);
   useEffect(() => {
-    if (expired) return;
+    if (expired || !hasExpiry) return;
     const t = setInterval(() => force((n) => n + 1), 1000);
     return () => clearInterval(t);
-  }, [expired]);
+  }, [expired, hasExpiry]);
 
   const live = msRemaining(user.expiresAt);
 
@@ -324,10 +333,24 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
           Welcome, {user.fullName || user.username}
         </DialogTitle>
         <DialogDescription className="text-slate-400">
-          You are signed in as <span className="text-cyan-300 font-semibold">{user.username}</span> ({user.role}).
+          You are signed in as <span className="text-cyan-300 font-semibold">{user.username}</span> (Student).
         </DialogDescription>
       </DialogHeader>
 
+      {/* Quick-access links — professional portal entry */}
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="col-span-1"><StudentDashboard /></div>
+        <Button asChild variant="outline" className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-12">
+          <Link href="#project-tracker"><Search className="size-4 mr-1.5" />Track Project</Link>
+        </Button>
+      </div>
+      <div className="mt-2">
+        <Button asChild variant="outline" className="w-full bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-10">
+          <Link href="#register"><Rocket className="size-4 mr-1.5" />Register for another project</Link>
+        </Button>
+      </div>
+
+      {/* Access status */}
       <div className="mt-5 rounded-xl border border-[rgba(6,182,212,0.22)] bg-[#0a1422]/70 p-5">
         {expired ? (
           <div className="flex items-start gap-3">
@@ -341,11 +364,11 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
               </p>
             </div>
           </div>
-        ) : (
+        ) : hasExpiry ? (
           <div className="flex items-start gap-3">
             <Clock className="size-5 text-emerald-400 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <div className="font-semibold text-emerald-300">Access active</div>
+              <div className="font-semibold text-emerald-300">Access active (demo)</div>
               <p className="text-sm text-slate-400 mt-1">Your password expires in:</p>
               <div className="mt-2 font-mono text-2xl font-bold text-foreground tabular-nums">
                 {live.days > 0 && <span>{live.days}d </span>}
@@ -353,6 +376,16 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
               </div>
               <p className="text-[11px] text-slate-500 mt-2">
                 Expires {new Date(user.expiresAt!).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <div className="font-semibold text-emerald-300">Access active ✓</div>
+              <p className="text-sm text-slate-400 mt-1">
+                Your student account is active. Open the Student Dashboard to register, track your project, ask the AI mentor, and view the schedule.
               </p>
             </div>
           </div>

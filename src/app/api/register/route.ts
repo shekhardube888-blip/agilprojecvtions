@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { notifyRegistration, type StudentRecord } from "@/lib/notify";
+import { hashPassword } from "@/lib/auth";
 import { SITE } from "@/lib/data";
 
 export const runtime = "nodejs";
@@ -71,6 +72,33 @@ export async function POST(req: Request) {
       where: { id: student.id },
       data: { emailSent: notify.smtpSent, waSent: notify.smtpSent },
     });
+
+    // 3) Auto-create a STUDENT LOGIN account so the student can log in with
+    //    their registration email + mobile number. Idempotent (upsert by
+    //    username = email). No expiry — the student keeps permanent portal
+    //    access; the 2-day expiry is only for admin-unlocked demo accounts.
+    try {
+      await db.account.upsert({
+        where: { username: record.email.toLowerCase() },
+        update: {
+          // refresh the password hash + name on re-registration
+          passwordHash: hashPassword(record.mobile.replace(/[\s+]/g, "").replace(/^91/, "")),
+          fullName: `${record.firstName} ${record.lastName}`,
+          note: "Auto-created at registration — login with email + mobile",
+        },
+        create: {
+          username: record.email.toLowerCase(),
+          passwordHash: hashPassword(record.mobile.replace(/[\s+]/g, "").replace(/^91/, "")),
+          role: "guest", // labeled "Student" in the UI
+          status: "unlocked",
+          fullName: `${record.firstName} ${record.lastName}`,
+          note: "Auto-created at registration — login with email + mobile",
+        },
+      });
+    } catch (acctErr) {
+      // Non-fatal — the registration + notification already succeeded.
+      console.error("[register] auto-account creation failed:", (acctErr as Error).message);
+    }
 
     return NextResponse.json({
       ok: true,

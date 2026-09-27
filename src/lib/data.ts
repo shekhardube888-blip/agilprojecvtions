@@ -579,3 +579,22 @@ export const SOURCES = [
   "YouTube",
   "Other",
 ];
+
+// ── 6-stage internship journey (universal ML lifecycle). ──
+export type ProjectStage = {
+  step: number;
+  week: string;
+  title: string;
+  desc: string;
+  deliverable: string;
+  icon: string;
+};
+
+export const PROJECT_STAGES: ProjectStage[] = [
+  { step: 1, week: "Week 1", title: "Data Ingestion & Setup", desc: "Pull the dataset for your chosen project. Load into Pandas, inspect shape/dtypes/nulls, set up the project structure (notebooks/, src/, models/, data/).", deliverable: "A clean DataFrame + project skeleton committed to GitHub.", icon: "📥" },
+  { step: 2, week: "Week 2", title: "Exploratory Data Analysis (EDA)", desc: "Plot distributions, correlation heatmaps, and (where relevant) geographical/grouped scatters. Identify skew, outliers, and the features most correlated with the target.", deliverable: "An EDA notebook with 4-6 key charts + a findings write-up.", icon: "📊" },
+  { step: 3, week: "Week 3", title: "Feature Engineering & Pipeline", desc: "Build a Scikit-Learn Pipeline: imputation, custom transformers, scaling, one-hot. Combine numeric + categorical in a ColumnTransformer so preprocessing is reproducible + deploy-safe.", deliverable: "A full preprocessing Pipeline + a stratified train/val split.", icon: "🔧" },
+  { step: 4, week: "Week 4", title: "Model Training & Tuning", desc: "Train several baselines (e.g. Linear/DecisionTree/RandomForest/GradientBoosting). Cross-validate with RMSE/accuracy, then tune the best via RandomizedSearchCV. Persist with joblib.", deliverable: "A tuned model artifact (models/<name>.pkl) + CV scores.", icon: "🧠" },
+  { step: 5, week: "Week 5", title: "Evaluation & Explainability", desc: "Score on the held-out test set. Residual / confusion-matrix analysis. Use SHAP/LIME to explain which features drive each prediction.", deliverable: "Test-set metrics + a SHAP beeswarm + a residual plot.", icon: "🎯" },
+  { step: 6, week: "Week 6", title: "Deployment & Capstone Demo", desc: "Serve the model behind a FastAPI endpoint + a Streamlit dashboard. Containerise with Docker. Present the end-to-end project to an industry panel + hand off on GitHub.", deliverable: "Live API + dashboard + a 10-min capstone demo to the panel.", icon: "🚀" },
+];
