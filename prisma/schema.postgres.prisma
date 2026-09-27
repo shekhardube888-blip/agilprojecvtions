@@ -57,6 +57,8 @@ model Student {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  certificates Certificate[]
+
   @@index([email])
   @@index([category])
   @@index([email, mobile])
@@ -122,4 +124,18 @@ model UnlockLog {
   createdAt DateTime @default(now())
 
   @@index([accountId])
+}
+
+// ── Auto-issued certificates (verifiable, with a unique certificate number) ──
+model Certificate {
+  id              String   @id @default(cuid())
+  certificateNumber String @unique  // e.g. AP-2026-A1B2C3
+  studentId       String
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  type            String   @default("Internship Completion")
+  eligibility     String   // "attendance>75%, project completed, mentor approved"
+  issuedAt        DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([studentId])
 }

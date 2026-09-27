@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { AdminDashboard } from "@/components/agile/admin-dashboard";
 
 type Role = "admin" | "guest";
 type User = {
@@ -431,6 +432,14 @@ function AdminPanel({
           Unlock a guest account to grant 2 days of access. Confirm payment was received before unlocking.
         </DialogDescription>
       </DialogHeader>
+      {/* Open the full enterprise Admin Dashboard (KPIs / Students / Applications / Certificates / Reports…) */}
+      <div className="mt-4 mb-4 rounded-xl border border-[rgba(6,182,212,0.22)] bg-gradient-to-r from-violet-600/10 to-cyan-500/10 p-3 flex items-center justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold text-foreground">Enterprise Admin Dashboard</div>
+          <div className="text-[11px] text-slate-400">KPIs · Students · Applications · Payments · Certificates · Reports · AI Analytics · Settings</div>
+        </div>
+        <AdminDashboard />
+      </div>
 
       <div className="mt-5 flex items-center justify-between">
         <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold">

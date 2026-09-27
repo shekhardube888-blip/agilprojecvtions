@@ -513,3 +513,39 @@ Verification:
 
 Stage Summary:
 - Portal fully recovered and live. Clean two-schema setup: SQLite default (works everywhere out of the box) + Postgres (schema.postgres.prisma) for Supabase/Vercel. All API routes + DB models restored. 20 student records intact. Lint clean.
+
+---
+Task ID: 25
+Agent: Z.ai Code (orchestrator) — Enterprise Admin Dashboard + auto-certificates
+Task: Full enterprise admin dashboard (sidebar + KPIs + Students + Applications + Certificates + Reports + stubs) + auto-certificate generation + public verification.
+
+Work Log:
+- DB: added `Certificate` model (certificateNumber unique, studentId, type, eligibility, issuedAt) + `certificates Certificate[]` relation on Student. Pushed to both schemas (SQLite + Postgres).
+- API routes:
+  - `POST /api/admin/certificate/generate { studentId }` — admin-only; checks student.internshipStatus === "completed"; idempotent (returns existing cert if already issued); generates a unique number `AP-YYYY-XXXXXX`; creates the certificate row.
+  - `GET /api/certificate/[number]` — PUBLIC verification; returns the certificate + student info (name, degree, college, project, completedAt) so anyone can verify a certificate by number.
+  - `GET /api/admin/certificates` — admin-only; lists all issued certificates with student info.
+- Component `src/components/agile/admin-dashboard.tsx` — a near-fullscreen popup (max-w-7xl × max-h-94vh) with:
+  - A 13-item sidebar grouped by Overview / Operations / Lifecycle / Insights: Dashboard, Students, Applications, Payments, Internships, Mentors, Projects, Attendance, Certificates, Reports, AI Analytics, Notifications, Settings.
+  - **Dashboard tab**: 5 KPI cards (Total Students, Pending Approval, Active Interns, Completed, Certificates Issued) computed live from the DB + a pipeline strip (Pending → Active → Completed → Certified).
+  - **Students tab**: full management table with search (name/email/project) + status filter (All/Pending/Active/Completed) + college filter + actions (Approve & Start / Advance → / Generate Cert for completed).
+  - **Applications tab**: approval center — Pending Review / Approved-In-Progress / Completed groups with Approve + Generate Cert buttons.
+  - **Certificates tab**: lists all issued certs (number, student, project, issued date) with a "Verify" link → opens `/api/certificate/[number]` in a new tab (public verification).
+  - **Reports tab**: college-wise / technology-wise / degree-wise breakdowns with bar visualisations.
+  - **Stub tabs** (Payments, Internships, Mentors, Projects, Attendance, AI Analytics, Notifications, Settings): each shows the module title + planned features list — the enterprise structure is scaffolded.
+  - A reusable `GenCertButton` sub-component (calls /api/admin/certificate/generate → shows the certificate number as a verify link) used in Students/Applications/Certificates tabs.
+- Wired into `auth-menu.tsx`: the admin console (when admin logs in) now shows an "Enterprise Admin Dashboard" banner with an "Open Admin Dashboard" button that opens the big popup on top of the auth dialog.
+- Recreated `student-dashboard.tsx` (lost during recovery) + re-added `PROJECT_STAGES` to data.ts (lost during recovery — caused HTTP 500).
+
+Verification (curl + Agent Browser):
+- `bun run lint` clean. Page HTTP 200.
+- Created a completed student (start → advance ×6) → `POST /api/admin/certificate/generate` → `{ok:true, certificate:{certificateNumber:"AP-2026-71B162"}}` ✓
+- `GET /api/certificate/AP-2026-71B162` (public) → `{ok:true, certificate:{certificateNumber, type:"Internship Completion", student:{firstName:"Shekhar Dubey", project:"Multilingual AI Chatbot…", college:"SVIT"}}}` ✓
+- `GET /api/admin/certificates` → 1 certificate issued ✓
+- Browser: login as admin/admin123 → admin console shows "Enterprise Admin Dashboard" banner → click "Open Admin Dashboard" → big popup opens with 13-item sidebar + KPI cards (Total Students: 20, Pending Approval: 20, Active Interns: 0) ✓
+- Browser: click Certificates tab → shows the issued cert (AP-2026-…) with a Verify link ✓
+
+Stage Summary:
+- Enterprise Admin Dashboard is live as a popup (single-route constraint respected — no /admin route, opened from the admin console). 13-item sidebar with 5 fully-working tabs (Dashboard KPIs, Students management, Applications approval center, Certificates auto-generation+verification, Reports breakdowns) + 8 scaffolded stub tabs (Payments, Internships, Mentors, Projects, Attendance, AI Analytics, Notifications, Settings) showing planned features.
+- Complete student lifecycle now works end-to-end: register → admin approves payment → start internship → advance 6 stages → completed → admin generates verifiable certificate (AP-YYYY-XXXXXX) → anyone verifies at /api/certificate/[number].
+- Certificate model + generation + public verification all working. Lint clean.
