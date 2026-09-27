@@ -63,6 +63,8 @@ export async function GET(req: Request) {
           college: true, state: true, project: true, categoryLabel: true,
           category: true, projectId: true, consentWa: true, consentEm: true,
           emailSent: true, waSent: true, source: true, notes: true,
+          paymentStatus: true, internshipStatus: true, currentStage: true,
+          startedAt: true, completedAt: true,
           createdAt: true,
         },
       }),
@@ -75,6 +77,7 @@ export async function GET(req: Request) {
         "degree", "branch", "semester", "plan", "college", "state",
         "category", "categoryLabel", "project", "projectId",
         "source", "notes", "consentWa", "consentEm", "emailSent", "waSent",
+        "paymentStatus", "internshipStatus", "currentStage", "startedAt", "completedAt",
       ].join(",");
       const esc = (v: unknown) => {
         const s = v === null || v === undefined ? "" : String(v);
@@ -88,6 +91,8 @@ export async function GET(req: Request) {
           r.category, r.categoryLabel, r.project, r.projectId ?? "",
           r.source ?? "", r.notes ?? "",
           r.consentWa, r.consentEm, r.emailSent, r.waSent,
+          r.paymentStatus ?? "", r.internshipStatus ?? "", r.currentStage ?? "",
+          r.startedAt?.toISOString() ?? "", r.completedAt?.toISOString() ?? "",
         ].map(esc).join(",")
       );
       const csv = [header, ...rows].join("\n");
