@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
   IdCard,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { PaymentPage } from "@/components/agile/payment-page";
 import {
   CATEGORIES,
   DEGREES,
@@ -569,7 +571,7 @@ export function RegisterForm() {
                         <Loader2 className="size-4 animate-spin" /> Submitting…
                       </>
                     ) : (
-                      <>🚀 Submit Enrolment — It&apos;s Free →</>
+                      <>🚀 Submit Enrolment — It's Free →</>
                     )}
                   </Button>
                   <Button
@@ -580,6 +582,23 @@ export function RegisterForm() {
                   >
                     <ArrowLeft className="size-4" /> Back
                   </Button>
+                </div>
+
+                {/* Online payment section */}
+                <div className="mt-8 border-t border-[rgba(6,182,212,0.12)] pt-5">
+                  <div className="flex items-center gap-2 mb-1">
+                    <CreditCard className="size-4 text-cyan-400" />
+                    <span className="text-sm font-semibold text-foreground">Pay Online (Optional)</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Test Mode</span>
+                  </div>
+                  <p className="text-xs text-slate-500 mb-4">Pay your plan fee via UPI, Card, Net Banking, or International Card. The internship starts after the admin confirms your payment.</p>
+                  <PaymentPage
+                    planName={form.plan.split(" — ")[0]?.trim() || "Standard"}
+                    studentName={`${form.firstName} ${form.lastName}`.trim()}
+                    onPaid={(m, t) => {
+                      toast({ title: "Payment confirmed!", description: `${form.plan} via ${m} · ${t}` });
+                    }}
+                  />
                 </div>
               </div>
             )}
