@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 import {
-  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles,
+  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -93,7 +93,12 @@ export function StudentDashboard() {
               <span className="size-8 rounded-lg ap-gradient-cyan grid place-items-center text-navy"><LayoutDashboard className="size-4" /></span>
               <div><DialogTitle className="font-bold text-base">Student Dashboard</DialogTitle><DialogDescription className="text-[11px] text-slate-500">One window · navigate via tabs</DialogDescription></div>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]"><X className="size-4" /></button>
+            <div className="flex items-center gap-2">
+              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-white font-semibold transition-colors">
+                <LogOut className="size-3.5" /> Logout
+              </button>
+              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]"><X className="size-4" /></button>
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row max-h-[calc(92vh-64px)]">
             <nav className="sm:w-48 shrink-0 border-b sm:border-b-0 sm:border-r border-[rgba(6,182,212,0.18)] bg-[#0a1422]/60 p-2 flex sm:flex-col gap-1 overflow-x-auto sm:overflow-y-auto">

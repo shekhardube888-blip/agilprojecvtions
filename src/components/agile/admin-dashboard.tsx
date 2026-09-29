@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import {
   LayoutDashboard, Users, FileText, CreditCard, Cpu, GraduationCap, FolderKanban,
   CalendarCheck, Award, BarChart3, Brain, Bell, Settings, X, RefreshCw, Loader2,
-  CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink,
+  CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink, LogOut,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -75,9 +75,14 @@ export function AdminDashboard() {
                 <DialogDescription className="text-[11px] text-slate-500">NT-AI Network · enterprise admin suite</DialogDescription>
               </div>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]">
-              <X className="size-4" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-white font-semibold transition-colors">
+                <LogOut className="size-3.5" /> Logout
+              </button>
+              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]">
+                <X className="size-4" />
+              </button>
+            </div>
           </div>
           {/* Sidebar + content */}
           <div className="flex max-h-[calc(94vh-64px)]">
