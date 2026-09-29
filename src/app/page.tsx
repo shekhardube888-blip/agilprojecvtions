@@ -282,7 +282,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: PortalUser) => void }) {
       </Button>
       <div className="flex flex-wrap gap-1.5 justify-center pt-1">
         <button type="button" onClick={() => { setUsername("admin"); setPassword("admin123"); }} className="text-[10px] px-2 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-300 hover:bg-cyan-500/20">admin / admin123</button>
-        <button type="button" onClick={() => { setUsername("flow-test@example.com"); setPassword("9999900555"); }} className="text-[10px] px-2 py-1 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-300 hover:bg-violet-500/20">student demo</button>
+        <button type="button" onClick={() => { setUsername("student@agileprojection.com"); setPassword("1234567890"); }} className="text-[10px] px-2 py-1 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-300 hover:bg-violet-500/20">student demo</button>
       </div>
       <p className="text-center text-xs text-muted-foreground pt-2">
         Not registered? <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">Register free →</Link>
