@@ -82,7 +82,7 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
 
 // ── NT-AI Chatbot tab — launches the external chatbot in a new tab ──
 function NTAIChatbotTab() {
-  const CHATBOT_URL = "https://m1e8d8j40rg0-d.space-z.ai";
+  const CHATBOT_URL = "https://preview-chat-94e26b7c-b83a-4044-af7c-c97c88642529.space-z.ai/";
 
   return (
     <div className="flex flex-col items-center justify-center text-center py-8" style={{ minHeight: "400px" }}>
