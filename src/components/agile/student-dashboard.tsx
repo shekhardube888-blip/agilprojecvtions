@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState } from "react";
 import {
-  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut,
+  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -17,13 +17,14 @@ import { Schedule } from "@/components/agile/schedule";
 import { FAQ } from "@/components/agile/faq";
 import { cn } from "@/lib/utils";
 
-type TabKey = "overview" | "register" | "track" | "ai-mentor" | "schedule" | "faq";
+type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "schedule" | "faq";
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home" },
   { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment" },
   { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey" },
   { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant" },
+  { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "NT-AI Network chatbot" },
   { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches" },
   { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, desc: "Questions & answers" },
 ];
@@ -36,6 +37,7 @@ function TabBody({ k, onJump }: { k: TabKey; onJump: (k: TabKey) => void }) {
     case "register": return <div className={WRAP}><RegisterForm /></div>;
     case "track": return <div className={WRAP}><ProjectTracker /></div>;
     case "ai-mentor": return <div className={WRAP}><AIAssistant /></div>;
+    case "ntai-chat": return <NTAIChatbotTab />;
     case "schedule": return <div className={WRAP}><Schedule /></div>;
     case "faq": return <div className={WRAP}><FAQ /></div>;
     default: return null;
@@ -73,6 +75,59 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
           <li><span className="text-cyan-400 font-semibold">3.</span> <button onClick={() => onJump("track")} className="text-cyan-300 underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training (LLM)".</li>
           <li><span className="text-cyan-400 font-semibold">4.</span> <button onClick={() => onJump("ai-mentor")} className="text-cyan-300 underline underline-offset-2">Ask the AI Mentor</button> for help.</li>
         </ol>
+      </div>
+    </div>
+  );
+}
+
+// ── NT-AI Chatbot tab — embeds the external NT-AI chatbot via iframe ──
+function NTAIChatbotTab() {
+  const CHATBOT_URL = "https://m1e8d8j40rg0-d.space-z.ai";
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
+
+  return (
+    <div className="flex flex-col h-full" style={{ minHeight: "500px" }}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            <MessageSquare className="size-5 text-cyan-400" />
+            NT-AI Chatbot
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">Ask the NT-AI Network chatbot anything about your internship, projects, or career.</p>
+        </div>
+        <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300">
+          <ExternalLink className="size-3.5" /> Open in new tab
+        </a>
+      </div>
+      <div className="flex-1 rounded-xl border border-[rgba(6,182,212,0.22)] overflow-hidden bg-white relative" style={{ minHeight: "450px" }}>
+        {!loaded && !error && (
+          <div className="absolute inset-0 grid place-items-center bg-[#0e1b2e]">
+            <div className="text-center">
+              <div className="size-10 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto mb-3" />
+              <p className="text-xs text-slate-400">Loading NT-AI Chatbot…</p>
+            </div>
+          </div>
+        )}
+        {error && (
+          <div className="absolute inset-0 grid place-items-center bg-[#0e1b2e] text-center p-6">
+            <div>
+              <p className="text-sm text-slate-400 mb-3">Couldn't load the chatbot inline. Open it in a new tab:</p>
+              <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 bg-[#0F2340] border border-[rgba(6,182,212,0.22)] rounded-lg px-4 py-2">
+                <ExternalLink className="size-4" /> Open NT-AI Chatbot
+              </a>
+            </div>
+          </div>
+        )}
+        <iframe
+          src={CHATBOT_URL}
+          title="NT-AI Chatbot"
+          className="w-full h-full border-0"
+          style={{ minHeight: "450px" }}
+          onLoad={() => setLoaded(true)}
+          onError={() => setError(true)}
+          allow="clipboard-write; microphone; camera"
+        />
       </div>
     </div>
   );
