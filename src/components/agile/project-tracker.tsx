@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   Search,
   Loader2,
@@ -12,6 +13,8 @@ import {
   ArrowRight,
   RefreshCw,
   Rocket,
+  GraduationCap,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -160,6 +163,26 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
   const notStarted = student.internshipStatus === "not_started";
   const completed = student.internshipStatus === "completed";
   const current = student.currentStage; // 0 = not started, 1-6 = in-progress stage, 7 = done
+  const { toast } = useToast();
+  const [training, setTraining] = useState<Record<number, { content: string; loading: boolean }>>({});
+
+  async function startTraining(stage: number) {
+    setTraining((t) => ({ ...t, [stage]: { content: t[stage]?.content || "", loading: true } }));
+    try {
+      const res = await fetch("/api/training/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage, project: student.project, categoryLabel: student.categoryLabel }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "Training generation failed");
+      setTraining((t) => ({ ...t, [stage]: { content: data.content, loading: false } }));
+      toast({ title: `Week ${stage} training ready`, description: data.title });
+    } catch (err) {
+      setTraining((t) => ({ ...t, [stage]: { content: "", loading: false } }));
+      toast({ title: "Training failed", description: (err as Error).message, variant: "destructive" });
+    }
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -237,7 +260,8 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
           const stageNum = s.step;
           const isDone = current > stageNum || completed;
           const isCurrent = !completed && current === stageNum;
-          const isLocked = notStarted || current < stageNum;
+          const isLocked = notStarted;
+          const isUpcoming = !notStarted && !isDone && !isCurrent;
           return (
             <li key={s.step} className="relative">
               <span
@@ -288,6 +312,32 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
                 <div className="text-[11px] text-cyan-300/80 mt-2 flex items-center gap-1.5">
                   <ArrowRight className="size-3" /> Deliverable: <span className="text-slate-300">{s.deliverable}</span>
                 </div>
+
+                {/* LLM Start Week X Training */}
+                {!notStarted && (
+                  <div className="mt-3 border-t border-[rgba(6,182,212,0.12)] pt-3">
+                    {training[stageNum]?.content ? (
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[11px] font-semibold text-cyan-300 inline-flex items-center gap-1.5">
+                            <GraduationCap className="size-3.5" /> {s.week} Training Module
+                          </span>
+                          <button onClick={() => setTraining((t) => { const n = { ...t }; delete n[stageNum]; return n; })} className="text-slate-500 hover:text-rose-300 text-[10px]" aria-label="Hide training">
+                            <X className="size-3.5" />
+                          </button>
+                        </div>
+                        <div className="prose prose-sm prose-invert max-w-none bg-[#0a1422] border border-[rgba(6,182,212,0.15)] rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
+                          <ReactMarkdown>{training[stageNum].content}</ReactMarkdown>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button size="sm" onClick={() => startTraining(stageNum)} disabled={training[stageNum]?.loading} className="h-8 text-xs bg-gradient-to-r from-violet-600 to-cyan-500 text-white hover:opacity-90">
+                        {training[stageNum]?.loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <GraduationCap className="size-3.5 mr-1.5" />}
+                        {training[stageNum]?.loading ? "Generating training\u2026" : `Start ${s.week} Training (LLM)`}
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </li>
           );
