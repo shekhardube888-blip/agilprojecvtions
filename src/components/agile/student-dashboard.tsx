@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare,
 } from "lucide-react";
@@ -117,6 +117,20 @@ function NTAIChatbotTab() {
 export function StudentDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
   const [open, setOpen] = useState(initiallyOpen || false);
   const [tab, setTab] = useState<TabKey>("overview");
+
+  // Listen for tab-switch requests from embedded components (e.g. Project Tracker's "Ask AI Mentor" button)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as TabKey;
+      if (detail) {
+        setTab(detail);
+        setOpen(true);
+      }
+    };
+    window.addEventListener("switch-dashboard-tab", handler);
+    return () => window.removeEventListener("switch-dashboard-tab", handler);
+  }, []);
+
   return (
     <>
       <Button onClick={() => { setOpen(true); setTab("overview"); }} size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-12 px-6 shadow-lg shadow-cyan-500/20">

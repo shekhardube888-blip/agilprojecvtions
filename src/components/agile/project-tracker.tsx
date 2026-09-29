@@ -349,6 +349,9 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
         <Button
           variant="outline"
           onClick={() => {
+            // First try switching the Student Dashboard tab (if inside the popup)
+            window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "ai-mentor" }));
+            // Also try scrolling on the main page (if on the marketing page)
             const el = document.getElementById("ai-assistant");
             if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
@@ -359,6 +362,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
         <Button
           variant="outline"
           onClick={() => {
+            window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "register" }));
             const el = document.getElementById("register");
             if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
