@@ -80,55 +80,36 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
   );
 }
 
-// ── NT-AI Chatbot tab — embeds the external NT-AI chatbot via iframe ──
+// ── NT-AI Chatbot tab — launches the external chatbot in a new tab ──
 function NTAIChatbotTab() {
   const CHATBOT_URL = "https://m1e8d8j40rg0-d.space-z.ai";
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(false);
 
   return (
-    <div className="flex flex-col h-full" style={{ minHeight: "500px" }}>
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-bold text-lg flex items-center gap-2">
-            <MessageSquare className="size-5 text-cyan-400" />
-            NT-AI Chatbot
-          </h3>
-          <p className="text-xs text-slate-500 mt-0.5">Ask the NT-AI Network chatbot anything about your internship, projects, or career.</p>
-        </div>
-        <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300">
-          <ExternalLink className="size-3.5" /> Open in new tab
+    <div className="flex flex-col items-center justify-center text-center py-8" style={{ minHeight: "400px" }}>
+      <div className="size-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white mx-auto mb-4 shadow-lg">
+        <MessageSquare className="size-8" />
+      </div>
+      <h3 className="font-bold text-xl text-foreground">NT-AI Chatbot</h3>
+      <p className="text-sm text-slate-500 mt-2 max-w-md">
+        The NT-AI Network chatbot — powered by OpenAI GPT models. Ask anything about your
+        internship, AI/ML projects, coding, or career guidance.
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+        <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold px-6 h-12 rounded-lg shadow-lg shadow-cyan-500/20 hover:opacity-90 transition-opacity">
+          <MessageSquare className="size-5" />
+          Launch NT-AI Chatbot
+          <ExternalLink className="size-4" />
         </a>
       </div>
-      <div className="flex-1 rounded-xl border border-[rgba(6,182,212,0.22)] overflow-hidden bg-white relative" style={{ minHeight: "450px" }}>
-        {!loaded && !error && (
-          <div className="absolute inset-0 grid place-items-center bg-[#0e1b2e]">
-            <div className="text-center">
-              <div className="size-10 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin mx-auto mb-3" />
-              <p className="text-xs text-slate-400">Loading NT-AI Chatbot…</p>
-            </div>
-          </div>
-        )}
-        {error && (
-          <div className="absolute inset-0 grid place-items-center bg-[#0e1b2e] text-center p-6">
-            <div>
-              <p className="text-sm text-slate-400 mb-3">Couldn't load the chatbot inline. Open it in a new tab:</p>
-              <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 bg-[#0F2340] border border-[rgba(6,182,212,0.22)] rounded-lg px-4 py-2">
-                <ExternalLink className="size-4" /> Open NT-AI Chatbot
-              </a>
-            </div>
-          </div>
-        )}
-        <iframe
-          src={CHATBOT_URL}
-          title="NT-AI Chatbot"
-          className="w-full h-full border-0"
-          style={{ minHeight: "450px" }}
-          onLoad={() => setLoaded(true)}
-          onError={() => setError(true)}
-          allow="clipboard-write; microphone; camera"
-        />
+      <div className="mt-6 flex flex-wrap gap-2 justify-center">
+        {["AI/ML Project Help", "Coding Questions", "Career Guidance", "Internship Queries", "Resume Tips"].map(tag => (
+          <span key={tag} className="text-[10px] px-2 py-1 rounded-md bg-muted/50 border border-border text-slate-500">{tag}</span>
+        ))}
       </div>
+      <p className="text-[10px] text-slate-500 mt-6 inline-flex items-center gap-1">
+        <ExternalLink className="size-3" />
+        Opens in a new tab · Powered by OpenAI GPT-4o · {CHATBOT_URL}
+      </p>
     </div>
   );
 }
