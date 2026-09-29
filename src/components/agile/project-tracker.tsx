@@ -346,15 +346,25 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
 
       {/* Help CTA */}
       <div className="text-center mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild variant="outline" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300">
-          <Link href="#ai-assistant">
-            🤖 Ask AP-AI Mentor for help with a stage
-          </Link>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const el = document.getElementById("ai-assistant");
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+        >
+          🤖 Ask AP-AI Mentor for help with a stage
         </Button>
-        <Button asChild variant="outline" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300">
-          <Link href="#register">
-            <Rocket className="size-4 mr-1.5" /> Register for another project
-          </Link>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const el = document.getElementById("register");
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+        >
+          <Rocket className="size-4 mr-1.5" /> Register for another project
         </Button>
       </div>
     </div>
