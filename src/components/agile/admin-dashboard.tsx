@@ -48,8 +48,8 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
   { key: "settings", label: "Settings", icon: <Settings className="size-4" />, group: "Insights" },
 ];
 
-export function AdminDashboard() {
-  const [open, setOpen] = useState(false);
+export function AdminDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
+  const [open, setOpen] = useState(initiallyOpen || false);
   const [tab, setTab] = useState<MenuKey>("dashboard");
 
   return (

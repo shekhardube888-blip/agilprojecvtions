@@ -78,8 +78,8 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
   );
 }
 
-export function StudentDashboard() {
-  const [open, setOpen] = useState(false);
+export function StudentDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
+  const [open, setOpen] = useState(initiallyOpen || false);
   const [tab, setTab] = useState<TabKey>("overview");
   return (
     <>
