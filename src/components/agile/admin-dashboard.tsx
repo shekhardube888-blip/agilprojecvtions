@@ -14,6 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import ReactMarkdown from "react-markdown";
+import { MENTORS, CATEGORIES, DEGREES, BRANCHES, PLANS, STATES, SOURCES, PROGRAMS, AIML_CURRICULUM } from "@/lib/data";
+import { MessageCircle, Mail } from "lucide-react";
 
 // ── types ──
 type Student = {
@@ -123,6 +127,14 @@ function TabContent({ tab }: { tab: MenuKey }) {
     case "applications": return <ApplicationsTab />;
     case "certificates": return <CertificatesTab />;
     case "reports": return <ReportsTab />;
+    case "mentors": return <MentorsTab />;
+    case "attendance": return <AttendanceTab />;
+    case "projects": return <ProjectsTab />;
+    case "ai": return <AIAnalyticsTab />;
+    case "notifications": return <NotificationsTab />;
+    case "settings": return <SettingsTab />;
+    case "payments": return <PaymentsTab />;
+    case "internships": return <InternshipsTab />;
     default: return <StubTab tab={tab} />;
   }
 }
@@ -423,7 +435,260 @@ function ReportList({ title, data }: { title: string; data: [string, number][] }
   );
 }
 
-// ── Stub tabs (structure for the rest of the enterprise suite) ──
+// ── Mentor Management ──
+function MentorsTab() {
+  const { students, loading } = useStudents();
+  if (loading) return <Loading />;
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Mentor Management</h3>
+      <p className="text-xs text-slate-500 mb-4">{MENTORS.length} mentors · student counts by domain · workload.</p>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {MENTORS.map((m) => {
+          const assigned = students.filter(s => s.categoryLabel && s.categoryLabel.toLowerCase().includes(m.role.split(" — ")[0]?.toLowerCase() || "zzz"));
+          const active = assigned.filter(s => s.internshipStatus === "in_progress");
+          const completed = assigned.filter(s => s.internshipStatus === "completed");
+          return (
+            <div key={m.initials} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="size-10 rounded-full grid place-items-center text-white font-bold text-sm" style={{ background: m.color }}>{m.initials}</span>
+                <div><div className="font-semibold text-foreground text-sm">{m.name}</div><div className="text-[11px] text-cyan-500">{m.role}</div></div>
+              </div>
+              <div className="text-[11px] text-slate-500 mb-2">{m.exp}</div>
+              <div className="flex gap-3 text-xs">
+                <span className="text-slate-300">Assigned: <strong className="text-cyan-500">{assigned.length}</strong></span>
+                <span className="text-slate-300">Active: <strong className="text-cyan-500">{active.length}</strong></span>
+                <span className="text-slate-300">Done: <strong className="text-emerald-500">{completed.length}</strong></span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Attendance ──
+function AttendanceTab() {
+  const { students, loading } = useStudents();
+  const [attendance, setAttendance] = useState<Record<string, string>>({});
+  if (loading) return <Loading />;
+  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+  function mark(id: string, status: string) { setAttendance(a => ({ ...a, [id]: status })); }
+  const present = Object.values(attendance).filter(s => s === "present").length;
+  const absent = Object.values(attendance).filter(s => s === "absent").length;
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Attendance Management</h3>
+      <p className="text-xs text-slate-500 mb-4">Daily tracking — {new Date().toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</p>
+      <div className="flex gap-3 mb-3 text-xs">
+        <span className="px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">Present: {present}</span>
+        <span className="px-2 py-1 rounded-full bg-rose-500/15 text-rose-500 border border-rose-500/30">Absent: {absent}</span>
+      </div>
+      {activeStudents.length === 0 ? <Empty text="No active students to track." /> : (
+        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+          <table className="w-full text-sm"><tbody>
+            {activeStudents.map(s => (
+              <tr key={s.id} className="border-b border-border/50 last:border-0">
+                <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-slate-500">Stage {s.currentStage}/6</div></td>
+                <td className="px-3 py-2 text-right whitespace-nowrap">
+                  {["present", "absent", "leave", "late"].map(st => (
+                    <button key={st} onClick={() => mark(s.id, st)} className={cn("ml-1 text-[10px] px-2 py-0.5 rounded-full border capitalize transition-colors",
+                      attendance[s.id] === st ? (st === "present" ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40" : st === "absent" ? "bg-rose-500/20 text-rose-500 border-rose-500/40" : st === "leave" ? "bg-amber-500/20 text-amber-500 border-amber-500/40" : "bg-blue-500/20 text-blue-500 border-blue-500/40")
+                      : "bg-muted/50 text-slate-500 border-border hover:text-slate-300")}>{st}</button>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody></table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Projects ──
+function ProjectsTab() {
+  const { students, loading } = useStudents();
+  if (loading) return <Loading />;
+  const totalProjects = CATEGORIES.reduce((sum, c) => sum + c.projects.length, 0);
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Project Management</h3>
+      <p className="text-xs text-slate-500 mb-4">{totalProjects} projects across {CATEGORIES.length} domains · {students.length} student assignments.</p>
+      <div className="space-y-3 max-h-[65vh] overflow-y-auto">
+        {CATEGORIES.map(cat => {
+          const assigned = students.filter(s => s.category === cat.key);
+          return (
+            <div key={cat.key} className="bg-card border border-border rounded-xl p-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2"><span className="text-lg">{cat.icon}</span><span className="font-semibold text-foreground text-sm">{cat.label}</span></div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-500 border border-cyan-500/30">{cat.projects.length} templates · {assigned.length} assigned</span>
+              </div>
+              {assigned.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5">{assigned.map(s => <span key={s.id} className="text-[10px] px-2 py-0.5 rounded-md bg-muted/50 border border-border text-slate-600">{s.firstName} {s.lastName[0]}.</span>)}</div>
+              ) : <div className="text-[10px] text-slate-500">No students assigned yet.</div>}
+              <details className="mt-2"><summary className="text-[10px] text-cyan-500 cursor-pointer">View {cat.projects.length} projects</summary><ul className="mt-1 space-y-0.5">{cat.projects.slice(0, 5).map(p => <li key={p.id} className="text-[10px] text-slate-500">#{p.id} {p.name} <span className="text-slate-400">({p.tags})</span></li>)}{cat.projects.length > 5 && <li className="text-[10px] text-slate-400">… +{cat.projects.length - 5} more</li>}</ul></details>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── AI Analytics ──
+function AIAnalyticsTab() {
+  const { toast } = useToast();
+  const [insights, setInsights] = useState("");
+  const [loadingAI, setLoadingAI] = useState(false);
+  async function generate() {
+    setLoadingAI(true); setInsights("");
+    try {
+      const res = await fetch("/api/admin/ai-analytics", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error);
+      setInsights(data.insights);
+      toast({ title: "AI insights generated" });
+    } catch (e) { toast({ title: "AI analytics failed", description: (e as Error).message, variant: "destructive" }); }
+    finally { setLoadingAI(false); }
+  }
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">AI Analytics Dashboard</h3>
+      <p className="text-xs text-slate-500 mb-4">ML-powered insights: dropout risk, performance forecast, certificate eligibility.</p>
+      <Button onClick={generate} disabled={loadingAI} className="mb-4 bg-gradient-to-r from-violet-600 to-cyan-500 text-white hover:opacity-90 h-9">
+        {loadingAI ? <><Loader2 className="size-4 animate-spin mr-2" />Analyzing…</> : <><Brain className="size-4 mr-2" />Generate AI Insights</>}
+      </Button>
+      {insights ? (
+        <div className="prose prose-sm max-w-none bg-muted/30 border border-border rounded-lg p-4 prose-h2:text-cyan-500 prose-h2:text-sm prose-strong:text-foreground prose-ul:my-2 prose-li:my-0.5 prose-p:my-1.5">
+          <ReactMarkdown>{insights}</ReactMarkdown>
+        </div>
+      ) : !loadingAI && <p className="text-xs text-slate-500">Click "Generate AI Insights" to analyze student lifecycle data.</p>}
+    </div>
+  );
+}
+
+// ── Notifications ──
+function NotificationsTab() {
+  const { students, loading } = useStudents();
+  const [selected, setSelected] = useState("");
+  const [message, setMessage] = useState("");
+  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+  const student = students.find(s => s.id === selected);
+  function sendWhatsApp() {
+    if (!student || !message.trim()) return;
+    window.open(`https://wa.me/${student.mobile.replace(/[\s+]/g, "").replace(/^91/, "91")}?text=${encodeURIComponent(`*AgileProjection NT-AI*\n\nHi ${student.firstName},\n\n${message}`)}`, "_blank");
+  }
+  function sendEmail() {
+    if (!student || !message.trim()) return;
+    window.open(`mailto:${student.email}?subject=${encodeURIComponent("AgileProjection — Notification")}&body=${encodeURIComponent(message)}`, "_blank");
+  }
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Notification Center</h3>
+      <p className="text-xs text-slate-500 mb-4">Send WhatsApp / email notifications to students.</p>
+      {loading ? <Loading /> : activeStudents.length === 0 ? <Empty text="No approved students to notify." /> : (
+        <div className="space-y-3">
+          <div><Label className="text-xs">Select Student</Label><select value={selected} onChange={e => setSelected(e.target.value)} className="w-full mt-1 bg-muted/50 border border-border rounded-md h-9 px-2 text-sm text-foreground"><option value="">— Select —</option>{activeStudents.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.email})</option>)}</select></div>
+          <div><Label className="text-xs">Message</Label><textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} placeholder="e.g. Your batch starts tomorrow at 6 PM IST." className="w-full mt-1 bg-muted/50 border border-border rounded-md p-2 text-sm text-foreground resize-none" /></div>
+          <div className="flex gap-2">
+            <Button onClick={sendWhatsApp} disabled={!student || !message.trim()} className="bg-gradient-to-r from-emerald-600 to-cyan-500 text-white hover:opacity-90 h-9"><MessageCircle className="size-4 mr-2" />Send WhatsApp</Button>
+            <Button onClick={sendEmail} disabled={!student || !message.trim()} variant="outline" className="bg-muted/50 border-border text-foreground hover:text-cyan-500 h-9"><Mail className="size-4 mr-2" />Send Email</Button>
+          </div>
+        </div>
+      )}
+      <div className="mt-4 rounded-lg border border-border bg-card p-3">
+        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Quick Templates</div>
+        <div className="flex flex-wrap gap-1.5">{["Batch starts tomorrow at 6 PM IST","Your assignment is due in 2 days","Attendance warning: below 75%","Your certificate is ready!","Project submission deadline extended"].map(t => <button key={t} onClick={() => setMessage(t)} className="text-[10px] px-2 py-1 rounded-md bg-muted/50 border border-border text-slate-600 hover:text-cyan-500 hover:border-cyan-500/30">{t}</button>)}</div>
+      </div>
+    </div>
+  );
+}
+
+// ── Settings ──
+function SettingsTab() {
+  const lists = [
+    { label: "Degrees", items: DEGREES }, { label: "Branches", items: BRANCHES },
+    { label: "Plans", items: PLANS }, { label: "States", items: STATES },
+    { label: "Sources", items: SOURCES }, { label: "Internship Tracks", items: PROGRAMS.map(p => p.title) },
+    { label: "AI/ML Domains", items: CATEGORIES.map(c => c.label) }, { label: "Mentors", items: MENTORS.map(m => m.name) },
+  ];
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Settings</h3>
+      <p className="text-xs text-slate-500 mb-4">Configurable lists · roles · permissions.</p>
+      <div className="grid sm:grid-cols-2 gap-3 mb-4">
+        {lists.map(l => (
+          <div key={l.label} className="bg-card border border-border rounded-xl p-3">
+            <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">{l.label} ({l.items.length})</div>
+            <div className="flex flex-wrap gap-1">{l.items.map(i => <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-slate-600">{i}</span>)}</div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-card border border-border rounded-xl p-4">
+        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Roles & Permissions</div>
+        <table className="w-full text-xs"><thead><tr className="text-left text-slate-400 border-b border-border"><th className="py-1.5">Role</th><th>Access</th></tr></thead><tbody>
+          {[{r:"Super Admin",a:"Full access — all modules + settings + roles"},{r:"Admin",a:"Students, Applications, Payments, Certificates, Reports, Notifications"},{r:"Mentor",a:"Assigned students, attendance, project reviews"},{r:"College Coordinator",a:"College-wise student reports"},{r:"Student",a:"Dashboard, track project, AI mentor, certificates"}].map(x => <tr key={x.r} className="border-b border-border/50 last:border-0"><td className="py-1.5 font-semibold text-foreground">{x.r}</td><td className="text-slate-500">{x.a}</td></tr>)}
+        </tbody></table>
+      </div>
+    </div>
+  );
+}
+
+// ── Payments ──
+function PaymentsTab() {
+  const { students, loading } = useStudents();
+  if (loading) return <Loading />;
+  const pending = students.filter(s => s.paymentStatus !== "confirmed");
+  const confirmed = students.filter(s => s.paymentStatus === "confirmed");
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Payment Management</h3>
+      <p className="text-xs text-slate-500 mb-4">Track payment status · refunds · revenue.</p>
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-amber-500">{pending.length}</div><div className="text-[10px] text-slate-500">Pending</div></div>
+        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-emerald-500">{confirmed.length}</div><div className="text-[10px] text-slate-500">Completed</div></div>
+        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-cyan-500">₹{confirmed.length * 2499}</div><div className="text-[10px] text-slate-500">Est. Revenue</div></div>
+      </div>
+      <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+        {students.slice(0, 20).map(s => (
+          <div key={s.id} className="flex items-center justify-between bg-card border border-border rounded-lg p-2">
+            <div><div className="text-xs font-medium text-foreground">{s.firstName} {s.lastName}</div><div className="text-[10px] text-slate-500">{s.plan}</div></div>
+            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "✅ Paid" : "⏳ Pending"}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Internships ──
+function InternshipsTab() {
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Internship Management</h3>
+      <p className="text-xs text-slate-500 mb-4">{PROGRAMS.length} active tracks + AI/ML industry internship.</p>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {PROGRAMS.map(p => (
+          <div key={p.id} className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2"><span className="text-2xl">{p.icon}</span><div><div className="font-semibold text-foreground text-sm">{p.title}</div><div className="text-[10px] text-slate-500">{p.badge}</div></div></div>
+            <p className="text-[11px] text-slate-500 mb-2">{p.desc.slice(0, 100)}…</p>
+            <div className="flex flex-wrap gap-1 mb-2">{p.tags.slice(0, 3).map(t => <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-slate-500">{t}</span>)}</div>
+            <div className="flex gap-3 text-[10px] text-slate-500">{p.meta.map((m, i) => <span key={i}>{m.strong} {m.label}</span>)}</div>
+          </div>
+        ))}
+        <div className="bg-card border border-border rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-2"><span className="text-2xl">🚀</span><div><div className="font-semibold text-foreground text-sm">AI/ML Industry Internship</div><div className="text-[10px] text-slate-500">6 Weeks · 80+ Projects</div></div></div>
+          <p className="text-[11px] text-slate-500 mb-2">End-to-end ML pipeline: {AIML_CURRICULUM.map(c => c.title.split(" ")[0]).join(" → ")}</p>
+          <div className="text-[10px] text-slate-500">6 stages · LLM-generated training per week</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Stub (fallback) ──
 function StubTab({ tab }: { tab: MenuKey }) {
   const labels: Record<string, { title: string; desc: string; features: string[] }> = {
     payments: { title: "Payment Management", desc: "For future paid programs — track payments, refunds, invoices, GST reports.", features: ["Payment Pending / Completed", "Refund Requests", "Invoice Download", "Revenue + GST Reports"] },
