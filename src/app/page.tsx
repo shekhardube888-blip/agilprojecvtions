@@ -226,6 +226,9 @@ export default function Home() {
         {/* Footer */}
         <footer className="text-center py-4 text-xs text-muted-foreground">
           © 2026 AgileProjection (NT-AI) · <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link> · <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">agileprojection.com</a>
+          <div className="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
+            ⚠ Version 1.0 — Test Version. Next comes after testing.
+          </div>
         </footer>
       </div>
     </div>
