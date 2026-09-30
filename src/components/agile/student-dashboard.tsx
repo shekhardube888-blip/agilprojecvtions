@@ -48,32 +48,32 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
   return (
     <div className="space-y-5">
       <div className="rounded-xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40">
-        <div className="rounded-xl bg-[#0e1b2e] p-5">
+        <div className="rounded-xl bg-popover p-5">
           <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-1">Welcome to AgileProjection · NT-AI Network</div>
           <h3 className="font-bold text-xl">Your student dashboard</h3>
-          <p className="text-slate-400 text-sm mt-2 leading-relaxed">Free engineering internships + 80+ AI/ML projects for BE / B.Tech / ME / M.Tech / MCA students. Everything you need is one tab away.</p>
-          <div className="mt-4 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-lg px-3 py-2 inline-block">
-            <div className="text-[9px] uppercase tracking-wider text-slate-500 mb-1">Live portal traffic</div>
+          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Free engineering internships + 80+ AI/ML projects for BE / B.Tech / ME / M.Tech / MCA students. Everything you need is one tab away.</p>
+          <div className="mt-4 bg-muted/70 border border-border rounded-lg px-3 py-2 inline-block">
+            <div className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1">Live portal traffic</div>
             <VisitorStats />
           </div>
         </div>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {TABS.filter((t) => t.key !== "overview").map((t) => (
-          <button key={t.key} type="button" onClick={() => onJump(t.key)} className="group text-left bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-4 ap-lift">
+          <button key={t.key} type="button" onClick={() => onJump(t.key)} className="group text-left bg-card border border-border rounded-xl p-4 ap-lift">
             <div className="flex items-center gap-2 mb-2"><span className="size-8 rounded-lg ap-gradient-cyan grid place-items-center text-navy">{t.icon}</span><span className="font-semibold text-foreground text-sm">{t.label}</span></div>
-            <div className="text-[11px] text-slate-400">{t.desc}</div>
+            <div className="text-[11px] text-muted-foreground">{t.desc}</div>
             <div className="text-[10px] text-cyan-400 mt-2 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">Open tab →</div>
           </button>
         ))}
       </div>
-      <div className="rounded-xl border border-[rgba(6,182,212,0.18)] bg-[#111f35] p-4">
+      <div className="rounded-xl border border-border bg-card p-4">
         <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2 flex items-center gap-1.5"><Sparkles className="size-3.5" /> How it works</div>
-        <ol className="space-y-1.5 text-xs text-slate-300">
-          <li><span className="text-cyan-400 font-semibold">1.</span> <button onClick={() => onJump("register")} className="text-cyan-300 underline underline-offset-2">Register</button> for free.</li>
+        <ol className="space-y-1.5 text-xs text-foreground">
+          <li><span className="text-cyan-400 font-semibold">1.</span> <button onClick={() => onJump("register")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Register</button> for free.</li>
           <li><span className="text-cyan-400 font-semibold">2.</span> Admin confirms your payment + starts your internship.</li>
-          <li><span className="text-cyan-400 font-semibold">3.</span> <button onClick={() => onJump("track")} className="text-cyan-300 underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training (LLM)".</li>
-          <li><span className="text-cyan-400 font-semibold">4.</span> <button onClick={() => onJump("ai-mentor")} className="text-cyan-300 underline underline-offset-2">Ask the AI Mentor</button> for help.</li>
+          <li><span className="text-cyan-400 font-semibold">3.</span> <button onClick={() => onJump("track")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training (LLM)".</li>
+          <li><span className="text-cyan-400 font-semibold">4.</span> <button onClick={() => onJump("ai-mentor")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Ask the AI Mentor</button> for help.</li>
         </ol>
       </div>
     </div>
@@ -84,14 +84,14 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
 function NTAIChatbotTab() {
   return (
     <div className="flex flex-col items-center justify-center text-center py-8" style={{ minHeight: "400px" }}>
-      <div className="size-16 rounded-2xl bg-muted/50 border border-border grid place-items-center text-slate-400 mx-auto mb-4">
+      <div className="size-16 rounded-2xl bg-muted/50 border border-border grid place-items-center text-muted-foreground mx-auto mb-4">
         <MessageSquare className="size-8" />
       </div>
       <h3 className="font-bold text-xl text-foreground">NT-AI Chatbot</h3>
       <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
         ⚠ Coming in v2.0
       </div>
-      <p className="text-sm text-slate-500 mt-3 max-w-md">
+      <p className="text-sm text-muted-foreground mt-3 max-w-md">
         The NT-AI Network chatbot (powered by OpenAI GPT) will be available in the next version.
         For now, use the <strong className="text-cyan-500">AP-AI Mentor</strong> tab for learning assistance.
       </p>
@@ -118,27 +118,27 @@ export function StudentDashboard({ initiallyOpen }: { initiallyOpen?: boolean } 
 
   return (
     <>
-      <Button onClick={() => { setOpen(true); setTab("overview"); }} size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-12 px-6 shadow-lg shadow-cyan-500/20">
+      <Button onClick={() => { setOpen(true); setTab("overview"); }} size="lg" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-12 px-6 shadow-lg shadow-cyan-500/20">
         <LayoutDashboard className="size-5 mr-2" /> Open Student Dashboard
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.25)] text-foreground sm:max-w-3xl lg:sm:max-w-6xl max-h-[92vh] p-0 overflow-hidden">
-          <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+        <DialogContent className="bg-popover border-border text-foreground sm:max-w-3xl lg:sm:max-w-6xl max-h-[92vh] p-0 overflow-hidden">
+          <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-border bg-muted">
             <div className="flex items-center gap-2.5">
               <span className="size-8 rounded-lg ap-gradient-cyan grid place-items-center text-navy"><LayoutDashboard className="size-4" /></span>
-              <div><DialogTitle className="font-bold text-base">Student Dashboard</DialogTitle><DialogDescription className="text-[11px] text-slate-500">One window · navigate via tabs</DialogDescription></div>
+              <div><DialogTitle className="font-bold text-base">Student Dashboard</DialogTitle><DialogDescription className="text-[11px] text-muted-foreground">One window · navigate via tabs</DialogDescription></div>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-white font-semibold transition-colors">
+              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-primary-foreground font-semibold transition-colors">
                 <LogOut className="size-3.5" /> Logout
               </button>
-              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]"><X className="size-4" /></button>
+              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-muted-foreground hover:text-cyan-500 dark:text-cyan-400 hover:bg-secondary"><X className="size-4" /></button>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row max-h-[calc(92vh-64px)]">
-            <nav className="sm:w-48 shrink-0 border-b sm:border-b-0 sm:border-r border-[rgba(6,182,212,0.18)] bg-[#0a1422]/60 p-2 flex sm:flex-col gap-1 overflow-x-auto sm:overflow-y-auto">
+            <nav className="sm:w-48 shrink-0 border-b sm:border-b-0 sm:border-r border-border bg-muted/60 p-2 flex sm:flex-col gap-1 overflow-x-auto sm:overflow-y-auto">
               {TABS.map((t) => (
-                <button key={t.key} type="button" onClick={() => setTab(t.key)} className={cn("flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap text-left", tab === t.key ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30" : "text-slate-300 hover:bg-[#0F2340] hover:text-cyan-300 border border-transparent")} aria-current={tab === t.key ? "page" : undefined}>{t.icon}<span>{t.label}</span></button>
+                <button key={t.key} type="button" onClick={() => setTab(t.key)} className={cn("flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap text-left", tab === t.key ? "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border border-cyan-500/30" : "text-foreground hover:bg-secondary hover:text-cyan-500 dark:text-cyan-400 border border-transparent")} aria-current={tab === t.key ? "page" : undefined}>{t.icon}<span>{t.label}</span></button>
               ))}
             </nav>
             <div className="flex-1 overflow-y-auto p-5"><TabBody k={tab} onJump={setTab} /></div>

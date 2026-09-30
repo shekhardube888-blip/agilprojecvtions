@@ -93,7 +93,7 @@ export default function Home() {
             <div className="hidden sm:flex items-center gap-2">
               <span className="size-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white text-xs font-bold">{initials}</span>
               <span className="text-sm text-foreground">{user.fullName || user.username}</span>
-              <span className={cn("text-[10px] px-2 py-0.5 rounded-full border font-semibold", isAdmin ? "bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border-cyan-500/30" : "bg-violet-500/15 text-violet-600 dark:text-violet-300 border-violet-500/30")}>{isAdmin ? "Admin" : "Student"}</span>
+              <span className={cn("text-[10px] px-2 py-0.5 rounded-full border font-semibold", isAdmin ? "bg-cyan-500/15 text-cyan-600 dark:text-cyan-500 dark:text-cyan-400 border-cyan-500/30" : "bg-violet-500/15 text-violet-600 dark:text-violet-300 border-violet-500/30")}>{isAdmin ? "Admin" : "Student"}</span>
             </div>
             <ThemeToggle />
             <Button onClick={logout} size="sm" className="bg-rose-500 hover:bg-rose-600 text-white h-9 px-4 shadow-md shadow-rose-500/20">
@@ -284,7 +284,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: PortalUser) => void }) {
         {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Sign In</>}
       </Button>
       <div className="flex flex-wrap gap-1.5 justify-center pt-1">
-        <button type="button" onClick={() => { setUsername("admin"); setPassword("admin123"); }} className="text-[10px] px-2 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-300 hover:bg-cyan-500/20">admin / admin123</button>
+        <button type="button" onClick={() => { setUsername("admin"); setPassword("admin123"); }} className="text-[10px] px-2 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20">admin / admin123</button>
         <button type="button" onClick={() => { setUsername("student@agileprojection.com"); setPassword("1234567890"); }} className="text-[10px] px-2 py-1 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-300 hover:bg-violet-500/20">student demo</button>
       </div>
       <p className="text-center text-xs text-muted-foreground pt-2">
