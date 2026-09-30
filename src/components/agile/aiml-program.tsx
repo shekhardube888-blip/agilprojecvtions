@@ -41,8 +41,8 @@ export function AIMLProgram() {
           <h2 id="aiml-h2" className="font-bold text-3xl md:text-4xl">
             🚀 AI/ML Industry Internship — <span className="ap-gradient-text">80+ Industry Projects</span>
           </h2>
-          <p className="text-slate-300 mt-3 max-w-3xl leading-relaxed text-sm md:text-base">
-            A 6-week, project-based ML internship designed for <strong className="text-slate-100">BE / B.Tech final-year, M.Tech and MCA students</strong>. You&apos;ll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using{" "}
+          <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed text-sm md:text-base">
+            A 6-week, project-based ML internship designed for <strong className="text-foreground">BE / B.Tech final-year, M.Tech and MCA students</strong>. You&apos;ll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using{" "}
             <a
               href={HOUSING_URL}
               className="text-cyan-300 underline underline-offset-4 inline-flex items-center gap-1"
@@ -60,31 +60,31 @@ export function AIMLProgram() {
         {AIML_FEATURES.map((f) => (
           <article
             key={f.title}
-            className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5"
+            className="ap-lift bg-card border border-border rounded-xl p-5"
           >
-            <div className="size-11 rounded-xl bg-[#0F2340] border border-[rgba(6,182,212,0.18)] grid place-items-center text-2xl mb-3">
+            <div className="size-11 rounded-xl bg-secondary border border-border grid place-items-center text-2xl mb-3">
               <span aria-hidden>{f.icon}</span>
             </div>
             <h3 className="text-sm font-semibold text-foreground">{f.title}</h3>
-            <p className="text-xs text-slate-400 mt-2 leading-relaxed">{f.desc}</p>
+            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{f.desc}</p>
           </article>
         ))}
       </div>
 
       {/* Pipeline diagram */}
-      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 md:p-6 mb-10">
+      <div className="bg-popover border border-border rounded-xl p-5 md:p-6 mb-10">
         <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
           ML Pipeline (worked example: housing-price regression)
         </div>
         <div className="flex flex-col md:flex-row md:items-stretch md:gap-0 gap-3 overflow-x-auto">
           {PIPELINE.map((p, i) => (
             <div key={p.step} className="flex items-center gap-2 md:gap-1">
-              <div className="flex-1 min-w-[140px] bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-lg p-3 text-center">
+              <div className="flex-1 min-w-[140px] bg-card border border-border rounded-lg p-3 text-center">
                 <div className="size-9 rounded-lg ap-gradient-cyan grid place-items-center text-navy mx-auto mb-2">
                   <p.icon className="size-4" />
                 </div>
                 <div className="text-sm font-semibold text-foreground">{p.step}</div>
-                <div className="text-[10px] text-slate-500 mt-0.5">{p.note}</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{p.note}</div>
               </div>
               {i < PIPELINE.length - 1 && (
                 <ArrowRight className="size-4 text-cyan-500 shrink-0 rotate-90 md:rotate-0" aria-hidden />
@@ -92,7 +92,7 @@ export function AIMLProgram() {
             </div>
           ))}
         </div>
-        <p className="text-xs text-slate-500 mt-3">
+        <p className="text-xs text-muted-foreground mt-3">
           The same 6-stage pipeline you&apos;ll follow across all 80+ projects — adapted to the dataset and domain of your choice.
         </p>
       </div>
@@ -107,7 +107,7 @@ export function AIMLProgram() {
         </h3>
       </div>
 
-      <ol className="relative max-w-3xl mx-auto pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-5">
+      <ol className="relative max-w-3xl mx-auto pl-6 border-l border-border space-y-5">
         {AIML_CURRICULUM.map((c, i) => {
           const isHousing = i === 0 || i === 2 || i === 3;
           return (
@@ -121,10 +121,10 @@ export function AIMLProgram() {
               />
               <div
                 className={
-                  "bg-[#111f35] border rounded-xl p-4 " +
+                  "bg-card border rounded-xl p-4 " +
                   (isHousing
                     ? "border-cyan-500/40"
-                    : "border-[rgba(6,182,212,0.18)]")
+                    : "border-border")
                 }
               >
                 <div className="flex items-center gap-2 flex-wrap mb-1.5">
@@ -138,7 +138,7 @@ export function AIMLProgram() {
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">{c.text}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
                 {i === 0 && (
                   <a
                     href={HOUSING_URL}

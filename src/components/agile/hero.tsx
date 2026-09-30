@@ -44,7 +44,7 @@ export function Hero() {
 
       <div className="relative max-w-7xl mx-auto px-5 md:px-[5%] grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
         <div className="ap-fade-up">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(6,182,212,0.28)] bg-[#0F2340]/60 px-3 py-1.5 text-xs text-cyan-300 font-medium mb-5">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1.5 text-xs text-cyan-300 font-medium mb-5">
             <span className="ap-pulse size-2 rounded-full bg-cyan-400" />
             Free Online Internships · 2025–26 Batch Open
           </div>
@@ -57,15 +57,15 @@ export function Hero() {
             <span className="ap-gradient-text">Free Industry Internships</span>
           </h1>
 
-          <p className="mt-5 text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed">
-            AgileProjection · NT-AI Network runs <strong className="text-slate-200">live, mentor-led, project-based internship programs</strong> for BE / B.Tech / ME / M.Tech / MCA students — in Embedded, IoT, AI/ML, Full Stack &amp; Campus Ambassador tracks. Build a real project, earn a verifiable certificate, and get career support — at <strong className="text-cyan-300">zero cost</strong>.
+          <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            AgileProjection · NT-AI Network runs <strong className="text-foreground">live, mentor-led, project-based internship programs</strong> for BE / B.Tech / ME / M.Tech / MCA students — in Embedded, IoT, AI/ML, Full Stack &amp; Campus Ambassador tracks. Build a real project, earn a verifiable certificate, and get career support — at <strong className="text-cyan-300">zero cost</strong>.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
             {TRACK_PILLS.map((t) => (
               <span
                 key={t}
-                className="rounded-full border border-[rgba(6,182,212,0.2)] bg-[#0F2340]/60 px-3 py-1 text-xs text-slate-300"
+                className="rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs text-muted-foreground"
               >
                 {t}
               </span>
@@ -86,13 +86,13 @@ export function Hero() {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 px-6 border-[rgba(6,182,212,0.28)] text-slate-200 hover:bg-[#0F2340] hover:text-cyan-300"
+              className="h-12 px-6 border-border text-foreground hover:bg-secondary hover:text-cyan-300"
             >
               <Link href="#programs">Explore Programs</Link>
             </Button>
           </div>
 
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-400">
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
             {TRUST.map((t) => (
               <li key={t.label} className="inline-flex items-center gap-1.5">
                 <t.icon className="size-4 text-cyan-400" />
@@ -107,13 +107,13 @@ export function Hero() {
           {HERO_STATS.map((s, i) => (
             <div
               key={s.label}
-              className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 flex items-center justify-between"
+              className="ap-lift bg-card border border-border rounded-xl p-5 flex items-center justify-between"
               style={{ marginLeft: i === 1 ? "1.5rem" : i === 2 ? "3rem" : 0 }}
             >
               <div>
                 <div className="text-3xl md:text-4xl font-bold ap-gradient-text">{s.num}</div>
-                <div className="text-sm text-slate-200 mt-1">{s.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{s.sub}</div>
+                <div className="text-sm text-foreground mt-1">{s.label}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{s.sub}</div>
               </div>
               <div className="size-12 rounded-xl ap-gradient-cyan grid place-items-center text-navy text-xl font-bold opacity-90">
                 {String(i + 1).padStart(2, "0")}

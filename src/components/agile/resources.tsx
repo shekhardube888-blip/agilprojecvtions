@@ -16,7 +16,7 @@ export function Resources() {
         <h2 id="resources-h2" className="font-bold text-3xl md:text-4xl">
           Tools to <span className="ap-gradient-text">keep you learning</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Beyond the internship programs — a free library, an AI mentor, an end-to-end ML project guide, and our career blog.
         </p>
       </div>
@@ -27,13 +27,13 @@ export function Resources() {
           return (
             <article
               key={r.title}
-              className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-6 flex flex-col"
+              className="ap-lift bg-card border border-border rounded-xl p-6 flex flex-col"
             >
-              <div className="size-12 rounded-xl bg-[#0F2340] border border-[rgba(6,182,212,0.18)] grid place-items-center text-2xl mb-4">
+              <div className="size-12 rounded-xl bg-secondary border border-border grid place-items-center text-2xl mb-4">
                 <span aria-hidden>{r.icon}</span>
               </div>
               <h3 className="text-base font-semibold text-foreground">{r.title}</h3>
-              <p className="text-sm text-slate-400 mt-2 leading-relaxed flex-1">{r.desc}</p>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed flex-1">{r.desc}</p>
               {internal ? (
                 <Link
                   href={r.href}

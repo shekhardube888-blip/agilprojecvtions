@@ -1,0 +1,252 @@
+/home/z/my-project/src/components/agile/visitor-stats.tsx:47:    <span className="inline-flex items-center gap-1.5 text-slate-300">
+/home/z/my-project/src/components/agile/visitor-stats.tsx:50:      <span className="text-slate-500 hidden sm:inline">{label}</span>
+/home/z/my-project/src/components/agile/project-tracker.tsx:100:        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/project-tracker.tsx:107:        <div className="max-w-md mx-auto bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-2xl p-6">
+/home/z/my-project/src/components/agile/project-tracker.tsx:117:                className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/project-tracker.tsx:129:                className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/project-tracker.tsx:148:          <p className="text-center text-xs text-slate-500 mt-4">
+/home/z/my-project/src/components/agile/project-tracker.tsx:191:        <div className="rounded-2xl bg-[#0e1b2e] p-6">
+/home/z/my-project/src/components/agile/project-tracker.tsx:200:              <p className="text-sm text-slate-400 mt-1">
+/home/z/my-project/src/components/agile/project-tracker.tsx:204:            <Button variant="outline" size="sm" onClick={onReset} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+/home/z/my-project/src/components/agile/project-tracker.tsx:227:            <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+/home/z/my-project/src/components/agile/project-tracker.tsx:249:            <p className="text-sm text-slate-400 mt-1">
+/home/z/my-project/src/components/agile/project-tracker.tsx:258:      <ol className="relative pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-4">
+/home/z/my-project/src/components/agile/project-tracker.tsx:280:                    ? "border-cyan-500/40 bg-[#111f35] shadow-[0_0_24px_-6px_rgba(6,182,212,0.3)]"
+/home/z/my-project/src/components/agile/project-tracker.tsx:281:                    : "border-[rgba(6,182,212,0.12)] bg-[#111f35]/50"
+/home/z/my-project/src/components/agile/project-tracker.tsx:288:                    isDone ? "bg-emerald-500/20 text-emerald-300" : isCurrent ? "ap-gradient-cyan text-navy" : "bg-[#0F2340] text-slate-400"
+/home/z/my-project/src/components/agile/project-tracker.tsx:303:                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-slate-600/15 text-slate-400 border border-slate-500/30">
+/home/z/my-project/src/components/agile/project-tracker.tsx:308:                <h4 className={cn("text-sm font-semibold", isLocked && !isCurrent ? "text-slate-400" : "text-foreground")}>
+/home/z/my-project/src/components/agile/project-tracker.tsx:311:                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{s.desc}</p>
+/home/z/my-project/src/components/agile/project-tracker.tsx:313:                  <ArrowRight className="size-3" /> Deliverable: <span className="text-slate-300">{s.deliverable}</span>
+/home/z/my-project/src/components/agile/project-tracker.tsx:318:                  <div className="mt-3 border-t border-[rgba(6,182,212,0.12)] pt-3">
+/home/z/my-project/src/components/agile/project-tracker.tsx:325:                          <button onClick={() => setTraining((t) => { const n = { ...t }; delete n[stageNum]; return n; })} className="text-slate-500 hover:text-rose-300 text-[10px]" aria-label="Hide training">
+/home/z/my-project/src/components/agile/project-tracker.tsx:329:                        <div className="prose prose-sm prose-invert max-w-none bg-[#0a1422] border border-[rgba(6,182,212,0.15)] rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
+/home/z/my-project/src/components/agile/project-tracker.tsx:358:          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+/home/z/my-project/src/components/agile/project-tracker.tsx:369:          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+/home/z/my-project/src/components/agile/project-tracker.tsx:380:    <div className="bg-[#0a1422]/60 border border-[rgba(6,182,212,0.12)] rounded-lg px-3 py-2">
+/home/z/my-project/src/components/agile/project-tracker.tsx:381:      <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
+/home/z/my-project/src/components/agile/admin-dashboard.tsx:333:      {students.length === 0 ? <div className="text-[11px] text-muted-foreground py-2 px-3 border border-[rgba(6,182,212,0.1)] rounded-lg bg-muted/40">{empty}</div> : (
+/home/z/my-project/src/components/agile/program-details.tsx:37:        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/program-details.tsx:44:          className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] h-auto flex-wrap rounded-xl p-1.5 gap-1"
+/home/z/my-project/src/components/agile/program-details.tsx:69:              <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-6">
+/home/z/my-project/src/components/agile/program-details.tsx:71:                <div className="mt-3 space-y-3 text-sm text-slate-400 leading-relaxed">
+/home/z/my-project/src/components/agile/program-details.tsx:84:                      className="flex items-start gap-3 p-3 rounded-lg bg-[#0e1b2e] border border-[rgba(6,182,212,0.1)]"
+/home/z/my-project/src/components/agile/program-details.tsx:89:                      <span className="text-sm text-slate-300 leading-relaxed">
+/home/z/my-project/src/components/agile/program-details.tsx:138:    <div className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+/home/z/my-project/src/components/agile/program-details.tsx:156:            className="flex items-start gap-2 text-sm text-slate-400 leading-relaxed"
+/home/z/my-project/src/components/agile/custom-pages.tsx:39:      <Button onClick={() => { setOpen(true); load(); }} variant="outline" size="lg" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-100 hover:text-cyan-300 hover:border-cyan-500/50 h-12 px-6">
+/home/z/my-project/src/components/agile/custom-pages.tsx:44:        <DialogContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.25)] text-foreground sm:max-w-3xl lg:sm:max-w-4xl max-h-[88vh] overflow-y-auto">
+/home/z/my-project/src/components/agile/custom-pages.tsx:45:          <div className="sticky top-0 -mx-6 -mt-6 mb-2 px-6 py-3 bg-[#0e1b2e]/95 backdrop-blur border-b border-[rgba(6,182,212,0.18)] flex items-center gap-3 z-10">
+/home/z/my-project/src/components/agile/custom-pages.tsx:46:            <span className="size-8 rounded-lg bg-[#0F2340] grid place-items-center text-cyan-400 border border-[rgba(6,182,212,0.22)]"><LayoutGrid className="size-4" /></span>
+/home/z/my-project/src/components/agile/custom-pages.tsx:47:            <div className="flex-1"><DialogTitle className="font-bold text-base">{active ? active.title : "Custom Pages"}</DialogTitle><DialogDescription className="text-[11px] text-slate-500">{active ? `/${active.slug}` : "Open any page in a popup"}</DialogDescription></div>
+/home/z/my-project/src/components/agile/custom-pages.tsx:48:            {active && <Button variant="ghost" size="sm" onClick={() => setActiveSlug(null)} className="text-slate-300 hover:text-cyan-300 h-8">← All pages</Button>}
+/home/z/my-project/src/components/agile/custom-pages.tsx:49:            <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340]"><X className="size-4" /></button>
+/home/z/my-project/src/components/agile/custom-pages.tsx:53:              loading ? <div className="py-10 text-center text-sm text-slate-500"><Loader2 className="size-5 animate-spin mx-auto mb-2" /> Loading…</div> :
+/home/z/my-project/src/components/agile/custom-pages.tsx:54:              pages.length === 0 ? <div className="py-10 text-center text-sm text-slate-500">No pages yet.</div> :
+/home/z/my-project/src/components/agile/custom-pages.tsx:57:                  <button key={p.id} type="button" onClick={() => openPage(p.slug)} className="group text-left bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-4 ap-lift">
+/home/z/my-project/src/components/agile/custom-pages.tsx:60:                    <div className="text-[10px] text-slate-500 mt-0.5">/{p.slug}</div>
+/home/z/my-project/src/components/agile/custom-pages.tsx:67:                {pageLoading ? <div className="py-10 text-center text-sm text-slate-500"><Loader2 className="size-5 animate-spin mx-auto mb-2" /> Loading…</div> :
+/home/z/my-project/src/components/agile/custom-pages.tsx:68:                  <div className="prose prose-sm prose-invert max-w-none prose-h1:text-2xl prose-h1:text-foreground prose-h2:text-lg prose-h2:text-cyan-300 prose-a:text-cyan-300 prose-strong:text-slate-100 prose-ul:my-3 prose-li:my-1 prose-table:my-3 prose-th:text-foreground prose-th:bg-[#0a1422] prose-td:text-slate-300 prose-td:border-[rgba(6,182,212,0.18)]" dangerouslySetInnerHTML={{ __html: html }} />}
+/home/z/my-project/src/components/agile/reports.tsx:160:        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/reports.tsx:182:                      : "bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40"
+/home/z/my-project/src/components/agile/reports.tsx:190:                      active ? "bg-cyan-500/25 text-cyan-200" : "bg-[#0F2340] text-slate-400"
+/home/z/my-project/src/components/agile/reports.tsx:205:              className="bg-[#0e1b2e] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/40"
+/home/z/my-project/src/components/agile/reports.tsx:222:        <p className="text-xs text-slate-500 inline-flex items-center gap-1.5">
+/home/z/my-project/src/components/agile/reports.tsx:272:            <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/reports.tsx:322:                  <p className="text-xs text-slate-500 mt-3 inline-flex items-center gap-1.5">
+/home/z/my-project/src/components/agile/reports.tsx:331:            <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/reports.tsx:384:                  <p className="text-xs text-slate-500 mt-3 inline-flex items-center gap-1.5">
+/home/z/my-project/src/components/agile/reports.tsx:395:          <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/reports.tsx:410:                    <thead className="sticky top-0 bg-[#0e1b2e] z-10">
+/home/z/my-project/src/components/agile/reports.tsx:411:                      <tr className="text-left text-xs text-slate-400 border-b border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/reports.tsx:423:                          className="border-b border-[rgba(6,182,212,0.08)] hover:bg-[#0F2340]/50"
+/home/z/my-project/src/components/agile/reports.tsx:429:                            <div className="text-xs text-slate-500">{r.email}</div>
+/home/z/my-project/src/components/agile/reports.tsx:433:                            <div className="text-xs text-slate-500">{r.branch}</div>
+/home/z/my-project/src/components/agile/reports.tsx:435:                          <td className="px-3 py-2.5 hidden md:table-cell text-slate-300 text-xs">
+/home/z/my-project/src/components/agile/reports.tsx:442:                            <div className="text-[11px] text-slate-500">{r.categoryLabel}</div>
+/home/z/my-project/src/components/agile/reports.tsx:444:                          <td className="px-3 py-2.5 text-right text-xs text-slate-400 hidden sm:table-cell whitespace-nowrap">
+/home/z/my-project/src/components/agile/reports.tsx:456:          <p className="text-center text-xs text-slate-500 mt-6">
+/home/z/my-project/src/components/agile/reports.tsx:468:          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[10px] text-slate-500 font-mono">
+/home/z/my-project/src/components/agile/reports.tsx:500:        "bg-[#111f35] rounded-xl p-5 ap-lift relative overflow-hidden",
+/home/z/my-project/src/components/agile/reports.tsx:503:          : "border border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/reports.tsx:519:      <div className="text-xs text-slate-400 mt-1.5">{label}</div>
+/home/z/my-project/src/components/agile/reports.tsx:526:    <div className="h-[200px] grid place-items-center text-sm text-slate-500 text-center px-6">
+/home/z/my-project/src/components/agile/reports.tsx:537:          <div key={i} className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-28" />
+/home/z/my-project/src/components/agile/reports.tsx:542:          <div key={i} className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-80" />
+/home/z/my-project/src/components/agile/reports.tsx:545:      <div className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-64" />
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:259:              <p className="text-slate-300 mt-3 max-w-3xl text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:265:                <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:271:                  className="inline-flex items-center gap-1.5 text-[11px] text-cyan-300 hover:text-cyan-200 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1"
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:286:            className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 ap-lift"
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:288:            <div className="text-[11px] text-slate-400 uppercase tracking-wider">{m.label}</div>
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:290:            <div className="text-[11px] text-slate-500 mt-0.5">{m.sub}</div>
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:296:      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 mb-10">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:304:              className="text-xs px-2.5 py-1 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.22)] text-slate-200"
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:317:        <p className="text-slate-400 mt-3 text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:327:      <ol className="relative max-w-4xl mx-auto pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-6">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:336:              <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:346:                      <span className="text-[11px] text-slate-500">Stage {s.step}</span>
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:351:                <p className="text-xs text-slate-400 leading-relaxed mb-3">{s.desc}</p>
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:354:                    <li key={b} className="text-[12px] text-slate-300 flex items-start gap-1.5">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:360:                <pre className="bg-[#0a1422] border border-[rgba(6,182,212,0.18)] rounded-lg p-4 overflow-x-auto text-[12px] leading-relaxed text-slate-200 font-mono max-h-80 overflow-y-auto">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:371:        <div className="bg-gradient-to-br from-[#0e1b2e] to-[#0a2a30] border border-[rgba(6,182,212,0.22)] rounded-2xl p-6 md:p-8 text-center">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:373:          <p className="text-slate-200 italic text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:380:            <div className="text-xs text-slate-400">{AUTHOR.role}</div>
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:392:        <Button asChild size="lg" variant="outline" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/50 h-12 px-6">
+/home/z/my-project/src/components/agile/nt-ai-ml-project.tsx:397:        <Button asChild size="lg" variant="ghost" className="text-slate-300 hover:text-cyan-300 h-12 px-4">
+/home/z/my-project/src/components/agile/sales-chat.tsx:109:        <div className="fixed bottom-24 right-5 z-[60] w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-[#0e1b2e] border border-[rgba(6,182,212,0.25)] rounded-2xl shadow-2xl overflow-hidden">
+/home/z/my-project/src/components/agile/sales-chat.tsx:111:          <div className="flex items-center gap-3 px-4 py-3 border-b border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+/home/z/my-project/src/components/agile/sales-chat.tsx:122:              <div className="text-[11px] text-slate-500">Sales & queries · replies instantly</div>
+/home/z/my-project/src/components/agile/sales-chat.tsx:124:            <button onClick={() => setOpen(false)} aria-label="Close" className="text-slate-400 hover:text-cyan-300">
+/home/z/my-project/src/components/agile/sales-chat.tsx:132:            className="flex-1 overflow-y-auto p-3 space-y-3 bg-[#0B1929]"
+/home/z/my-project/src/components/agile/sales-chat.tsx:140:              <div className="flex items-center gap-2 text-slate-400 text-sm">
+/home/z/my-project/src/components/agile/sales-chat.tsx:141:                <span className="size-6 rounded-full bg-[#0F2340] grid place-items-center text-cyan-400">
+/home/z/my-project/src/components/agile/sales-chat.tsx:150:          <div className="px-3 py-2 flex flex-wrap gap-1.5 border-t border-[rgba(6,182,212,0.12)] bg-[#0a1422]/40">
+/home/z/my-project/src/components/agile/sales-chat.tsx:157:                className="text-[11px] px-2.5 py-1 rounded-full border border-[rgba(6,182,212,0.22)] bg-[#0F2340] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-colors disabled:opacity-50"
+/home/z/my-project/src/components/agile/sales-chat.tsx:165:          <div className="flex items-center gap-2 p-3 border-t border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+/home/z/my-project/src/components/agile/sales-chat.tsx:171:              className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] flex-1 h-9"
+/home/z/my-project/src/components/agile/sales-chat.tsx:188:          <p className="px-3 py-1.5 text-[10px] text-slate-500 border-t border-[rgba(6,182,212,0.08)] bg-[#0a1422]/60">
+/home/z/my-project/src/components/agile/sales-chat.tsx:219:            ? "bg-blue-600/15 border border-blue-500/30 text-slate-200"
+/home/z/my-project/src/components/agile/sales-chat.tsx:220:            : "bg-[#111f35] border border-[rgba(6,182,212,0.18)] text-slate-200"
+/home/z/my-project/src/components/agile/sales-chat.tsx:226:          <div className="prose prose-sm prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0 prose-strong:text-slate-100 prose-a:text-cyan-300">
+/home/z/my-project/src/components/agile/register-form.tsx:242:        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/register-form.tsx:247:      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.22)] rounded-2xl p-5 md:p-8">
+/home/z/my-project/src/components/agile/register-form.tsx:275:                            ? "border-cyan-400 bg-[#0F2340] ring-2 ring-cyan-500/40"
+/home/z/my-project/src/components/agile/register-form.tsx:276:                            : "border-[rgba(6,182,212,0.18)] bg-[#111f35] hover:border-cyan-500/40"
+/home/z/my-project/src/components/agile/register-form.tsx:283:                        <div className="text-[11px] text-slate-500 mt-1">{c.sub}</div>
+/home/z/my-project/src/components/agile/register-form.tsx:310:                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500" />
+/home/z/my-project/src/components/agile/register-form.tsx:315:                    className="pl-9 bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/register-form.tsx:322:                    <div className="text-center text-slate-500 text-sm py-6">
+/home/z/my-project/src/components/agile/register-form.tsx:337:                            ? "border-cyan-400 bg-[#0F2340] ring-2 ring-cyan-500/40"
+/home/z/my-project/src/components/agile/register-form.tsx:338:                            : "border-[rgba(6,182,212,0.18)] bg-[#111f35] hover:border-cyan-500/40"
+/home/z/my-project/src/components/agile/register-form.tsx:341:                        <span className="size-6 shrink-0 rounded-md bg-[#0a1422] border border-[rgba(6,182,212,0.18)] grid place-items-center text-[10px] font-bold text-slate-400 mt-0.5">
+/home/z/my-project/src/components/agile/register-form.tsx:348:                          <span className="block text-[11px] text-slate-500 mt-0.5">
+/home/z/my-project/src/components/agile/register-form.tsx:363:                  <div className="mt-4 p-3 rounded-lg border border-cyan-500/30 bg-[#0F2340] text-sm text-cyan-200 flex items-center gap-2">
+/home/z/my-project/src/components/agile/register-form.tsx:533:                  <div className="mt-4 p-3 rounded-lg bg-[#0a1422] border border-[rgba(6,182,212,0.12)] text-sm text-slate-300">
+/home/z/my-project/src/components/agile/register-form.tsx:534:                    <span className="text-slate-500 text-xs mr-2">Notes:</span>
+/home/z/my-project/src/components/agile/register-form.tsx:554:                <div className="mt-6 p-3 rounded-lg border border-cyan-500/20 bg-[#0F2340]/50 flex items-start gap-2 text-xs text-slate-400">
+/home/z/my-project/src/components/agile/register-form.tsx:581:                    className="text-slate-300 hover:text-cyan-300"
+/home/z/my-project/src/components/agile/register-form.tsx:588:                <div className="mt-8 border-t border-[rgba(6,182,212,0.12)] pt-5">
+/home/z/my-project/src/components/agile/register-form.tsx:594:                  <p className="text-xs text-slate-500 mb-4">Pay your plan fee via UPI, Card, Net Banking, or International Card. The internship starts after the admin confirms your payment.</p>
+/home/z/my-project/src/components/agile/register-form.tsx:609:      <p className="text-center text-xs text-slate-500 mt-4">
+/home/z/my-project/src/components/agile/register-form.tsx:642:                    : "bg-[#0F2340] text-slate-500 border border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/register-form.tsx:650:                  active ? "text-cyan-300 font-semibold" : "text-slate-500"
+/home/z/my-project/src/components/agile/register-form.tsx:689:      <p className="text-sm text-slate-400 mt-2 max-w-3xl">{desc}</p>
+/home/z/my-project/src/components/agile/register-form.tsx:715:        <Button type="button" variant="ghost" onClick={back} className="text-slate-300 hover:text-cyan-300">
+/home/z/my-project/src/components/agile/register-form.tsx:738:      <Label className="text-xs text-slate-300 flex items-center gap-1">
+/home/z/my-project/src/components/agile/register-form.tsx:763:      <SelectTrigger className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] w-full">
+/home/z/my-project/src/components/agile/register-form.tsx:766:      <SelectContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] max-h-72 overflow-y-auto">
+/home/z/my-project/src/components/agile/register-form.tsx:790:    <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+/home/z/my-project/src/components/agile/register-form.tsx:801:            className="flex items-start justify-between gap-3 py-1 border-b border-[rgba(6,182,212,0.08)] last:border-b-0"
+/home/z/my-project/src/components/agile/register-form.tsx:803:            <dt className="text-xs text-slate-500 uppercase tracking-wide shrink-0">{k}</dt>
+/home/z/my-project/src/components/agile/register-form.tsx:804:            <dd className="text-right text-slate-200 break-words">{v || "—"}</dd>
+/home/z/my-project/src/components/agile/register-form.tsx:824:    <label className="flex items-start gap-3 p-3 rounded-lg bg-[#0a1422] border border-[rgba(6,182,212,0.12)] cursor-pointer hover:border-cyan-500/30">
+/home/z/my-project/src/components/agile/register-form.tsx:828:        <span className="block text-xs text-slate-500 mt-0.5">{desc}</span>
+/home/z/my-project/src/components/agile/register-form.tsx:849:      <p className="text-sm text-slate-400 max-w-xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/register-form.tsx:850:        Welcome aboard, <strong className="text-slate-200">{result.student.name}</strong>! Your registration for{" "}
+/home/z/my-project/src/components/agile/register-form.tsx:873:      <p className="mt-6 text-xs text-slate-500 max-w-xl mx-auto">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:259:              <p className="text-slate-300 mt-3 max-w-3xl text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:265:                <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:271:                  className="inline-flex items-center gap-1.5 text-[11px] text-cyan-300 hover:text-cyan-200 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1"
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:286:            className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 ap-lift"
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:288:            <div className="text-[11px] text-slate-400 uppercase tracking-wider">{m.label}</div>
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:290:            <div className="text-[11px] text-slate-500 mt-0.5">{m.sub}</div>
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:296:      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 mb-10">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:304:              className="text-xs px-2.5 py-1 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.22)] text-slate-200"
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:317:        <p className="text-slate-400 mt-3 text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:327:      <ol className="relative max-w-4xl mx-auto pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-6">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:336:              <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:346:                      <span className="text-[11px] text-slate-500">Stage {s.step}</span>
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:351:                <p className="text-xs text-slate-400 leading-relaxed mb-3">{s.desc}</p>
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:354:                    <li key={b} className="text-[12px] text-slate-300 flex items-start gap-1.5">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:360:                <pre className="bg-[#0a1422] border border-[rgba(6,182,212,0.18)] rounded-lg p-4 overflow-x-auto text-[12px] leading-relaxed text-slate-200 font-mono max-h-80 overflow-y-auto">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:371:        <div className="bg-gradient-to-br from-[#0e1b2e] to-[#0a2a30] border border-[rgba(6,182,212,0.22)] rounded-2xl p-6 md:p-8 text-center">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:373:          <p className="text-slate-200 italic text-sm md:text-base leading-relaxed">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:380:            <div className="text-xs text-slate-400">{AUTHOR.role}</div>
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:392:        <Button asChild size="lg" variant="outline" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/50 h-12 px-6">
+/home/z/my-project/src/components/agile/shekhar-dube-ml-project.tsx:397:        <Button asChild size="lg" variant="ghost" className="text-slate-300 hover:text-cyan-300 h-12 px-4">
+/home/z/my-project/src/components/agile/payment-page.tsx:72:          <div className="text-slate-500">Transaction ID</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:75:        <p className="text-xs text-slate-500 mt-4">Your internship will start once the admin confirms this payment.</p>
+/home/z/my-project/src/components/agile/payment-page.tsx:85:          <div className="text-xs text-slate-500">Paying for</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:87:          <div className="text-xs text-slate-500">Student: {studentName}</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:91:          <div className="text-[10px] text-slate-500">incl. GST</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:105:            method === m.key ? "bg-cyan-400/10 border-cyan-400/40 text-cyan-500" : "bg-muted/30 border-border text-slate-500 hover:text-foreground hover:border-cyan-400/30"
+/home/z/my-project/src/components/agile/payment-page.tsx:117:            <div className="text-xs text-slate-500 mb-3">Scan the QR code with any UPI app (GPay, PhonePe, Paytm)</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:121:            <div className="text-xs text-slate-500">or pay to UPI ID</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:123:            <div className="text-[10px] text-slate-500 mb-4">Amount: ₹{amount} · {MERCHANT_NAME}</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:141:            <div className="flex items-center gap-3 text-[10px] text-slate-500 pt-1">
+/home/z/my-project/src/components/agile/payment-page.tsx:154:            <div className="text-xs text-slate-500">Select your bank to proceed</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:158:                  <Building2 className="size-3 inline mr-1.5 text-slate-400" />{b}
+/home/z/my-project/src/components/agile/payment-page.tsx:163:              <div className="text-[10px] text-slate-500 mb-2">Bank Transfer (Manual)</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:165:                <div><span className="text-slate-500">Account:</span> <span className="font-mono text-foreground">{BANK_ACCOUNT.number}</span></div>
+/home/z/my-project/src/components/agile/payment-page.tsx:166:                <div><span className="text-slate-500">IFSC:</span> <span className="font-mono text-foreground">{BANK_ACCOUNT.ifsc}</span></div>
+/home/z/my-project/src/components/agile/payment-page.tsx:167:                <div><span className="text-slate-500">Name:</span> <span className="text-foreground">{BANK_ACCOUNT.name}</span></div>
+/home/z/my-project/src/components/agile/payment-page.tsx:168:                <div><span className="text-slate-500">Bank:</span> <span className="text-foreground">{BANK_ACCOUNT.bank}</span></div>
+/home/z/my-project/src/components/agile/payment-page.tsx:179:            <div className="text-xs text-slate-500">For international students (USD equivalent)</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:188:            <div className="flex items-center gap-3 text-[10px] text-slate-500">
+/home/z/my-project/src/components/agile/payment-page.tsx:192:            <div className="text-xs text-slate-500">Estimated: ${(amount / 83).toFixed(2)} USD</div>
+/home/z/my-project/src/components/agile/payment-page.tsx:200:      <div className="flex items-center justify-center gap-2 mt-4 text-[10px] text-slate-500">
+/home/z/my-project/src/components/agile/schedule.tsx:33:        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+/home/z/my-project/src/components/agile/schedule.tsx:39:      <div className="hidden md:block rounded-xl overflow-hidden border border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/schedule.tsx:41:          <thead className="bg-[#0e1b2e] text-cyan-300">
+/home/z/my-project/src/components/agile/schedule.tsx:52:          <tbody className="bg-[#111f35]">
+/home/z/my-project/src/components/agile/schedule.tsx:58:                  className="border-t border-[rgba(6,182,212,0.1)] hover:bg-[#0F2340] transition-colors"
+/home/z/my-project/src/components/agile/schedule.tsx:61:                  <td className="px-4 py-3 text-slate-300">{row.start}</td>
+/home/z/my-project/src/components/agile/schedule.tsx:62:                  <td className="px-4 py-3 text-slate-300">{row.last}</td>
+/home/z/my-project/src/components/agile/schedule.tsx:63:                  <td className="px-4 py-3 text-slate-300">{row.duration}</td>
+/home/z/my-project/src/components/agile/schedule.tsx:64:                  <td className="px-4 py-3 text-slate-300">{row.mode}</td>
+/home/z/my-project/src/components/agile/schedule.tsx:98:              className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-4"
+/home/z/my-project/src/components/agile/schedule.tsx:103:                  <div className="text-xs text-slate-500 mt-0.5">{row.mode}</div>
+/home/z/my-project/src/components/agile/schedule.tsx:112:                <div className="bg-[#0e1b2e] rounded-md p-2">
+/home/z/my-project/src/components/agile/schedule.tsx:113:                  <div className="text-slate-500">Start</div>
+/home/z/my-project/src/components/agile/schedule.tsx:114:                  <div className="text-slate-200 font-medium mt-0.5">{row.start}</div>
+/home/z/my-project/src/components/agile/schedule.tsx:116:                <div className="bg-[#0e1b2e] rounded-md p-2">
+/home/z/my-project/src/components/agile/schedule.tsx:117:                  <div className="text-slate-500">Last Date</div>
+/home/z/my-project/src/components/agile/schedule.tsx:118:                  <div className="text-slate-200 font-medium mt-0.5">{row.last}</div>
+/home/z/my-project/src/components/agile/schedule.tsx:120:                <div className="bg-[#0e1b2e] rounded-md p-2">
+/home/z/my-project/src/components/agile/schedule.tsx:121:                  <div className="text-slate-500">Duration</div>
+/home/z/my-project/src/components/agile/schedule.tsx:122:                  <div className="text-slate-200 font-medium mt-0.5">{row.duration}</div>
+/home/z/my-project/src/components/agile/auth-menu.tsx:94:            "gap-1.5 text-slate-200 hover:text-cyan-300",
+/home/z/my-project/src/components/agile/auth-menu.tsx:117:      <DialogContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.25)] text-foreground sm:max-w-md lg:sm:max-w-2xl">
+/home/z/my-project/src/components/agile/auth-menu.tsx:201:        <DialogDescription className="text-slate-400">
+/home/z/my-project/src/components/agile/auth-menu.tsx:202:          Sign in with your account. <strong className="text-slate-200">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
+/home/z/my-project/src/components/agile/auth-menu.tsx:215:            className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/auth-menu.tsx:228:            className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+/home/z/my-project/src/components/agile/auth-menu.tsx:251:      <div className="mt-5 rounded-xl border border-[rgba(6,182,212,0.18)] bg-[#0a1422]/70 p-4">
+/home/z/my-project/src/components/agile/auth-menu.tsx:261:        <p className="text-[11px] text-slate-500 mt-2.5 leading-relaxed">
+/home/z/my-project/src/components/agile/auth-menu.tsx:262:          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-slate-200">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
+/home/z/my-project/src/components/agile/auth-menu.tsx:288:      className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.18)] hover:border-cyan-500/40 transition-colors text-left"
+/home/z/my-project/src/components/agile/auth-menu.tsx:295:        <div className="text-[10px] text-slate-500">pass: {sub}</div>
+/home/z/my-project/src/components/agile/auth-menu.tsx:302:        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-slate-400 hover:text-cyan-300"
+/home/z/my-project/src/components/agile/auth-menu.tsx:335:        <DialogDescription className="text-slate-400">
+/home/z/my-project/src/components/agile/auth-menu.tsx:343:        <Button asChild variant="outline" className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-12">
+/home/z/my-project/src/components/agile/auth-menu.tsx:348:        <Button asChild variant="outline" className="w-full bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-10">
+/home/z/my-project/src/components/agile/auth-menu.tsx:354:      <div className="mt-5 rounded-xl border border-[rgba(6,182,212,0.22)] bg-[#0a1422]/70 p-5">
+/home/z/my-project/src/components/agile/auth-menu.tsx:360:              <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+/home/z/my-project/src/components/agile/auth-menu.tsx:372:              <p className="text-sm text-slate-400 mt-1">Your password expires in:</p>
+/home/z/my-project/src/components/agile/auth-menu.tsx:377:              <p className="text-[11px] text-slate-500 mt-2">
+/home/z/my-project/src/components/agile/auth-menu.tsx:387:              <p className="text-sm text-slate-400 mt-1">
+/home/z/my-project/src/components/agile/auth-menu.tsx:396:        <Button variant="outline" onClick={onLogout} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+/home/z/my-project/src/components/agile/auth-menu.tsx:464:        <DialogDescription className="text-slate-400">
+/home/z/my-project/src/components/agile/auth-menu.tsx:469:      <div className="mt-4 mb-4 rounded-xl border border-[rgba(6,182,212,0.22)] bg-gradient-to-r from-violet-600/10 to-cyan-500/10 p-3 flex items-center justify-between gap-3">
+/home/z/my-project/src/components/agile/auth-menu.tsx:472:          <div className="text-[11px] text-slate-400">KPIs · Students · Applications · Payments · Certificates · Reports · AI Analytics · Settings</div>
+/home/z/my-project/src/components/agile/auth-menu.tsx:481:        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="text-slate-300 hover:text-cyan-300 h-8">
+/home/z/my-project/src/components/agile/auth-menu.tsx:489:          <div className="py-8 text-center text-sm text-slate-500">
+/home/z/my-project/src/components/agile/auth-menu.tsx:494:          <div className="py-8 text-center text-sm text-slate-500">No accounts found.</div>
+/home/z/my-project/src/components/agile/auth-menu.tsx:497:            <thead className="sticky top-0 bg-[#0e1b2e] z-10">
+/home/z/my-project/src/components/agile/auth-menu.tsx:498:              <tr className="text-left text-xs text-slate-400 border-b border-[rgba(6,182,212,0.18)]">
+/home/z/my-project/src/components/agile/auth-menu.tsx:511:                  <tr key={a.id} className="border-b border-[rgba(6,182,212,0.08)] hover:bg-[#0F2340]/40">
+/home/z/my-project/src/components/agile/auth-menu.tsx:517:                          <UserCircle2 className="size-3.5 text-slate-400" />
+/home/z/my-project/src/components/agile/auth-menu.tsx:521:                      <div className="text-[11px] text-slate-500">{a.fullName}</div>
+/home/z/my-project/src/components/agile/auth-menu.tsx:543:                    <td className="px-2 py-2.5 hidden sm:table-cell text-xs text-slate-400">
+/home/z/my-project/src/components/agile/auth-menu.tsx:545:                        <span className="text-slate-500">Never expires</span>
+/home/z/my-project/src/components/agile/auth-menu.tsx:547:                        <span className="text-slate-500">—</span>
+/home/z/my-project/src/components/agile/auth-menu.tsx:558:                        <span className="text-[11px] text-slate-500">—</span>
+/home/z/my-project/src/components/agile/auth-menu.tsx:569:                              : "bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300"
+/home/z/my-project/src/components/agile/auth-menu.tsx:592:        <p className="text-[11px] text-slate-500 flex-1 min-w-[200px]">
+/home/z/my-project/src/components/agile/auth-menu.tsx:596:        <Button variant="outline" onClick={onLogout} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+/home/z/my-project/src/components/agile/quick-launch.tsx:91:        <div className="rounded-2xl bg-[#0e1b2e] p-5 md:p-6">
+/home/z/my-project/src/components/agile/quick-launch.tsx:100:              <p className="text-slate-400 text-xs md:text-sm mt-1">
+/home/z/my-project/src/components/agile/quick-launch.tsx:104:            <div className="bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-lg px-3 py-2">
+
+[Showing results with pagination = limit: 250]

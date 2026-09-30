@@ -120,20 +120,20 @@
   }
 }
 
-/* ── Custom scrollbar (navy theme) ── */
+/* ── Custom scrollbar (theme-aware) ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a1422;
+  background: var(--muted);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2563EB;
+  background: var(--primary);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06B6D4;
+  background: var(--ring);
 }
 
 /* ── Utility classes ── */

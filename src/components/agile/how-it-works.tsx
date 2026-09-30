@@ -14,7 +14,7 @@ export function HowItWorks() {
         <h2 id="how-h2" className="font-bold text-3xl md:text-4xl">
           Your path from <span className="ap-gradient-text">enrolment to certificate</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Five clear steps — no fee, no documents, no friction. Pick a track, register free, attend live sessions, build your project, and earn your certificate.
         </p>
       </div>
@@ -28,13 +28,13 @@ export function HowItWorks() {
         {STEPS.map((s) => (
           <li
             key={s.num}
-            className="ap-lift relative flex flex-col items-center text-center bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5"
+            className="ap-lift relative flex flex-col items-center text-center bg-card border border-border rounded-xl p-5"
           >
             <div className="size-16 rounded-full ap-gradient-cyan grid place-items-center text-navy font-bold text-lg mb-4 relative z-10">
               {s.num}
             </div>
             <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
-            <p className="text-xs text-slate-400 mt-2 leading-relaxed">{s.desc}</p>
+            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{s.desc}</p>
           </li>
         ))}
       </ol>

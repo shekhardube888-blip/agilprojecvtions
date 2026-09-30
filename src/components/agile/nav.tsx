@@ -60,7 +60,7 @@ function BrandLogo() {
       </span>
       <span className="text-foreground">
         Agile<span className="text-cyan-400">Projection</span>
-        <span className="text-slate-400 text-xs font-semibold ml-0.5 hidden sm:inline">(NT-AI)</span>
+        <span className="text-muted-foreground text-xs font-semibold ml-0.5 hidden sm:inline">(NT-AI)</span>
       </span>
     </Link>
   );
@@ -76,7 +76,7 @@ export function Nav() {
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 h-16 bg-[#0B1929]/85 backdrop-blur-md border-b border-[rgba(6,182,212,0.15)]">
+    <header className="fixed top-0 inset-x-0 z-50 h-16 bg-background/85 backdrop-blur-md border-b border-border">
       <nav
         className="h-full max-w-7xl mx-auto px-4 md:px-[5%] flex items-center justify-between gap-4"
         aria-label="Primary navigation"
@@ -94,7 +94,7 @@ export function Nav() {
             >
               <Link
                 href={link.href}
-                className="px-3 py-2 inline-flex items-center gap-1 text-slate-300 hover:text-cyan-400 transition-colors"
+                className="px-3 py-2 inline-flex items-center gap-1 text-muted-foreground hover:text-cyan-400 transition-colors"
               >
                 {link.label}
                 {link.children && <ChevronDown className="size-3.5 opacity-70" />}
@@ -104,17 +104,17 @@ export function Nav() {
                   className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-80"
                   role="menu"
                 >
-                  <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.22)] rounded-xl p-2 shadow-2xl">
+                  <div className="bg-popover border border-border rounded-xl p-2 shadow-2xl">
                     {link.children.map((c) => (
                       <Link
                         key={c.label}
                         href={c.href}
-                        className="block px-3 py-2 rounded-lg hover:bg-[#0F2340] transition-colors"
+                        className="block px-3 py-2 rounded-lg hover:bg-secondary transition-colors"
                         onClick={() => setActiveDropdown(null)}
                       >
                         <div className="text-sm font-medium text-foreground">{c.label}</div>
                         {c.desc && (
-                          <div className="text-xs text-slate-400 mt-0.5">{c.desc}</div>
+                          <div className="text-xs text-muted-foreground mt-0.5">{c.desc}</div>
                         )}
                       </Link>
                     ))}
@@ -129,7 +129,7 @@ export function Nav() {
           <AuthMenu />
           <a
             href="tel:+918095557332"
-            className="text-sm text-slate-300 hover:text-cyan-400 inline-flex items-center gap-1.5"
+            className="text-sm text-muted-foreground hover:text-cyan-400 inline-flex items-center gap-1.5"
           >
             <Phone className="size-3.5" />
             +91 80955 57332
@@ -152,13 +152,13 @@ export function Nav() {
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-background border-l border-[rgba(6,182,212,0.18)] w-[88%] max-w-sm p-0">
+            <SheetContent side="right" className="bg-background border-l border-border w-[88%] max-w-sm p-0">
               <SheetHeader className="px-4 pt-4 pb-2 flex-row items-center justify-between">
                 <SheetTitle className="flex items-center gap-1.5 font-bold">
                   <span className="size-6 rounded-md ap-gradient-cyan grid place-items-center text-navy">
                     <Zap className="size-3.5" fill="currentColor" />
                   </span>
-                  <span>Agile<span className="text-cyan-400">Projection</span> <span className="text-slate-400 text-xs font-semibold">(NT-AI)</span></span>
+                  <span>Agile<span className="text-cyan-400">Projection</span> <span className="text-muted-foreground text-xs font-semibold">(NT-AI)</span></span>
                 </SheetTitle>
               </SheetHeader>
               <div className="px-2 pb-6 overflow-y-auto flex-1">
@@ -170,19 +170,19 @@ export function Nav() {
                         onClick={closeAll}
                         className={cn(
                           "block px-3 py-2.5 rounded-lg text-sm font-medium",
-                          "text-slate-200 hover:bg-[#0F2340] hover:text-cyan-400"
+                          "text-foreground hover:bg-secondary hover:text-cyan-400"
                         )}
                       >
                         {link.label}
                       </Link>
                       {link.children && (
-                        <ul className="ml-2 mt-1 mb-2 border-l border-[rgba(6,182,212,0.12)]">
+                        <ul className="ml-2 mt-1 mb-2 border-l border-border">
                           {link.children.map((c) => (
                             <li key={c.label}>
                               <Link
                                 href={c.href}
                                 onClick={closeAll}
-                                className="block px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-cyan-400"
+                                className="block px-3 py-2 rounded-lg text-xs text-muted-foreground hover:text-cyan-400"
                               >
                                 {c.label}
                               </Link>
@@ -198,7 +198,7 @@ export function Nav() {
                     <AuthMenu />
                     <a
                       href="tel:+918095557332"
-                      className="flex-1 text-sm text-slate-300 inline-flex items-center justify-center gap-1.5 h-9 rounded-md border border-[rgba(6,182,212,0.2)]"
+                      className="flex-1 text-sm text-muted-foreground inline-flex items-center justify-center gap-1.5 h-9 rounded-md border border-border"
                     >
                       <Phone className="size-3.5" /> +91 80955 57332
                     </a>

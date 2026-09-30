@@ -256,19 +256,19 @@ export function ShekharDubeMLProject() {
                 🏠 {AUTHOR.name}&apos;s End-to-End ML Project —{" "}
                 <span className="ap-gradient-text">Housing Price Prediction</span>
               </h2>
-              <p className="text-slate-300 mt-3 max-w-3xl text-sm md:text-base leading-relaxed">
+              <p className="text-muted-foreground mt-3 max-w-3xl text-sm md:text-base leading-relaxed">
                 A complete, production-style Machine Learning walkthrough — from raw CSV to a
                 deployed prediction API. This is the reference architecture every AgileProjection
                 AI/ML intern follows across all 80+ projects. Build it, own it, ship it.
               </p>
               <div className="flex flex-wrap items-center gap-2 mt-4">
-                <span className="inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1">
+                <span className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground bg-muted/70 border border-border rounded-full px-2.5 py-1">
                   <GraduationCap className="size-3 text-cyan-400" />
                   {AUTHOR.role}
                 </span>
                 <a
                   href={`mailto:${AUTHOR.email}`}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-cyan-300 hover:text-cyan-200 bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-full px-2.5 py-1"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-cyan-300 hover:text-cyan-200 bg-muted/70 border border-border rounded-full px-2.5 py-1"
                 >
                   ✉️ {AUTHOR.email}
                 </a>
@@ -283,17 +283,17 @@ export function ShekharDubeMLProject() {
         {METRICS.map((m) => (
           <div
             key={m.label}
-            className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 ap-lift"
+            className="bg-card border border-border rounded-xl p-5 ap-lift"
           >
-            <div className="text-[11px] text-slate-400 uppercase tracking-wider">{m.label}</div>
+            <div className="text-[11px] text-muted-foreground uppercase tracking-wider">{m.label}</div>
             <div className="font-bold text-base md:text-lg text-cyan-300 mt-1">{m.value}</div>
-            <div className="text-[11px] text-slate-500 mt-0.5">{m.sub}</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">{m.sub}</div>
           </div>
         ))}
       </div>
 
       {/* Tech stack */}
-      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 mb-10">
+      <div className="bg-popover border border-border rounded-xl p-5 mb-10">
         <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
           Tech Stack
         </div>
@@ -301,7 +301,7 @@ export function ShekharDubeMLProject() {
           {TECH.map((t) => (
             <span
               key={t}
-              className="text-xs px-2.5 py-1 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.22)] text-slate-200"
+              className="text-xs px-2.5 py-1 rounded-md bg-secondary border border-border text-foreground"
             >
               {t}
             </span>
@@ -314,7 +314,7 @@ export function ShekharDubeMLProject() {
         <h3 className="font-bold text-2xl md:text-3xl">
           Why this <span className="ap-gradient-text">project?</span>
         </h3>
-        <p className="text-slate-400 mt-3 text-sm md:text-base leading-relaxed">
+        <p className="text-muted-foreground mt-3 text-sm md:text-base leading-relaxed">
           Housing-price regression is the single best &quot;first end-to-end ML project&quot; —
           it&apos;s tabular, has a clear target, mixes numeric + geographic features, and rewards
           every stage of the pipeline (EDA matters, feature engineering matters, tuning matters).
@@ -324,7 +324,7 @@ export function ShekharDubeMLProject() {
       </div>
 
       {/* 6-stage walkthrough */}
-      <ol className="relative max-w-4xl mx-auto pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-6">
+      <ol className="relative max-w-4xl mx-auto pl-6 border-l border-border space-y-6">
         {STAGES.map((s) => {
           const Icon = s.icon;
           return (
@@ -333,7 +333,7 @@ export function ShekharDubeMLProject() {
                 className="absolute -left-[31px] top-1 size-3 rounded-full ring-4 ring-[#0B1929] bg-cyan-400"
                 aria-hidden
               />
-              <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+              <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-3 flex-wrap mb-3">
                   <span className="size-10 rounded-lg ap-gradient-cyan grid place-items-center text-navy shrink-0">
                     <Icon className="size-5" />
@@ -343,21 +343,21 @@ export function ShekharDubeMLProject() {
                       <span className="inline-flex items-center rounded-md ap-gradient-cyan text-navy text-[11px] font-bold px-2 py-0.5">
                         {s.week}
                       </span>
-                      <span className="text-[11px] text-slate-500">Stage {s.step}</span>
+                      <span className="text-[11px] text-muted-foreground">Stage {s.step}</span>
                     </div>
                     <h4 className="text-base font-semibold text-foreground mt-0.5">{s.title}</h4>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed mb-3">{s.desc}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">{s.desc}</p>
                 <ul className="grid sm:grid-cols-2 gap-1.5 mb-4">
                   {s.bullets.map((b) => (
-                    <li key={b} className="text-[12px] text-slate-300 flex items-start gap-1.5">
+                    <li key={b} className="text-[12px] text-muted-foreground flex items-start gap-1.5">
                       <CheckCircle2 className="size-3.5 text-emerald-400 shrink-0 mt-0.5" />
                       <span>{b}</span>
                     </li>
                   ))}
                 </ul>
-                <pre className="bg-[#0a1422] border border-[rgba(6,182,212,0.18)] rounded-lg p-4 overflow-x-auto text-[12px] leading-relaxed text-slate-200 font-mono max-h-80 overflow-y-auto">
+                <pre className="bg-muted border border-border rounded-lg p-4 overflow-x-auto text-[12px] leading-relaxed text-foreground font-mono max-h-80 overflow-y-auto">
                   <code>{s.code}</code>
                 </pre>
               </div>
@@ -368,16 +368,16 @@ export function ShekharDubeMLProject() {
 
       {/* Author quote */}
       <div className="max-w-3xl mx-auto mt-10">
-        <div className="bg-gradient-to-br from-[#0e1b2e] to-[#0a2a30] border border-[rgba(6,182,212,0.22)] rounded-2xl p-6 md:p-8 text-center">
+        <div className="bg-gradient-to-br from-[#0e1b2e] to-[#0a2a30] border border-border rounded-2xl p-6 md:p-8 text-center">
           <Quote className="size-8 text-cyan-400 mx-auto mb-3" />
-          <p className="text-slate-200 italic text-sm md:text-base leading-relaxed">
+          <p className="text-foreground italic text-sm md:text-base leading-relaxed">
             &quot;Don&apos;t just run a notebook — ship a model. The day you deploy your first
             predictor behind a real API is the day you stop being a student and start being an
             engineer.&quot;
           </p>
           <div className="mt-4">
             <div className="font-semibold text-foreground">{AUTHOR.name}</div>
-            <div className="text-xs text-slate-400">{AUTHOR.role}</div>
+            <div className="text-xs text-muted-foreground">{AUTHOR.role}</div>
           </div>
         </div>
       </div>
@@ -389,12 +389,12 @@ export function ShekharDubeMLProject() {
             Build this project with a mentor <ArrowRight className="size-4" />
           </Link>
         </Button>
-        <Button asChild size="lg" variant="outline" className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/50 h-12 px-6">
+        <Button asChild size="lg" variant="outline" className="bg-popover border-border text-foreground hover:text-cyan-300 hover:border-cyan-500/50 h-12 px-6">
           <Link href="#ai-assistant">
             Ask the AI Mentor about this project
           </Link>
         </Button>
-        <Button asChild size="lg" variant="ghost" className="text-slate-300 hover:text-cyan-300 h-12 px-4">
+        <Button asChild size="lg" variant="ghost" className="text-muted-foreground hover:text-cyan-300 h-12 px-4">
           <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
             <Github className="size-4" /> Starter repo
           </a>

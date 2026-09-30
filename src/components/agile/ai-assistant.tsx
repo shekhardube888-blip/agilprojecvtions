@@ -128,14 +128,14 @@ export function AIAssistant() {
         <h2 id="ai-h2" className="font-bold text-3xl md:text-4xl">
           🤖 AP-AI Mentor — <span className="ap-gradient-text">Your Learning Assistant</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Ask anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships &amp; careers. Built for BE / B.Tech / MCA / M.Tech students.
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto bg-[#0e1b2e] border border-[rgba(6,182,212,0.22)] rounded-2xl overflow-hidden">
+      <div className="max-w-3xl mx-auto bg-popover border border-border rounded-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-muted">
           <span className="size-9 rounded-full ap-gradient-cyan grid place-items-center text-navy">
             <Bot className="size-5" />
           </span>
@@ -146,18 +146,18 @@ export function AIAssistant() {
                 <span className="size-1.5 rounded-full bg-emerald-400" /> online
               </span>
             </div>
-            <div className="text-[11px] text-slate-500">Powered by AgileProjection · NT-AI Network</div>
+            <div className="text-[11px] text-muted-foreground">Powered by AgileProjection · NT-AI Network</div>
           </div>
         </div>
 
         {/* Degree selector */}
-        <div className="px-4 py-3 border-b border-[rgba(6,182,212,0.18)] bg-[#0a1422]/60">
-          <label className="text-[11px] text-slate-400 mb-1 block">Your degree (optional — improves context)</label>
+        <div className="px-4 py-3 border-b border-border bg-muted/60">
+          <label className="text-[11px] text-muted-foreground mb-1 block">Your degree (optional — improves context)</label>
           <Select value={degree} onValueChange={setDegree}>
-            <SelectTrigger className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] w-full sm:w-72 h-8 text-xs">
+            <SelectTrigger className="bg-muted border-border w-full sm:w-72 h-8 text-xs">
               <SelectValue placeholder="Select degree (optional)" />
             </SelectTrigger>
-            <SelectContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] max-h-72 overflow-y-auto">
+            <SelectContent className="bg-popover border-border max-h-72 overflow-y-auto">
               <SelectItem value="__none__">— None —</SelectItem>
               {DEGREES.map((d) => (
                 <SelectItem key={d} value={d}>{d}</SelectItem>
@@ -169,7 +169,7 @@ export function AIAssistant() {
         {/* Chat area */}
         <div
           ref={scrollRef}
-          className="max-h-96 overflow-y-auto p-4 space-y-4 bg-[#0B1929]"
+          className="max-h-96 overflow-y-auto p-4 space-y-4 bg-background"
           aria-live="polite"
           aria-label="Chat messages"
         >
@@ -177,8 +177,8 @@ export function AIAssistant() {
             <Bubble key={i} role={m.role} content={m.content} />
           ))}
           {loading && (
-            <div className="flex items-center gap-2 text-slate-400 text-sm">
-              <span className="size-7 rounded-full bg-[#0F2340] grid place-items-center text-cyan-400">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <span className="size-7 rounded-full bg-secondary grid place-items-center text-cyan-400">
                 <Loader2 className="size-3.5 animate-spin" />
               </span>
               <span className="italic">AP-AI Mentor is typing…</span>
@@ -187,14 +187,14 @@ export function AIAssistant() {
         </div>
 
         {/* Suggestions */}
-        <div className="px-4 py-2 flex flex-wrap gap-1.5 border-t border-[rgba(6,182,212,0.12)] bg-[#0a1422]/40">
+        <div className="px-4 py-2 flex flex-wrap gap-1.5 border-t border-border bg-muted/40">
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => send(s)}
               disabled={loading}
-              className="text-[11px] px-2.5 py-1 rounded-full border border-[rgba(6,182,212,0.22)] bg-[#0F2340] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-colors disabled:opacity-50"
+              className="text-[11px] px-2.5 py-1 rounded-full border border-border bg-secondary text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40 transition-colors disabled:opacity-50"
             >
               <Sparkles className="size-3 inline mr-1 text-cyan-400" />
               {s}
@@ -203,13 +203,13 @@ export function AIAssistant() {
         </div>
 
         {/* Input */}
-        <div className="flex items-center gap-2 p-3 border-t border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+        <div className="flex items-center gap-2 p-3 border-t border-border bg-muted">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="Ask AP-AI Mentor anything… (e.g. 'Recommend a final-year AI project')"
-            className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] flex-1"
+            className="bg-muted border-border flex-1"
             aria-label="Message AP-AI Mentor"
             disabled={loading}
             maxLength={2000}
@@ -225,7 +225,7 @@ export function AIAssistant() {
           </Button>
         </div>
 
-        <p className="px-4 py-2 text-[10px] text-slate-500 border-t border-[rgba(6,182,212,0.08)] bg-[#0a1422]/60">
+        <p className="px-4 py-2 text-[10px] text-muted-foreground border-t border-border bg-muted/60">
           AP-AI Mentor can make mistakes. For official program details, email{" "}
           <a href="mailto:hr@agileprojection.com" className="text-cyan-300 underline underline-offset-4">
             hr@agileprojection.com
@@ -260,8 +260,8 @@ function Bubble({ role, content }: { role: "user" | "assistant"; content: string
         className={cn(
           "max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed",
           isUser
-            ? "bg-blue-600/15 border border-blue-500/30 text-slate-200"
-            : "bg-[#111f35] border border-[rgba(6,182,212,0.18)] text-slate-200"
+            ? "bg-blue-600/15 border border-blue-500/30 text-foreground"
+            : "bg-card border border-border text-foreground"
         )}
       >
         {isUser ? (

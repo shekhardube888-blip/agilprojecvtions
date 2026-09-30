@@ -91,7 +91,7 @@ export function AuthMenu() {
           size="sm"
           aria-label={user ? "Account" : "Login"}
           className={cn(
-            "gap-1.5 text-slate-200 hover:text-cyan-300",
+            "gap-1.5 text-foreground hover:text-cyan-300",
             "lg:px-2 lg:py-2"
           )}
         >
@@ -114,7 +114,7 @@ export function AuthMenu() {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.25)] text-foreground sm:max-w-md lg:sm:max-w-2xl">
+      <DialogContent className="bg-popover border-border text-foreground sm:max-w-md lg:sm:max-w-2xl">
         {user ? (
           user.role === "admin" ? (
             <AdminPanel user={user} onLogout={async () => {
@@ -198,8 +198,8 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
         <DialogTitle className="flex items-center gap-2 text-xl">
           <LogIn className="size-5 text-cyan-400" /> Portal Login
         </DialogTitle>
-        <DialogDescription className="text-slate-400">
-          Sign in with your account. <strong className="text-slate-200">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
+        <DialogDescription className="text-muted-foreground">
+          Sign in with your account. <strong className="text-foreground">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
         </DialogDescription>
       </DialogHeader>
 
@@ -212,7 +212,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="your email  /  admin"
-            className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+            className="bg-muted border-border"
             required
           />
         </div>
@@ -225,7 +225,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+            className="bg-muted border-border"
             required
           />
         </div>
@@ -248,7 +248,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
       </form>
 
       {/* Demo credentials helper */}
-      <div className="mt-5 rounded-xl border border-[rgba(6,182,212,0.18)] bg-[#0a1422]/70 p-4">
+      <div className="mt-5 rounded-xl border border-border bg-muted/70 p-4">
         <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold mb-2 flex items-center gap-1.5">
           <ShieldCheck className="size-3.5" /> Demo accounts (click to autofill)
         </div>
@@ -258,8 +258,8 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           <CredentialButton label="guest2" sub="guest2" onClick={() => fill("guest2", "guest2")} onCopy={() => copy("guest2", "guest2")} copied={copied === "guest2"} />
           <CredentialButton label="guest3" sub="guest3" onClick={() => fill("guest3", "guest3")} onCopy={() => copy("guest3", "guest3")} copied={copied === "guest3"} />
         </div>
-        <p className="text-[11px] text-slate-500 mt-2.5 leading-relaxed">
-          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-slate-200">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
+        <p className="text-[11px] text-muted-foreground mt-2.5 leading-relaxed">
+          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-foreground">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
         </p>
       </div>
     </div>
@@ -285,21 +285,21 @@ function CredentialButton({
     <button
       type="button"
       onClick={onClick}
-      className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.18)] hover:border-cyan-500/40 transition-colors text-left"
+      className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-secondary border border-border hover:border-cyan-500/40 transition-colors text-left"
     >
       <div>
         <div className="text-xs font-semibold text-foreground flex items-center gap-1">
           {role === "admin" && <ShieldCheck className="size-3 text-cyan-400" />}
           {label}
         </div>
-        <div className="text-[10px] text-slate-500">pass: {sub}</div>
+        <div className="text-[10px] text-muted-foreground">pass: {sub}</div>
       </div>
       <span
         role="button"
         tabIndex={0}
         onClick={(e) => { e.stopPropagation(); onCopy(); }}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); e.preventDefault(); onCopy(); } }}
-        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-slate-400 hover:text-cyan-300"
+        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-muted-foreground hover:text-cyan-300"
         title="Copy password"
       >
         {copied ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
@@ -332,7 +332,7 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
           <UserCircle2 className="size-5 text-cyan-400" />
           Welcome, {user.fullName || user.username}
         </DialogTitle>
-        <DialogDescription className="text-slate-400">
+        <DialogDescription className="text-muted-foreground">
           You are signed in as <span className="text-cyan-300 font-semibold">{user.username}</span> (Student).
         </DialogDescription>
       </DialogHeader>
@@ -340,24 +340,24 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
       {/* Quick-access links — professional portal entry */}
       <div className="mt-4 grid grid-cols-2 gap-2">
         <div className="col-span-1"><StudentDashboard /></div>
-        <Button asChild variant="outline" className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-12">
+        <Button asChild variant="outline" className="bg-secondary border-border text-foreground hover:text-cyan-300 h-12">
           <Link href="#project-tracker"><Search className="size-4 mr-1.5" />Track Project</Link>
         </Button>
       </div>
       <div className="mt-2">
-        <Button asChild variant="outline" className="w-full bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-100 hover:text-cyan-300 h-10">
+        <Button asChild variant="outline" className="w-full bg-secondary border-border text-foreground hover:text-cyan-300 h-10">
           <Link href="#register"><Rocket className="size-4 mr-1.5" />Register for another project</Link>
         </Button>
       </div>
 
       {/* Access status */}
-      <div className="mt-5 rounded-xl border border-[rgba(6,182,212,0.22)] bg-[#0a1422]/70 p-5">
+      <div className="mt-5 rounded-xl border border-border bg-muted/70 p-5">
         {expired ? (
           <div className="flex items-start gap-3">
             <AlertTriangle className="size-5 text-rose-400 mt-0.5 shrink-0" />
             <div>
               <div className="font-semibold text-rose-300">Access expired</div>
-              <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+              <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                 Your 2-day access window has ended. Please contact the admin to renew —
                 email <a className="text-cyan-300 underline underline-offset-4" href="mailto:hr@agileprojection.com">hr@agileprojection.com</a>{" "}
                 or WhatsApp <a className="text-cyan-300 underline underline-offset-4" href="https://wa.me/918319985622">+91 83199 85622</a>.
@@ -369,12 +369,12 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
             <Clock className="size-5 text-emerald-400 mt-0.5 shrink-0" />
             <div className="flex-1">
               <div className="font-semibold text-emerald-300">Access active (demo)</div>
-              <p className="text-sm text-slate-400 mt-1">Your password expires in:</p>
+              <p className="text-sm text-muted-foreground mt-1">Your password expires in:</p>
               <div className="mt-2 font-mono text-2xl font-bold text-foreground tabular-nums">
                 {live.days > 0 && <span>{live.days}d </span>}
                 {String(live.hours).padStart(2, "0")}h {String(live.minutes).padStart(2, "0")}m {String(live.seconds).padStart(2, "0")}s
               </div>
-              <p className="text-[11px] text-slate-500 mt-2">
+              <p className="text-[11px] text-muted-foreground mt-2">
                 Expires {new Date(user.expiresAt!).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}.
               </p>
             </div>
@@ -384,7 +384,7 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
             <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
             <div className="flex-1">
               <div className="font-semibold text-emerald-300">Access active ✓</div>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Your student account is active. Open the Student Dashboard to register, track your project, ask the AI mentor, and view the schedule.
               </p>
             </div>
@@ -393,7 +393,7 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
       </div>
 
       <div className="mt-5 flex justify-end">
-        <Button variant="outline" onClick={onLogout} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+        <Button variant="outline" onClick={onLogout} className="bg-secondary border-border text-foreground hover:text-cyan-300">
           <LogOut className="size-4 mr-2" /> Logout
         </Button>
       </div>
@@ -461,15 +461,15 @@ function AdminPanel({
           <ShieldCheck className="size-5 text-cyan-400" />
           Admin Console · {user.username}
         </DialogTitle>
-        <DialogDescription className="text-slate-400">
+        <DialogDescription className="text-muted-foreground">
           Unlock a guest account to grant 2 days of access. Confirm payment was received before unlocking.
         </DialogDescription>
       </DialogHeader>
       {/* Open the full enterprise Admin Dashboard (KPIs / Students / Applications / Certificates / Reports…) */}
-      <div className="mt-4 mb-4 rounded-xl border border-[rgba(6,182,212,0.22)] bg-gradient-to-r from-violet-600/10 to-cyan-500/10 p-3 flex items-center justify-between gap-3">
+      <div className="mt-4 mb-4 rounded-xl border border-border bg-gradient-to-r from-violet-600/10 to-cyan-500/10 p-3 flex items-center justify-between gap-3">
         <div>
           <div className="text-sm font-semibold text-foreground">Enterprise Admin Dashboard</div>
-          <div className="text-[11px] text-slate-400">KPIs · Students · Applications · Payments · Certificates · Reports · AI Analytics · Settings</div>
+          <div className="text-[11px] text-muted-foreground">KPIs · Students · Applications · Payments · Certificates · Reports · AI Analytics · Settings</div>
         </div>
         <AdminDashboard />
       </div>
@@ -478,7 +478,7 @@ function AdminPanel({
         <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold">
           Accounts ({accounts.length})
         </div>
-        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="text-slate-300 hover:text-cyan-300 h-8">
+        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="text-muted-foreground hover:text-cyan-300 h-8">
           {loading ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
           Refresh
         </Button>
@@ -486,16 +486,16 @@ function AdminPanel({
 
       <div className="mt-2 max-h-80 overflow-y-auto -mx-1 px-1">
         {loading && accounts.length === 0 ? (
-          <div className="py-8 text-center text-sm text-slate-500">
+          <div className="py-8 text-center text-sm text-muted-foreground">
             <Loader2 className="size-5 animate-spin mx-auto mb-2" />
             Loading accounts…
           </div>
         ) : accounts.length === 0 ? (
-          <div className="py-8 text-center text-sm text-slate-500">No accounts found.</div>
+          <div className="py-8 text-center text-sm text-muted-foreground">No accounts found.</div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-[#0e1b2e] z-10">
-              <tr className="text-left text-xs text-slate-400 border-b border-[rgba(6,182,212,0.18)]">
+            <thead className="sticky top-0 bg-popover z-10">
+              <tr className="text-left text-xs text-muted-foreground border-b border-border">
                 <th className="px-2 py-2 font-semibold">User</th>
                 <th className="px-2 py-2 font-semibold">Status</th>
                 <th className="px-2 py-2 font-semibold hidden sm:table-cell">Expires</th>
@@ -508,17 +508,17 @@ function AdminPanel({
                 const isLocked = a.role === "guest" && (a.status !== "unlocked" || isExpired);
                 const isExpiringSoon = a.role === "guest" && !isLocked && a.expiresAt && msRemaining(a.expiresAt).total < 12 * 3600 * 1000;
                 return (
-                  <tr key={a.id} className="border-b border-[rgba(6,182,212,0.08)] hover:bg-[#0F2340]/40">
+                  <tr key={a.id} className="border-b border-border hover:bg-secondary/40">
                     <td className="px-2 py-2.5">
                       <div className="font-medium text-foreground flex items-center gap-1.5">
                         {a.role === "admin" ? (
                           <ShieldCheck className="size-3.5 text-cyan-400" />
                         ) : (
-                          <UserCircle2 className="size-3.5 text-slate-400" />
+                          <UserCircle2 className="size-3.5 text-muted-foreground" />
                         )}
                         {a.username}
                       </div>
-                      <div className="text-[11px] text-slate-500">{a.fullName}</div>
+                      <div className="text-[11px] text-muted-foreground">{a.fullName}</div>
                     </td>
                     <td className="px-2 py-2.5">
                       {a.role === "admin" ? (
@@ -540,11 +540,11 @@ function AdminPanel({
                         </span>
                       )}
                     </td>
-                    <td className="px-2 py-2.5 hidden sm:table-cell text-xs text-slate-400">
+                    <td className="px-2 py-2.5 hidden sm:table-cell text-xs text-muted-foreground">
                       {a.role === "admin" ? (
-                        <span className="text-slate-500">Never expires</span>
+                        <span className="text-muted-foreground">Never expires</span>
                       ) : isLocked ? (
-                        <span className="text-slate-500">—</span>
+                        <span className="text-muted-foreground">—</span>
                       ) : (
                         <span className="tabular-nums">
                           {msRemaining(a.expiresAt).days > 0 ? `${msRemaining(a.expiresAt).days}d ` : ""}
@@ -555,7 +555,7 @@ function AdminPanel({
                     </td>
                     <td className="px-2 py-2.5 text-right">
                       {a.role === "admin" ? (
-                        <span className="text-[11px] text-slate-500">—</span>
+                        <span className="text-[11px] text-muted-foreground">—</span>
                       ) : (
                         <Button
                           size="sm"
@@ -566,7 +566,7 @@ function AdminPanel({
                             "h-7 text-xs px-2.5",
                             isLocked
                               ? "bg-gradient-to-r from-emerald-600 to-cyan-500 text-white hover:opacity-90"
-                              : "bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300"
+                              : "bg-secondary border-border text-foreground hover:text-cyan-300"
                           )}
                         >
                           {unlocking === a.username ? (
@@ -589,11 +589,11 @@ function AdminPanel({
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
-        <p className="text-[11px] text-slate-500 flex-1 min-w-[200px]">
+        <p className="text-[11px] text-muted-foreground flex-1 min-w-[200px]">
           <ShieldCheck className="size-3.5 inline text-cyan-400 mr-1" />
           Unlocking confirms payment was received. An audit entry is logged for each unlock.
         </p>
-        <Button variant="outline" onClick={onLogout} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+        <Button variant="outline" onClick={onLogout} className="bg-secondary border-border text-foreground hover:text-cyan-300">
           <LogOut className="size-4 mr-2" /> Logout
         </Button>
       </div>

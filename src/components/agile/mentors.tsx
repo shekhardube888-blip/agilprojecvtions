@@ -14,7 +14,7 @@ export function Mentors() {
         <h2 id="mentors-h2" className="font-bold text-3xl md:text-4xl">
           Learn from <span className="ap-gradient-text">industry veterans</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Our mentors are active professionals with 8&ndash;20 years of experience at companies like Texas Instruments, Bosch, Qualcomm &amp; Infosys. They bring real-world context to every session.
         </p>
       </div>
@@ -23,7 +23,7 @@ export function Mentors() {
         {MENTORS.map((m) => (
           <article
             key={m.name}
-            className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 text-center flex flex-col items-center"
+            className="ap-lift bg-card border border-border rounded-xl p-5 text-center flex flex-col items-center"
           >
             <div
               className="size-16 rounded-full grid place-items-center text-white font-bold text-lg mb-3"
@@ -34,7 +34,7 @@ export function Mentors() {
             </div>
             <h3 className="text-sm font-semibold text-foreground">{m.name}</h3>
             <div className="text-xs text-cyan-300 mt-0.5">{m.role}</div>
-            <p className="text-[11px] text-slate-500 mt-2 leading-relaxed">{m.exp}</p>
+            <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">{m.exp}</p>
           </article>
         ))}
       </div>

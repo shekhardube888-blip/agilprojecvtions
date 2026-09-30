@@ -29,7 +29,7 @@ const badgeClass = (cls: string): string => {
     case "green":
       return "bg-emerald-500/15 text-emerald-300 border-emerald-500/30";
     default:
-      return "bg-slate-500/15 text-slate-300 border-slate-500/30";
+      return "bg-slate-500/15 text-muted-foreground border-slate-500/30";
   }
 };
 
@@ -42,7 +42,7 @@ export function ITCourses() {
     >
       {/* Partnership banner */}
       <div className="rounded-2xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40 mb-6">
-        <div className="rounded-2xl bg-[#0e1b2e] px-5 py-4 flex items-center gap-4">
+        <div className="rounded-2xl bg-popover px-5 py-4 flex items-center gap-4">
           <span className="size-10 rounded-xl ap-gradient-cyan grid place-items-center text-navy">
             <Zap className="size-5" fill="currentColor" />
           </span>
@@ -58,7 +58,7 @@ export function ITCourses() {
       </div>
 
       {/* SAP feature banner */}
-      <div className="rounded-2xl border border-[rgba(6,182,212,0.22)] bg-gradient-to-br from-[#0a2a20] via-[#071a30] to-[#1a0a30] p-6 md:p-8 mb-8 grid md:grid-cols-[1.4fr_1fr] gap-6 items-center">
+      <div className="rounded-2xl border border-border bg-gradient-to-br from-[#0a2a20] via-[#071a30] to-[#1a0a30] p-6 md:p-8 mb-8 grid md:grid-cols-[1.4fr_1fr] gap-6 items-center">
         <div>
           <div className="text-amber-300 text-xs font-semibold tracking-widest uppercase mb-2 flex items-center gap-2">
             <Settings className="size-4" /> Master SAP
@@ -66,24 +66,24 @@ export function ITCourses() {
           <h2 id="it-courses-h2" className="font-bold text-2xl md:text-3xl">
             India&apos;s #1 SAP Training Platform
           </h2>
-          <p className="text-sm text-slate-400 mt-3 leading-relaxed max-w-xl">
+          <p className="text-sm text-muted-foreground mt-3 leading-relaxed max-w-xl">
             SAP Ariba, BTP, S/4HANA MM, and SAP AI Core — with real sandbox access, live mentor-led sessions, and certification aligned with SAP&apos;s official curriculum. The fastest path to a high-paying SAP consultant role in India.
           </p>
           <div className="flex flex-wrap gap-2 mt-4">
             {["SAP Ariba", "SAP BTP", "SAP S/4HANA MM", "SAP AI Core", "Generative AI for SAP"].map((t) => (
               <span
                 key={t}
-                className="text-[11px] rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.18)] px-2 py-1 text-slate-300"
+                className="text-[11px] rounded-md bg-secondary border border-border px-2 py-1 text-muted-foreground"
               >
                 {t}
               </span>
             ))}
           </div>
         </div>
-        <div className="bg-[#0a1422] border border-[rgba(6,182,212,0.18)] rounded-xl p-5 text-center">
+        <div className="bg-muted border border-border rounded-xl p-5 text-center">
           <div className="text-4xl font-bold ap-gradient-text">95%</div>
-          <div className="text-sm text-slate-300 mt-1">Placement Rate</div>
-          <div className="text-xs text-slate-500 mt-1">SAP-certified alumni placed across 200+ Indian enterprises</div>
+          <div className="text-sm text-muted-foreground mt-1">Placement Rate</div>
+          <div className="text-xs text-muted-foreground mt-1">SAP-certified alumni placed across 200+ Indian enterprises</div>
         </div>
       </div>
 
@@ -97,7 +97,7 @@ export function ITCourses() {
               "text-xs px-3 py-1.5 rounded-full border transition-all " +
               (i === 0
                 ? "bg-cyan-500/15 text-cyan-300 border-cyan-500/40"
-                : "bg-[#0F2340] text-slate-400 border-[rgba(6,182,212,0.18)] hover:text-cyan-300 hover:border-cyan-500/30")
+                : "bg-secondary text-muted-foreground border-border hover:text-cyan-300 hover:border-cyan-500/30")
             }
           >
             {p}
@@ -110,7 +110,7 @@ export function ITCourses() {
         {COURSES.map((c) => (
           <article
             key={c.title}
-            className="ap-lift flex flex-col bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl overflow-hidden"
+            className="ap-lift flex flex-col bg-card border border-border rounded-xl overflow-hidden"
           >
             <div
               className="relative h-24 grid place-items-center text-4xl"
@@ -131,12 +131,12 @@ export function ITCourses() {
             </div>
             <div className="p-5 flex-1 flex flex-col">
               <h3 className="text-sm font-semibold text-foreground leading-snug">{c.title}</h3>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed flex-1">{c.desc}</p>
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed flex-1">{c.desc}</p>
               <div className="mt-3 flex flex-wrap gap-1">
                 {c.meta.map((m) => (
                   <span
                     key={m}
-                    className="text-[10px] text-slate-500 bg-[#0a1422] border border-[rgba(6,182,212,0.1)] rounded px-1.5 py-0.5"
+                    className="text-[10px] text-muted-foreground bg-muted border border-border rounded px-1.5 py-0.5"
                   >
                     {m}
                   </span>
@@ -145,14 +145,14 @@ export function ITCourses() {
               <div className="mt-3 flex items-center justify-between">
                 <div className="flex items-center gap-1 text-amber-400 text-xs">
                   <Star className="size-3.5" fill="currentColor" />
-                  <span className="text-slate-300 font-medium">{c.rating}</span>
-                  <span className="text-slate-500">· {c.reviews}</span>
+                  <span className="text-muted-foreground font-medium">{c.rating}</span>
+                  <span className="text-muted-foreground">· {c.reviews}</span>
                 </div>
               </div>
             </div>
             <div className="p-5 pt-0 mt-auto flex items-center justify-between">
               <div>
-                <div className="text-[10px] text-slate-500 uppercase">Price</div>
+                <div className="text-[10px] text-muted-foreground uppercase">Price</div>
                 <div className="text-emerald-300 font-bold text-sm">{c.price}</div>
               </div>
               <Button asChild size="sm" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
@@ -170,7 +170,7 @@ export function ITCourses() {
       </div>
 
       <div className="text-center mt-8">
-        <Button asChild variant="outline" className="border-[rgba(6,182,212,0.28)] text-slate-200 hover:bg-[#0F2340] hover:text-cyan-300">
+        <Button asChild variant="outline" className="border-border text-foreground hover:bg-secondary hover:text-cyan-300">
           <a
             href="https://www.skillgorila.com/s/store"
             target="_blank"

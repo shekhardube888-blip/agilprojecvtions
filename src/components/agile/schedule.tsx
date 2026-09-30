@@ -30,15 +30,15 @@ export function Schedule() {
         <h2 id="schedule-h2" className="font-bold text-3xl md:text-4xl">
           Upcoming <span className="ap-gradient-text">internship batches</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           All sessions are online live. Seats are limited per batch — register early to confirm your spot.
         </p>
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block rounded-xl overflow-hidden border border-[rgba(6,182,212,0.18)]">
+      <div className="hidden md:block rounded-xl overflow-hidden border border-border">
         <table className="w-full text-sm">
-          <thead className="bg-[#0e1b2e] text-cyan-300">
+          <thead className="bg-popover text-cyan-300">
             <tr>
               <th className="text-left font-semibold px-4 py-3">Internship</th>
               <th className="text-left font-semibold px-4 py-3">Batch Start</th>
@@ -49,19 +49,19 @@ export function Schedule() {
               <th className="text-left font-semibold px-4 py-3">Apply</th>
             </tr>
           </thead>
-          <tbody className="bg-[#111f35]">
+          <tbody className="bg-card">
             {SCHEDULE.map((row) => {
               const st = statusStyle(row.status);
               return (
                 <tr
                   key={row.name}
-                  className="border-t border-[rgba(6,182,212,0.1)] hover:bg-[#0F2340] transition-colors"
+                  className="border-t border-border hover:bg-secondary transition-colors"
                 >
                   <td className="px-4 py-3 font-medium text-foreground">{row.name}</td>
-                  <td className="px-4 py-3 text-slate-300">{row.start}</td>
-                  <td className="px-4 py-3 text-slate-300">{row.last}</td>
-                  <td className="px-4 py-3 text-slate-300">{row.duration}</td>
-                  <td className="px-4 py-3 text-slate-300">{row.mode}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.start}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.last}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.duration}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.mode}</td>
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${st.cls}`}
@@ -95,12 +95,12 @@ export function Schedule() {
           return (
             <div
               key={row.name}
-              className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-4"
+              className="bg-card border border-border rounded-xl p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="font-semibold text-foreground text-sm">{row.name}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">{row.mode}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{row.mode}</div>
                 </div>
                 <span
                   className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium ${st.cls}`}
@@ -109,17 +109,17 @@ export function Schedule() {
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2 mt-3 text-center text-xs">
-                <div className="bg-[#0e1b2e] rounded-md p-2">
-                  <div className="text-slate-500">Start</div>
-                  <div className="text-slate-200 font-medium mt-0.5">{row.start}</div>
+                <div className="bg-popover rounded-md p-2">
+                  <div className="text-muted-foreground">Start</div>
+                  <div className="text-foreground font-medium mt-0.5">{row.start}</div>
                 </div>
-                <div className="bg-[#0e1b2e] rounded-md p-2">
-                  <div className="text-slate-500">Last Date</div>
-                  <div className="text-slate-200 font-medium mt-0.5">{row.last}</div>
+                <div className="bg-popover rounded-md p-2">
+                  <div className="text-muted-foreground">Last Date</div>
+                  <div className="text-foreground font-medium mt-0.5">{row.last}</div>
                 </div>
-                <div className="bg-[#0e1b2e] rounded-md p-2">
-                  <div className="text-slate-500">Duration</div>
-                  <div className="text-slate-200 font-medium mt-0.5">{row.duration}</div>
+                <div className="bg-popover rounded-md p-2">
+                  <div className="text-muted-foreground">Duration</div>
+                  <div className="text-foreground font-medium mt-0.5">{row.duration}</div>
                 </div>
               </div>
               <Button

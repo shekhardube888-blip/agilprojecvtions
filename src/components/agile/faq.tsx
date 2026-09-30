@@ -22,7 +22,7 @@ export function FAQ() {
         <h2 id="faq-h2" className="font-bold text-3xl md:text-4xl">
           Everything you want to <span className="ap-gradient-text">know</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Still have a question? Ask the AI Mentor below, or WhatsApp{" "}
           <a href="https://wa.me/918095557334" className="text-cyan-300 underline underline-offset-4">
             +91 80955 57334
@@ -41,7 +41,7 @@ export function FAQ() {
             <AccordionItem
               key={i}
               value={`faq-${i}`}
-              className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl px-5 [&:last-child]:border-b"
+              className="bg-card border border-border rounded-xl px-5 [&:last-child]:border-b"
             >
               <AccordionTrigger
                 className="text-left text-sm md:text-base font-medium text-foreground hover:text-cyan-300 hover:no-underline [&>svg]:text-cyan-400"
@@ -49,7 +49,7 @@ export function FAQ() {
               >
                 {f.q}
               </AccordionTrigger>
-              <AccordionContent className="text-sm text-slate-400 leading-relaxed">
+              <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
                 {f.a}
               </AccordionContent>
             </AccordionItem>

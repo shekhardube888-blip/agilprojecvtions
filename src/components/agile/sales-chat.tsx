@@ -106,9 +106,9 @@ export function SalesChat() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 right-5 z-[60] w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-[#0e1b2e] border border-[rgba(6,182,212,0.25)] rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed bottom-24 right-5 z-[60] w-[calc(100vw-2.5rem)] sm:w-96 max-h-[70vh] flex flex-col bg-popover border border-border rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-muted">
             <span className="size-9 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 grid place-items-center text-white">
               <Headset className="size-5" />
             </span>
@@ -119,9 +119,9 @@ export function SalesChat() {
                   <span className="size-1.5 rounded-full bg-emerald-400" /> online
                 </span>
               </div>
-              <div className="text-[11px] text-slate-500">Sales & queries · replies instantly</div>
+              <div className="text-[11px] text-muted-foreground">Sales & queries · replies instantly</div>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="Close" className="text-slate-400 hover:text-cyan-300">
+            <button onClick={() => setOpen(false)} aria-label="Close" className="text-muted-foreground hover:text-cyan-300">
               <X className="size-4" />
             </button>
           </div>
@@ -129,7 +129,7 @@ export function SalesChat() {
           {/* Messages */}
           <div
             ref={scrollRef}
-            className="flex-1 overflow-y-auto p-3 space-y-3 bg-[#0B1929]"
+            className="flex-1 overflow-y-auto p-3 space-y-3 bg-background"
             aria-live="polite"
             aria-label="Sales chat messages"
           >
@@ -137,8 +137,8 @@ export function SalesChat() {
               <SalesBubble key={i} role={m.role} content={m.content} />
             ))}
             {loading && (
-              <div className="flex items-center gap-2 text-slate-400 text-sm">
-                <span className="size-6 rounded-full bg-[#0F2340] grid place-items-center text-cyan-400">
+              <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                <span className="size-6 rounded-full bg-secondary grid place-items-center text-cyan-400">
                   <Loader2 className="size-3 animate-spin" />
                 </span>
                 <span className="italic">AP-Sales Assistant is typing…</span>
@@ -147,14 +147,14 @@ export function SalesChat() {
           </div>
 
           {/* Suggestions */}
-          <div className="px-3 py-2 flex flex-wrap gap-1.5 border-t border-[rgba(6,182,212,0.12)] bg-[#0a1422]/40">
+          <div className="px-3 py-2 flex flex-wrap gap-1.5 border-t border-border bg-muted/40">
             {SUGGESTIONS.map((s) => (
               <button
                 key={s}
                 type="button"
                 onClick={() => send(s)}
                 disabled={loading}
-                className="text-[11px] px-2.5 py-1 rounded-full border border-[rgba(6,182,212,0.22)] bg-[#0F2340] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-colors disabled:opacity-50"
+                className="text-[11px] px-2.5 py-1 rounded-full border border-border bg-secondary text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40 transition-colors disabled:opacity-50"
               >
                 {s}
               </button>
@@ -162,13 +162,13 @@ export function SalesChat() {
           </div>
 
           {/* Input */}
-          <div className="flex items-center gap-2 p-3 border-t border-[rgba(6,182,212,0.18)] bg-[#0a1422]">
+          <div className="flex items-center gap-2 p-3 border-t border-border bg-muted">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="Ask about plans, pricing, batches…"
-              className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] flex-1 h-9"
+              className="bg-muted border-border flex-1 h-9"
               aria-label="Message AP-Sales Assistant"
               disabled={loading}
               maxLength={1500}
@@ -185,7 +185,7 @@ export function SalesChat() {
             </Button>
           </div>
 
-          <p className="px-3 py-1.5 text-[10px] text-slate-500 border-t border-[rgba(6,182,212,0.08)] bg-[#0a1422]/60">
+          <p className="px-3 py-1.5 text-[10px] text-muted-foreground border-t border-border bg-muted/60">
             For official details: WhatsApp{" "}
             <a href="https://wa.me/918319985622" className="text-cyan-300 underline underline-offset-4">+91 83199 85622</a>{" "}
             · email{" "}
@@ -216,8 +216,8 @@ function SalesBubble({ role, content }: { role: "user" | "assistant"; content: s
         className={cn(
           "max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed",
           isUser
-            ? "bg-blue-600/15 border border-blue-500/30 text-slate-200"
-            : "bg-[#111f35] border border-[rgba(6,182,212,0.18)] text-slate-200"
+            ? "bg-blue-600/15 border border-blue-500/30 text-foreground"
+            : "bg-card border border-border text-foreground"
         )}
       >
         {isUser ? (

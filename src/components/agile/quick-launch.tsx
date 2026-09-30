@@ -88,7 +88,7 @@ export function QuickLaunch() {
     >
       {/* Hub header — enterprise dashboard feel */}
       <div className="rounded-2xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40 mb-6">
-        <div className="rounded-2xl bg-[#0e1b2e] p-5 md:p-6">
+        <div className="rounded-2xl bg-popover p-5 md:p-6">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
               <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-1">
@@ -97,12 +97,12 @@ export function QuickLaunch() {
               <h2 id="ql-h2" className="font-bold text-2xl md:text-3xl">
                 Quick <span className="ap-gradient-text">Launch</span>
               </h2>
-              <p className="text-slate-400 text-xs md:text-sm mt-1">
+              <p className="text-muted-foreground text-xs md:text-sm mt-1">
                 Open any module in a popup — no scrolling needed.
               </p>
             </div>
-            <div className="bg-[#0a1422]/70 border border-[rgba(6,182,212,0.22)] rounded-lg px-3 py-2">
-              <div className="text-[9px] uppercase tracking-wider text-slate-500 mb-1">Live traffic</div>
+            <div className="bg-muted/70 border border-border rounded-lg px-3 py-2">
+              <div className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1">Live traffic</div>
               <VisitorStats />
             </div>
           </div>
@@ -116,7 +116,7 @@ export function QuickLaunch() {
             key={m.key}
             type="button"
             onClick={() => setOpenKey(m.key)}
-            className="group relative text-left bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-4 ap-lift overflow-hidden"
+            className="group relative text-left bg-card border border-border rounded-xl p-4 ap-lift overflow-hidden"
             aria-haspopup="dialog"
             aria-expanded={openKey === m.key}
           >
@@ -129,7 +129,7 @@ export function QuickLaunch() {
               {m.icon}
             </span>
             <div className="font-semibold text-foreground text-sm">{m.title}</div>
-            <div className="text-[11px] text-slate-400 mt-1 leading-relaxed">{m.desc}</div>
+            <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">{m.desc}</div>
             <div className="text-[10px] text-cyan-400 mt-2 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
               Open <ArrowRight className="size-3" />
             </div>
@@ -139,8 +139,8 @@ export function QuickLaunch() {
 
       {/* Popup dialog containing the selected module */}
       <Dialog open={!!current} onOpenChange={(o) => !o && setOpenKey(null)}>
-        <DialogContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.25)] text-foreground sm:max-w-3xl lg:sm:max-w-5xl max-h-[88vh] overflow-y-auto">
-          <div className="sticky top-0 -mx-6 -mt-6 mb-2 px-6 py-3 bg-[#0e1b2e]/95 backdrop-blur border-b border-[rgba(6,182,212,0.18)] flex items-center gap-3 z-10">
+        <DialogContent className="bg-popover border-border text-foreground sm:max-w-3xl lg:sm:max-w-5xl max-h-[88vh] overflow-y-auto">
+          <div className="sticky top-0 -mx-6 -mt-6 mb-2 px-6 py-3 bg-popover/95 backdrop-blur border-b border-border flex items-center gap-3 z-10">
             {current && (
               <span className={cn("size-9 rounded-lg grid place-items-center text-white bg-gradient-to-br", current.accent)}>
                 {current.icon}
@@ -148,12 +148,12 @@ export function QuickLaunch() {
             )}
             <div className="flex-1">
               <DialogTitle className="font-bold text-lg">{current?.title}</DialogTitle>
-              <DialogDescription className="text-xs text-slate-400">{current?.desc}</DialogDescription>
+              <DialogDescription className="text-xs text-muted-foreground">{current?.desc}</DialogDescription>
             </div>
             <button
               onClick={() => setOpenKey(null)}
               aria-label="Close"
-              className="size-8 rounded-md grid place-items-center text-slate-400 hover:text-cyan-300 hover:bg-[#0F2340] transition-colors"
+              className="size-8 rounded-md grid place-items-center text-muted-foreground hover:text-cyan-300 hover:bg-secondary transition-colors"
             >
               <X className="size-4" />
             </button>

@@ -330,7 +330,7 @@ function AppGroup({ title, count, accent, students, empty, action }: { title: st
   return (
     <div>
       <div className="flex items-center gap-2 mb-1.5"><span className={cn("text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border", c)}>{title}</span><span className="text-[10px] text-muted-foreground">{count}</span></div>
-      {students.length === 0 ? <div className="text-[11px] text-muted-foreground py-2 px-3 border border-[rgba(6,182,212,0.1)] rounded-lg bg-muted/40">{empty}</div> : (
+      {students.length === 0 ? <div className="text-[11px] text-muted-foreground py-2 px-3 border border-border rounded-lg bg-muted/40">{empty}</div> : (
         <div className="border border-border rounded-lg max-h-48 overflow-y-auto">
           <table className="w-full text-sm"><tbody>
             {students.map(s => <tr key={s.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
