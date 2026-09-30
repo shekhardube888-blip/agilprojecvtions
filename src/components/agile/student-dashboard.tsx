@@ -24,7 +24,7 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string }[
   { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment" },
   { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey" },
   { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant" },
-  { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "NT-AI Network chatbot" },
+  { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "Coming in v2.0" },
   { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches" },
   { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, desc: "Questions & answers" },
 ];
@@ -37,7 +37,7 @@ function TabBody({ k, onJump }: { k: TabKey; onJump: (k: TabKey) => void }) {
     case "register": return <div className={WRAP}><RegisterForm /></div>;
     case "track": return <div className={WRAP}><ProjectTracker /></div>;
     case "ai-mentor": return <div className={WRAP}><AIAssistant /></div>;
-    case "ntai-chat": return <NTAIChatbotTab />;
+    case "ntai-chat": return <NTAIChatbotTab disabled />;
     case "schedule": return <div className={WRAP}><Schedule /></div>;
     case "faq": return <div className={WRAP}><FAQ /></div>;
     default: return null;
@@ -82,33 +82,18 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
 
 // ── NT-AI Chatbot tab — launches the external chatbot in a new tab ──
 function NTAIChatbotTab() {
-  const CHATBOT_URL = "https://preview-chat-94e26b7c-b83a-4044-af7c-c97c88642529.space-z.ai/";
-
   return (
     <div className="flex flex-col items-center justify-center text-center py-8" style={{ minHeight: "400px" }}>
-      <div className="size-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white mx-auto mb-4 shadow-lg">
+      <div className="size-16 rounded-2xl bg-muted/50 border border-border grid place-items-center text-slate-400 mx-auto mb-4">
         <MessageSquare className="size-8" />
       </div>
       <h3 className="font-bold text-xl text-foreground">NT-AI Chatbot</h3>
-      <p className="text-sm text-slate-500 mt-2 max-w-md">
-        The NT-AI Network chatbot — powered by OpenAI GPT models. Ask anything about your
-        internship, AI/ML projects, coding, or career guidance.
-      </p>
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-        <a href={CHATBOT_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-semibold px-6 h-12 rounded-lg shadow-lg shadow-cyan-500/20 hover:opacity-90 transition-opacity">
-          <MessageSquare className="size-5" />
-          Launch NT-AI Chatbot
-          <ExternalLink className="size-4" />
-        </a>
+      <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
+        ⚠ Coming in v2.0
       </div>
-      <div className="mt-6 flex flex-wrap gap-2 justify-center">
-        {["AI/ML Project Help", "Coding Questions", "Career Guidance", "Internship Queries", "Resume Tips"].map(tag => (
-          <span key={tag} className="text-[10px] px-2 py-1 rounded-md bg-muted/50 border border-border text-slate-500">{tag}</span>
-        ))}
-      </div>
-      <p className="text-[10px] text-slate-500 mt-6 inline-flex items-center gap-1">
-        <ExternalLink className="size-3" />
-        Opens in a new tab · Powered by OpenAI GPT-4o · {CHATBOT_URL}
+      <p className="text-sm text-slate-500 mt-3 max-w-md">
+        The NT-AI Network chatbot (powered by OpenAI GPT) will be available in the next version.
+        For now, use the <strong className="text-cyan-500">AP-AI Mentor</strong> tab for learning assistance.
       </p>
     </div>
   );
