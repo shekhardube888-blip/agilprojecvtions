@@ -35,7 +35,7 @@ export function Programs() {
         <h2 id="programs-h2" className="font-bold text-3xl md:text-4xl">
           Choose your <span className="ap-gradient-text">free internship track</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Four tracks covering the entire engineering landscape — from hardware (Embedded / IoT) to software (Full Stack / AI/ML), plus a non-technical leadership track. All live, all project-based, all free.
         </p>
       </div>
@@ -44,7 +44,7 @@ export function Programs() {
         {PROGRAMS.map((p) => (
           <article
             key={p.id}
-            className="ap-lift flex flex-col bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl overflow-hidden"
+            className="ap-lift flex flex-col bg-card border border-border rounded-xl overflow-hidden"
           >
             <div
               className="relative h-28 grid place-items-center text-5xl"
@@ -62,20 +62,20 @@ export function Programs() {
               <h3 className="text-lg font-semibold text-foreground leading-snug">
                 {p.title}
               </h3>
-              <p className="text-sm text-slate-400 mt-2 leading-relaxed">{p.desc}</p>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.desc}</p>
 
               <div className="flex flex-wrap gap-1.5 mt-4">
                 {p.tags.map((t) => (
                   <span
                     key={t}
-                    className="text-[11px] rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.16)] px-2 py-0.5 text-slate-400"
+                    className="text-[11px] rounded-md bg-secondary border border-border px-2 py-0.5 text-muted-foreground"
                   >
                     {t}
                   </span>
                 ))}
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-[rgba(6,182,212,0.12)]">
+              <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-border">
                 {p.meta.map((m) => {
                   const I = metaIcon(m.label);
                   return (
@@ -84,7 +84,7 @@ export function Programs() {
                       <div className="text-xs font-semibold text-foreground leading-tight">
                         {m.strong}
                       </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{m.label}</div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">{m.label}</div>
                     </div>
                   );
                 })}
@@ -101,7 +101,7 @@ export function Programs() {
                   {p.primaryCta} <ArrowRight className="size-3.5" />
                 </Link>
               </Button>
-              <Button asChild size="sm" variant="ghost" className="text-slate-300 hover:text-cyan-300">
+              <Button asChild size="sm" variant="ghost" className="text-muted-foreground hover:text-cyan-300">
                 <Link href={`#detail-${p.id}`}>Details</Link>
               </Button>
             </div>

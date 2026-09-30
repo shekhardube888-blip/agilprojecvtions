@@ -97,14 +97,14 @@ export function ProjectTracker() {
         <h2 id="tracker-h2" className="font-bold text-3xl md:text-4xl">
           Project <span className="ap-gradient-text">Tracker</span> — step-by-step
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Registered? Enter your email + mobile to track your 6-stage project journey. Once the admin
           confirms your payment and starts your internship, your stages unlock one by one.
         </p>
       </div>
 
       {!student ? (
-        <div className="max-w-md mx-auto bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-2xl p-6">
+        <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-6">
           <form onSubmit={lookup} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="tk-email">Email (used at registration)</Label>
@@ -114,7 +114,7 @@ export function ProjectTracker() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@college.edu.in"
-                className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+                className="bg-muted border-border"
                 required
               />
             </div>
@@ -126,7 +126,7 @@ export function ProjectTracker() {
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+                className="bg-muted border-border"
                 required
               />
             </div>
@@ -145,7 +145,7 @@ export function ProjectTracker() {
               Track My Project
             </Button>
           </form>
-          <p className="text-center text-xs text-slate-500 mt-4">
+          <p className="text-center text-xs text-muted-foreground mt-4">
             Not registered yet?{" "}
             <Link href="#register" className="text-cyan-300 underline underline-offset-4">
               Register free →
@@ -188,7 +188,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
     <div className="max-w-3xl mx-auto">
       {/* Student header */}
       <div className="rounded-2xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40 mb-6">
-        <div className="rounded-2xl bg-[#0e1b2e] p-6">
+        <div className="rounded-2xl bg-popover p-6">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-1">
@@ -197,11 +197,11 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
               <h3 className="font-bold text-xl">
                 {student.firstName} {student.lastName}
               </h3>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 {student.degree} · {student.branch} · {student.college}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={onReset} className="bg-[#0F2340] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300">
+            <Button variant="outline" size="sm" onClick={onReset} className="bg-secondary border-border text-foreground hover:text-cyan-300">
               <RefreshCw className="size-3.5 mr-1" /> Look up another
             </Button>
           </div>
@@ -224,7 +224,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
           <Clock className="size-5 text-amber-400 mt-0.5 shrink-0" />
           <div>
             <div className="font-semibold text-amber-300">Awaiting admin to confirm payment & start your internship</div>
-            <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+            <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
               Once the admin confirms your payment and clicks "Start Internship", your 6-stage project
               journey unlocks below — one stage at a time. Need to reach the team?
             </p>
@@ -246,7 +246,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
           <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
           <div>
             <div className="font-semibold text-emerald-300">🎉 Congratulations — internship completed!</div>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               You finished all 6 stages of your project journey. Your merit certificate will be issued within 7 days.
               {student.completedAt && ` Completed on ${new Date(student.completedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}.`}
             </p>
@@ -255,7 +255,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
       )}
 
       {/* 6-stage roadmap */}
-      <ol className="relative pl-6 border-l border-[rgba(6,182,212,0.22)] space-y-4">
+      <ol className="relative pl-6 border-l border-border space-y-4">
         {PROJECT_STAGES.map((s) => {
           const stageNum = s.step;
           const isDone = current > stageNum || completed;
@@ -277,15 +277,15 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
                   isDone
                     ? "border-emerald-500/30 bg-[#0e2a1e]/40"
                     : isCurrent
-                    ? "border-cyan-500/40 bg-[#111f35] shadow-[0_0_24px_-6px_rgba(6,182,212,0.3)]"
-                    : "border-[rgba(6,182,212,0.12)] bg-[#111f35]/50"
+                    ? "border-cyan-500/40 bg-card shadow-[0_0_24px_-6px_rgba(6,182,212,0.3)]"
+                    : "border-border bg-card/50"
                 )}
               >
                 <div className="flex items-center gap-2 flex-wrap mb-1.5">
                   <span className="text-lg" aria-hidden>{s.icon}</span>
                   <span className={cn(
                     "inline-flex items-center rounded-md text-[11px] font-bold px-2 py-0.5",
-                    isDone ? "bg-emerald-500/20 text-emerald-300" : isCurrent ? "ap-gradient-cyan text-navy" : "bg-[#0F2340] text-slate-400"
+                    isDone ? "bg-emerald-500/20 text-emerald-300" : isCurrent ? "ap-gradient-cyan text-navy" : "bg-secondary text-muted-foreground"
                   )}>
                     {s.week} · Stage {s.step}
                   </span>
@@ -300,33 +300,33 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
                     </span>
                   )}
                   {isLocked && !isDone && !isCurrent && (
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-slate-600/15 text-slate-400 border border-slate-500/30">
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-slate-600/15 text-muted-foreground border border-slate-500/30">
                       <Lock className="size-3" /> Locked
                     </span>
                   )}
                 </div>
-                <h4 className={cn("text-sm font-semibold", isLocked && !isCurrent ? "text-slate-400" : "text-foreground")}>
+                <h4 className={cn("text-sm font-semibold", isLocked && !isCurrent ? "text-muted-foreground" : "text-foreground")}>
                   {s.title}
                 </h4>
-                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{s.desc}</p>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{s.desc}</p>
                 <div className="text-[11px] text-cyan-300/80 mt-2 flex items-center gap-1.5">
-                  <ArrowRight className="size-3" /> Deliverable: <span className="text-slate-300">{s.deliverable}</span>
+                  <ArrowRight className="size-3" /> Deliverable: <span className="text-muted-foreground">{s.deliverable}</span>
                 </div>
 
                 {/* LLM Start Week X Training */}
                 {!notStarted && (
-                  <div className="mt-3 border-t border-[rgba(6,182,212,0.12)] pt-3">
+                  <div className="mt-3 border-t border-border pt-3">
                     {training[stageNum]?.content ? (
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[11px] font-semibold text-cyan-300 inline-flex items-center gap-1.5">
                             <GraduationCap className="size-3.5" /> {s.week} Training Module
                           </span>
-                          <button onClick={() => setTraining((t) => { const n = { ...t }; delete n[stageNum]; return n; })} className="text-slate-500 hover:text-rose-300 text-[10px]" aria-label="Hide training">
+                          <button onClick={() => setTraining((t) => { const n = { ...t }; delete n[stageNum]; return n; })} className="text-muted-foreground hover:text-rose-300 text-[10px]" aria-label="Hide training">
                             <X className="size-3.5" />
                           </button>
                         </div>
-                        <div className="prose prose-sm prose-invert max-w-none bg-[#0a1422] border border-[rgba(6,182,212,0.15)] rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
+                        <div className="prose prose-sm prose-invert max-w-none bg-muted border border-border rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
                           <ReactMarkdown>{training[stageNum].content}</ReactMarkdown>
                         </div>
                       </div>
@@ -355,7 +355,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
             const el = document.getElementById("ai-assistant");
             if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
-          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+          className="bg-popover border-border text-foreground hover:text-cyan-300"
         >
           🤖 Ask AP-AI Mentor for help with a stage
         </Button>
@@ -366,7 +366,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
             const el = document.getElementById("register");
             if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
-          className="bg-[#0e1b2e] border-[rgba(6,182,212,0.3)] text-slate-200 hover:text-cyan-300"
+          className="bg-popover border-border text-foreground hover:text-cyan-300"
         >
           <Rocket className="size-4 mr-1.5" /> Register for another project
         </Button>
@@ -377,8 +377,8 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
 
 function Chip({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
-    <div className="bg-[#0a1422]/60 border border-[rgba(6,182,212,0.12)] rounded-lg px-3 py-2">
-      <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
+    <div className="bg-muted/60 border border-border rounded-lg px-3 py-2">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className={cn("text-xs font-semibold mt-0.5 truncate", accent)} title={value}>{value}</div>
     </div>
   );

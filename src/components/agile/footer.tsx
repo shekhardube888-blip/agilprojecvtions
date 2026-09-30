@@ -36,7 +36,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-[#0a1422] border-t border-[rgba(6,182,212,0.18)]">
+    <footer className="mt-auto bg-muted border-t border-border">
       <div className="max-w-7xl mx-auto px-5 md:px-[5%] py-12 md:py-16">
         <div className="grid lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-10">
           {/* Brand */}
@@ -47,10 +47,10 @@ export function Footer() {
               </span>
               <span>
                 Agile<span className="text-cyan-400">Projection</span>
-                <span className="text-slate-400 text-xs font-semibold ml-0.5">(NT-AI)</span>
+                <span className="text-muted-foreground text-xs font-semibold ml-0.5">(NT-AI)</span>
               </span>
             </Link>
-            <p className="text-sm text-slate-400 leading-relaxed max-w-md">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
               AgileProjection (NT-AI Network) is a free engineering internship platform serving BE / B.Tech / ME / M.Tech / MCA students across India. Live mentoring, real projects, AICTE-aligned certificates — at zero cost, always.
             </p>
             <div className="mt-5 flex flex-col gap-2 text-sm">
@@ -58,21 +58,21 @@ export function Footer() {
                 href="https://agileprojection.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-300"
               >
                 <Zap className="size-4 text-cyan-400" />
                 agileprojection.com
               </a>
               <a
                 href="mailto:training@agileprojection.com"
-                className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-300"
               >
                 <Mail className="size-4 text-cyan-400" />
                 training@agileprojection.com
               </a>
               <a
                 href="tel:+918095557332"
-                className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-300"
               >
                 <Phone className="size-4 text-cyan-400" />
                 +91 80955 57332
@@ -81,7 +81,7 @@ export function Footer() {
                 href="https://wa.me/918095557334"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-slate-300 hover:text-cyan-300"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-cyan-300"
               >
                 <MessageCircle className="size-4 text-cyan-400" />
                 WhatsApp +91 80955 57334
@@ -100,7 +100,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="size-9 rounded-md bg-[#0F2340] border border-[rgba(6,182,212,0.18)] grid place-items-center text-slate-400 hover:text-cyan-300 hover:border-cyan-500/40 transition-colors"
+                  className="size-9 rounded-md bg-secondary border border-border grid place-items-center text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40 transition-colors"
                 >
                   <s.icon className="size-4" />
                 </a>
@@ -119,7 +119,7 @@ export function Footer() {
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-slate-400 hover:text-cyan-300 transition-colors"
+                      className="text-muted-foreground hover:text-cyan-300 transition-colors"
                     >
                       {l.label}
                     </Link>
@@ -135,12 +135,12 @@ export function Footer() {
               Contact
             </h3>
             <ul className="flex flex-col gap-2 text-sm">
-              <li className="text-slate-400">NT-AI</li>
-              <li className="text-slate-500 text-xs">Founder &amp; Lead Mentor</li>
+              <li className="text-muted-foreground">NT-AI</li>
+              <li className="text-muted-foreground text-xs">Founder &amp; Lead Mentor</li>
               <li>
                 <a
                   href="mailto:hr@agileprojection.com"
-                  className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2 break-all"
+                  className="text-muted-foreground hover:text-cyan-300 inline-flex items-center gap-2 break-all"
                 >
                   <Mail className="size-4 text-cyan-400 shrink-0" />
                   hr@agileprojection.com
@@ -151,7 +151,7 @@ export function Footer() {
                   href="https://wa.me/918319985622"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2"
+                  className="text-muted-foreground hover:text-cyan-300 inline-flex items-center gap-2"
                 >
                   <MessageCircle className="size-4 text-cyan-400 shrink-0" />
                   +91 83199 85622
@@ -162,7 +162,7 @@ export function Footer() {
                   href="https://www.linkedin.com/in/ai-is-a-mirror-reflecting-not-only-our-intellect-in-nt-ai-network-690362367/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-slate-300 hover:text-cyan-300 inline-flex items-center gap-2"
+                  className="text-muted-foreground hover:text-cyan-300 inline-flex items-center gap-2"
                 >
                   <Linkedin className="size-4 text-cyan-400 shrink-0" />
                   Jobs on LinkedIn →
@@ -173,7 +173,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-[rgba(6,182,212,0.12)] flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <div>© 2026 <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-300">AgileProjection.com</a> · All Rights Reserved.</div>
           <div className="flex items-center gap-4">
             <Link href="#" className="hover:text-cyan-300">Privacy Policy</Link>

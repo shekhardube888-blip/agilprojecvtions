@@ -1,0 +1,726 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import { useEffect, useState, useCallback } from "react";
+     5→import {
+     6→  LayoutDashboard, Users, FileText, CreditCard, Cpu, GraduationCap, FolderKanban,
+     7→  CalendarCheck, Award, BarChart3, Brain, Bell, Settings, X, RefreshCw, Loader2,
+     8→  CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink, LogOut,
+     9→} from "lucide-react";
+    10→import {
+    11→  Dialog, DialogContent, DialogTitle, DialogDescription,
+    12→} from "@/components/ui/dialog";
+    13→import { Button } from "@/components/ui/button";
+    14→import { Input } from "@/components/ui/input";
+    15→import { useToast } from "@/hooks/use-toast";
+    16→import { cn } from "@/lib/utils";
+    17→import { Label } from "@/components/ui/label";
+    18→import ReactMarkdown from "react-markdown";
+    19→import { MENTORS, CATEGORIES, DEGREES, BRANCHES, PLANS, STATES, SOURCES, PROGRAMS, AIML_CURRICULUM } from "@/lib/data";
+    20→import { MessageCircle, Mail } from "lucide-react";
+    21→
+    22→// ── types ──
+    23→type Student = {
+    24→  id: string; firstName: string; lastName: string; email: string; mobile: string;
+    25→  degree: string; branch: string; semester: string; plan: string; college: string;
+    26→  state: string; categoryLabel: string; project: string;
+    27→  paymentStatus: string; internshipStatus: string; currentStage: number;
+    28→  createdAt: string; completedAt?: string | null;
+    29→};
+    30→type Cert = {
+    31→  id: string; certificateNumber: string; type: string; eligibility: string;
+    32→  issuedAt: string;
+    33→  student: { firstName: string; lastName: string; email: string; degree: string; branch: string; college: string; project: string; categoryLabel: string; completedAt: string | null };
+    34→};
+    35→type MenuKey =
+    36→  | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
+    37→  | "projects" | "attendance" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+    38→
+    39→const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
+    40→  { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
+    41→  { key: "students", label: "Students", icon: <Users className="size-4" />, group: "Overview" },
+    42→  { key: "applications", label: "Applications", icon: <FileText className="size-4" />, group: "Overview" },
+    43→  { key: "payments", label: "Payments", icon: <CreditCard className="size-4" />, group: "Operations" },
+    44→  { key: "internships", label: "Internships", icon: <Cpu className="size-4" />, group: "Operations" },
+    45→  { key: "mentors", label: "Mentors", icon: <GraduationCap className="size-4" />, group: "Operations" },
+    46→  { key: "projects", label: "Projects", icon: <FolderKanban className="size-4" />, group: "Operations" },
+    47→  { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
+    48→  { key: "certificates", label: "Certificates", icon: <Award className="size-4" />, group: "Lifecycle" },
+    49→  { key: "reports", label: "Reports", icon: <BarChart3 className="size-4" />, group: "Lifecycle" },
+    50→  { key: "ai", label: "AI Analytics", icon: <Brain className="size-4" />, group: "Insights" },
+    51→  { key: "notifications", label: "Notifications", icon: <Bell className="size-4" />, group: "Insights" },
+    52→  { key: "settings", label: "Settings", icon: <Settings className="size-4" />, group: "Insights" },
+    53→];
+    54→
+    55→export function AdminDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
+    56→  const [open, setOpen] = useState(initiallyOpen || false);
+    57→  const [tab, setTab] = useState<MenuKey>("dashboard");
+    58→
+    59→  return (
+    60→    <>
+    61→      <Button
+    62→        onClick={() => { setOpen(true); setTab("dashboard"); }}
+    63→        size="lg"
+    64→        className="bg-gradient-to-r from-violet-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-12 px-6 shadow-lg shadow-violet-500/20"
+    65→      >
+    66→        <ShieldCheck className="size-5 mr-2" />
+    67→        Open Admin Dashboard
+    68→      </Button>
+    69→      <Dialog open={open} onOpenChange={setOpen}>
+    70→        <DialogContent className="bg-popover border-border text-foreground sm:max-w-3xl lg:sm:max-w-7xl max-h-[94vh] p-0 overflow-hidden">
+    71→          {/* Header */}
+    72→          <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-border bg-muted">
+    73→            <div className="flex items-center gap-2.5">
+    74→              <span className="size-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 grid place-items-center text-primary-foreground">
+    75→                <ShieldCheck className="size-4" />
+    76→              </span>
+    77→              <div>
+    78→                <DialogTitle className="font-bold text-base">Admin Dashboard</DialogTitle>
+    79→                <DialogDescription className="text-[11px] text-muted-foreground">NT-AI Network · enterprise admin suite</DialogDescription>
+    80→              </div>
+    81→            </div>
+    82→            <div className="flex items-center gap-2">
+    83→              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-primary-foreground font-semibold transition-colors">
+    84→                <LogOut className="size-3.5" /> Logout
+    85→              </button>
+    86→              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-muted-foreground hover:text-cyan-500 dark:text-cyan-400 hover:bg-secondary">
+    87→                <X className="size-4" />
+    88→              </button>
+    89→            </div>
+    90→          </div>
+    91→          {/* Sidebar + content */}
+    92→          <div className="flex max-h-[calc(94vh-64px)]">
+    93→            <nav className="w-16 sm:w-52 shrink-0 border-r border-border bg-muted/60 overflow-y-auto p-2 flex flex-col gap-0.5">
+    94→              {MENU.map((m, i) => (
+    95→                <React.Fragment key={m.key}>
+    96→                  {i === 0 || MENU[i].group !== MENU[i - 1].group ? (
+    97→                    <div className="text-[9px] uppercase tracking-wider text-muted-foreground px-2 pt-3 pb-1 hidden sm:block">{m.group}</div>
+    98→                  ) : null}
+    99→                  <button
+   100→                    onClick={() => setTab(m.key)}
+   101→                    className={cn(
+   102→                      "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg text-sm transition-colors text-left",
+   103→                      tab === m.key ? "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border border-cyan-500/30" : "text-foreground hover:bg-secondary hover:text-cyan-500 dark:text-cyan-400 border border-transparent"
+   104→                    )}
+   105→                    title={m.label}
+   106→                  >
+   107→                    {m.icon}
+   108→                    <span className="hidden sm:inline">{m.label}</span>
+   109→                  </button>
+   110→                </React.Fragment>
+   111→              ))}
+   112→            </nav>
+   113→            <div className="flex-1 overflow-y-auto p-5">
+   114→              <TabContent tab={tab} />
+   115→            </div>
+   116→          </div>
+   117→        </DialogContent>
+   118→      </Dialog>
+   119→    </>
+   120→  );
+   121→}
+   122→
+   123→function TabContent({ tab }: { tab: MenuKey }) {
+   124→  switch (tab) {
+   125→    case "dashboard": return <DashboardTab />;
+   126→    case "students": return <StudentsTab />;
+   127→    case "applications": return <ApplicationsTab />;
+   128→    case "certificates": return <CertificatesTab />;
+   129→    case "reports": return <ReportsTab />;
+   130→    case "mentors": return <MentorsTab />;
+   131→    case "attendance": return <AttendanceTab />;
+   132→    case "projects": return <ProjectsTab />;
+   133→    case "ai": return <AIAnalyticsTab />;
+   134→    case "notifications": return <NotificationsTab />;
+   135→    case "settings": return <SettingsTab />;
+   136→    case "payments": return <PaymentsTab />;
+   137→    case "internships": return <InternshipsTab />;
+   138→    default: return <StubTab tab={tab} />;
+   139→  }
+   140→}
+   141→
+   142→// ── shared data hook ──
+   143→function useStudents() {
+   144→  const [students, setStudents] = useState<Student[]>([]);
+   145→  const [loading, setLoading] = useState(true);
+   146→  const load = useCallback(async () => {
+   147→    setLoading(true);
+   148→    try {
+   149→      const res = await fetch("/api/admin/registrations?since=all&limit=500", { cache: "no-store" });
+   150→      const data = await res.json();
+   151→      if (data.ok) setStudents(data.recent || []);
+   152→    } catch { /* ignore */ }
+   153→    finally { setLoading(false); }
+   154→  }, []);
+   155→  useEffect(() => { load(); }, [load]);
+   156→  return { students, loading, load };
+   157→}
+   158→
+   159→// ── Dashboard tab (KPI cards) ──
+   160→function DashboardTab() {
+   161→  const { students, loading } = useStudents();
+   162→  const [certCount, setCertCount] = useState<number | null>(null);
+   163→  useEffect(() => {
+   164→    fetch("/api/admin/certificates", { cache: "no-store" })
+   165→      .then(r => r.json()).then(d => { if (d.ok) setCertCount(d.count); }).catch(() => {});
+   166→  }, [students]);
+   167→  const total = students.length;
+   168→  const pending = students.filter(s => s.paymentStatus !== "confirmed").length;
+   169→  const active = students.filter(s => s.internshipStatus === "in_progress").length;
+   170→  const completed = students.filter(s => s.internshipStatus === "completed").length;
+   171→  const kpis = [
+   172→    { label: "Total Students", value: total, icon: <Users className="size-5" />, accent: "from-cyan-500 to-blue-600" },
+   173→    { label: "Pending Approval", value: pending, icon: <FileText className="size-5" />, accent: "from-amber-500 to-rose-500", highlight: pending > 0 },
+   174→    { label: "Active Interns", value: active, icon: <Rocket className="size-5" />, accent: "from-violet-500 to-cyan-500", highlight: active > 0 },
+   175→    { label: "Completed", value: completed, icon: <CheckCircle2 className="size-5" />, accent: "from-emerald-500 to-cyan-500" },
+   176→    { label: "Certificates Issued", value: certCount ?? "—", icon: <Award className="size-5" />, accent: "from-blue-600 to-cyan-500" },
+   177→  ];
+   178→  return (
+   179→    <div>
+   180→      <h3 className="font-bold text-lg mb-1">Dashboard</h3>
+   181→      <p className="text-xs text-muted-foreground mb-4">Complete student lifecycle — registration to certificate.</p>
+   182→      {loading ? <Loading /> : (
+   183→        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+   184→          {kpis.map(k => (
+   185→            <div key={k.label} className={cn("bg-card rounded-xl p-4 border", k.highlight ? "border-cyan-400/50 shadow-[0_0_20px_-4px_rgba(6,182,212,0.3)]" : "border-border")}>
+   186→              <span className={cn("size-9 rounded-lg grid place-items-center text-primary-foreground bg-gradient-to-br mb-2", k.accent)}>{k.icon}</span>
+   187→              <div className="font-bold text-2xl ap-gradient-text leading-none">{k.value}</div>
+   188→              <div className="text-[11px] text-muted-foreground mt-1.5">{k.label}</div>
+   189→            </div>
+   190→          ))}
+   191→        </div>
+   192→      )}
+   193→      <div className="rounded-xl border border-border bg-card p-4">
+   194→        <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2">Pipeline</div>
+   195→        <div className="flex items-center gap-2 flex-wrap text-xs">
+   196→          <Pill color="amber" label="Pending" n={pending} />
+   197→          <span className="text-muted-foreground">→</span>
+   198→          <Pill color="cyan" label="Active" n={active} />
+   199→          <span className="text-muted-foreground">→</span>
+   200→          <Pill color="emerald" label="Completed" n={completed} />
+   201→          <span className="text-muted-foreground">→</span>
+   202→          <Pill color="blue" label="Certified" n={certCount ?? 0} />
+   203→        </div>
+   204→        <p className="text-[11px] text-muted-foreground mt-3">Approve payment → start internship → advance 6 stages → generate certificate. Use the Students / Applications / Certificates tabs to action each stage.</p>
+   205→      </div>
+   206→    </div>
+   207→  );
+   208→}
+   209→
+   210→function Pill({ color, label, n }: { color: "amber" | "cyan" | "emerald" | "blue"; label: string; n: number }) {
+   211→  const c = { amber: "bg-amber-500/15 text-amber-300 border-amber-500/30", cyan: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", blue: "bg-blue-500/15 text-blue-300 border-blue-500/30" }[color];
+   212→  return <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-semibold", c)}>{label} <strong className="tabular-nums">{n}</strong></span>;
+   213→}
+   214→
+   215→// ── Students tab (filters + actions) ──
+   216→function StudentsTab() {
+   217→  const { students, loading, load } = useStudents();
+   218→  const { toast } = useToast();
+   219→  const [busy, setBusy] = useState<string | null>(null);
+   220→  const [q, setQ] = useState("");
+   221→  const [filterStatus, setFilterStatus] = useState("all");
+   222→  const [filterCollege, setFilterCollege] = useState("all");
+   223→
+   224→  const colleges = Array.from(new Set(students.map(s => s.college).filter(Boolean))).sort();
+   225→  const filtered = students.filter(s => {
+   226→    if (q && !(`${s.firstName} ${s.lastName} ${s.email} ${s.project}`.toLowerCase().includes(q.toLowerCase()))) return false;
+   227→    if (filterStatus !== "all") {
+   228→      if (filterStatus === "pending" && s.paymentStatus === "confirmed") return false;
+   229→      if (filterStatus === "active" && s.internshipStatus !== "in_progress") return false;
+   230→      if (filterStatus === "completed" && s.internshipStatus !== "completed") return false;
+   231→    }
+   232→    if (filterCollege !== "all" && s.college !== filterCollege) return false;
+   233→    return true;
+   234→  });
+   235→
+   236→  async function start(id: string, name: string) {
+   237→    setBusy(id); try {
+   238→      const res = await fetch("/api/admin/student/start", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) });
+   239→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   240→      toast({ title: `Approved ${name}'s payment`, description: "Stage 1 unlocked." }); await load();
+   241→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   242→    finally { setBusy(null); }
+   243→  }
+   244→  async function advance(id: string, name: string) {
+   245→    setBusy(id + "-a"); try {
+   246→      const res = await fetch("/api/admin/student/advance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) });
+   247→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   248→      const done = d.student.internshipStatus === "completed";
+   249→      toast({ title: done ? `🎉 ${name} completed!` : `${name} → Stage ${d.student.currentStage}`, description: done ? "Ready for certificate." : `Stage ${d.student.currentStage}/6.` }); await load();
+   250→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   251→    finally { setBusy(null); }
+   252→  }
+   253→
+   254→  return (
+   255→    <div>
+   256→      <h3 className="font-bold text-lg mb-1">Student Management</h3>
+   257→      <p className="text-xs text-muted-foreground mb-4">Filter, approve payments, advance stages, generate certificates.</p>
+   258→      <div className="flex flex-wrap gap-2 mb-3">
+   259→        <div className="relative flex-1 min-w-[180px]">
+   260→          <Search className="size-4 absolute left-2.5 top-2.5 text-muted-foreground" />
+   261→          <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name / email / project…" className="bg-muted border-border pl-8 h-9 text-sm" />
+   262→        </div>
+   263→        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-muted border border-border rounded-md h-9 px-2 text-xs text-foreground">
+   264→          <option value="all">All status</option><option value="pending">Pending</option><option value="active">Active</option><option value="completed">Completed</option>
+   265→        </select>
+   266→        <select value={filterCollege} onChange={e => setFilterCollege(e.target.value)} className="bg-muted border border-border rounded-md h-9 px-2 text-xs text-foreground max-w-[160px]">
+   267→          <option value="all">All colleges</option>{colleges.map(c => <option key={c} value={c}>{c}</option>)}
+   268→        </select>
+   269→        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="text-foreground hover:text-cyan-500 dark:text-cyan-400 h-9"><RefreshCw className={cn("size-3.5", loading && "animate-spin")} /></Button>
+   270→      </div>
+   271→      {loading ? <Loading /> : filtered.length === 0 ? <Empty text="No students match the filters." /> : (
+   272→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   273→          <table className="w-full text-sm">
+   274→            <thead className="sticky top-0 bg-popover z-10"><tr className="text-left text-[10px] text-muted-foreground border-b border-border">
+   275→              <th className="px-3 py-2">Student</th><th className="px-3 py-2 hidden md:table-cell">Project</th><th className="px-3 py-2">Status</th><th className="px-3 py-2 text-right">Action</th>
+   276→            </tr></thead>
+   277→            <tbody>
+   278→              {filtered.map(s => {
+   279→                const done = s.internshipStatus === "completed";
+   280→                const inProg = s.internshipStatus === "in_progress";
+   281→                return (
+   282→                  <tr key={s.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   283→                    <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.degree} · {s.college}</div></td>
+   284→                    <td className="px-3 py-2 hidden md:table-cell text-xs text-foreground max-w-[180px]"><div className="truncate" title={s.project}>{s.project}</div><div className="text-[10px] text-muted-foreground">{s.categoryLabel}</div></td>
+   285→                    <td className="px-3 py-2">{done ? <Badge color="emerald" icon={<CheckCircle2 className="size-2.5" />}>Done</Badge> : inProg ? <Badge color="cyan" icon={<Loader2 className="size-2.5" />}>Stage {s.currentStage}/6</Badge> : <Badge color="amber" icon={<Lock className="size-2.5" />}>Pending</Badge>}</td>
+   286→                    <td className="px-3 py-2 text-right whitespace-nowrap">
+   287→                      {done ? <GenCertButton studentId={s.id} name={s.firstName} small /> :
+   288→                        inProg ? <Button size="sm" variant="outline" onClick={() => advance(s.id, s.firstName)} disabled={busy === s.id + "-a"} className="h-7 text-[11px] bg-secondary border-border text-foreground hover:text-cyan-500 dark:text-cyan-400">{busy === s.id + "-a" ? <Loader2 className="size-3 animate-spin" /> : <Forward className="size-3.5" />}Advance</Button> :
+   289→                        <Button size="sm" onClick={() => start(s.id, s.firstName)} disabled={busy === s.id} className="h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90">{busy === s.id ? <Loader2 className="size-3 animate-spin" /> : <Rocket className="size-3.5" />}Approve & Start</Button>}
+   290→                    </td>
+   291→                  </tr>
+   292→                );
+   293→              })}
+   294→            </tbody>
+   295→          </table>
+   296→        </div>
+   297→      )}
+   298→    </div>
+   299→  );
+   300→}
+   301→
+   302→// ── Applications tab (approval center) ──
+   303→function ApplicationsTab() {
+   304→  const { students, loading, load } = useStudents();
+   305→  const { toast } = useToast();
+   306→  const [busy, setBusy] = useState<string | null>(null);
+   307→  const pending = students.filter(s => s.paymentStatus !== "confirmed");
+   308→  const active = students.filter(s => s.paymentStatus === "confirmed" && s.internshipStatus === "in_progress");
+   309→  const completed = students.filter(s => s.internshipStatus === "completed");
+   310→  async function start(id: string, name: string) {
+   311→    setBusy(id); try { const res = await fetch("/api/admin/student/start", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) }); const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error); toast({ title: `Approved ${name}`, description: "Internship started." }); await load(); } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); } finally { setBusy(null); }
+   312→  }
+   313→  return (
+   314→    <div>
+   315→      <h3 className="font-bold text-lg mb-1">Application Approval Center</h3>
+   316→      <p className="text-xs text-muted-foreground mb-4">Review and approve pending applications.</p>
+   317→      {loading ? <Loading /> : (
+   318→        <div className="space-y-4">
+   319→          <AppGroup title="Pending Review" count={pending.length} accent="amber" students={pending} empty="No pending applications — all approved!" action={(s) => <Button size="sm" onClick={() => start(s.id, s.firstName)} disabled={busy === s.id} className="h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90">{busy === s.id ? <Loader2 className="size-3 animate-spin" /> : <CheckCircle2 className="size-3.5" />}Approve</Button>} />
+   320→          <AppGroup title="Approved / In Progress" count={active.length} accent="cyan" students={active} empty="No active interns." action={() => <span className="text-[10px] text-muted-foreground">Use Students tab → Advance</span>} />
+   321→          <AppGroup title="Completed" count={completed.length} accent="emerald" students={completed} empty="No completed interns yet." action={(s) => <GenCertButton studentId={s.id} name={s.firstName} small />} />
+   322→        </div>
+   323→      )}
+   324→    </div>
+   325→  );
+   326→}
+   327→
+   328→function AppGroup({ title, count, accent, students, empty, action }: { title: string; count: number; accent: "amber" | "cyan" | "emerald"; students: Student[]; empty: string; action: (s: Student) => React.ReactNode }) {
+   329→  const c = { amber: "text-amber-300 border-amber-500/30", cyan: "text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "text-emerald-300 border-emerald-500/30" }[accent];
+   330→  return (
+   331→    <div>
+   332→      <div className="flex items-center gap-2 mb-1.5"><span className={cn("text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border", c)}>{title}</span><span className="text-[10px] text-muted-foreground">{count}</span></div>
+   333→      {students.length === 0 ? <div className="text-[11px] text-muted-foreground py-2 px-3 border border-[rgba(6,182,212,0.1)] rounded-lg bg-muted/40">{empty}</div> : (
+   334→        <div className="border border-border rounded-lg max-h-48 overflow-y-auto">
+   335→          <table className="w-full text-sm"><tbody>
+   336→            {students.map(s => <tr key={s.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   337→              <td className="px-2 py-1.5"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.degree} · {s.college}</div></td>
+   338→              <td className="px-2 py-1.5 hidden sm:table-cell text-xs text-foreground max-w-[140px] truncate" title={s.project}>{s.project}</td>
+   339→              <td className="px-2 py-1.5 text-right whitespace-nowrap">{action(s)}</td>
+   340→            </tr>)}
+   341→          </tbody></table>
+   342→        </div>
+   343→      )}
+   344→    </div>
+   345→  );
+   346→}
+   347→
+   348→// ── Certificates tab (auto-generation + verify + download) ──
+   349→function CertificatesTab() {
+   350→  const { toast } = useToast();
+   351→  const [certs, setCerts] = useState<Cert[]>([]);
+   352→  const [loading, setLoading] = useState(true);
+   353→  const load = useCallback(async () => {
+   354→    setLoading(true); try { const res = await fetch("/api/admin/certificates", { cache: "no-store" }); const d = await res.json(); if (d.ok) setCerts(d.certificates); } catch {} finally { setLoading(false); }
+   355→  }, []);
+   356→  useEffect(() => { load(); }, [load]);
+   357→  return (
+   358→    <div>
+   359→      <h3 className="font-bold text-lg mb-1">Certificate Management</h3>
+   360→      <p className="text-xs text-muted-foreground mb-4">Auto-issue verifiable certificates for completed students. Eligibility: project completed (6/6 stages) + mentor approved.</p>
+   361→      {loading ? <Loading /> : certs.length === 0 ? <Empty text="No certificates issued yet. Go to Students tab → find a completed student → click Generate Certificate." /> : (
+   362→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   363→          <table className="w-full text-sm">
+   364→            <thead className="sticky top-0 bg-popover z-10"><tr className="text-left text-[10px] text-muted-foreground border-b border-border"><th className="px-3 py-2">Certificate #</th><th className="px-3 py-2">Student</th><th className="px-3 py-2 hidden md:table-cell">Project</th><th className="px-3 py-2 text-right">Verify / Download</th></tr></thead>
+   365→            <tbody>
+   366→              {certs.map(c => (
+   367→                <tr key={c.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   368→                  <td className="px-3 py-2"><div className="font-mono text-xs text-cyan-500 dark:text-cyan-400 font-semibold">{c.certificateNumber}</div><div className="text-[10px] text-muted-foreground">{new Date(c.issuedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}</div></td>
+   369→                  <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{c.student.firstName} {c.student.lastName}</div><div className="text-[10px] text-muted-foreground">{c.student.degree} · {c.student.college}</div></td>
+   370→                  <td className="px-3 py-2 hidden md:table-cell text-xs text-foreground max-w-[160px] truncate" title={c.student.project}>{c.student.project}</td>
+   371→                  <td className="px-3 py-2 text-right whitespace-nowrap">
+   372→                    <a href={`/api/certificate/${c.certificateNumber}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200 mr-2"><ExternalLink className="size-3" />Verify</a>
+   373→                  </td>
+   374→                </tr>
+   375→              ))}
+   376→            </tbody>
+   377→          </table>
+   378→        </div>
+   379→      )}
+   380→      <p className="text-[11px] text-muted-foreground mt-3"><Award className="size-3 inline text-cyan-400 mr-1" />Each certificate has a unique number (e.g. AP-2026-XXXXXX) — anyone can verify it at <code className="text-cyan-500 dark:text-cyan-400">/api/certificate/&lt;number&gt;</code>.</p>
+   381→    </div>
+   382→  );
+   383→}
+   384→
+   385→// Generate Certificate button (used in Students + Applications tabs for completed students)
+   386→function GenCertButton({ studentId, name, small }: { studentId: string; name: string; small?: boolean }) {
+   387→  const { toast } = useToast();
+   388→  const [busy, setBusy] = useState(false);
+   389→  const [cert, setCert] = useState<{ certificateNumber: string } | null>(null);
+   390→  async function gen() {
+   391→    setBusy(true); try {
+   392→      const res = await fetch("/api/admin/certificate/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId }) });
+   393→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   394→      setCert({ certificateNumber: d.certificate.certificateNumber });
+   395→      toast({ title: `Certificate issued for ${name}`, description: d.certificate.certificateNumber + (d.certificate.alreadyExisted ? " (already existed)" : "") });
+   396→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   397→    finally { setBusy(false); }
+   398→  }
+   399→  if (cert) return <a href={`/api/certificate/${cert.certificateNumber}`} target="_blank" rel="noopener noreferrer" className={cn("inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200", small && "h-7")}><ExternalLink className="size-3" />{cert.certificateNumber}</a>;
+   400→  return <Button size="sm" onClick={gen} disabled={busy} className="h-7 text-[11px] bg-gradient-to-r from-amber-500 to-cyan-500 text-primary-foreground hover:opacity-90">{busy ? <Loader2 className="size-3 animate-spin" /> : <Award className="size-3.5" />}Generate Cert</Button>;
+   401→}
+   402→
+   403→// ── Reports tab (embeds the existing /api/admin/registrations analytics summary) ──
+   404→function ReportsTab() {
+   405→  const { students, loading } = useStudents();
+   406→  if (loading) return <Loading />;
+   407→  const byDegree: Record<string, number> = {};
+   408→  const byCategory: Record<string, number> = {};
+   409→  const byCollege: Record<string, number> = {};
+   410→  students.forEach(s => { byDegree[s.degree] = (byDegree[s.degree] || 0) + 1; byCategory[s.categoryLabel] = (byCategory[s.categoryLabel] || 0) + 1; byCollege[s.college] = (byCollege[s.college] || 0) + 1; });
+   411→  const sorted = (o: Record<string, number>) => Object.entries(o).sort((a, b) => b[1] - a[1]);
+   412→  return (
+   413→    <div>
+   414→      <h3 className="font-bold text-lg mb-1">Reports</h3>
+   415→      <p className="text-xs text-muted-foreground mb-4">College-wise, branch-wise, technology-wise breakdowns.</p>
+   416→      <div className="grid md:grid-cols-3 gap-4">
+   417→        <ReportList title="By Degree" data={sorted(byDegree)} />
+   418→        <ReportList title="By Technology" data={sorted(byCategory)} />
+   419→        <ReportList title="By College" data={sorted(byCollege)} />
+   420→      </div>
+   421→    </div>
+   422→  );
+   423→}
+   424→function ReportList({ title, data }: { title: string; data: [string, number][] }) {
+   425→  const max = Math.max(1, ...data.map(d => d[1]));
+   426→  return (
+   427→    <div className="bg-card border border-border rounded-xl p-4">
+   428→      <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold mb-3">{title}</div>
+   429→      <div className="space-y-1.5 max-h-56 overflow-y-auto">
+   430→        {data.length === 0 ? <div className="text-xs text-muted-foreground">No data.</div> : data.map(([k, n]) => (
+   431→          <div key={k} className="text-xs"><div className="flex justify-between mb-0.5"><span className="text-foreground truncate pr-2">{k}</span><span className="text-cyan-500 dark:text-cyan-400 font-semibold tabular-nums">{n}</span></div><div className="h-1.5 bg-muted rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-cyan-500 to-blue-600" style={{ width: `${(n / max) * 100}%` }} /></div></div>
+   432→        ))}
+   433→      </div>
+   434→    </div>
+   435→  );
+   436→}
+   437→
+   438→// ── Mentor Management ──
+   439→function MentorsTab() {
+   440→  const { students, loading } = useStudents();
+   441→  if (loading) return <Loading />;
+   442→  return (
+   443→    <div>
+   444→      <h3 className="font-bold text-lg mb-1">Mentor Management</h3>
+   445→      <p className="text-xs text-muted-foreground mb-4">{MENTORS.length} mentors · student counts by domain · workload.</p>
+   446→      <div className="grid sm:grid-cols-2 gap-3">
+   447→        {MENTORS.map((m) => {
+   448→          const assigned = students.filter(s => s.categoryLabel && s.categoryLabel.toLowerCase().includes(m.role.split(" — ")[0]?.toLowerCase() || "zzz"));
+   449→          const active = assigned.filter(s => s.internshipStatus === "in_progress");
+   450→          const completed = assigned.filter(s => s.internshipStatus === "completed");
+   451→          return (
+   452→            <div key={m.initials} className="bg-card border border-border rounded-xl p-4">
+   453→              <div className="flex items-center gap-3 mb-3">
+   454→                <span className="size-10 rounded-full grid place-items-center text-primary-foreground font-bold text-sm" style={{ background: m.color }}>{m.initials}</span>
+   455→                <div><div className="font-semibold text-foreground text-sm">{m.name}</div><div className="text-[11px] text-cyan-500">{m.role}</div></div>
+   456→              </div>
+   457→              <div className="text-[11px] text-muted-foreground mb-2">{m.exp}</div>
+   458→              <div className="flex gap-3 text-xs">
+   459→                <span className="text-foreground">Assigned: <strong className="text-cyan-500">{assigned.length}</strong></span>
+   460→                <span className="text-foreground">Active: <strong className="text-cyan-500">{active.length}</strong></span>
+   461→                <span className="text-foreground">Done: <strong className="text-emerald-500">{completed.length}</strong></span>
+   462→              </div>
+   463→            </div>
+   464→          );
+   465→        })}
+   466→      </div>
+   467→    </div>
+   468→  );
+   469→}
+   470→
+   471→// ── Attendance ──
+   472→function AttendanceTab() {
+   473→  const { students, loading } = useStudents();
+   474→  const [attendance, setAttendance] = useState<Record<string, string>>({});
+   475→  if (loading) return <Loading />;
+   476→  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+   477→  function mark(id: string, status: string) { setAttendance(a => ({ ...a, [id]: status })); }
+   478→  const present = Object.values(attendance).filter(s => s === "present").length;
+   479→  const absent = Object.values(attendance).filter(s => s === "absent").length;
+   480→  return (
+   481→    <div>
+   482→      <h3 className="font-bold text-lg mb-1">Attendance Management</h3>
+   483→      <p className="text-xs text-muted-foreground mb-4">Daily tracking — {new Date().toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</p>
+   484→      <div className="flex gap-3 mb-3 text-xs">
+   485→        <span className="px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">Present: {present}</span>
+   486→        <span className="px-2 py-1 rounded-full bg-rose-500/15 text-rose-500 border border-rose-500/30">Absent: {absent}</span>
+   487→      </div>
+   488→      {activeStudents.length === 0 ? <Empty text="No active students to track." /> : (
+   489→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   490→          <table className="w-full text-sm"><tbody>
+   491→            {activeStudents.map(s => (
+   492→              <tr key={s.id} className="border-b border-border/50 last:border-0">
+   493→                <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">Stage {s.currentStage}/6</div></td>
+   494→                <td className="px-3 py-2 text-right whitespace-nowrap">
+   495→                  {["present", "absent", "leave", "late"].map(st => (
+   496→                    <button key={st} onClick={() => mark(s.id, st)} className={cn("ml-1 text-[10px] px-2 py-0.5 rounded-full border capitalize transition-colors",
+   497→                      attendance[s.id] === st ? (st === "present" ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40" : st === "absent" ? "bg-rose-500/20 text-rose-500 border-rose-500/40" : st === "leave" ? "bg-amber-500/20 text-amber-500 border-amber-500/40" : "bg-blue-500/20 text-blue-500 border-blue-500/40")
+   498→                      : "bg-muted/50 text-muted-foreground border-border hover:text-foreground")}>{st}</button>
+   499→                  ))}
+   500→                </td>
+   501→              </tr>
+   502→            ))}
+   503→          </tbody></table>
+   504→        </div>
+   505→      )}
+   506→    </div>
+   507→  );
+   508→}
+   509→
+   510→// ── Projects ──
+   511→function ProjectsTab() {
+   512→  const { students, loading } = useStudents();
+   513→  if (loading) return <Loading />;
+   514→  const totalProjects = CATEGORIES.reduce((sum, c) => sum + c.projects.length, 0);
+   515→  return (
+   516→    <div>
+   517→      <h3 className="font-bold text-lg mb-1">Project Management</h3>
+   518→      <p className="text-xs text-muted-foreground mb-4">{totalProjects} projects across {CATEGORIES.length} domains · {students.length} student assignments.</p>
+   519→      <div className="space-y-3 max-h-[65vh] overflow-y-auto">
+   520→        {CATEGORIES.map(cat => {
+   521→          const assigned = students.filter(s => s.category === cat.key);
+   522→          return (
+   523→            <div key={cat.key} className="bg-card border border-border rounded-xl p-3">
+   524→              <div className="flex items-center justify-between mb-2">
+   525→                <div className="flex items-center gap-2"><span className="text-lg">{cat.icon}</span><span className="font-semibold text-foreground text-sm">{cat.label}</span></div>
+   526→                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-500 border border-cyan-500/30">{cat.projects.length} templates · {assigned.length} assigned</span>
+   527→              </div>
+   528→              {assigned.length > 0 ? (
+   529→                <div className="flex flex-wrap gap-1.5">{assigned.map(s => <span key={s.id} className="text-[10px] px-2 py-0.5 rounded-md bg-muted/50 border border-border text-muted-foreground">{s.firstName} {s.lastName[0]}.</span>)}</div>
+   530→              ) : <div className="text-[10px] text-muted-foreground">No students assigned yet.</div>}
+   531→              <details className="mt-2"><summary className="text-[10px] text-cyan-500 cursor-pointer">View {cat.projects.length} projects</summary><ul className="mt-1 space-y-0.5">{cat.projects.slice(0, 5).map(p => <li key={p.id} className="text-[10px] text-muted-foreground">#{p.id} {p.name} <span className="text-muted-foreground">({p.tags})</span></li>)}{cat.projects.length > 5 && <li className="text-[10px] text-muted-foreground">… +{cat.projects.length - 5} more</li>}</ul></details>
+   532→            </div>
+   533→          );
+   534→        })}
+   535→      </div>
+   536→    </div>
+   537→  );
+   538→}
+   539→
+   540→// ── AI Analytics ──
+   541→function AIAnalyticsTab() {
+   542→  const { toast } = useToast();
+   543→  const [insights, setInsights] = useState("");
+   544→  const [loadingAI, setLoadingAI] = useState(false);
+   545→  async function generate() {
+   546→    setLoadingAI(true); setInsights("");
+   547→    try {
+   548→      const res = await fetch("/api/admin/ai-analytics", { method: "POST" });
+   549→      const data = await res.json();
+   550→      if (!res.ok || !data.ok) throw new Error(data.error);
+   551→      setInsights(data.insights);
+   552→      toast({ title: "AI insights generated" });
+   553→    } catch (e) { toast({ title: "AI analytics failed", description: (e as Error).message, variant: "destructive" }); }
+   554→    finally { setLoadingAI(false); }
+   555→  }
+   556→  return (
+   557→    <div>
+   558→      <h3 className="font-bold text-lg mb-1">AI Analytics Dashboard</h3>
+   559→      <p className="text-xs text-muted-foreground mb-4">ML-powered insights: dropout risk, performance forecast, certificate eligibility.</p>
+   560→      <Button onClick={generate} disabled={loadingAI} className="mb-4 bg-gradient-to-r from-violet-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-9">
+   561→        {loadingAI ? <><Loader2 className="size-4 animate-spin mr-2" />Analyzing…</> : <><Brain className="size-4 mr-2" />Generate AI Insights</>}
+   562→      </Button>
+   563→      {insights ? (
+   564→        <div className="prose prose-sm max-w-none bg-muted/30 border border-border rounded-lg p-4 prose-h2:text-cyan-500 prose-h2:text-sm prose-strong:text-foreground prose-ul:my-2 prose-li:my-0.5 prose-p:my-1.5">
+   565→          <ReactMarkdown>{insights}</ReactMarkdown>
+   566→        </div>
+   567→      ) : !loadingAI && <p className="text-xs text-muted-foreground">Click "Generate AI Insights" to analyze student lifecycle data.</p>}
+   568→    </div>
+   569→  );
+   570→}
+   571→
+   572→// ── Notifications ──
+   573→function NotificationsTab() {
+   574→  const { students, loading } = useStudents();
+   575→  const [selected, setSelected] = useState("");
+   576→  const [message, setMessage] = useState("");
+   577→  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+   578→  const student = students.find(s => s.id === selected);
+   579→  function sendWhatsApp() {
+   580→    if (!student || !message.trim()) return;
+   581→    window.open(`https://wa.me/${student.mobile.replace(/[\s+]/g, "").replace(/^91/, "91")}?text=${encodeURIComponent(`*AgileProjection NT-AI*\n\nHi ${student.firstName},\n\n${message}`)}`, "_blank");
+   582→  }
+   583→  function sendEmail() {
+   584→    if (!student || !message.trim()) return;
+   585→    window.open(`mailto:${student.email}?subject=${encodeURIComponent("AgileProjection — Notification")}&body=${encodeURIComponent(message)}`, "_blank");
+   586→  }
+   587→  return (
+   588→    <div>
+   589→      <h3 className="font-bold text-lg mb-1">Notification Center</h3>
+   590→      <p className="text-xs text-muted-foreground mb-4">Send WhatsApp / email notifications to students.</p>
+   591→      {loading ? <Loading /> : activeStudents.length === 0 ? <Empty text="No approved students to notify." /> : (
+   592→        <div className="space-y-3">
+   593→          <div><Label className="text-xs">Select Student</Label><select value={selected} onChange={e => setSelected(e.target.value)} className="w-full mt-1 bg-muted/50 border border-border rounded-md h-9 px-2 text-sm text-foreground"><option value="">— Select —</option>{activeStudents.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.email})</option>)}</select></div>
+   594→          <div><Label className="text-xs">Message</Label><textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} placeholder="e.g. Your batch starts tomorrow at 6 PM IST." className="w-full mt-1 bg-muted/50 border border-border rounded-md p-2 text-sm text-foreground resize-none" /></div>
+   595→          <div className="flex gap-2">
+   596→            <Button onClick={sendWhatsApp} disabled={!student || !message.trim()} className="bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-9"><MessageCircle className="size-4 mr-2" />Send WhatsApp</Button>
+   597→            <Button onClick={sendEmail} disabled={!student || !message.trim()} variant="outline" className="bg-muted/50 border-border text-foreground hover:text-cyan-500 h-9"><Mail className="size-4 mr-2" />Send Email</Button>
+   598→          </div>
+   599→        </div>
+   600→      )}
+   601→      <div className="mt-4 rounded-lg border border-border bg-card p-3">
+   602→        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Quick Templates</div>
+   603→        <div className="flex flex-wrap gap-1.5">{["Batch starts tomorrow at 6 PM IST","Your assignment is due in 2 days","Attendance warning: below 75%","Your certificate is ready!","Project submission deadline extended"].map(t => <button key={t} onClick={() => setMessage(t)} className="text-[10px] px-2 py-1 rounded-md bg-muted/50 border border-border text-muted-foreground hover:text-cyan-500 hover:border-cyan-500/30">{t}</button>)}</div>
+   604→      </div>
+   605→    </div>
+   606→  );
+   607→}
+   608→
+   609→// ── Settings ──
+   610→function SettingsTab() {
+   611→  const lists = [
+   612→    { label: "Degrees", items: DEGREES }, { label: "Branches", items: BRANCHES },
+   613→    { label: "Plans", items: PLANS }, { label: "States", items: STATES },
+   614→    { label: "Sources", items: SOURCES }, { label: "Internship Tracks", items: PROGRAMS.map(p => p.title) },
+   615→    { label: "AI/ML Domains", items: CATEGORIES.map(c => c.label) }, { label: "Mentors", items: MENTORS.map(m => m.name) },
+   616→  ];
+   617→  return (
+   618→    <div>
+   619→      <h3 className="font-bold text-lg mb-1">Settings</h3>
+   620→      <p className="text-xs text-muted-foreground mb-4">Configurable lists · roles · permissions.</p>
+   621→      <div className="grid sm:grid-cols-2 gap-3 mb-4">
+   622→        {lists.map(l => (
+   623→          <div key={l.label} className="bg-card border border-border rounded-xl p-3">
+   624→            <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">{l.label} ({l.items.length})</div>
+   625→            <div className="flex flex-wrap gap-1">{l.items.map(i => <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-muted-foreground">{i}</span>)}</div>
+   626→          </div>
+   627→        ))}
+   628→      </div>
+   629→      <div className="bg-card border border-border rounded-xl p-4">
+   630→        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Roles & Permissions</div>
+   631→        <table className="w-full text-xs"><thead><tr className="text-left text-muted-foreground border-b border-border"><th className="py-1.5">Role</th><th>Access</th></tr></thead><tbody>
+   632→          {[{r:"Super Admin",a:"Full access — all modules + settings + roles"},{r:"Admin",a:"Students, Applications, Payments, Certificates, Reports, Notifications"},{r:"Mentor",a:"Assigned students, attendance, project reviews"},{r:"College Coordinator",a:"College-wise student reports"},{r:"Student",a:"Dashboard, track project, AI mentor, certificates"}].map(x => <tr key={x.r} className="border-b border-border/50 last:border-0"><td className="py-1.5 font-semibold text-foreground">{x.r}</td><td className="text-muted-foreground">{x.a}</td></tr>)}
+   633→        </tbody></table>
+   634→      </div>
+   635→    </div>
+   636→  );
+   637→}
+   638→
+   639→// ── Payments ──
+   640→function PaymentsTab() {
+   641→  const { students, loading } = useStudents();
+   642→  if (loading) return <Loading />;
+   643→  const pending = students.filter(s => s.paymentStatus !== "confirmed");
+   644→  const confirmed = students.filter(s => s.paymentStatus === "confirmed");
+   645→  return (
+   646→    <div>
+   647→      <h3 className="font-bold text-lg mb-1">Payment Management</h3>
+   648→      <p className="text-xs text-muted-foreground mb-4">Track payment status · refunds · revenue.</p>
+   649→      <div className="grid grid-cols-3 gap-3 mb-4">
+   650→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-amber-500">{pending.length}</div><div className="text-[10px] text-muted-foreground">Pending</div></div>
+   651→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-emerald-500">{confirmed.length}</div><div className="text-[10px] text-muted-foreground">Completed</div></div>
+   652→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-cyan-500">₹{confirmed.length * 2499}</div><div className="text-[10px] text-muted-foreground">Est. Revenue</div></div>
+   653→      </div>
+   654→      <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+   655→        {students.slice(0, 20).map(s => (
+   656→          <div key={s.id} className="flex items-center justify-between bg-card border border-border rounded-lg p-2">
+   657→            <div><div className="text-xs font-medium text-foreground">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.plan}</div></div>
+   658→            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "✅ Paid" : "⏳ Pending"}</span>
+   659→          </div>
+   660→        ))}
+   661→      </div>
+   662→    </div>
+   663→  );
+   664→}
+   665→
+   666→// ── Internships ──
+   667→function InternshipsTab() {
+   668→  return (
+   669→    <div>
+   670→      <h3 className="font-bold text-lg mb-1">Internship Management</h3>
+   671→      <p className="text-xs text-muted-foreground mb-4">{PROGRAMS.length} active tracks + AI/ML industry internship.</p>
+   672→      <div className="grid sm:grid-cols-2 gap-3">
+   673→        {PROGRAMS.map(p => (
+   674→          <div key={p.id} className="bg-card border border-border rounded-xl p-4">
+   675→            <div className="flex items-center gap-2 mb-2"><span className="text-2xl">{p.icon}</span><div><div className="font-semibold text-foreground text-sm">{p.title}</div><div className="text-[10px] text-muted-foreground">{p.badge}</div></div></div>
+   676→            <p className="text-[11px] text-muted-foreground mb-2">{p.desc.slice(0, 100)}…</p>
+   677→            <div className="flex flex-wrap gap-1 mb-2">{p.tags.slice(0, 3).map(t => <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-muted-foreground">{t}</span>)}</div>
+   678→            <div className="flex gap-3 text-[10px] text-muted-foreground">{p.meta.map((m, i) => <span key={i}>{m.strong} {m.label}</span>)}</div>
+   679→          </div>
+   680→        ))}
+   681→        <div className="bg-card border border-border rounded-xl p-4">
+   682→          <div className="flex items-center gap-2 mb-2"><span className="text-2xl">🚀</span><div><div className="font-semibold text-foreground text-sm">AI/ML Industry Internship</div><div className="text-[10px] text-muted-foreground">6 Weeks · 80+ Projects</div></div></div>
+   683→          <p className="text-[11px] text-muted-foreground mb-2">End-to-end ML pipeline: {AIML_CURRICULUM.map(c => c.title.split(" ")[0]).join(" → ")}</p>
+   684→          <div className="text-[10px] text-muted-foreground">6 stages · LLM-generated training per week</div>
+   685→        </div>
+   686→      </div>
+   687→    </div>
+   688→  );
+   689→}
+   690→
+   691→// ── Stub (fallback) ──
+   692→function StubTab({ tab }: { tab: MenuKey }) {
+   693→  const labels: Record<string, { title: string; desc: string; features: string[] }> = {
+   694→    payments: { title: "Payment Management", desc: "For future paid programs — track payments, refunds, invoices, GST reports.", features: ["Payment Pending / Completed", "Refund Requests", "Invoice Download", "Revenue + GST Reports"] },
+   695→    internships: { title: "Internship Management", desc: "Create and configure internship tracks.", features: ["Create Internship (title, duration, mentor, technology, max students, dates)", "AI/ML · Full Stack · IoT · Embedded · Campus Ambassador"] },
+   696→    mentors: { title: "Mentor Management", desc: "Add mentors, assign students/batches, track performance + workload.", features: ["Add Mentor", "Assign Students + Batches", "Performance Tracking", "Workload Monitoring"] },
+   697→    projects: { title: "Project Management", desc: "Project library, templates, assignments, submission + evaluation.", features: ["Project Library (84+ templates)", "Assignments", "Submission", "Evaluation (Assigned → Reviewed → Approved)"] },
+   698→    attendance: { title: "Attendance Management", desc: "Daily tracking — Present / Absent / Leave / Late + analytics.", features: ["Daily Tracking", "Attendance %", "Batch-wise + College-wise analytics", "Daily Progress Monitoring"] },
+   699→    ai: { title: "AI Analytics Dashboard", desc: "ML-powered insights on student outcomes.", features: ["Dropout Prediction", "Student Risk Score", "Performance Prediction", "Attendance Trends", "Certificate Eligibility Forecast", "AI Mentor Analytics (most-asked questions, learning gaps)"] },
+   700→    notifications: { title: "Notification Center", desc: "Send notifications across channels.", features: ["Email", "SMS", "WhatsApp", "Portal Notifications", "Templates: Batch Started / Assignment Due / Attendance Warning / Certificate Available"] },
+   701→    settings: { title: "Settings (Super Admin)", desc: "Manage colleges, courses, technologies, mentors, roles, permissions.", features: ["Manage Colleges / Courses / Technologies / Mentors", "Roles: Super Admin · Admin · Mentor · College Coordinator · Student", "Permissions"] },
+   702→  };
+   703→  const info = labels[tab] || { title: String(tab), desc: "", features: [] };
+   704→  return (
+   705→    <div>
+   706→      <h3 className="font-bold text-lg mb-1">{info.title}</h3>
+   707→      <p className="text-xs text-muted-foreground mb-4">{info.desc}</p>
+   708→      <div className="rounded-xl border border-dashed border-border bg-card/50 p-6 text-center">
+   709→        <div className="size-12 rounded-xl bg-secondary border border-border grid place-items-center text-cyan-400 mx-auto mb-3"><Brain className="size-6" /></div>
+   710→        <div className="font-semibold text-foreground text-sm">Part of the NT-AI enterprise admin suite</div>
+   711→        <p className="text-xs text-muted-foreground mt-1 max-w-md mx-auto">This module is scaffolded in the sidebar. Planned features:</p>
+   712→        <ul className="text-xs text-muted-foreground mt-3 max-w-md mx-auto space-y-1 text-left">
+   713→          {info.features.map(f => <li key={f} className="flex items-start gap-1.5"><CheckCircle2 className="size-3 text-cyan-400 mt-0.5 shrink-0" />{f}</li>)}
+   714→        </ul>
+   715→      </div>
+   716→    </div>
+   717→  );
+   718→}
+   719→
+   720→function Loading() { return <div className="py-10 text-center text-sm text-muted-foreground"><Loader2 className="size-5 animate-spin mx-auto mb-2" /> Loading…</div>; }
+   721→function Empty({ text }: { text: string }) { return <div className="py-8 text-center text-sm text-muted-foreground border border-dashed border-border rounded-lg">{text}</div>; }
+   722→function Badge({ color, icon, children }: { color: "amber" | "cyan" | "emerald"; icon: React.ReactNode; children: React.ReactNode }) {
+   723→  const c = { amber: "bg-amber-500/15 text-amber-300 border-amber-500/30", cyan: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" }[color];
+   724→  return <span className={cn("inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full border", c)}>{icon}{children}</span>;
+   725→}
+   726→

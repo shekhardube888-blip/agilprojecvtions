@@ -239,12 +239,12 @@ export function RegisterForm() {
         <h2 id="register-h2" className="font-bold text-3xl md:text-4xl">
           Register for your <span className="ap-gradient-text">free internship</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Pick a track, choose a project, enter your details, and confirm. No fee, no documents, no friction — your seat is reserved the moment you submit.
         </p>
       </div>
 
-      <div className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.22)] rounded-2xl p-5 md:p-8">
+      <div className="bg-popover border border-border rounded-2xl p-5 md:p-8">
         {result ? (
           <SuccessPanel result={result} onReset={resetAll} />
         ) : (
@@ -272,15 +272,15 @@ export function RegisterForm() {
                         className={cn(
                           "ap-lift text-left p-4 rounded-xl border transition-all relative",
                           active
-                            ? "border-cyan-400 bg-[#0F2340] ring-2 ring-cyan-500/40"
-                            : "border-[rgba(6,182,212,0.18)] bg-[#111f35] hover:border-cyan-500/40"
+                            ? "border-cyan-400 bg-secondary ring-2 ring-cyan-500/40"
+                            : "border-border bg-card hover:border-cyan-500/40"
                         )}
                       >
                         <div className="text-2xl mb-2" aria-hidden>{c.icon}</div>
                         <div className="text-sm font-semibold text-foreground leading-tight">
                           {c.label}
                         </div>
-                        <div className="text-[11px] text-slate-500 mt-1">{c.sub}</div>
+                        <div className="text-[11px] text-muted-foreground mt-1">{c.sub}</div>
                         {active && (
                           <span className="absolute top-3 right-3 size-5 rounded-full ap-gradient-cyan grid place-items-center text-navy">
                             <Check className="size-3.5" />
@@ -307,19 +307,19 @@ export function RegisterForm() {
                   desc={`${category.projects.length} projects available. Search by name or tag, then select one to continue.`}
                 />
                 <div className="relative mt-4 mb-4">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                   <Input
                     placeholder="Search projects by name or tag (e.g. RAG, YOLO, churn, ESP32…)"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-9 bg-[#0a1422] border-[rgba(6,182,212,0.18)]"
+                    className="pl-9 bg-muted border-border"
                     aria-label="Search projects"
                   />
                 </div>
 
                 <div className="max-h-96 overflow-y-auto pr-1 grid gap-2">
                   {filteredProjects.length === 0 && (
-                    <div className="text-center text-slate-500 text-sm py-6">
+                    <div className="text-center text-muted-foreground text-sm py-6">
                       No projects match &ldquo;{search}&rdquo;. Try a different keyword.
                     </div>
                   )}
@@ -334,18 +334,18 @@ export function RegisterForm() {
                         className={cn(
                           "text-left p-3 rounded-lg border transition-all flex items-start gap-3",
                           active
-                            ? "border-cyan-400 bg-[#0F2340] ring-2 ring-cyan-500/40"
-                            : "border-[rgba(6,182,212,0.18)] bg-[#111f35] hover:border-cyan-500/40"
+                            ? "border-cyan-400 bg-secondary ring-2 ring-cyan-500/40"
+                            : "border-border bg-card hover:border-cyan-500/40"
                         )}
                       >
-                        <span className="size-6 shrink-0 rounded-md bg-[#0a1422] border border-[rgba(6,182,212,0.18)] grid place-items-center text-[10px] font-bold text-slate-400 mt-0.5">
+                        <span className="size-6 shrink-0 rounded-md bg-muted border border-border grid place-items-center text-[10px] font-bold text-muted-foreground mt-0.5">
                           {p.id}
                         </span>
                         <span className="flex-1">
                           <span className="block text-sm font-medium text-foreground">
                             {p.name}
                           </span>
-                          <span className="block text-[11px] text-slate-500 mt-0.5">
+                          <span className="block text-[11px] text-muted-foreground mt-0.5">
                             {p.tags}
                           </span>
                           {active && (
@@ -360,7 +360,7 @@ export function RegisterForm() {
                 </div>
 
                 {project && (
-                  <div className="mt-4 p-3 rounded-lg border border-cyan-500/30 bg-[#0F2340] text-sm text-cyan-200 flex items-center gap-2">
+                  <div className="mt-4 p-3 rounded-lg border border-cyan-500/30 bg-secondary text-sm text-cyan-200 flex items-center gap-2">
                     <Check className="size-4" /> Selected project:{" "}
                     <strong className="font-semibold">{project.name}</strong>
                   </div>
@@ -530,8 +530,8 @@ export function RegisterForm() {
                 </div>
 
                 {form.notes && (
-                  <div className="mt-4 p-3 rounded-lg bg-[#0a1422] border border-[rgba(6,182,212,0.12)] text-sm text-slate-300">
-                    <span className="text-slate-500 text-xs mr-2">Notes:</span>
+                  <div className="mt-4 p-3 rounded-lg bg-muted border border-border text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-xs mr-2">Notes:</span>
                     {form.notes}
                   </div>
                 )}
@@ -551,7 +551,7 @@ export function RegisterForm() {
                   />
                 </div>
 
-                <div className="mt-6 p-3 rounded-lg border border-cyan-500/20 bg-[#0F2340]/50 flex items-start gap-2 text-xs text-slate-400">
+                <div className="mt-6 p-3 rounded-lg border border-cyan-500/20 bg-secondary/50 flex items-start gap-2 text-xs text-muted-foreground">
                   <ShieldCheck className="size-4 text-cyan-400 mt-0.5 shrink-0" />
                   <span>
                     Your data is stored securely and used only for internship communication. We never sell or share your details with third parties. By submitting you agree to AgileProjection&apos;s privacy policy.
@@ -578,20 +578,20 @@ export function RegisterForm() {
                     type="button"
                     variant="ghost"
                     onClick={() => back()}
-                    className="text-slate-300 hover:text-cyan-300"
+                    className="text-muted-foreground hover:text-cyan-300"
                   >
                     <ArrowLeft className="size-4" /> Back
                   </Button>
                 </div>
 
                 {/* Online payment section */}
-                <div className="mt-8 border-t border-[rgba(6,182,212,0.12)] pt-5">
+                <div className="mt-8 border-t border-border pt-5">
                   <div className="flex items-center gap-2 mb-1">
                     <CreditCard className="size-4 text-cyan-400" />
                     <span className="text-sm font-semibold text-foreground">Pay Online (Optional)</span>
                     <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Test Mode</span>
                   </div>
-                  <p className="text-xs text-slate-500 mb-4">Pay your plan fee via UPI, Card, Net Banking, or International Card. The internship starts after the admin confirms your payment.</p>
+                  <p className="text-xs text-muted-foreground mb-4">Pay your plan fee via UPI, Card, Net Banking, or International Card. The internship starts after the admin confirms your payment.</p>
                   <PaymentPage
                     planName={form.plan.split(" — ")[0]?.trim() || "Standard"}
                     studentName={`${form.firstName} ${form.lastName}`.trim()}
@@ -606,7 +606,7 @@ export function RegisterForm() {
         )}
       </div>
 
-      <p className="text-center text-xs text-slate-500 mt-4">
+      <p className="text-center text-xs text-muted-foreground mt-4">
         Need help choosing? Ask{" "}
         <Link href="#ai-assistant" className="text-cyan-300 underline underline-offset-4">
           AP-AI Mentor
@@ -639,7 +639,7 @@ function StepIndicator({ current }: { current: number }) {
                     ? "ap-gradient-cyan text-navy ring-2 ring-cyan-500/40"
                     : done
                     ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
-                    : "bg-[#0F2340] text-slate-500 border border-[rgba(6,182,212,0.18)]"
+                    : "bg-secondary text-muted-foreground border border-border"
                 )}
               >
                 {done ? <Check className="size-4" /> : s.n}
@@ -647,7 +647,7 @@ function StepIndicator({ current }: { current: number }) {
               <span
                 className={cn(
                   "text-xs hidden sm:block",
-                  active ? "text-cyan-300 font-semibold" : "text-slate-500"
+                  active ? "text-cyan-300 font-semibold" : "text-muted-foreground"
                 )}
               >
                 {s.label}
@@ -686,7 +686,7 @@ function StepHeader({
         className="text-xl md:text-2xl font-bold text-foreground"
         dangerouslySetInnerHTML={{ __html: title }}
       />
-      <p className="text-sm text-slate-400 mt-2 max-w-3xl">{desc}</p>
+      <p className="text-sm text-muted-foreground mt-2 max-w-3xl">{desc}</p>
     </div>
   );
 }
@@ -712,7 +712,7 @@ function WizardNav({
         {nextLabel} <ArrowRight className="size-4" />
       </Button>
       {back && (
-        <Button type="button" variant="ghost" onClick={back} className="text-slate-300 hover:text-cyan-300">
+        <Button type="button" variant="ghost" onClick={back} className="text-muted-foreground hover:text-cyan-300">
           <ArrowLeft className="size-4" /> Back
         </Button>
       )}
@@ -735,7 +735,7 @@ function Field({
 }) {
   return (
     <div className={cn("flex flex-col gap-1.5", full && "md:col-span-2")}>
-      <Label className="text-xs text-slate-300 flex items-center gap-1">
+      <Label className="text-xs text-muted-foreground flex items-center gap-1">
         {label}
         {required && <span className="text-cyan-400">*</span>}
       </Label>
@@ -760,10 +760,10 @@ function SelectField({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="bg-[#0a1422] border-[rgba(6,182,212,0.18)] w-full">
+      <SelectTrigger className="bg-muted border-border w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
-      <SelectContent className="bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] max-h-72 overflow-y-auto">
+      <SelectContent className="bg-popover border-border max-h-72 overflow-y-auto">
         {allowEmpty && (
           <SelectItem value="__none__">— None —</SelectItem>
         )}
@@ -787,7 +787,7 @@ function SummaryCard({
   rows: [string, string][];
 }) {
   return (
-    <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+    <div className="bg-card border border-border rounded-xl p-5">
       <div className="flex items-center gap-2 mb-3">
         <span className="size-7 rounded-md bg-cyan-500/15 text-cyan-300 grid place-items-center">
           {icon}
@@ -798,10 +798,10 @@ function SummaryCard({
         {rows.map(([k, v]) => (
           <div
             key={k}
-            className="flex items-start justify-between gap-3 py-1 border-b border-[rgba(6,182,212,0.08)] last:border-b-0"
+            className="flex items-start justify-between gap-3 py-1 border-b border-border last:border-b-0"
           >
-            <dt className="text-xs text-slate-500 uppercase tracking-wide shrink-0">{k}</dt>
-            <dd className="text-right text-slate-200 break-words">{v || "—"}</dd>
+            <dt className="text-xs text-muted-foreground uppercase tracking-wide shrink-0">{k}</dt>
+            <dd className="text-right text-foreground break-words">{v || "—"}</dd>
           </div>
         ))}
       </dl>
@@ -821,11 +821,11 @@ function ConsentRow({
   desc: string;
 }) {
   return (
-    <label className="flex items-start gap-3 p-3 rounded-lg bg-[#0a1422] border border-[rgba(6,182,212,0.12)] cursor-pointer hover:border-cyan-500/30">
+    <label className="flex items-start gap-3 p-3 rounded-lg bg-muted border border-border cursor-pointer hover:border-cyan-500/30">
       <Checkbox checked={checked} onCheckedChange={(v) => onChange(!!v)} className="mt-0.5" />
       <span className="flex-1">
         <span className="block text-sm font-medium text-foreground">{title}</span>
-        <span className="block text-xs text-slate-500 mt-0.5">{desc}</span>
+        <span className="block text-xs text-muted-foreground mt-0.5">{desc}</span>
       </span>
     </label>
   );
@@ -846,8 +846,8 @@ function SuccessPanel({
       <h3 className="text-2xl md:text-3xl font-bold text-foreground">
         🎉 Enrolment Submitted!
       </h3>
-      <p className="text-sm text-slate-400 max-w-xl mx-auto mt-3">
-        Welcome aboard, <strong className="text-slate-200">{result.student.name}</strong>! Your registration for{" "}
+      <p className="text-sm text-muted-foreground max-w-xl mx-auto mt-3">
+        Welcome aboard, <strong className="text-foreground">{result.student.name}</strong>! Your registration for{" "}
         <strong className="text-cyan-300">{result.student.project}</strong>{" "}
         ({result.student.categoryLabel}) has been logged. Use the buttons below to instantly confirm with
         Shekhar&apos;s team on WhatsApp or email — they&apos;ll reach out within 24 hours.
@@ -870,7 +870,7 @@ function SuccessPanel({
         </a>
       </div>
 
-      <p className="mt-6 text-xs text-slate-500 max-w-xl mx-auto">
+      <p className="mt-6 text-xs text-muted-foreground max-w-xl mx-auto">
         We&apos;ve also logged your registration for our team. Shekhar&apos;s team will reach out within 24 hours.
       </p>
 

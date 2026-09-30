@@ -84,6 +84,44 @@ export function Reports() {
   const [exporting, setExporting] = useState(false);
   const { toast } = useToast();
 
+  // Theme-aware Recharts tooltip styles — re-read CSS variables when the .dark class toggles.
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({
+    background: "#0e1b2e",
+    border: "1px solid rgba(6,182,212,0.25)",
+    borderRadius: 10,
+    color: "#F8FAFC",
+    fontSize: 12,
+  });
+  const [labelStyle, setLabelStyle] = useState<{ color: string }>({ color: "#67E8F9" });
+  const [tickFill, setTickFill] = useState("#94a3b8");
+  const [axisStroke, setAxisStroke] = useState("rgba(6,182,212,0.18)");
+
+  useEffect(() => {
+    const readVars = () => {
+      const cs = getComputedStyle(document.documentElement);
+      const get = (name: string, fallback: string) => (cs.getPropertyValue(name).trim() || fallback);
+      const popover = get("--popover", "#0e1b2e");
+      const borderRaw = get("--border", "rgba(6,182,212,0.25)");
+      const fg = get("--foreground", "#F8FAFC");
+      const accent = get("--accent-foreground", "#67E8F9");
+      const muted = get("--muted-foreground", "#94a3b8");
+      setTooltipStyle({
+        background: popover,
+        border: `1px solid ${borderRaw}`,
+        borderRadius: 10,
+        color: fg,
+        fontSize: 12,
+      });
+      setLabelStyle({ color: accent });
+      setTickFill(muted);
+      setAxisStroke(borderRaw);
+    };
+    readVars();
+    const obs = new MutationObserver(readVars);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+
   const load = useCallback(async (filter: SinceFilter) => {
     setLoading(true);
     setError(null);
@@ -157,7 +195,7 @@ export function Reports() {
         <h2 id="reports-h2" className="font-bold text-3xl md:text-4xl">
           Registration <span className="ap-gradient-text">Reports & Analytics</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Live counts of students registered for AgileProjection internships — broken down by degree
           (BE / B.Tech / MCA / M.Tech) and by AI/ML project domain. Data refreshes from the database in real time.
         </p>
@@ -179,7 +217,7 @@ export function Reports() {
                     "inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors",
                     active
                       ? "bg-cyan-500/15 border-cyan-500/40 text-cyan-300"
-                      : "bg-[#0e1b2e] border-[rgba(6,182,212,0.18)] text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40"
+                      : "bg-popover border-border text-muted-foreground hover:text-cyan-300 hover:border-cyan-500/40"
                   )}
                   aria-pressed={active}
                 >
@@ -187,7 +225,7 @@ export function Reports() {
                   {count !== undefined && count !== null && (
                     <span className={cn(
                       "text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-                      active ? "bg-cyan-500/25 text-cyan-200" : "bg-[#0F2340] text-slate-400"
+                      active ? "bg-cyan-500/25 text-cyan-200" : "bg-secondary text-muted-foreground"
                     )}>
                       {count}
                     </span>
@@ -202,7 +240,7 @@ export function Reports() {
               size="sm"
               onClick={() => load(since)}
               disabled={loading}
-              className="bg-[#0e1b2e] border-[rgba(6,182,212,0.22)] text-slate-200 hover:text-cyan-300 hover:border-cyan-500/40"
+              className="bg-popover border-border text-foreground hover:text-cyan-300 hover:border-cyan-500/40"
             >
               {loading ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
               Refresh
@@ -219,7 +257,7 @@ export function Reports() {
             </Button>
           </div>
         </div>
-        <p className="text-xs text-slate-500 inline-flex items-center gap-1.5">
+        <p className="text-xs text-muted-foreground inline-flex items-center gap-1.5">
           <Clock className="size-3.5" />
           {data
             ? `Showing ${data.recent.length} registration${data.recent.length === 1 ? "" : "s"} ${
@@ -269,7 +307,7 @@ export function Reports() {
 
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
                   <GraduationCap className="size-4 text-cyan-400" />
@@ -295,20 +333,14 @@ export function Reports() {
                       />
                       <YAxis
                         allowDecimals={false}
-                        tick={{ fill: "#94a3b8", fontSize: 11 }}
+                        tick={{ fill: tickFill, fontSize: 11 }}
                         tickLine={false}
-                        axisLine={{ stroke: "rgba(6,182,212,0.18)" }}
+                        axisLine={{ stroke: axisStroke }}
                       />
                       <Tooltip
                         cursor={{ fill: "rgba(6,182,212,0.06)" }}
-                        contentStyle={{
-                          background: "#0e1b2e",
-                          border: "1px solid rgba(6,182,212,0.25)",
-                          borderRadius: 10,
-                          color: "#F8FAFC",
-                          fontSize: 12,
-                        }}
-                        labelStyle={{ color: "#67E8F9" }}
+                        contentStyle={tooltipStyle}
+                        labelStyle={labelStyle}
                       />
                       <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={64}>
                         {degreeData.map((_, i) => (
@@ -319,7 +351,7 @@ export function Reports() {
                   </ResponsiveContainer>
                 )}
                 {topDegree && (
-                  <p className="text-xs text-slate-500 mt-3 inline-flex items-center gap-1.5">
+                  <p className="text-xs text-muted-foreground mt-3 inline-flex items-center gap-1.5">
                     <TrendingUp className="size-3.5 text-emerald-400" />
                     Top degree: <span className="text-cyan-300 font-semibold">{topDegree.name}</span> ·{" "}
                     {topDegree.count} student{topDegree.count === 1 ? "" : "s"}
@@ -328,7 +360,7 @@ export function Reports() {
               </CardContent>
             </Card>
 
-            <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+            <Card className="bg-card border-border">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base font-semibold flex items-center gap-2">
                   <Layers className="size-4 text-cyan-400" />
@@ -357,20 +389,14 @@ export function Reports() {
                         type="category"
                         dataKey="name"
                         width={150}
-                        tick={{ fill: "#94a3b8", fontSize: 10.5 }}
+                        tick={{ fill: tickFill, fontSize: 10.5 }}
                         tickLine={false}
-                        axisLine={{ stroke: "rgba(6,182,212,0.18)" }}
+                        axisLine={{ stroke: axisStroke }}
                       />
                       <Tooltip
                         cursor={{ fill: "rgba(6,182,212,0.06)" }}
-                        contentStyle={{
-                          background: "#0e1b2e",
-                          border: "1px solid rgba(6,182,212,0.25)",
-                          borderRadius: 10,
-                          color: "#F8FAFC",
-                          fontSize: 12,
-                        }}
-                        labelStyle={{ color: "#67E8F9" }}
+                        contentStyle={tooltipStyle}
+                        labelStyle={labelStyle}
                       />
                       <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={28}>
                         {categoryData.map((_, i) => (
@@ -381,7 +407,7 @@ export function Reports() {
                   </ResponsiveContainer>
                 )}
                 {topCategory && (
-                  <p className="text-xs text-slate-500 mt-3 inline-flex items-center gap-1.5">
+                  <p className="text-xs text-muted-foreground mt-3 inline-flex items-center gap-1.5">
                     <TrendingUp className="size-3.5 text-emerald-400" />
                     Top domain: <span className="text-cyan-300 font-semibold">{topCategory.name}</span> ·{" "}
                     {topCategory.count} student{topCategory.count === 1 ? "" : "s"}
@@ -392,7 +418,7 @@ export function Reports() {
           </div>
 
           {/* Recent registrations */}
-          <Card className="bg-[#111f35] border-[rgba(6,182,212,0.18)]">
+          <Card className="bg-card border-border">
             <CardHeader className="pb-2">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <BarChart3 className="size-4 text-cyan-400" />
@@ -407,8 +433,8 @@ export function Reports() {
               ) : (
                 <div className="max-h-96 overflow-y-auto -mx-2">
                   <table className="w-full text-sm">
-                    <thead className="sticky top-0 bg-[#0e1b2e] z-10">
-                      <tr className="text-left text-xs text-slate-400 border-b border-[rgba(6,182,212,0.18)]">
+                    <thead className="sticky top-0 bg-popover z-10">
+                      <tr className="text-left text-xs text-muted-foreground border-b border-border">
                         <th className="px-3 py-2 font-semibold">Student</th>
                         <th className="px-3 py-2 font-semibold hidden sm:table-cell">Degree / Branch</th>
                         <th className="px-3 py-2 font-semibold hidden md:table-cell">College</th>
@@ -420,28 +446,28 @@ export function Reports() {
                       {data.recent.map((r) => (
                         <tr
                           key={r.id}
-                          className="border-b border-[rgba(6,182,212,0.08)] hover:bg-[#0F2340]/50"
+                          className="border-b border-border hover:bg-secondary/50"
                         >
                           <td className="px-3 py-2.5">
                             <div className="font-medium text-foreground">
                               {r.firstName} {r.lastName}
                             </div>
-                            <div className="text-xs text-slate-500">{r.email}</div>
+                            <div className="text-xs text-muted-foreground">{r.email}</div>
                           </td>
                           <td className="px-3 py-2.5 hidden sm:table-cell">
                             <div className="text-cyan-300 text-xs">{r.degree}</div>
-                            <div className="text-xs text-slate-500">{r.branch}</div>
+                            <div className="text-xs text-muted-foreground">{r.branch}</div>
                           </td>
-                          <td className="px-3 py-2.5 hidden md:table-cell text-slate-300 text-xs">
+                          <td className="px-3 py-2.5 hidden md:table-cell text-muted-foreground text-xs">
                             {r.college}
                           </td>
                           <td className="px-3 py-2.5 max-w-[220px]">
                             <div className="text-xs text-foreground truncate" title={r.project}>
                               {r.project}
                             </div>
-                            <div className="text-[11px] text-slate-500">{r.categoryLabel}</div>
+                            <div className="text-[11px] text-muted-foreground">{r.categoryLabel}</div>
                           </td>
-                          <td className="px-3 py-2.5 text-right text-xs text-slate-400 hidden sm:table-cell whitespace-nowrap">
+                          <td className="px-3 py-2.5 text-right text-xs text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                             {timeAgo(r.createdAt)}
                           </td>
                         </tr>
@@ -453,7 +479,7 @@ export function Reports() {
             </CardContent>
           </Card>
 
-          <p className="text-center text-xs text-slate-500 mt-6">
+          <p className="text-center text-xs text-muted-foreground mt-6">
             Reports auto-update. For a CSV export or batch-wise breakdown, email{" "}
             <a
               href="mailto:hr@agileprojection.com"
@@ -465,7 +491,7 @@ export function Reports() {
           </p>
 
           {/* Server configuration status */}
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[10px] text-slate-500 font-mono">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[10px] text-muted-foreground font-mono">
             <span className="inline-flex items-center gap-1">
               <span className="size-1.5 rounded-full bg-emerald-400 ap-pulse" />
               server: next.js 16 · port 3000
@@ -497,10 +523,10 @@ function StatCard({
   return (
     <div
       className={cn(
-        "bg-[#111f35] rounded-xl p-5 ap-lift relative overflow-hidden",
+        "bg-card rounded-xl p-5 ap-lift relative overflow-hidden",
         highlight
           ? "border border-cyan-400/60 shadow-[0_0_24px_-4px_rgba(6,182,212,0.35)]"
-          : "border border-[rgba(6,182,212,0.18)]"
+          : "border border-border"
       )}
     >
       {highlight && (
@@ -516,14 +542,14 @@ function StatCard({
       <div className={cn("font-bold text-2xl md:text-3xl leading-none", highlight ? "text-foreground" : "ap-gradient-text")}>
         {value}
       </div>
-      <div className="text-xs text-slate-400 mt-1.5">{label}</div>
+      <div className="text-xs text-muted-foreground mt-1.5">{label}</div>
     </div>
   );
 }
 
 function EmptyState({ label = "No data yet." }: { label?: string }) {
   return (
-    <div className="h-[200px] grid place-items-center text-sm text-slate-500 text-center px-6">
+    <div className="h-[200px] grid place-items-center text-sm text-muted-foreground text-center px-6">
       {label}
     </div>
   );
@@ -534,15 +560,15 @@ function ReportSkeleton() {
     <div className="animate-pulse">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-28" />
+          <div key={i} className="bg-card border border-border rounded-xl p-5 h-28" />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-80" />
+          <div key={i} className="bg-card border border-border rounded-xl p-5 h-80" />
         ))}
       </div>
-      <div className="bg-[#111f35] border border-[rgba(6,182,212,0.12)] rounded-xl p-5 h-64" />
+      <div className="bg-card border border-border rounded-xl p-5 h-64" />
     </div>
   );
 }

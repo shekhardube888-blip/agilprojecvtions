@@ -34,14 +34,14 @@ export function ProgramDetails() {
         <h2 id="program-details-h2" className="font-bold text-3xl md:text-4xl">
           What you&apos;ll <span className="ap-gradient-text">build &amp; learn</span>
         </h2>
-        <p className="text-slate-400 max-w-2xl mx-auto mt-3">
+        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Weekly curriculum, deliverables, perks and eligibility — for each program. Click a tab to switch tracks.
         </p>
       </div>
 
       <Tabs value={tab} onValueChange={setTab} className="w-full">
         <TabsList
-          className="bg-[#0e1b2e] border border-[rgba(6,182,212,0.18)] h-auto flex-wrap rounded-xl p-1.5 gap-1"
+          className="bg-popover border border-border h-auto flex-wrap rounded-xl p-1.5 gap-1"
           aria-label="Program detail tabs"
         >
           {PROGRAM_DETAILS.map((d) => (
@@ -66,9 +66,9 @@ export function ProgramDetails() {
             <div id={`detail-${d.id}`} className="scroll-mt-20" />
             <div className="grid lg:grid-cols-[1.2fr_1fr] gap-6">
               {/* Left column: intro + curriculum */}
-              <div className="bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-6">
+              <div className="bg-card border border-border rounded-xl p-6">
                 <h3 className="text-xl font-semibold text-foreground">{d.title}</h3>
-                <div className="mt-3 space-y-3 text-sm text-slate-400 leading-relaxed">
+                <div className="mt-3 space-y-3 text-sm text-muted-foreground leading-relaxed">
                   {d.intro.map((p, i) => (
                     <p key={i}>{p}</p>
                   ))}
@@ -81,12 +81,12 @@ export function ProgramDetails() {
                   {d.curriculum.map((c) => (
                     <li
                       key={c.week}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-[#0e1b2e] border border-[rgba(6,182,212,0.1)]"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-popover border border-border"
                     >
                       <span className="shrink-0 inline-flex items-center rounded-md ap-gradient-cyan text-navy text-[11px] font-bold px-2 py-1">
                         {c.week}
                       </span>
-                      <span className="text-sm text-slate-300 leading-relaxed">
+                      <span className="text-sm text-muted-foreground leading-relaxed">
                         {c.text}
                       </span>
                     </li>
@@ -135,7 +135,7 @@ function DetailCard({
   accent: "cyan" | "blue";
 }) {
   return (
-    <div className="ap-lift bg-[#111f35] border border-[rgba(6,182,212,0.18)] rounded-xl p-5">
+    <div className="ap-lift bg-card border border-border rounded-xl p-5">
       <div className="flex items-center gap-2 mb-3">
         <span
           className={
@@ -153,7 +153,7 @@ function DetailCard({
         {items.map((it) => (
           <li
             key={it}
-            className="flex items-start gap-2 text-sm text-slate-400 leading-relaxed"
+            className="flex items-start gap-2 text-sm text-muted-foreground leading-relaxed"
           >
             <CheckCircle2 className="size-4 text-cyan-400 mt-0.5 shrink-0" />
             <span>{it}</span>
