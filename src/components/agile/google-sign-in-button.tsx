@@ -1,16 +1,19 @@
 "use client";
 
+import { useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 /**
  * GoogleSignInButton
  * ------------------
- * A "Sign in with Google" button that uses NextAuth's `signIn("google", …)`
- * client helper to kick off the Google OAuth flow. After Google authenticates
- * the user, NextAuth redirects them to `/api/auth/google-link`, which is a
- * server route (handled by the backend agent) that links the Google email to
- * the local portal session cookie and then redirects back to `/?google=1`.
+ * A "Sign in with Google" button that opens Google OAuth in a centered popup
+ * window ON the portal (not a full-page redirect). When the popup closes
+ * (after Google auth + the /api/auth/google-link?popup=1 callback), it
+ * postMessages the parent, which then refreshes its auth state.
+ *
+ * Fallback: if the browser blocks the popup, it falls back to a full-page
+ * redirect via NextAuth's `signIn("google", ...)`.
  *
  * The button renders the official Google "G" logo inline (no network image
  * dependency) so it always renders identically in light / dark themes.
@@ -24,10 +27,85 @@ export function GoogleSignInButton({
   /** Optional extra className appended to the button. */
   className?: string;
 }) {
+  const handleClick = useCallback(() => {
+    const callbackUrl = "/api/auth/google-link?popup=1";
+    // NextAuth's Google signin endpoint — opening it in a popup runs the whole
+    // OAuth flow inside that window and returns to our callback with ?popup=1.
+    const authUrl = `/api/auth/signin/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+
+    const w = 500;
+    const h = 640;
+    const left = Math.max(0, Math.round((window.screen.width - w) / 2));
+    const top = Math.max(0, Math.round((window.screen.height - h) / 2));
+    const features = [
+      `width=${w}`,
+      `height=${h}`,
+      `left=${left}`,
+      `top=${top}`,
+      "scrollbars=yes",
+      "toolbar=no",
+      "menubar=no",
+      "location=no",
+      "status=no",
+      "resizable=yes",
+    ].join(",");
+
+    let popup: Window | null = null;
+    try {
+      popup = window.open(authUrl, "google-auth-popup", features);
+    } catch {
+      popup = null;
+    }
+
+    // If the popup was blocked (null) OR the browser doesn't support popups,
+    // fall back to the full-page redirect flow.
+    if (!popup || popup.closed || typeof popup.closed === "undefined") {
+      void signIn("google", { callbackUrl: "/api/auth/google-link" });
+      return;
+    }
+
+    // Listen for a postMessage from the popup when auth completes.
+    const onMessage = (e: MessageEvent) => {
+      if (e.data && typeof e.data === "object" && e.data.type === "google-auth-complete") {
+        cleanup();
+        // Refresh the portal's auth state. The page listens for "auth-change"
+        // and re-fetches /api/auth/me, which now returns the logged-in student.
+        window.dispatchEvent(new Event("auth-change"));
+        if (!e.data.success) {
+          // Optional: surface the error via a toast. The parent page handles
+          // the ?error=google-failed query param in its own useEffect.
+          console.warn("[google-auth]", e.data.error);
+        }
+      }
+    };
+    window.addEventListener("message", onMessage);
+
+    // Fallback: poll for the popup closing (in case the postMessage is missed
+    // — e.g. the user closes the popup manually, or the OAuth provider blocks
+    // cross-window messaging).
+    const interval = window.setInterval(() => {
+      if (popup?.closed) {
+        cleanup();
+        // The cookie was set in the popup; refresh the auth state so the
+        // dashboard mounts without a full page reload.
+        window.dispatchEvent(new Event("auth-change"));
+      }
+    }, 400);
+
+    function cleanup() {
+      window.removeEventListener("message", onMessage);
+      if (interval) window.clearInterval(interval);
+    }
+
+    // Safety: clean up the interval after 5 minutes (avoids a leak if the
+    // user walks away with the popup open).
+    window.setTimeout(cleanup, 5 * 60 * 1000);
+  }, []);
+
   return (
     <button
       type="button"
-      onClick={() => signIn("google", { callbackUrl: "/api/auth/google-link" })}
+      onClick={handleClick}
       className={cn(
         "w-full h-12 rounded-lg bg-white text-zinc-800 border border-zinc-300",
         "flex items-center justify-center gap-3 px-4 font-medium text-sm",
