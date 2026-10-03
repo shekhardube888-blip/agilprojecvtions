@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import {
-  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare,
+  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare, Code2,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -15,9 +15,10 @@ import { ProjectTracker } from "@/components/agile/project-tracker";
 import { AIAssistant } from "@/components/agile/ai-assistant";
 import { Schedule } from "@/components/agile/schedule";
 import { FAQ } from "@/components/agile/faq";
+import { CodeRunner } from "@/components/agile/code-runner";
 import { cn } from "@/lib/utils";
 
-type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "schedule" | "faq";
+type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "code" | "schedule" | "faq";
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home" },
@@ -25,6 +26,7 @@ const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string }[
   { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey" },
   { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant" },
   { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "Coming in v2.0" },
+  { key: "code", label: "Code Playground", icon: <Code2 className="size-4" />, desc: "HTML · CSS · JS live runner" },
   { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches" },
   { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, desc: "Questions & answers" },
 ];
@@ -38,6 +40,7 @@ function TabBody({ k, onJump }: { k: TabKey; onJump: (k: TabKey) => void }) {
     case "track": return <div className={WRAP}><ProjectTracker /></div>;
     case "ai-mentor": return <div className={WRAP}><AIAssistant /></div>;
     case "ntai-chat": return <NTAIChatbotTab disabled />;
+    case "code": return <CodeRunner />;
     case "schedule": return <div className={WRAP}><Schedule /></div>;
     case "faq": return <div className={WRAP}><FAQ /></div>;
     default: return null;
