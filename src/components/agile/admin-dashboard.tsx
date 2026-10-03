@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import ReactMarkdown from "react-markdown";
 import { MENTORS, CATEGORIES, DEGREES, BRANCHES, PLANS, STATES, SOURCES, PROGRAMS, AIML_CURRICULUM } from "@/lib/data";
 import { MessageCircle, Mail } from "lucide-react";
+import { CertificateView } from "@/components/agile/certificate-view";
 
 // ── types ──
 type Student = {
@@ -55,6 +56,27 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
 export function AdminDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
   const [open, setOpen] = useState(initiallyOpen || false);
   const [tab, setTab] = useState<MenuKey>("dashboard");
+  const [viewCert, setViewCert] = useState<Cert | null>(null);
+  const [certViewOpen, setCertViewOpen] = useState(false);
+
+  // Listen for "view-certificate" events from nested components (GenCertButton,
+  // CertificatesTab) — fetches the full cert data + opens the visual certificate dialog.
+  useEffect(() => {
+    const handler = async (e: Event) => {
+      const number = (e as CustomEvent).detail as string;
+      if (!number) return;
+      try {
+        const res = await fetch(`/api/certificate/${encodeURIComponent(number)}?json=1`, { cache: "no-store" });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          setViewCert(data.certificate);
+          setCertViewOpen(true);
+        }
+      } catch { /* ignore */ }
+    };
+    window.addEventListener("view-certificate", handler);
+    return () => window.removeEventListener("view-certificate", handler);
+  }, []);
 
   return (
     <>
@@ -66,6 +88,8 @@ export function AdminDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = 
         <ShieldCheck className="size-5 mr-2" />
         Open Admin Dashboard
       </Button>
+      {/* Visual certificate dialog — overlays the admin dashboard */}
+      <CertificateView certificate={viewCert} open={certViewOpen} onOpenChange={setCertViewOpen} />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="bg-popover border-border text-foreground sm:max-w-3xl lg:sm:max-w-7xl max-h-[94vh] p-0 overflow-hidden">
           {/* Header */}
@@ -369,7 +393,8 @@ function CertificatesTab() {
                   <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{c.student.firstName} {c.student.lastName}</div><div className="text-[10px] text-muted-foreground">{c.student.degree} · {c.student.college}</div></td>
                   <td className="px-3 py-2 hidden md:table-cell text-xs text-foreground max-w-[160px] truncate" title={c.student.project}>{c.student.project}</td>
                   <td className="px-3 py-2 text-right whitespace-nowrap">
-                    <a href={`/api/certificate/${c.certificateNumber}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200 mr-2"><ExternalLink className="size-3" />Verify</a>
+                    <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("view-certificate", { detail: c.certificateNumber }))} className="inline-flex items-center gap-1 text-[11px] text-amber-500 dark:text-amber-400 hover:text-amber-300 font-semibold mr-2"><Award className="size-3" />View</button>
+                    <a href={`/api/certificate/${c.certificateNumber}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200"><ExternalLink className="size-3" />Public</a>
                   </td>
                 </tr>
               ))}
@@ -396,7 +421,7 @@ function GenCertButton({ studentId, name, small }: { studentId: string; name: st
     } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   }
-  if (cert) return <a href={`/api/certificate/${cert.certificateNumber}`} target="_blank" rel="noopener noreferrer" className={cn("inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200", small && "h-7")}><ExternalLink className="size-3" />{cert.certificateNumber}</a>;
+  if (cert) return <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("view-certificate", { detail: cert.certificateNumber }))} className={cn("inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200 font-semibold", small && "h-7")}><Award className="size-3" />{cert.certificateNumber}</button>;
   return <Button size="sm" onClick={gen} disabled={busy} className="h-7 text-[11px] bg-gradient-to-r from-amber-500 to-cyan-500 text-primary-foreground hover:opacity-90">{busy ? <Loader2 className="size-3 animate-spin" /> : <Award className="size-3.5" />}Generate Cert</Button>;
 }
 
