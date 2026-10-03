@@ -28,6 +28,9 @@ type StudentTracker = {
   id: string;
   firstName: string;
   lastName: string;
+  email: string;
+  mobile: string;
+  accountId?: string | null;
   degree: string;
   branch: string;
   college: string;
@@ -47,9 +50,39 @@ export function ProjectTracker() {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
+  const [autoLoading, setAutoLoading] = useState(true);
   const [student, setStudent] = useState<StudentTracker | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [noRegistration, setNoRegistration] = useState(false);
   const { toast } = useToast();
+
+  // Auto-fetch the logged-in student's record on mount — no manual form
+  // entry needed. The server identifies the student from the session cookie.
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/student/me", { cache: "no-store" });
+        const data = await res.json();
+        if (cancelled) return;
+        if (res.ok && data.ok) {
+          setStudent({
+            ...data.student,
+            accountId: data.account?.id || null,
+          });
+        } else if (res.status === 401) {
+          // Not logged in — fall back to the manual lookup form.
+        } else if (data.code === "NO_REGISTRATION") {
+          setNoRegistration(true);
+        }
+      } catch {
+        // Network error — fall back to manual form silently.
+      } finally {
+        if (!cancelled) setAutoLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   async function lookup(e: React.FormEvent) {
     e.preventDefault();
@@ -103,8 +136,30 @@ export function ProjectTracker() {
         </p>
       </div>
 
-      {!student ? (
+      {autoLoading ? (
+        <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-8 flex flex-col items-center gap-3">
+          <Loader2 className="size-6 animate-spin text-cyan-400" />
+          <p className="text-sm text-muted-foreground">Loading your project status…</p>
+        </div>
+      ) : noRegistration ? (
+        <div className="max-w-md mx-auto bg-card border border-amber-500/30 rounded-2xl p-6 text-center">
+          <AlertTriangle className="size-8 text-amber-400 mx-auto mb-3" />
+          <h3 className="font-semibold text-foreground mb-1">Complete your registration first</h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            You&apos;re signed in, but you haven&apos;t chosen a project yet. Open the Student Dashboard and complete the registration form to start tracking your internship.
+          </p>
+          <Link href="#register" className="inline-flex items-center gap-1.5 text-sm text-cyan-500 dark:text-cyan-400 font-semibold hover:underline">
+            <Rocket className="size-4" /> Register for a project →
+          </Link>
+        </div>
+      ) : !student ? (
         <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-6">
+          <div className="text-center mb-4">
+            <p className="text-xs text-muted-foreground">
+              Not signed in? Enter your registration email + mobile to track your project, or{" "}
+              <Link href="/" className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">sign in</Link> for auto-tracking.
+            </p>
+          </div>
           <form onSubmit={lookup} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="tk-email">Email (used at registration)</Label>
@@ -131,7 +186,7 @@ export function ProjectTracker() {
               />
             </div>
             {error && (
-              <div className="flex items-start gap-2 text-sm text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-md p-3">
+              <div className="flex items-start gap-2 text-sm text-rose-500 dark:text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-md p-3">
                 <AlertTriangle className="size-4 mt-0.5 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -147,7 +202,7 @@ export function ProjectTracker() {
           </form>
           <p className="text-center text-xs text-muted-foreground mt-4">
             Not registered yet?{" "}
-            <Link href="#register" className="text-cyan-300 underline underline-offset-4">
+            <Link href="#register" className="text-cyan-500 dark:text-cyan-400 underline underline-offset-4">
               Register free →
             </Link>
           </p>
@@ -186,7 +241,7 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Student header */}
+      {/* Student header — auto-populated from the logged-in session */}
       <div className="rounded-2xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40 mb-6">
         <div className="rounded-2xl bg-popover p-6">
           <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -201,18 +256,37 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
                 {student.degree} · {student.branch} · {student.college}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={onReset} className="bg-secondary border-border text-foreground hover:text-cyan-300">
-              <RefreshCw className="size-3.5 mr-1" /> Look up another
+            <Button variant="outline" size="sm" onClick={onReset} className="bg-secondary border-border text-foreground hover:text-cyan-500 dark:hover:text-cyan-400">
+              <RefreshCw className="size-3.5 mr-1" /> Refresh
             </Button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
-            <Chip label="Project" value={student.project} accent="text-cyan-300" />
-            <Chip label="Domain" value={student.categoryLabel} accent="text-cyan-300" />
-            <Chip label="Plan" value={student.plan} accent="text-violet-300" />
+
+          {/* Auto-populated student identity — User ID, Email, Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-5 text-xs">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/60 border border-border">
+              <span className="text-muted-foreground uppercase tracking-wider text-[10px] font-semibold">User ID</span>
+              <span className="font-mono text-foreground truncate" title={student.accountId || student.id}>
+                {student.accountId ? student.accountId.slice(0, 16) : student.id.slice(0, 16)}…
+              </span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/60 border border-border">
+              <span className="text-muted-foreground uppercase tracking-wider text-[10px] font-semibold">Email</span>
+              <span className="text-foreground truncate" title={student.email}>{student.email}</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/60 border border-border">
+              <span className="text-muted-foreground uppercase tracking-wider text-[10px] font-semibold">Phone</span>
+              <span className="text-foreground">{student.mobile}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+            <Chip label="Project" value={student.project} accent="text-cyan-500 dark:text-cyan-400" />
+            <Chip label="Domain" value={student.categoryLabel} accent="text-cyan-500 dark:text-cyan-400" />
+            <Chip label="Plan" value={student.plan} accent="text-violet-600 dark:text-violet-400" />
             <Chip
               label="Payment"
               value={student.paymentStatus === "confirmed" ? "✅ Confirmed" : "⏳ Pending"}
-              accent={student.paymentStatus === "confirmed" ? "text-emerald-300" : "text-amber-300"}
+              accent={student.paymentStatus === "confirmed" ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}
             />
           </div>
         </div>
