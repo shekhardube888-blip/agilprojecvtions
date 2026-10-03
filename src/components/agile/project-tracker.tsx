@@ -51,38 +51,63 @@ export function ProjectTracker() {
   const [mobile, setMobile] = useState("");
   const [loading, setLoading] = useState(false);
   const [autoLoading, setAutoLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [student, setStudent] = useState<StudentTracker | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [noRegistration, setNoRegistration] = useState(false);
   const { toast } = useToast();
 
-  // Auto-fetch the logged-in student's record on mount — no manual form
-  // entry needed. The server identifies the student from the session cookie.
+  // Fetch the logged-in student's record from the session cookie. Reused for
+  // both the initial auto-load (on mount) and the "Refresh" button (so the
+  // student can pull the latest status — e.g. after admin confirms payment).
+  const fetchStudent = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/student/me", { cache: "no-store" });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setStudent({ ...data.student, accountId: data.account?.id || null });
+        setNoRegistration(false);
+        setError(null);
+        return true;
+      } else if (res.status === 401) {
+        // Not logged in — fall back to the manual lookup form.
+        setStudent(null);
+        return false;
+      } else if (data.code === "NO_REGISTRATION") {
+        setStudent(null);
+        setNoRegistration(true);
+        return false;
+      }
+      return false;
+    } catch {
+      // Network error — fall back to manual form silently.
+      return false;
+    }
+  }, []);
+
+  // Auto-fetch on mount.
   React.useEffect(() => {
     let cancelled = false;
     (async () => {
-      try {
-        const res = await fetch("/api/student/me", { cache: "no-store" });
-        const data = await res.json();
-        if (cancelled) return;
-        if (res.ok && data.ok) {
-          setStudent({
-            ...data.student,
-            accountId: data.account?.id || null,
-          });
-        } else if (res.status === 401) {
-          // Not logged in — fall back to the manual lookup form.
-        } else if (data.code === "NO_REGISTRATION") {
-          setNoRegistration(true);
-        }
-      } catch {
-        // Network error — fall back to manual form silently.
-      } finally {
-        if (!cancelled) setAutoLoading(false);
-      }
+      await fetchStudent();
+      if (!cancelled) setAutoLoading(false);
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [fetchStudent]);
+
+  // Refresh button handler — re-fetches the latest student record (e.g. after
+  // admin confirms payment or advances a stage). Shows a spinner while loading.
+  async function refreshStudent() {
+    setRefreshing(true);
+    try {
+      const ok = await fetchStudent();
+      if (ok) {
+        toast({ title: "Project status refreshed", description: "Latest data loaded." });
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   async function lookup(e: React.FormEvent) {
     e.preventDefault();
@@ -120,13 +145,6 @@ export function ProjectTracker() {
     } finally {
       setLoading(false);
     }
-  }
-
-  function reset() {
-    setStudent(null);
-    setError(null);
-    setEmail("");
-    setMobile("");
   }
 
   return (
@@ -223,13 +241,13 @@ export function ProjectTracker() {
           </p>
         </div>
       ) : (
-        <StudentRoadmap student={student} onReset={reset} />
+        <StudentRoadmap student={student} onRefresh={refreshStudent} refreshing={refreshing} />
       )}
     </section>
   );
 }
 
-function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset: () => void }) {
+function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTracker; onRefresh: () => void; refreshing: boolean }) {
   const notStarted = student.internshipStatus === "not_started";
   const completed = student.internshipStatus === "completed";
   const current = student.currentStage; // 0 = not started, 1-6 = in-progress stage, 7 = done
@@ -271,8 +289,9 @@ function StudentRoadmap({ student, onReset }: { student: StudentTracker; onReset
                 {student.degree} · {student.branch} · {student.college}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={onReset} className="bg-secondary border-border text-foreground hover:text-cyan-500 dark:hover:text-cyan-400">
-              <RefreshCw className="size-3.5 mr-1" /> Refresh
+            <Button variant="outline" size="sm" onClick={onRefresh} disabled={refreshing} className="bg-secondary border-border text-foreground hover:text-cyan-500 dark:hover:text-cyan-400">
+              {refreshing ? <Loader2 className="size-3.5 mr-1 animate-spin" /> : <RefreshCw className="size-3.5 mr-1" />}
+              {refreshing ? "Refreshing…" : "Refresh"}
             </Button>
           </div>
 
