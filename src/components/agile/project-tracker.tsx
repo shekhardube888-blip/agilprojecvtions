@@ -89,20 +89,32 @@ export function ProjectTracker() {
     setError(null);
     setStudent(null);
     if (!email.trim() || !mobile.trim()) {
-      setError("Please enter both email and mobile.");
+      setError("Please enter both email and mobile number.");
       return;
     }
     setLoading(true);
     try {
-      const url = `/api/student/lookup?email=${encodeURIComponent(email.trim())}&mobile=${encodeURIComponent(mobile.trim())}`;
-      const res = await fetch(url, { cache: "no-store" });
+      // Combined lookup + login: verifies email + mobile, sets the session
+      // cookie so the student is signed in, and returns the full record.
+      const res = await fetch("/api/student/lookup-and-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), mobile: mobile.trim() }),
+      });
       const data = await res.json();
       if (!res.ok || !data.ok) {
         setError(data.error || "Lookup failed");
         return;
       }
-      setStudent(data.student);
-      toast({ title: `Welcome, ${data.student.firstName}!` });
+      setStudent({ ...data.student, accountId: data.account?.id || null });
+      if (data.loggedIn) {
+        // The student is now signed in — notify the rest of the page so the
+        // dashboard mounts + the header shows their name.
+        window.dispatchEvent(new Event("auth-change"));
+        toast({ title: `Welcome, ${data.student.firstName}!`, description: "You're now signed in." });
+      } else {
+        toast({ title: `Welcome, ${data.student.firstName}!` });
+      }
     } catch (err) {
       setError((err as Error).message || "Network error");
     } finally {
@@ -131,8 +143,10 @@ export function ProjectTracker() {
           Project <span className="ap-gradient-text">Tracker</span> — step-by-step
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
-          Registered? Enter your email + mobile to track your 6-stage project journey. Once the admin
-          confirms your payment and starts your internship, your stages unlock one by one.
+          Already registered? Enter your email + mobile number below to{" "}
+          <strong className="text-foreground">sign in &amp; track</strong> your 6-stage project journey.
+          You&apos;ll be logged in automatically. Once the admin confirms your payment and starts your
+          internship, your stages unlock one by one.
         </p>
       </div>
 
@@ -156,13 +170,14 @@ export function ProjectTracker() {
         <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-6">
           <div className="text-center mb-4">
             <p className="text-xs text-muted-foreground">
-              Not signed in? Enter your registration email + mobile to track your project, or{" "}
-              <Link href="/" className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">sign in</Link> for auto-tracking.
+              Enter your registration email + mobile number to{" "}
+              <strong className="text-foreground">sign in &amp; track</strong> your project.
+              You&apos;ll be logged in automatically.
             </p>
           </div>
           <form onSubmit={lookup} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="tk-email">Email (used at registration)</Label>
+              <Label htmlFor="tk-email">Email (your login username)</Label>
               <Input
                 id="tk-email"
                 type="email"
@@ -174,7 +189,7 @@ export function ProjectTracker() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="tk-mobile">Mobile (used at registration)</Label>
+              <Label htmlFor="tk-mobile">Mobile Number (used at registration)</Label>
               <Input
                 id="tk-mobile"
                 type="tel"
@@ -197,7 +212,7 @@ export function ProjectTracker() {
               className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-10"
             >
               {loading ? <Loader2 className="size-4 animate-spin mr-2" /> : <Search className="size-4 mr-2" />}
-              Track My Project
+              Sign In &amp; Track Project
             </Button>
           </form>
           <p className="text-center text-xs text-muted-foreground mt-4">

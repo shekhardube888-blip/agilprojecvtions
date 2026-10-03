@@ -277,6 +277,9 @@ export default function Home() {
           </div>
         </main>
 
+        {/* Project Tracker — visitors can sign in + track with email + mobile */}
+        <ProjectTracker />
+
         {/* Footer */}
         <footer className="text-center py-4 text-xs text-muted-foreground">
           © 2026 AgileProjection (NT-AI) · <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link> · <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">agileprojection.com</a>
