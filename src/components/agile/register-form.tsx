@@ -99,7 +99,28 @@ export function RegisterForm() {
   // the backend can guarantee the registration email matches the Google login.
   const googleEmail = session?.user?.email?.toLowerCase().trim() || "";
   const authLoading = status === "loading";
-  const isSignedIn = !!googleEmail && status === "authenticated";
+  // Fallback: also check the local session (ap_session cookie) — this is set
+  // when a student signs up with email+password OR uses the tracker login form.
+  // Google session takes priority; the local session is the fallback.
+  const [localEmail, setLocalEmail] = React.useState<string>("");
+  const [localChecked, setLocalChecked] = React.useState(false);
+  React.useEffect(() => {
+    if (googleEmail) { setLocalChecked(true); return; } // Google session wins
+    let cancelled = false;
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && d.ok && d.user?.username) {
+          setLocalEmail(d.user.username.toLowerCase().trim());
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLocalChecked(true); });
+    return () => { cancelled = true; };
+  }, [googleEmail]);
+
+  const activeEmail = googleEmail || localEmail;
+  const isSignedIn = !!activeEmail;
   // Set by /api/register when it detects a duplicate registration for the
   // same Google email. Renders an inline "already registered" banner with a
   // link to log in.
@@ -113,6 +134,21 @@ export function RegisterForm() {
   const [errors, setErrors] = React.useState<Partial<Record<keyof FormState, string>>>({});
   const [consentWa, setConsentWa] = React.useState(true);
   const [consentEm, setConsentEm] = React.useState(true);
+  const [colleges, setColleges] = React.useState<{ id: string; name: string }[]>([]);
+
+  // Fetch the college list on mount (seeded + student-added colleges from the DB).
+  // Used by the datalist so students can search + select, OR type a new college.
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/colleges", { cache: "no-store" });
+        const data = await res.json();
+        if (!cancelled && data.ok) setColleges(data.colleges);
+      } catch { /* ignore — the field still works as a free-text input */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
   const [submitting, setSubmitting] = React.useState(false);
   const [result, setResult] = React.useState<SubmitResult | null>(null);
   const { toast } = useToast();
@@ -174,7 +210,7 @@ export function RegisterForm() {
     if (!category || !project) return;
     // Email is owned by the active Google session — we refuse to submit a
     // registration without one. Backend re-validates this same check.
-    if (!googleEmail) {
+    if (!activeEmail) {
       toast({
         title: "Sign in with Google first",
         description: "Your registration email is taken from your Google account. Click the Google Sign-In banner above to continue.",
@@ -193,6 +229,23 @@ export function RegisterForm() {
     setSubmitting(true);
     setDuplicateEmail(null);
     try {
+      // If the student typed a college that isn't in the list yet, save it to
+      // the DB (idempotent) so it appears for future students. This makes the
+      // college list grow organically as students from new colleges register.
+      const trimmedCollege = form.college.trim();
+      if (trimmedCollege && !colleges.some((c) => c.name.toLowerCase() === trimmedCollege.toLowerCase())) {
+        try {
+          const collegeRes = await fetch("/api/colleges", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: trimmedCollege, state: form.state }),
+          });
+          const collegeData = await collegeRes.json();
+          if (collegeData.ok && collegeData.college && !collegeData.alreadyExisted) {
+            setColleges((prev) => [...prev, collegeData.college].sort((a, b) => a.name.localeCompare(b.name)));
+          }
+        } catch { /* non-fatal — the registration still proceeds */ }
+      }
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -201,7 +254,7 @@ export function RegisterForm() {
           lastName: form.lastName,
           // Email is read-only and pulled from the Google session so a
           // logged-in student can never register a different email.
-          email: googleEmail,
+          email: activeEmail,
           mobile: form.mobile,
           degree: form.degree,
           branch: form.branch,
@@ -226,7 +279,7 @@ export function RegisterForm() {
         // Show an inline "already registered" banner with a login link
         // instead of the generic error toast.
         if (data.code === "DUPLICATE" || /duplicate/i.test(data.error || "")) {
-          setDuplicateEmail(googleEmail);
+          setDuplicateEmail(activeEmail);
           toast({
             title: "Already registered",
             description: "You are already registered with this Google account.",
@@ -336,13 +389,13 @@ export function RegisterForm() {
                 role="alert"
                 className="mb-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4 flex flex-col sm:flex-row sm:items-start gap-3"
               >
-                {authLoading ? (
+                {(authLoading || !localChecked) ? (
                   <>
                     <Loader2 className="size-5 text-cyan-400 mt-0.5 shrink-0 animate-spin" />
                     <div className="flex-1">
-                      <div className="font-semibold text-foreground text-sm">Checking your Google session…</div>
+                      <div className="font-semibold text-foreground text-sm">Checking your session…</div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Hang on a moment while we look up your signed-in Google account.
+                        Hang on a moment while we check if you&apos;re signed in (Google or email+password).
                       </p>
                     </div>
                   </>
@@ -351,15 +404,20 @@ export function RegisterForm() {
                     <AlertTriangle className="size-5 text-cyan-500 dark:text-cyan-400 mt-0.5 shrink-0" />
                     <div className="flex-1">
                       <div className="font-semibold text-foreground text-sm">
-                        ⚠ Sign in with Google to register.
+                        ⚠ Sign in to register.
                       </div>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                        Your Google email will be used for registration and cannot be changed. This
-                        guarantees every registration is tied to a verified Google identity and prevents
-                        duplicate sign-ups.
+                        Sign in with Google OR with your email+password. Your email will be used for
+                        registration and cannot be changed. This prevents duplicate sign-ups.
                       </p>
-                      <div className="mt-3 max-w-sm">
+                      <div className="mt-3 max-w-sm space-y-2">
                         <GoogleSignInButton label="Sign in with Google to register" />
+                        <p className="text-[11px] text-muted-foreground text-center">
+                          or{" "}
+                          <Link href="/" className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">
+                            sign in with email+password
+                          </Link>
+                        </p>
                       </div>
                     </div>
                   </>
@@ -529,7 +587,7 @@ export function RegisterForm() {
                   <Field label="Email (from Google)" error={errors.email} required>
                     <Input
                       type="email"
-                      value={googleEmail}
+                      value={activeEmail}
                       readOnly
                       placeholder="Sign in with Google first"
                       aria-invalid={!!errors.email}
@@ -584,11 +642,23 @@ export function RegisterForm() {
                   </Field>
                   <Field label="College Name" error={errors.college} required>
                     <Input
+                      list="colleges-list"
                       value={form.college}
                       onChange={(e) => setForm({ ...form, college: e.target.value })}
-                      placeholder="e.g. VIT Vellore"
+                      placeholder="Type to search — e.g. VIT, NIT, BITS… (or enter a new college)"
                       aria-invalid={!!errors.college}
+                      autoComplete="off"
                     />
+                    <datalist id="colleges-list">
+                      {colleges.map((c) => (
+                        <option key={c.id} value={c.name} />
+                      ))}
+                    </datalist>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      {colleges.length > 0
+                        ? `${colleges.length} colleges available — type to search, or enter a new one if yours isn't listed (it'll be saved for future students).`
+                        : "Enter your college name — new colleges are saved automatically."}
+                    </p>
                   </Field>
                   <Field label="State" error={errors.state} required>
                     <SelectField
@@ -649,7 +719,7 @@ export function RegisterForm() {
                     icon={<IdCard className="size-4" />}
                     rows={[
                       ["Name", `${form.firstName} ${form.lastName}`.trim()],
-                      ["Email", googleEmail || form.email],
+                      ["Email", activeEmail || form.email],
                       ["Mobile", form.mobile],
                       ["Degree", form.degree],
                       ["Branch", form.branch],

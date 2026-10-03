@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { notifyRegistration, type StudentRecord } from "@/lib/notify";
-import { makeSessionCookie } from "@/lib/auth";
+import { makeSessionCookie, readSession } from "@/lib/auth";
 import { SITE } from "@/lib/data";
 
 export const runtime = "nodejs";
@@ -15,23 +15,31 @@ export const runtime = "nodejs";
 // Returns: { ok, id, whatsappUrl, mailtoUrl, smtpSent }
 export async function POST(req: Request) {
   try {
-    // 1) Require a verified Google session. No session → no registration.
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
+    // 1) Require a verified session — either a Google (NextAuth) session OR a
+    //    local login session (ap_session cookie from email+password signup or
+    //    the tracker lookup-and-login flow). The email is taken from whichever
+    //    session is active — NEVER from the request body.
+    const googleSession = await getServerSession(authOptions);
+    const localSession = readSession(req.headers.get("cookie"));
+    const activeEmail = (
+      googleSession?.user?.email ||
+      localSession?.username ||
+      ""
+    ).toLowerCase().trim();
+
+    if (!activeEmail) {
       return NextResponse.json(
         {
           ok: false,
-          error: "You must sign in with Google before registering.",
-          code: "NO_GOOGLE_SESSION",
+          error: "You must sign in before registering. Use Google Sign-In or your email+password.",
+          code: "NO_SESSION",
         },
         { status: 401 }
       );
     }
 
-    // 2) The student's email is ALWAYS the Google email — never trust the body.
-    //    This enforces: "the email MUST be the Google login email" + "users
-    //    cannot enter a different email after Google Sign-In".
-    const googleEmail = session.user.email.toLowerCase().trim();
+    // 2) The student's email is ALWAYS the session email — never trust the body.
+    const googleEmail = activeEmail;
 
     const body = await req.json();
 
