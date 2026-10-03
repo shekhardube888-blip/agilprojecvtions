@@ -1,0 +1,887 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import Link from "next/link";
+     5→import {
+     6→  ArrowRight,
+     7→  ArrowLeft,
+     8→  Check,
+     9→  Loader2,
+    10→  Search,
+    11→  PartyPopper,
+    12→  MessageCircle,
+    13→  Mail,
+    14→  ShieldCheck,
+    15→  Sparkles,
+    16→  IdCard,
+    17→  CreditCard,
+    18→} from "lucide-react";
+    19→import { Button } from "@/components/ui/button";
+    20→import { Input } from "@/components/ui/input";
+    21→import { Label } from "@/components/ui/label";
+    22→import { Textarea } from "@/components/ui/textarea";
+    23→import { Checkbox } from "@/components/ui/checkbox";
+    24→import {
+    25→  Select,
+    26→  SelectContent,
+    27→  SelectItem,
+    28→  SelectTrigger,
+    29→  SelectValue,
+    30→} from "@/components/ui/select";
+    31→import { useToast } from "@/hooks/use-toast";
+    32→import { PaymentPage } from "@/components/agile/payment-page";
+    33→import {
+    34→  CATEGORIES,
+    35→  DEGREES,
+    36→  BRANCHES,
+    37→  SEMESTERS,
+    38→  PLANS,
+    39→  STATES,
+    40→  SOURCES,
+    41→} from "@/lib/data";
+    42→import type { Category, Project } from "@/lib/data";
+    43→import { cn } from "@/lib/utils";
+    44→
+    45→type FormState = {
+    46→  firstName: string;
+    47→  lastName: string;
+    48→  email: string;
+    49→  mobile: string;
+    50→  degree: string;
+    51→  branch: string;
+    52→  semester: string;
+    53→  plan: string;
+    54→  college: string;
+    55→  state: string;
+    56→  source: string;
+    57→  notes: string;
+    58→};
+    59→
+    60→const EMPTY_FORM: FormState = {
+    61→  firstName: "",
+    62→  lastName: "",
+    63→  email: "",
+    64→  mobile: "",
+    65→  degree: "",
+    66→  branch: "",
+    67→  semester: "",
+    68→  plan: "",
+    69→  college: "",
+    70→  state: "",
+    71→  source: "",
+    72→  notes: "",
+    73→};
+    74→
+    75→type SubmitResult = {
+    76→  id: number;
+    77→  student: { name: string; email: string; project: string; categoryLabel: string };
+    78→  notification: {
+    79→    whatsappUrl: string;
+    80→    mailtoUrl: string;
+    81→    smtpSent: boolean;
+    82→  };
+    83→};
+    84→
+    85→const STEPS_META = [
+    86→  { n: 1, label: "Category" },
+    87→  { n: 2, label: "Project" },
+    88→  { n: 3, label: "Details" },
+    89→  { n: 4, label: "Confirm" },
+    90→];
+    91→
+    92→export function RegisterForm() {
+    93→  const [step, setStep] = React.useState(1);
+    94→  const [category, setCategory] = React.useState<Category | null>(null);
+    95→  const [project, setProject] = React.useState<Project | null>(null);
+    96→  const [search, setSearch] = React.useState("");
+    97→  const [form, setForm] = React.useState<FormState>(EMPTY_FORM);
+    98→  const [errors, setErrors] = React.useState<Partial<Record<keyof FormState, string>>>({});
+    99→  const [consentWa, setConsentWa] = React.useState(true);
+   100→  const [consentEm, setConsentEm] = React.useState(true);
+   101→  const [submitting, setSubmitting] = React.useState(false);
+   102→  const [result, setResult] = React.useState<SubmitResult | null>(null);
+   103→  const { toast } = useToast();
+   104→
+   105→  // Filtered projects in current category
+   106→  const filteredProjects = React.useMemo(() => {
+   107→    if (!category) return [];
+   108→    const q = search.trim().toLowerCase();
+   109→    if (!q) return category.projects;
+   110→    return category.projects.filter(
+   111→      (p) => p.name.toLowerCase().includes(q) || p.tags.toLowerCase().includes(q)
+   112→    );
+   113→  }, [category, search]);
+   114→
+   115→  function pickCategory(c: Category) {
+   116→    setCategory(c);
+   117→    setProject(null); // reset project selection when category changes
+   118→    setSearch("");
+   119→  }
+   120→
+   121→  function canNext(): boolean {
+   122→    if (step === 1) return !!category;
+   123→    if (step === 2) return !!project;
+   124→    if (step === 3) return Object.keys(errors).length === 0 && validateStep3();
+   125→    return true;
+   126→  }
+   127→
+   128→  function validateStep3(): boolean {
+   129→    const e: Partial<Record<keyof FormState, string>> = {};
+   130→    if (!form.firstName.trim()) e.firstName = "First name is required";
+   131→    if (!form.lastName.trim()) e.lastName = "Last name is required";
+   132→    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
+   133→      e.email = "Valid email required";
+   134→    if (!/^[+\d][\d\s-]{8,}$/.test(form.mobile))
+   135→      e.mobile = "Valid mobile number required";
+   136→    if (!form.degree) e.degree = "Select your degree";
+   137→    if (!form.branch) e.branch = "Select your branch";
+   138→    if (!form.semester) e.semester = "Select semester";
+   139→    if (!form.plan) e.plan = "Select a plan";
+   140→    if (!form.college.trim()) e.college = "College name required";
+   141→    if (!form.state) e.state = "Select your state";
+   142→    setErrors(e);
+   143→    return Object.keys(e).length === 0;
+   144→  }
+   145→
+   146→  function next() {
+   147→    if (step === 3 && !validateStep3()) {
+   148→      toast({ title: "Please fix the errors", description: "Some required fields are missing or invalid.", variant: "destructive" });
+   149→      return;
+   150→    }
+   151→    setStep((s) => Math.min(4, s + 1));
+   152→  }
+   153→  function back() {
+   154→    setStep((s) => Math.max(1, s - 1));
+   155→  }
+   156→
+   157→  async function submit() {
+   158→    if (!category || !project) return;
+   159→    if (!consentWa && !consentEm) {
+   160→      toast({
+   161→        title: "Consent required",
+   162→        description: "Please allow at least one contact channel (WhatsApp/phone or email) so our team can reach you.",
+   163→        variant: "destructive",
+   164→      });
+   165→      return;
+   166→    }
+   167→    setSubmitting(true);
+   168→    try {
+   169→      const res = await fetch("/api/register", {
+   170→        method: "POST",
+   171→        headers: { "Content-Type": "application/json" },
+   172→        body: JSON.stringify({
+   173→          firstName: form.firstName,
+   174→          lastName: form.lastName,
+   175→          email: form.email,
+   176→          mobile: form.mobile,
+   177→          degree: form.degree,
+   178→          branch: form.branch,
+   179→          semester: form.semester,
+   180→          plan: form.plan,
+   181→          college: form.college,
+   182→          state: form.state,
+   183→          source: form.source || undefined,
+   184→          notes: form.notes || undefined,
+   185→          category: category.key,
+   186→          categoryLabel: category.label,
+   187→          project: project.name,
+   188→          projectId: project.id,
+   189→          consentWa,
+   190→          consentEm,
+   191→        }),
+   192→      });
+   193→      const data = await res.json();
+   194→      if (!res.ok || !data.ok) {
+   195→        throw new Error(data.error || "Submission failed");
+   196→      }
+   197→      setResult({
+   198→        id: data.id,
+   199→        student: data.student,
+   200→        notification: data.notification,
+   201→      });
+   202→      toast({
+   203→        title: "🎉 Enrolment Submitted!",
+   204→        description: `Your registration for "${project.name}" was saved. Open WhatsApp or email to confirm with Shekhar's team.`,
+   205→      });
+   206→    } catch (err) {
+   207→      toast({
+   208→        title: "Submission failed",
+   209→        description: (err as Error).message || "Please try again in a moment.",
+   210→        variant: "destructive",
+   211→      });
+   212→    } finally {
+   213→      setSubmitting(false);
+   214→    }
+   215→  }
+   216→
+   217→  function resetAll() {
+   218→    setResult(null);
+   219→    setStep(1);
+   220→    setCategory(null);
+   221→    setProject(null);
+   222→    setSearch("");
+   223→    setForm(EMPTY_FORM);
+   224→    setErrors({});
+   225→    setConsentWa(true);
+   226→    setConsentEm(true);
+   227→  }
+   228→
+   229→  return (
+   230→    <section
+   231→      id="register"
+   232→      className="py-16 md:py-24 px-5 md:px-[5%] max-w-7xl mx-auto scroll-mt-20"
+   233→      aria-labelledby="register-h2"
+   234→    >
+   235→      <div className="text-center mb-10">
+   236→        <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
+   237→          Free Enrolment · 4 Steps
+   238→        </div>
+   239→        <h2 id="register-h2" className="font-bold text-3xl md:text-4xl">
+   240→          Register for your <span className="ap-gradient-text">free internship</span>
+   241→        </h2>
+   242→        <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
+   243→          Pick a track, choose a project, enter your details, and confirm. No fee, no documents, no friction — your seat is reserved the moment you submit.
+   244→        </p>
+   245→      </div>
+   246→
+   247→      <div className="bg-popover border border-border rounded-2xl p-5 md:p-8">
+   248→        {result ? (
+   249→          <SuccessPanel result={result} onReset={resetAll} />
+   250→        ) : (
+   251→          <>
+   252→            {/* Step indicators */}
+   253→            <StepIndicator current={step} />
+   254→
+   255→            {/* STEP 1 — Category */}
+   256→            {step === 1 && (
+   257→              <div className="mt-8">
+   258→                <StepHeader
+   259→                  num={1}
+   260→                  title="Select your internship category"
+   261→                  desc="Pick the AI/ML domain or classic track you want to intern in. You can change this any time before submitting."
+   262→                />
+   263→                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mt-6">
+   264→                  {CATEGORIES.map((c) => {
+   265→                    const active = category?.key === c.key;
+   266→                    return (
+   267→                      <button
+   268→                        type="button"
+   269→                        key={c.key}
+   270→                        onClick={() => pickCategory(c)}
+   271→                        aria-pressed={active}
+   272→                        className={cn(
+   273→                          "ap-lift text-left p-4 rounded-xl border transition-all relative",
+   274→                          active
+   275→                            ? "border-cyan-400 bg-secondary ring-2 ring-cyan-500/40"
+   276→                            : "border-border bg-card hover:border-cyan-500/40"
+   277→                        )}
+   278→                      >
+   279→                        <div className="text-2xl mb-2" aria-hidden>{c.icon}</div>
+   280→                        <div className="text-sm font-semibold text-foreground leading-tight">
+   281→                          {c.label}
+   282→                        </div>
+   283→                        <div className="text-[11px] text-muted-foreground mt-1">{c.sub}</div>
+   284→                        {active && (
+   285→                          <span className="absolute top-3 right-3 size-5 rounded-full ap-gradient-cyan grid place-items-center text-navy">
+   286→                            <Check className="size-3.5" />
+   287→                          </span>
+   288→                        )}
+   289→                      </button>
+   290→                    );
+   291→                  })}
+   292→                </div>
+   293→                <WizardNav
+   294→                  back={null}
+   295→                  next={category ? () => next() : undefined}
+   296→                  nextLabel="Next: Choose Project"
+   297→                />
+   298→              </div>
+   299→            )}
+   300→
+   301→            {/* STEP 2 — Project */}
+   302→            {step === 2 && category && (
+   303→              <div className="mt-8">
+   304→                <StepHeader
+   305→                  num={2}
+   306→                  title={`Choose a project in ${category.label}`}
+   307→                  desc={`${category.projects.length} projects available. Search by name or tag, then select one to continue.`}
+   308→                />
+   309→                <div className="relative mt-4 mb-4">
+   310→                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+   311→                  <Input
+   312→                    placeholder="Search projects by name or tag (e.g. RAG, YOLO, churn, ESP32…)"
+   313→                    value={search}
+   314→                    onChange={(e) => setSearch(e.target.value)}
+   315→                    className="pl-9 bg-muted border-border"
+   316→                    aria-label="Search projects"
+   317→                  />
+   318→                </div>
+   319→
+   320→                <div className="max-h-96 overflow-y-auto pr-1 grid gap-2">
+   321→                  {filteredProjects.length === 0 && (
+   322→                    <div className="text-center text-muted-foreground text-sm py-6">
+   323→                      No projects match &ldquo;{search}&rdquo;. Try a different keyword.
+   324→                    </div>
+   325→                  )}
+   326→                  {filteredProjects.map((p) => {
+   327→                    const active = project?.id === p.id;
+   328→                    return (
+   329→                      <button
+   330→                        type="button"
+   331→                        key={p.id}
+   332→                        onClick={() => setProject(p)}
+   333→                        aria-pressed={active}
+   334→                        className={cn(
+   335→                          "text-left p-3 rounded-lg border transition-all flex items-start gap-3",
+   336→                          active
+   337→                            ? "border-cyan-400 bg-secondary ring-2 ring-cyan-500/40"
+   338→                            : "border-border bg-card hover:border-cyan-500/40"
+   339→                        )}
+   340→                      >
+   341→                        <span className="size-6 shrink-0 rounded-md bg-muted border border-border grid place-items-center text-[10px] font-bold text-muted-foreground mt-0.5">
+   342→                          {p.id}
+   343→                        </span>
+   344→                        <span className="flex-1">
+   345→                          <span className="block text-sm font-medium text-foreground">
+   346→                            {p.name}
+   347→                          </span>
+   348→                          <span className="block text-[11px] text-muted-foreground mt-0.5">
+   349→                            {p.tags}
+   350→                          </span>
+   351→                          {active && (
+   352→                            <span className="inline-flex items-center gap-1 mt-1.5 text-[11px] text-cyan-300 font-medium">
+   353→                              <Check className="size-3" /> Selected
+   354→                            </span>
+   355→                          )}
+   356→                        </span>
+   357→                      </button>
+   358→                    );
+   359→                  })}
+   360→                </div>
+   361→
+   362→                {project && (
+   363→                  <div className="mt-4 p-3 rounded-lg border border-cyan-500/30 bg-secondary text-sm text-cyan-200 flex items-center gap-2">
+   364→                    <Check className="size-4" /> Selected project:{" "}
+   365→                    <strong className="font-semibold">{project.name}</strong>
+   366→                  </div>
+   367→                )}
+   368→                <WizardNav
+   369→                  back={() => back()}
+   370→                  next={project ? () => next() : undefined}
+   371→                  nextLabel="Next: Your Details"
+   372→                />
+   373→              </div>
+   374→            )}
+   375→
+   376→            {/* STEP 3 — Details */}
+   377→            {step === 3 && (
+   378→              <div className="mt-8">
+   379→                <StepHeader
+   380→                  num={3}
+   381→                  title="Your details"
+   382→                  desc="We need your basic info to register you on the program and issue your certificate. We never sell your data — see our privacy notes below."
+   383→                />
+   384→                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+   385→                  <Field label="First Name" error={errors.firstName} required>
+   386→                    <Input
+   387→                      value={form.firstName}
+   388→                      onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+   389→                      placeholder="e.g. Aditya"
+   390→                      aria-invalid={!!errors.firstName}
+   391→                    />
+   392→                  </Field>
+   393→                  <Field label="Last Name" error={errors.lastName} required>
+   394→                    <Input
+   395→                      value={form.lastName}
+   396→                      onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+   397→                      placeholder="e.g. Sharma"
+   398→                      aria-invalid={!!errors.lastName}
+   399→                    />
+   400→                  </Field>
+   401→                  <Field label="Email" error={errors.email} required>
+   402→                    <Input
+   403→                      type="email"
+   404→                      value={form.email}
+   405→                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+   406→                      placeholder="you@college.edu.in"
+   407→                      aria-invalid={!!errors.email}
+   408→                    />
+   409→                  </Field>
+   410→                  <Field label="Mobile / WhatsApp" error={errors.mobile} required>
+   411→                    <Input
+   412→                      inputMode="tel"
+   413→                      value={form.mobile}
+   414→                      onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+   415→                      placeholder="+91 98765 43210"
+   416→                      aria-invalid={!!errors.mobile}
+   417→                    />
+   418→                  </Field>
+   419→
+   420→                  <Field label="Degree" error={errors.degree} required>
+   421→                    <SelectField
+   422→                      value={form.degree}
+   423→                      onChange={(v) => setForm({ ...form, degree: v })}
+   424→                      placeholder="Select degree"
+   425→                      options={DEGREES}
+   426→                    />
+   427→                  </Field>
+   428→                  <Field label="Branch" error={errors.branch} required>
+   429→                    <SelectField
+   430→                      value={form.branch}
+   431→                      onChange={(v) => setForm({ ...form, branch: v })}
+   432→                      placeholder="Select branch"
+   433→                      options={BRANCHES}
+   434→                    />
+   435→                  </Field>
+   436→                  <Field label="Semester" error={errors.semester} required>
+   437→                    <SelectField
+   438→                      value={form.semester}
+   439→                      onChange={(v) => setForm({ ...form, semester: v })}
+   440→                      placeholder="Select semester"
+   441→                      options={SEMESTERS}
+   442→                    />
+   443→                  </Field>
+   444→                  <Field label="Plan" error={errors.plan} required>
+   445→                    <SelectField
+   446→                      value={form.plan}
+   447→                      onChange={(v) => setForm({ ...form, plan: v })}
+   448→                      placeholder="Select plan"
+   449→                      options={PLANS}
+   450→                    />
+   451→                  </Field>
+   452→                  <Field label="College Name" error={errors.college} required>
+   453→                    <Input
+   454→                      value={form.college}
+   455→                      onChange={(e) => setForm({ ...form, college: e.target.value })}
+   456→                      placeholder="e.g. VIT Vellore"
+   457→                      aria-invalid={!!errors.college}
+   458→                    />
+   459→                  </Field>
+   460→                  <Field label="State" error={errors.state} required>
+   461→                    <SelectField
+   462→                      value={form.state}
+   463→                      onChange={(v) => setForm({ ...form, state: v })}
+   464→                      placeholder="Select state"
+   465→                      options={STATES}
+   466→                    />
+   467→                  </Field>
+   468→                  <Field label="How did you hear about us? (optional)">
+   469→                    <SelectField
+   470→                      value={form.source || "__none__"}
+   471→                      onChange={(v) => setForm({ ...form, source: v === "__none__" ? "" : v })}
+   472→                      placeholder="Select source"
+   473→                      options={SOURCES}
+   474→                      allowEmpty
+   475→                    />
+   476→                  </Field>
+   477→                  <Field label="Notes / Questions (optional)" full>
+   478→                    <Textarea
+   479→                      value={form.notes}
+   480→                      onChange={(e) => setForm({ ...form, notes: e.target.value })}
+   481→                      placeholder="Anything you'd like the team to know? Batch preferences, doubt-clearing timings, etc."
+   482→                      rows={3}
+   483→                    />
+   484→                  </Field>
+   485→                </div>
+   486→                <WizardNav
+   487→                  back={() => back()}
+   488→                  next={() => next()}
+   489→                  nextLabel="Next: Confirm & Submit"
+   490→                />
+   491→              </div>
+   492→            )}
+   493→
+   494→            {/* STEP 4 — Confirm & Submit */}
+   495→            {step === 4 && (
+   496→              <div className="mt-8">
+   497→                <StepHeader
+   498→                  num={4}
+   499→                  title="Confirm &amp; submit"
+   500→                  desc="Review your enrolment details below. Once you submit, your seat is reserved and our team will reach out within 24 hours."
+   501→                />
+   502→
+   503→                <div className="grid lg:grid-cols-2 gap-4 mt-6">
+   504→                  <SummaryCard
+   505→                    title="Selected Track"
+   506→                    icon={<Sparkles className="size-4" />}
+   507→                    rows={[
+   508→                      ["Category", category?.label ?? "—"],
+   509→                      ["Project", project?.name ?? "—"],
+   510→                      ["Project ID", String(project?.id ?? "—")],
+   511→                      ["Tags", project?.tags ?? "—"],
+   512→                    ]}
+   513→                  />
+   514→                  <SummaryCard
+   515→                    title="Personal & Academic"
+   516→                    icon={<IdCard className="size-4" />}
+   517→                    rows={[
+   518→                      ["Name", `${form.firstName} ${form.lastName}`.trim()],
+   519→                      ["Email", form.email],
+   520→                      ["Mobile", form.mobile],
+   521→                      ["Degree", form.degree],
+   522→                      ["Branch", form.branch],
+   523→                      ["Semester", form.semester],
+   524→                      ["College", form.college],
+   525→                      ["State", form.state],
+   526→                      ["Plan", form.plan],
+   527→                      ...(form.source ? [["Source", form.source] as [string, string]] : []),
+   528→                    ]}
+   529→                  />
+   530→                </div>
+   531→
+   532→                {form.notes && (
+   533→                  <div className="mt-4 p-3 rounded-lg bg-muted border border-border text-sm text-muted-foreground">
+   534→                    <span className="text-muted-foreground text-xs mr-2">Notes:</span>
+   535→                    {form.notes}
+   536→                  </div>
+   537→                )}
+   538→
+   539→                <div className="mt-6 grid gap-3">
+   540→                  <ConsentRow
+   541→                    checked={consentWa}
+   542→                    onChange={setConsentWa}
+   543→                    title="I agree to be contacted on WhatsApp / phone by the AgileProjection team."
+   544→                    desc="We'll confirm your enrolment, share batch links, and send reminders. No promotional spam — ever."
+   545→                  />
+   546→                  <ConsentRow
+   547→                    checked={consentEm}
+   548→                    onChange={setConsentEm}
+   549→                    title="I agree to receive enrolment confirmation & certificate via email."
+   550→                    desc="Operational emails only. You can opt out any time."
+   551→                  />
+   552→                </div>
+   553→
+   554→                <div className="mt-6 p-3 rounded-lg border border-cyan-500/20 bg-secondary/50 flex items-start gap-2 text-xs text-muted-foreground">
+   555→                  <ShieldCheck className="size-4 text-cyan-400 mt-0.5 shrink-0" />
+   556→                  <span>
+   557→                    Your data is stored securely and used only for internship communication. We never sell or share your details with third parties. By submitting you agree to AgileProjection&apos;s privacy policy.
+   558→                  </span>
+   559→                </div>
+   560→
+   561→                <div className="mt-6 flex items-center gap-3 flex-wrap">
+   562→                  <Button
+   563→                    type="button"
+   564→                    onClick={() => submit()}
+   565→                    disabled={submitting || (!consentWa && !consentEm)}
+   566→                    size="lg"
+   567→                    className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-12 px-6"
+   568→                  >
+   569→                    {submitting ? (
+   570→                      <>
+   571→                        <Loader2 className="size-4 animate-spin" /> Submitting…
+   572→                      </>
+   573→                    ) : (
+   574→                      <>🚀 Submit Enrolment — It's Free →</>
+   575→                    )}
+   576→                  </Button>
+   577→                  <Button
+   578→                    type="button"
+   579→                    variant="ghost"
+   580→                    onClick={() => back()}
+   581→                    className="text-muted-foreground hover:text-cyan-300"
+   582→                  >
+   583→                    <ArrowLeft className="size-4" /> Back
+   584→                  </Button>
+   585→                </div>
+   586→
+   587→                {/* Online payment section */}
+   588→                <div className="mt-8 border-t border-border pt-5">
+   589→                  <div className="flex items-center gap-2 mb-1">
+   590→                    <CreditCard className="size-4 text-cyan-400" />
+   591→                    <span className="text-sm font-semibold text-foreground">Pay Online (Optional)</span>
+   592→                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Test Mode</span>
+   593→                  </div>
+   594→                  <p className="text-xs text-muted-foreground mb-4">Pay your plan fee via UPI, Card, Net Banking, or International Card. The internship starts after the admin confirms your payment.</p>
+   595→                  <PaymentPage
+   596→                    planName={form.plan.split(" — ")[0]?.trim() || "Standard"}
+   597→                    studentName={`${form.firstName} ${form.lastName}`.trim()}
+   598→                    onPaid={(m, t) => {
+   599→                      toast({ title: "Payment confirmed!", description: `${form.plan} via ${m} · ${t}` });
+   600→                    }}
+   601→                  />
+   602→                </div>
+   603→              </div>
+   604→            )}
+   605→          </>
+   606→        )}
+   607→      </div>
+   608→
+   609→      <p className="text-center text-xs text-muted-foreground mt-4">
+   610→        Need help choosing? Ask{" "}
+   611→        <Link href="#ai-assistant" className="text-cyan-300 underline underline-offset-4">
+   612→          AP-AI Mentor
+   613→        </Link>{" "}
+   614→        or WhatsApp{" "}
+   615→        <a href="https://wa.me/918095557334" className="text-cyan-300 underline underline-offset-4">
+   616→          +91 80955 57334
+   617→        </a>
+   618→        .
+   619→      </p>
+   620→    </section>
+   621→  );
+   622→}
+   623→
+   624→/* ── Sub-components ── */
+   625→
+   626→function StepIndicator({ current }: { current: number }) {
+   627→  return (
+   628→    <ol className="flex items-center justify-center gap-1 sm:gap-3" aria-label="Wizard progress">
+   629→      {STEPS_META.map((s, i) => {
+   630→        const done = s.n < current;
+   631→        const active = s.n === current;
+   632→        return (
+   633→          <li key={s.n} className="flex items-center gap-1 sm:gap-3">
+   634→            <div className="flex items-center gap-2">
+   635→              <div
+   636→                className={cn(
+   637→                  "size-8 rounded-full grid place-items-center text-xs font-bold transition-all",
+   638→                  active
+   639→                    ? "ap-gradient-cyan text-navy ring-2 ring-cyan-500/40"
+   640→                    : done
+   641→                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+   642→                    : "bg-secondary text-muted-foreground border border-border"
+   643→                )}
+   644→              >
+   645→                {done ? <Check className="size-4" /> : s.n}
+   646→              </div>
+   647→              <span
+   648→                className={cn(
+   649→                  "text-xs hidden sm:block",
+   650→                  active ? "text-cyan-300 font-semibold" : "text-muted-foreground"
+   651→                )}
+   652→              >
+   653→                {s.label}
+   654→              </span>
+   655→            </div>
+   656→            {i < STEPS_META.length - 1 && (
+   657→              <div
+   658→                className={cn(
+   659→                  "w-8 sm:w-12 h-px",
+   660→                  done ? "bg-cyan-500/40" : "bg-[rgba(6,182,212,0.18)]"
+   661→                )}
+   662→              />
+   663→            )}
+   664→          </li>
+   665→        );
+   666→      })}
+   667→    </ol>
+   668→  );
+   669→}
+   670→
+   671→function StepHeader({
+   672→  num,
+   673→  title,
+   674→  desc,
+   675→}: {
+   676→  num: number;
+   677→  title: string;
+   678→  desc: string;
+   679→}) {
+   680→  return (
+   681→    <div>
+   682→      <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-2">
+   683→        Step {num}
+   684→      </div>
+   685→      <h3
+   686→        className="text-xl md:text-2xl font-bold text-foreground"
+   687→        dangerouslySetInnerHTML={{ __html: title }}
+   688→      />
+   689→      <p className="text-sm text-muted-foreground mt-2 max-w-3xl">{desc}</p>
+   690→    </div>
+   691→  );
+   692→}
+   693→
+   694→function WizardNav({
+   695→  back,
+   696→  next,
+   697→  nextLabel,
+   698→}: {
+   699→  back: null | (() => void);
+   700→  next: undefined | (() => void);
+   701→  nextLabel: string;
+   702→}) {
+   703→  return (
+   704→    <div className="mt-6 flex items-center gap-3 flex-wrap">
+   705→      <Button
+   706→        type="button"
+   707→        onClick={() => next?.()}
+   708→        disabled={!next}
+   709→        size="lg"
+   710→        className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90"
+   711→      >
+   712→        {nextLabel} <ArrowRight className="size-4" />
+   713→      </Button>
+   714→      {back && (
+   715→        <Button type="button" variant="ghost" onClick={back} className="text-muted-foreground hover:text-cyan-300">
+   716→          <ArrowLeft className="size-4" /> Back
+   717→        </Button>
+   718→      )}
+   719→    </div>
+   720→  );
+   721→}
+   722→
+   723→function Field({
+   724→  label,
+   725→  error,
+   726→  required,
+   727→  full,
+   728→  children,
+   729→}: {
+   730→  label: string;
+   731→  error?: string;
+   732→  required?: boolean;
+   733→  full?: boolean;
+   734→  children: React.ReactNode;
+   735→}) {
+   736→  return (
+   737→    <div className={cn("flex flex-col gap-1.5", full && "md:col-span-2")}>
+   738→      <Label className="text-xs text-muted-foreground flex items-center gap-1">
+   739→        {label}
+   740→        {required && <span className="text-cyan-400">*</span>}
+   741→      </Label>
+   742→      {children}
+   743→      {error && <span className="text-[11px] text-red-400">{error}</span>}
+   744→    </div>
+   745→  );
+   746→}
+   747→
+   748→function SelectField({
+   749→  value,
+   750→  onChange,
+   751→  placeholder,
+   752→  options,
+   753→  allowEmpty,
+   754→}: {
+   755→  value: string;
+   756→  onChange: (v: string) => void;
+   757→  placeholder: string;
+   758→  options: string[];
+   759→  allowEmpty?: boolean;
+   760→}) {
+   761→  return (
+   762→    <Select value={value} onValueChange={onChange}>
+   763→      <SelectTrigger className="bg-muted border-border w-full">
+   764→        <SelectValue placeholder={placeholder} />
+   765→      </SelectTrigger>
+   766→      <SelectContent className="bg-popover border-border max-h-72 overflow-y-auto">
+   767→        {allowEmpty && (
+   768→          <SelectItem value="__none__">— None —</SelectItem>
+   769→        )}
+   770→        {options.map((opt) => (
+   771→          <SelectItem key={opt} value={opt}>
+   772→            {opt}
+   773→          </SelectItem>
+   774→        ))}
+   775→      </SelectContent>
+   776→    </Select>
+   777→  );
+   778→}
+   779→
+   780→function SummaryCard({
+   781→  title,
+   782→  icon,
+   783→  rows,
+   784→}: {
+   785→  title: string;
+   786→  icon: React.ReactNode;
+   787→  rows: [string, string][];
+   788→}) {
+   789→  return (
+   790→    <div className="bg-card border border-border rounded-xl p-5">
+   791→      <div className="flex items-center gap-2 mb-3">
+   792→        <span className="size-7 rounded-md bg-cyan-500/15 text-cyan-300 grid place-items-center">
+   793→          {icon}
+   794→        </span>
+   795→        <h4 className="text-sm font-semibold text-foreground">{title}</h4>
+   796→      </div>
+   797→      <dl className="grid grid-cols-1 gap-1.5 text-sm">
+   798→        {rows.map(([k, v]) => (
+   799→          <div
+   800→            key={k}
+   801→            className="flex items-start justify-between gap-3 py-1 border-b border-border last:border-b-0"
+   802→          >
+   803→            <dt className="text-xs text-muted-foreground uppercase tracking-wide shrink-0">{k}</dt>
+   804→            <dd className="text-right text-foreground break-words">{v || "—"}</dd>
+   805→          </div>
+   806→        ))}
+   807→      </dl>
+   808→    </div>
+   809→  );
+   810→}
+   811→
+   812→function ConsentRow({
+   813→  checked,
+   814→  onChange,
+   815→  title,
+   816→  desc,
+   817→}: {
+   818→  checked: boolean;
+   819→  onChange: (v: boolean) => void;
+   820→  title: string;
+   821→  desc: string;
+   822→}) {
+   823→  return (
+   824→    <label className="flex items-start gap-3 p-3 rounded-lg bg-muted border border-border cursor-pointer hover:border-cyan-500/30">
+   825→      <Checkbox checked={checked} onCheckedChange={(v) => onChange(!!v)} className="mt-0.5" />
+   826→      <span className="flex-1">
+   827→        <span className="block text-sm font-medium text-foreground">{title}</span>
+   828→        <span className="block text-xs text-muted-foreground mt-0.5">{desc}</span>
+   829→      </span>
+   830→    </label>
+   831→  );
+   832→}
+   833→
+   834→function SuccessPanel({
+   835→  result,
+   836→  onReset,
+   837→}: {
+   838→  result: SubmitResult;
+   839→  onReset: () => void;
+   840→}) {
+   841→  return (
+   842→    <div className="text-center py-8">
+   843→      <div className="size-16 mx-auto rounded-full ap-gradient-cyan grid place-items-center text-navy mb-4">
+   844→        <PartyPopper className="size-8" />
+   845→      </div>
+   846→      <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+   847→        🎉 Enrolment Submitted!
+   848→      </h3>
+   849→      <p className="text-sm text-muted-foreground max-w-xl mx-auto mt-3">
+   850→        Welcome aboard, <strong className="text-foreground">{result.student.name}</strong>! Your registration for{" "}
+   851→        <strong className="text-cyan-300">{result.student.project}</strong>{" "}
+   852→        ({result.student.categoryLabel}) has been logged. Use the buttons below to instantly confirm with
+   853→        Shekhar&apos;s team on WhatsApp or email — they&apos;ll reach out within 24 hours.
+   854→      </p>
+   855→
+   856→      <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+   857→        <a
+   858→          href={result.notification.whatsappUrl}
+   859→          target="_blank"
+   860→          rel="noopener noreferrer"
+   861→          className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-medium text-sm hover:opacity-90"
+   862→        >
+   863→          <MessageCircle className="size-4" /> Send WhatsApp to AgileProjection
+   864→        </a>
+   865→        <a
+   866→          href={result.notification.mailtoUrl}
+   867→          className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-md bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium text-sm hover:opacity-90"
+   868→        >
+   869→          <Mail className="size-4" /> Email AgileProjection Team
+   870→        </a>
+   871→      </div>
+   872→
+   873→      <p className="mt-6 text-xs text-muted-foreground max-w-xl mx-auto">
+   874→        We&apos;ve also logged your registration for our team. Shekhar&apos;s team will reach out within 24 hours.
+   875→      </p>
+   876→
+   877→      <button
+   878→        type="button"
+   879→        onClick={onReset}
+   880→        className="mt-6 text-sm text-cyan-300 hover:text-cyan-200 underline underline-offset-4"
+   881→      >
+   882→        Register another student →
+   883→      </button>
+   884→    </div>
+   885→  );
+   886→}
+   887→

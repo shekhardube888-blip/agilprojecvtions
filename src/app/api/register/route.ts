@@ -1,29 +1,69 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/db";
 import { notifyRegistration, type StudentRecord } from "@/lib/notify";
-import { hashPassword } from "@/lib/auth";
+import { makeSessionCookie } from "@/lib/auth";
 import { SITE } from "@/lib/data";
 
 export const runtime = "nodejs";
 
 // POST /api/register
-// Body: StudentRecord (matches src/lib/data.ts form fields)
+// Body: StudentRecord (matches src/lib/data.ts form fields) — the `email` field
+// in the body is IGNORED. The email is taken from the verified Google session
+// (session.user.email) so the student cannot register with a different email.
 // Returns: { ok, id, whatsappUrl, mailtoUrl, smtpSent }
 export async function POST(req: Request) {
   try {
+    // 1) Require a verified Google session. No session → no registration.
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "You must sign in with Google before registering.",
+          code: "NO_GOOGLE_SESSION",
+        },
+        { status: 401 }
+      );
+    }
+
+    // 2) The student's email is ALWAYS the Google email — never trust the body.
+    //    This enforces: "the email MUST be the Google login email" + "users
+    //    cannot enter a different email after Google Sign-In".
+    const googleEmail = session.user.email.toLowerCase().trim();
+
     const body = await req.json();
 
-    const required = ["firstName", "lastName", "email", "mobile", "degree", "branch", "semester", "plan", "college", "state", "category", "categoryLabel", "project"];
+    // 3) Validate required fields (email is NOT in this list — it comes from
+    //    the Google session, not the request body).
+    const required = [
+      "firstName",
+      "lastName",
+      "mobile",
+      "degree",
+      "branch",
+      "semester",
+      "plan",
+      "college",
+      "state",
+      "category",
+      "categoryLabel",
+      "project",
+    ];
     for (const k of required) {
       if (!body[k] || String(body[k]).trim() === "") {
-        return NextResponse.json({ ok: false, error: `Missing field: ${k}` }, { status: 400 });
+        return NextResponse.json(
+          { ok: false, error: `Missing field: ${k}` },
+          { status: 400 }
+        );
       }
     }
 
     const record: StudentRecord = {
       firstName: String(body.firstName).trim(),
       lastName: String(body.lastName).trim(),
-      email: String(body.email).trim(),
+      email: googleEmail, // ← from Google session, NEVER from body
       mobile: String(body.mobile).trim(),
       degree: String(body.degree),
       branch: String(body.branch),
@@ -39,7 +79,25 @@ export async function POST(req: Request) {
       projectId: body.projectId ? Number(body.projectId) : null,
     };
 
-    // 1) Persist to the database.
+    // 4) Duplicate check — a Student with this Google email already exists.
+    //    This is how we "link the student profile to the Google account to
+    //    avoid duplicate registrations".
+    const existingStudent = await db.student.findFirst({
+      where: { email: googleEmail },
+      select: { id: true },
+    });
+    if (existingStudent) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "You are already registered. Log in with your Google account to continue.",
+          code: "DUPLICATE",
+        },
+        { status: 409 }
+      );
+    }
+
+    // 5) Persist the student record.
     const student = await db.student.create({
       data: {
         firstName: record.firstName,
@@ -63,9 +121,12 @@ export async function POST(req: Request) {
       },
     });
 
-    // 2) Compose + persist + (optionally) send email & WhatsApp notifications
+    // 6) Compose + persist + (optionally) send email & WhatsApp notifications
     //    destined for hr@agileprojection.com and WhatsApp 8319985622.
-    const notify = await notifyRegistration(record, { to: SITE.email, whatsapp: SITE.whatsapp });
+    const notify = await notifyRegistration(record, {
+      to: SITE.email,
+      whatsapp: SITE.whatsapp,
+    });
 
     // Mark the DB row with whether notifications were dispatched.
     await db.student.update({
@@ -73,34 +134,59 @@ export async function POST(req: Request) {
       data: { emailSent: notify.smtpSent, waSent: notify.smtpSent },
     });
 
-    // 3) Auto-create a STUDENT LOGIN account so the student can log in with
-    //    their registration email + mobile number. Idempotent (upsert by
-    //    username = email). No expiry — the student keeps permanent portal
-    //    access; the 2-day expiry is only for admin-unlocked demo accounts.
+    // 7) Find or create the local Account linked to this Google email — same
+    //    logic as /api/auth/google-link. Google handles authentication; the
+    //    Account has no usable password. Permanent (never expires).
+    //    SECURITY: the passwordHash is a random unusable value — never loggable
+    //    via /api/auth/login, never returned to the client.
     try {
-      await db.account.upsert({
-        where: { username: record.email.toLowerCase() },
-        update: {
-          // refresh the password hash + name on re-registration
-          passwordHash: hashPassword(record.mobile.replace(/[\s+]/g, "").replace(/^91/, "")),
-          fullName: `${record.firstName} ${record.lastName}`,
-          note: "Auto-created at registration — login with email + mobile",
-        },
-        create: {
-          username: record.email.toLowerCase(),
-          passwordHash: hashPassword(record.mobile.replace(/[\s+]/g, "").replace(/^91/, "")),
-          role: "guest", // labeled "Student" in the UI
-          status: "unlocked",
-          fullName: `${record.firstName} ${record.lastName}`,
-          note: "Auto-created at registration — login with email + mobile",
-        },
+      const { randomBytes } = await import("crypto");
+      const unusableHash =
+        randomBytes(48).toString("hex") + ":" + randomBytes(64).toString("hex");
+
+      const existingAccount = await db.account.findUnique({
+        where: { username: googleEmail },
       });
+      if (!existingAccount) {
+        await db.account.create({
+          data: {
+            username: googleEmail,
+            passwordHash: unusableHash, // never usable — Google handles auth
+            role: "guest", // labeled "Student" in the UI
+            status: "unlocked",
+            expiresAt: null, // permanent — Google students never expire
+            passwordSetAt: null,
+            fullName: `${record.firstName} ${record.lastName}`,
+            note: "Auto-created at registration — login via Google OAuth",
+          },
+        });
+      } else if (
+        existingAccount.status !== "unlocked" ||
+        existingAccount.expiresAt !== null
+      ) {
+        // Re-link: make sure the account is unlocked + permanent.
+        await db.account.update({
+          where: { id: existingAccount.id },
+          data: {
+            status: "unlocked",
+            expiresAt: null,
+            passwordSetAt: null,
+            fullName: `${record.firstName} ${record.lastName}`,
+          },
+        });
+      }
     } catch (acctErr) {
       // Non-fatal — the registration + notification already succeeded.
-      console.error("[register] auto-account creation failed:", (acctErr as Error).message);
+      console.error(
+        "[register] auto-account creation failed:",
+        (acctErr as Error).message
+      );
     }
 
-    return NextResponse.json({
+    // 8) Return the same success response as before, plus a fresh ap_session
+    //    cookie (in case the user landed here without going through
+    //    /api/auth/google-link first). Idempotent + harmless if already set.
+    const res = NextResponse.json({
       ok: true,
       id: student.id,
       student: {
@@ -118,8 +204,18 @@ export async function POST(req: Request) {
         logPersisted: notify.logPersisted,
       },
     });
+    res.headers.append(
+      "Set-Cookie",
+      makeSessionCookie({
+        username: googleEmail,
+        role: "guest",
+        scope: "agileprojection-portal",
+      })
+    );
+    return res;
   } catch (err) {
-    console.error("[register] error:", err);
+    // SECURITY: never log credentials. The error message is generic.
+    console.error("[register] error:", (err as Error).message);
     return NextResponse.json(
       { ok: false, error: (err as Error).message || "Internal server error" },
       { status: 500 }
@@ -155,7 +251,10 @@ export async function GET() {
     });
     return NextResponse.json({ ok: true, count: students.length, students });
   } catch (err) {
-    console.error("[register GET] error:", err);
-    return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 500 });
+    console.error("[register GET] error:", (err as Error).message);
+    return NextResponse.json(
+      { ok: false, error: (err as Error).message },
+      { status: 500 }
+    );
   }
 }

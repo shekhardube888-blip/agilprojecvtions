@@ -15,6 +15,7 @@ import { VisitorStats } from "@/components/agile/visitor-stats";
 import { SalesChat } from "@/components/agile/sales-chat";
 import { ProjectTracker } from "@/components/agile/project-tracker";
 import { Footer } from "@/components/agile/footer";
+import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import { cn } from "@/lib/utils";
 // Marketing sections (for visitor landing page)
 import { Hero } from "@/components/agile/hero";
@@ -43,6 +44,7 @@ type PortalUser = { username: string; role: string; status: string; fullName: st
 export default function Home() {
   const [user, setUser] = useState<PortalUser | null>(null);
   const [bootstrapping, setBootstrapping] = useState(true);
+  const { toast } = useToast();
 
   const refreshAuth = useCallback(() => {
     fetch("/api/auth/me", { cache: "no-store" })
@@ -53,11 +55,44 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // 1. Bootstrap auth state on mount.
     refreshAuth();
     const handler = () => refreshAuth();
     window.addEventListener("auth-change", handler);
+
+    // 2. Google OAuth callback handling. After NextAuth redirects the user
+    //    back from Google → /api/auth/google-link (the backend route that
+    //    links the Google email to the local portal session cookie), we land
+    //    back on /?google=1. We refresh auth state + strip the query param.
+    //    On failure NextAuth redirects to /?error=google-failed → toast.
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const googleDone = params.get("google") === "1";
+      const googleError = params.get("error") === "google-failed";
+      if (googleDone) {
+        refreshAuth();
+        params.delete("google");
+        const remaining = params.toString();
+        const newUrl =
+          window.location.pathname + (remaining ? `?${remaining}` : "") + window.location.hash;
+        window.history.replaceState(null, "", newUrl);
+      }
+      if (googleError) {
+        toast({
+          title: "Google sign-in failed",
+          description: "Please try again. If the problem persists, use admin login below.",
+          variant: "destructive",
+        });
+        params.delete("error");
+        const remaining = params.toString();
+        const newUrl =
+          window.location.pathname + (remaining ? `?${remaining}` : "") + window.location.hash;
+        window.history.replaceState(null, "", newUrl);
+      }
+    }
+
     return () => window.removeEventListener("auth-change", handler);
-  }, [refreshAuth]);
+  }, [refreshAuth, toast]);
 
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -216,7 +251,7 @@ export default function Home() {
                   <LogIn className="size-7" />
                 </div>
                 <h2 className="font-bold text-xl text-foreground">Portal Login</h2>
-                <p className="text-xs text-muted-foreground mt-1">Students: use your registration email + mobile. Admin: admin / admin123.</p>
+                <p className="text-xs text-muted-foreground mt-1">Students: sign in with Google. Admin: use your credentials.</p>
               </div>
               <LoginForm onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }} />
             </div>
@@ -268,28 +303,39 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: PortalUser) => void }) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="lu" className="text-xs text-muted-foreground">Username / Email</Label>
-        <Input id="lu" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="your email or admin" className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/60 focus:border-cyan-400/50" required />
+    <div className="space-y-4">
+      {/* Google Sign-In for students (top of form) */}
+      <GoogleSignInButton />
+
+      {/* Divider between Google and the admin-only credentials form */}
+      <div className="flex items-center gap-3" aria-hidden>
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-[11px] uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
       </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="lp" className="text-xs text-muted-foreground">Password</Label>
-        <Input id="lp" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/60 focus:border-cyan-400/50" required />
-      </div>
-      {error && (
-        <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-center">{error}</div>
-      )}
-      <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:opacity-90 h-11 font-semibold shadow-lg shadow-cyan-500/20">
-        {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Sign In</>}
-      </Button>
-      <div className="flex flex-wrap gap-1.5 justify-center pt-1">
-        <button type="button" onClick={() => { setUsername("admin"); setPassword("admin123"); }} className="text-[10px] px-2 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20">admin / admin123</button>
-        <button type="button" onClick={() => { setUsername("student@agileprojection.com"); setPassword("1234567890"); }} className="text-[10px] px-2 py-1 rounded-md bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-300 hover:bg-violet-500/20">student demo</button>
-      </div>
-      <p className="text-center text-xs text-muted-foreground pt-2">
-        Not registered? <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">Register free →</Link>
-      </p>
-    </form>
+
+      <form onSubmit={submit} className="space-y-4">
+        <div className="space-y-1.5">
+          <Label htmlFor="lu" className="text-xs text-muted-foreground">Admin Username / Email</Label>
+          <Input id="lu" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="admin email" className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/60 focus:border-cyan-400/50" required />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="lp" className="text-xs text-muted-foreground">Admin Password</Label>
+          <Input id="lp" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/60 focus:border-cyan-400/50" required />
+        </div>
+        {error && (
+          <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-center">{error}</div>
+        )}
+        <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:opacity-90 h-11 font-semibold shadow-lg shadow-cyan-500/20">
+          {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Admin Sign In</>}
+        </Button>
+        <p className="text-center text-[11px] text-muted-foreground pt-1">
+          Admin login only. Students must use Google Sign-In above.
+        </p>
+        <p className="text-center text-xs text-muted-foreground pt-1">
+          Not registered? <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">Register free →</Link>
+        </p>
+      </form>
+    </div>
   );
 }

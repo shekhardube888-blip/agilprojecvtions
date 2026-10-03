@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import {
   ArrowRight,
   ArrowLeft,
@@ -15,6 +16,7 @@ import {
   Sparkles,
   IdCard,
   CreditCard,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { PaymentPage } from "@/components/agile/payment-page";
+import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import {
   CATEGORIES,
   DEGREES,
@@ -90,6 +93,18 @@ const STEPS_META = [
 ];
 
 export function RegisterForm() {
+  const { data: session, status } = useSession();
+  // Email is sourced from the active Google session (read-only). Empty when
+  // unauthenticated. The same email is sent to /api/register on submit, so
+  // the backend can guarantee the registration email matches the Google login.
+  const googleEmail = session?.user?.email?.toLowerCase().trim() || "";
+  const authLoading = status === "loading";
+  const isSignedIn = !!googleEmail && status === "authenticated";
+  // Set by /api/register when it detects a duplicate registration for the
+  // same Google email. Renders an inline "already registered" banner with a
+  // link to log in.
+  const [duplicateEmail, setDuplicateEmail] = React.useState<string | null>(null);
+
   const [step, setStep] = React.useState(1);
   const [category, setCategory] = React.useState<Category | null>(null);
   const [project, setProject] = React.useState<Project | null>(null);
@@ -129,8 +144,9 @@ export function RegisterForm() {
     const e: Partial<Record<keyof FormState, string>> = {};
     if (!form.firstName.trim()) e.firstName = "First name is required";
     if (!form.lastName.trim()) e.lastName = "Last name is required";
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
-      e.email = "Valid email required";
+    // Email is sourced from the active Google session — it is guaranteed
+    // valid and read-only on the client. Backend re-validates the email
+    // against the Google session, so we don't re-check the format here.
     if (!/^[+\d][\d\s-]{8,}$/.test(form.mobile))
       e.mobile = "Valid mobile number required";
     if (!form.degree) e.degree = "Select your degree";
@@ -156,6 +172,16 @@ export function RegisterForm() {
 
   async function submit() {
     if (!category || !project) return;
+    // Email is owned by the active Google session — we refuse to submit a
+    // registration without one. Backend re-validates this same check.
+    if (!googleEmail) {
+      toast({
+        title: "Sign in with Google first",
+        description: "Your registration email is taken from your Google account. Click the Google Sign-In banner above to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (!consentWa && !consentEm) {
       toast({
         title: "Consent required",
@@ -165,6 +191,7 @@ export function RegisterForm() {
       return;
     }
     setSubmitting(true);
+    setDuplicateEmail(null);
     try {
       const res = await fetch("/api/register", {
         method: "POST",
@@ -172,7 +199,9 @@ export function RegisterForm() {
         body: JSON.stringify({
           firstName: form.firstName,
           lastName: form.lastName,
-          email: form.email,
+          // Email is read-only and pulled from the Google session so a
+          // logged-in student can never register a different email.
+          email: googleEmail,
           mobile: form.mobile,
           degree: form.degree,
           branch: form.branch,
@@ -192,6 +221,18 @@ export function RegisterForm() {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
+        // Backend signals a duplicate registration for the same Google email
+        // with `code: "DUPLICATE"` (see backend agent /api/register update).
+        // Show an inline "already registered" banner with a login link
+        // instead of the generic error toast.
+        if (data.code === "DUPLICATE" || /duplicate/i.test(data.error || "")) {
+          setDuplicateEmail(googleEmail);
+          toast({
+            title: "Already registered",
+            description: "You are already registered with this Google account.",
+          });
+          return;
+        }
         throw new Error(data.error || "Submission failed");
       }
       setResult({
@@ -224,6 +265,7 @@ export function RegisterForm() {
     setErrors({});
     setConsentWa(true);
     setConsentEm(true);
+    setDuplicateEmail(null);
   }
 
   return (
@@ -249,17 +291,103 @@ export function RegisterForm() {
           <SuccessPanel result={result} onReset={resetAll} />
         ) : (
           <>
-            {/* Step indicators */}
-            <StepIndicator current={step} />
+            {/* Duplicate-registration banner — backend signals `code: "DUPLICATE"`
+                when the Google email already has a student record. */}
+            {duplicateEmail && (
+              <div
+                role="alert"
+                className="mb-6 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 flex flex-col sm:flex-row sm:items-start gap-3"
+              >
+                <AlertTriangle className="size-5 text-amber-500 dark:text-amber-400 mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <div className="font-semibold text-amber-700 dark:text-amber-300 text-sm">
+                    You are already registered with this Google account.
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    Email <span className="font-mono text-foreground">{duplicateEmail}</span> already has a
+                    student record. Log in to continue and track your project, or use a different Google
+                    account to register a new student.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <a
+                      href="/?google=1"
+                      className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-md bg-gradient-to-r from-cyan-400 to-blue-500 text-white text-xs font-semibold hover:opacity-90"
+                    >
+                      <Mail className="size-3.5" /> Log in with Google
+                    </a>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDuplicateEmail(null)}
+                      className="bg-secondary border-border text-foreground hover:text-cyan-300 h-9"
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            {/* STEP 1 — Category */}
-            {step === 1 && (
-              <div className="mt-8">
-                <StepHeader
-                  num={1}
-                  title="Select your internship category"
-                  desc="Pick the AI/ML domain or classic track you want to intern in. You can change this any time before submitting."
-                />
+            {/* Not-signed-in banner — Google session is required because the
+                registration email is sourced from it (read-only). */}
+            {!isSignedIn && (
+              <div
+                role="alert"
+                className="mb-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4 flex flex-col sm:flex-row sm:items-start gap-3"
+              >
+                {authLoading ? (
+                  <>
+                    <Loader2 className="size-5 text-cyan-400 mt-0.5 shrink-0 animate-spin" />
+                    <div className="flex-1">
+                      <div className="font-semibold text-foreground text-sm">Checking your Google session…</div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Hang on a moment while we look up your signed-in Google account.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="size-5 text-cyan-500 dark:text-cyan-400 mt-0.5 shrink-0" />
+                    <div className="flex-1">
+                      <div className="font-semibold text-foreground text-sm">
+                        ⚠ Sign in with Google to register.
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                        Your Google email will be used for registration and cannot be changed. This
+                        guarantees every registration is tied to a verified Google identity and prevents
+                        duplicate sign-ups.
+                      </p>
+                      <div className="mt-3 max-w-sm">
+                        <GoogleSignInButton label="Sign in with Google to register" />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* When not signed in, the wizard below is greyed out + non-interactive
+                so the student has to complete Google Sign-In before picking a
+                category / project / entering details. */}
+            <div
+              aria-disabled={!isSignedIn}
+              className={cn(
+                "transition-all",
+                !isSignedIn && "pointer-events-none opacity-50 select-none"
+              )}
+            >
+              {/* Step indicators */}
+              <StepIndicator current={step} />
+
+              {/* STEP 1 — Category */}
+              {step === 1 && (
+                <div className="mt-8">
+                  <StepHeader
+                    num={1}
+                    title="Select your internship category"
+                    desc="Pick the AI/ML domain or classic track you want to intern in. You can change this any time before submitting."
+                  />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mt-6">
                   {CATEGORIES.map((c) => {
                     const active = category?.key === c.key;
@@ -398,14 +526,19 @@ export function RegisterForm() {
                       aria-invalid={!!errors.lastName}
                     />
                   </Field>
-                  <Field label="Email" error={errors.email} required>
+                  <Field label="Email (from Google)" error={errors.email} required>
                     <Input
                       type="email"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder="you@college.edu.in"
+                      value={googleEmail}
+                      readOnly
+                      placeholder="Sign in with Google first"
                       aria-invalid={!!errors.email}
+                      aria-describedby="email-from-google-help"
+                      className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground/60 cursor-not-allowed"
                     />
+                    <span id="email-from-google-help" className="text-[11px] text-muted-foreground">
+                      Read-only — taken from your Google session. Sign out & back in with another Google account to change it.
+                    </span>
                   </Field>
                   <Field label="Mobile / WhatsApp" error={errors.mobile} required>
                     <Input
@@ -516,7 +649,7 @@ export function RegisterForm() {
                     icon={<IdCard className="size-4" />}
                     rows={[
                       ["Name", `${form.firstName} ${form.lastName}`.trim()],
-                      ["Email", form.email],
+                      ["Email", googleEmail || form.email],
                       ["Mobile", form.mobile],
                       ["Degree", form.degree],
                       ["Branch", form.branch],
@@ -602,6 +735,7 @@ export function RegisterForm() {
                 </div>
               </div>
             )}
+            </div>
           </>
         )}
       </div>

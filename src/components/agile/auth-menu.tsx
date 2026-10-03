@@ -14,11 +14,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   RefreshCw,
-  Copy,
-  Check,
   Search,
   Rocket,
-  LayoutDashboard,
 } from "lucide-react";
 import {
   Dialog,
@@ -35,6 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { AdminDashboard } from "@/components/agile/admin-dashboard";
 import { StudentDashboard } from "@/components/agile/student-dashboard";
+import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import Link from "next/link";
 
 type Role = "admin" | "guest";
@@ -150,8 +148,6 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
-  const { toast } = useToast();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -176,22 +172,6 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
     }
   }
 
-  function fill(u: string, p: string) {
-    setUsername(u);
-    setPassword(p);
-    setError(null);
-  }
-
-  async function copy(text: string, key: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(key);
-      setTimeout(() => setCopied(null), 1200);
-    } catch {
-      /* ignore */
-    }
-  }
-
   return (
     <div>
       <DialogHeader>
@@ -199,25 +179,37 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           <LogIn className="size-5 text-cyan-400" /> Portal Login
         </DialogTitle>
         <DialogDescription className="text-muted-foreground">
-          Sign in with your account. <strong className="text-foreground">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
+          Sign in with Google for student access. Admin: use your credentials.
         </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={submit} className="space-y-4 mt-5">
+      {/* Google Sign-In for students (top of dialog) */}
+      <div className="mt-5">
+        <GoogleSignInButton />
+      </div>
+
+      {/* Divider between Google and admin-only credentials form */}
+      <div className="flex items-center gap-3 my-5" aria-hidden>
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-[11px] uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
+
+      <form onSubmit={submit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="lu">Username</Label>
+          <Label htmlFor="lu">Admin Username</Label>
           <Input
             id="lu"
             autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="your email  /  admin"
+            placeholder="admin email"
             className="bg-muted border-border"
             required
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="lp">Password</Label>
+          <Label htmlFor="lp">Admin Password</Label>
           <Input
             id="lp"
             type="password"
@@ -243,68 +235,20 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-10"
         >
           {loading ? <Loader2 className="size-4 animate-spin mr-2" /> : <LogIn className="size-4 mr-2" />}
-          Sign In
+          Admin Sign In
         </Button>
       </form>
 
-      {/* Demo credentials helper */}
+      {/* Info note — no demo credentials shown (admin password is never displayed) */}
       <div className="mt-5 rounded-xl border border-border bg-muted/70 p-4">
         <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold mb-2 flex items-center gap-1.5">
-          <ShieldCheck className="size-3.5" /> Demo accounts (click to autofill)
+          <ShieldCheck className="size-3.5" /> Access guide
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <CredentialButton label="admin" sub="admin123" onClick={() => fill("admin", "admin123")} onCopy={() => copy("admin123", "admin")} copied={copied === "admin"} role="admin" />
-          <CredentialButton label="guest1" sub="guest1" onClick={() => fill("guest1", "guest1")} onCopy={() => copy("guest1", "guest1")} copied={copied === "guest1"} />
-          <CredentialButton label="guest2" sub="guest2" onClick={() => fill("guest2", "guest2")} onCopy={() => copy("guest2", "guest2")} copied={copied === "guest2"} />
-          <CredentialButton label="guest3" sub="guest3" onClick={() => fill("guest3", "guest3")} onCopy={() => copy("guest3", "guest3")} copied={copied === "guest3"} />
-        </div>
-        <p className="text-[11px] text-muted-foreground mt-2.5 leading-relaxed">
-          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-foreground">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
+        <p className="text-[11px] text-muted-foreground leading-relaxed">
+          Students sign in with Google. Registered students get permanent access. Admin manages students from the dashboard.
         </p>
       </div>
     </div>
-  );
-}
-
-function CredentialButton({
-  label,
-  sub,
-  onClick,
-  onCopy,
-  copied,
-  role,
-}: {
-  label: string;
-  sub: string;
-  onClick: () => void;
-  onCopy: () => void;
-  copied: boolean;
-  role?: "admin";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-secondary border border-border hover:border-cyan-500/40 transition-colors text-left"
-    >
-      <div>
-        <div className="text-xs font-semibold text-foreground flex items-center gap-1">
-          {role === "admin" && <ShieldCheck className="size-3 text-cyan-400" />}
-          {label}
-        </div>
-        <div className="text-[10px] text-muted-foreground">pass: {sub}</div>
-      </div>
-      <span
-        role="button"
-        tabIndex={0}
-        onClick={(e) => { e.stopPropagation(); onCopy(); }}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); e.preventDefault(); onCopy(); } }}
-        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-muted-foreground hover:text-cyan-300"
-        title="Copy password"
-      >
-        {copied ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
-      </span>
-    </button>
   );
 }
 

@@ -96,30 +96,84 @@ export function expiryAfterUnlock(): Date {
   return new Date(Date.now() + TWO_DAYS_MS);
 }
 
+// ── Admin credentials (env-driven; NEVER logged, NEVER returned to client) ──
+// SECURITY: the admin password is NEVER logged, NEVER returned in API responses,
+// NEVER shown in the UI. It is read from ADMIN_PASSWORD env var and hashed
+// before storage. In production this env var MUST be set; if it is empty, the
+// admin account is simply not seeded and admin login (via either the legacy
+// /api/auth/login route OR the NextAuth Credentials provider) is disabled.
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD ||
+  (process.env.NODE_ENV === "production" ? "" : "admin123");
+const ADMIN_EMAIL = (
+  process.env.ADMIN_EMAIL || "admin@agileprojection.com"
+)
+  .toLowerCase()
+  .trim();
+
+let adminPasswordWarned = false;
+function warnAdminPasswordMissing() {
+  if (adminPasswordWarned) return;
+  adminPasswordWarned = true;
+  console.warn(
+    "[auth] WARNING: ADMIN_PASSWORD not set. Admin login disabled."
+  );
+}
+
 // ── Auto-seed ──
-// Ensures the demo accounts exist: admin + guest1..guest5 + student demo. Idempotent.
-// Called lazily by API routes so the portal works on a fresh DB.
+// Ensures the required accounts exist in the DB. In dev: admin + guest1..guest5 +
+// demo student. In production: ONLY the admin account (and only if ADMIN_PASSWORD
+// is set). Idempotent. Called lazily by API routes so the portal works on a fresh DB.
 type SeedSpec = {
   username: string;
-  password: string;
+  password: string; // plaintext — used once at seed-time, then forgotten
   role: Role;
   fullName: string;
   status?: "locked" | "unlocked"; // override; default "locked" for guests
   permanent?: boolean; // if true → expiresAt = null (never expires)
 };
 
-const SEED_ACCOUNTS: SeedSpec[] = [
-  { username: "admin", password: "admin123", role: "admin", fullName: "AgileProjection Admin" },
-  // Demo guest accounts — unlocked + 2-day expiry so the credential buttons work immediately
-  // and the expiry countdown is demonstrable. Admin can re-unlock to reset the 2-day window.
-  { username: "guest1", password: "guest1", role: "guest", fullName: "Guest User 1", status: "unlocked" },
-  { username: "guest2", password: "guest2", role: "guest", fullName: "Guest User 2", status: "unlocked" },
-  { username: "guest3", password: "guest3", role: "guest", fullName: "Guest User 3", status: "unlocked" },
-  { username: "guest4", password: "guest4", role: "guest", fullName: "Guest User 4", status: "unlocked" },
-  { username: "guest5", password: "guest5", role: "guest", fullName: "Guest User 5", status: "unlocked" },
-  // Permanent demo student — matches the "student demo" button on the login page.
-  { username: "student@agileprojection.com", password: "1234567890", role: "guest", fullName: "Demo Student", status: "unlocked", permanent: true },
-];
+function buildSeedSpecs(): SeedSpec[] {
+  const isDev = process.env.NODE_ENV !== "production";
+  const list: SeedSpec[] = [];
+
+  // Admin account — always seeded (when ADMIN_PASSWORD is set), even in production.
+  if (ADMIN_PASSWORD) {
+    list.push({
+      username: "admin",
+      password: ADMIN_PASSWORD,
+      role: "admin",
+      fullName: "AgileProjection Admin",
+    });
+  } else if (!isDev) {
+    // Production + no env var → admin login disabled; warn exactly once.
+    warnAdminPasswordMissing();
+  }
+
+  if (isDev) {
+    // Demo guest accounts — DEV ONLY. Unlocked + 2-day expiry so the credential
+    // buttons work immediately and the expiry countdown is demonstrable.
+    list.push(
+      { username: "guest1", password: "guest1", role: "guest", fullName: "Guest User 1", status: "unlocked" },
+      { username: "guest2", password: "guest2", role: "guest", fullName: "Guest User 2", status: "unlocked" },
+      { username: "guest3", password: "guest3", role: "guest", fullName: "Guest User 3", status: "unlocked" },
+      { username: "guest4", password: "guest4", role: "guest", fullName: "Guest User 4", status: "unlocked" },
+      { username: "guest5", password: "guest5", role: "guest", fullName: "Guest User 5", status: "unlocked" },
+      // Permanent demo student — matches the "student demo" button on the login page.
+      { username: "student@agileprojection.com", password: "1234567890", role: "guest", fullName: "Demo Student", status: "unlocked", permanent: true }
+    );
+  }
+
+  return list;
+}
+
+// Computed once at module load. The `ensureAccountsSeeded` function also
+// re-evaluates at runtime (env vars can change between cold-start and the
+// first request that triggers seeding). Read-only — never log/return these.
+export const ADMIN_CREDENTIALS = {
+  email: ADMIN_EMAIL,
+  hasPassword: ADMIN_PASSWORD.length > 0,
+};
 
 let seedPromise: Promise<void> | null = null;
 
@@ -127,9 +181,13 @@ export async function ensureAccountsSeeded(): Promise<void> {
   if (seedPromise) return seedPromise;
   seedPromise = (async () => {
     try {
-      const existing = await db.account.count();
-      if (existing >= SEED_ACCOUNTS.length) return;
-      for (const s of SEED_ACCOUNTS) {
+      const specs = buildSeedSpecs();
+      // No accounts to seed — production + ADMIN_PASSWORD unset. Warn once.
+      if (specs.length === 0) {
+        warnAdminPasswordMissing();
+        return;
+      }
+      for (const s of specs) {
         const found = await db.account.findUnique({ where: { username: s.username } });
         if (found) continue;
         if (s.role === "admin") {
@@ -166,7 +224,8 @@ export async function ensureAccountsSeeded(): Promise<void> {
         }
       }
     } catch (e) {
-      // reset so a later request can retry
+      // reset so a later request can retry. SECURITY: log message only — never
+      // log any credential (the error message itself never contains the password).
       seedPromise = null;
       console.error("[auth] seed failed:", (e as Error).message);
     }
