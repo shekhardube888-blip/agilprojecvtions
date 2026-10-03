@@ -97,22 +97,28 @@ export function expiryAfterUnlock(): Date {
 }
 
 // ── Auto-seed ──
-// Ensures the demo accounts exist: admin + guest1..guest5. Idempotent.
+// Ensures the demo accounts exist: admin + guest1..guest5 + student demo. Idempotent.
 // Called lazily by API routes so the portal works on a fresh DB.
 type SeedSpec = {
   username: string;
   password: string;
   role: Role;
   fullName: string;
+  status?: "locked" | "unlocked"; // override; default "locked" for guests
+  permanent?: boolean; // if true → expiresAt = null (never expires)
 };
 
 const SEED_ACCOUNTS: SeedSpec[] = [
   { username: "admin", password: "admin123", role: "admin", fullName: "AgileProjection Admin" },
-  { username: "guest1", password: "guest1", role: "guest", fullName: "Guest User 1" },
-  { username: "guest2", password: "guest2", role: "guest", fullName: "Guest User 2" },
-  { username: "guest3", password: "guest3", role: "guest", fullName: "Guest User 3" },
-  { username: "guest4", password: "guest4", role: "guest", fullName: "Guest User 4" },
-  { username: "guest5", password: "guest5", role: "guest", fullName: "Guest User 5" },
+  // Demo guest accounts — unlocked + 2-day expiry so the credential buttons work immediately
+  // and the expiry countdown is demonstrable. Admin can re-unlock to reset the 2-day window.
+  { username: "guest1", password: "guest1", role: "guest", fullName: "Guest User 1", status: "unlocked" },
+  { username: "guest2", password: "guest2", role: "guest", fullName: "Guest User 2", status: "unlocked" },
+  { username: "guest3", password: "guest3", role: "guest", fullName: "Guest User 3", status: "unlocked" },
+  { username: "guest4", password: "guest4", role: "guest", fullName: "Guest User 4", status: "unlocked" },
+  { username: "guest5", password: "guest5", role: "guest", fullName: "Guest User 5", status: "unlocked" },
+  // Permanent demo student — matches the "student demo" button on the login page.
+  { username: "student@agileprojection.com", password: "1234567890", role: "guest", fullName: "Demo Student", status: "unlocked", permanent: true },
 ];
 
 let seedPromise: Promise<void> | null = null;
@@ -138,14 +144,23 @@ export async function ensureAccountsSeeded(): Promise<void> {
             },
           });
         } else {
+          const isPermanent = s.permanent === true;
+          const guestStatus = s.status === "unlocked" ? "unlocked" : "locked";
           await db.account.create({
             data: {
               username: s.username,
               passwordHash: hashPassword(s.password),
               role: "guest",
-              status: "locked", // guests start locked; admin unlocks after payment
+              status: guestStatus,
+              // permanent demo accounts never expire; unlocked demo accounts get the 2-day window
+              expiresAt: isPermanent ? null : (guestStatus === "unlocked" ? expiryAfterUnlock() : null),
+              passwordSetAt: isPermanent ? null : (guestStatus === "unlocked" ? new Date() : null),
               fullName: s.fullName,
-              note: "Awaiting payment — contact admin to unlock",
+              note: isPermanent
+                ? "Permanent demo student (auto-seeded, never expires)"
+                : (guestStatus === "unlocked"
+                    ? "Demo account — auto-unlocked (2-day window). Admin can re-unlock to reset."
+                    : "Awaiting payment — contact admin to unlock"),
             },
           });
         }
