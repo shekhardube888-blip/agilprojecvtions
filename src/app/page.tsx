@@ -16,6 +16,7 @@ import { SalesChat } from "@/components/agile/sales-chat";
 import { ProjectTracker } from "@/components/agile/project-tracker";
 import { Footer } from "@/components/agile/footer";
 import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
+import { SignupForm } from "@/components/agile/signup-form";
 import { cn } from "@/lib/utils";
 // Marketing sections (for visitor landing page)
 import { Hero } from "@/components/agile/hero";
@@ -44,6 +45,7 @@ type PortalUser = { username: string; role: string; status: string; fullName: st
 export default function Home() {
   const [user, setUser] = useState<PortalUser | null>(null);
   const [bootstrapping, setBootstrapping] = useState(true);
+  const [authView, setAuthView] = useState<"login" | "signup">("login");
   const { toast } = useToast();
 
   const refreshAuth = useCallback(() => {
@@ -244,16 +246,33 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right: login card */}
+            {/* Right: login/signup card */}
             <div className="bg-card backdrop-blur-xl border border-border rounded-2xl p-6 md:p-8 shadow-2xl">
               <div className="text-center mb-5">
                 <div className="size-14 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white mx-auto mb-3 shadow-lg">
-                  <LogIn className="size-7" />
+                  {authView === "login" ? <LogIn className="size-7" /> : <UserCircle2 className="size-7" />}
                 </div>
-                <h2 className="font-bold text-xl text-foreground">Portal Login</h2>
-                <p className="text-xs text-muted-foreground mt-1">Students: sign in with Google. Admin: use your credentials.</p>
+                <h2 className="font-bold text-xl text-foreground">
+                  {authView === "login" ? "Portal Login" : "Create Student Account"}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {authView === "login"
+                    ? "Students: sign in with Google or sign up. Admin: use your credentials."
+                    : "Sign up with your email + password. Student accounts only — permanent access."}
+                </p>
               </div>
-              <LoginForm onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }} />
+
+              {authView === "login" ? (
+                <LoginForm
+                  onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
+                  onSwitchToSignup={() => setAuthView("signup")}
+                />
+              ) : (
+                <SignupForm
+                  onSignedUp={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
+                  onSwitchToLogin={() => setAuthView("login")}
+                />
+              )}
             </div>
           </div>
         </main>
@@ -271,7 +290,7 @@ export default function Home() {
 }
 
 // ── Login form (embedded, not a dialog) ──
-function LoginForm({ onLoggedIn }: { onLoggedIn: (u: PortalUser) => void }) {
+function LoginForm({ onLoggedIn, onSwitchToSignup }: { onLoggedIn: (u: PortalUser) => void; onSwitchToSignup: () => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -330,10 +349,13 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: PortalUser) => void }) {
           {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Admin Sign In</>}
         </Button>
         <p className="text-center text-[11px] text-muted-foreground pt-1">
-          Admin login only. Students must use Google Sign-In above.
+          Admin login only. Students use Google Sign-In or sign up below.
         </p>
         <p className="text-center text-xs text-muted-foreground pt-1">
-          Not registered? <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">Register free →</Link>
+          Don&apos;t have an account?{" "}
+          <button type="button" onClick={onSwitchToSignup} className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">
+            Sign up as student →
+          </button>
         </p>
       </form>
     </div>
