@@ -27,10 +27,38 @@ export function GoogleSignInButton({
   /** Optional extra className appended to the button. */
   className?: string;
 }) {
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback(async () => {
+    // Check if Google OAuth is configured before opening the popup.
+    // If not configured, show a helpful message instead of redirecting to a
+    // confusing NextAuth error page.
+    try {
+      const statusRes = await fetch("/api/auth/google-status", { cache: "no-store" });
+      const statusData = await statusRes.json();
+      if (!statusData.configured) {
+        alert(
+          "Google Sign-In is not configured yet.\n\n" +
+          "To enable it:\n" +
+          "1. Go to https://console.cloud.google.com/ → APIs & Services → Credentials\n" +
+          "2. Create an OAuth 2.0 Client ID (Web application)\n" +
+          "3. Add this Authorized redirect URI:\n" +
+          "   http://localhost:3000/api/auth/callback/google\n" +
+          "4. Copy the Client ID + Secret into your .env file:\n" +
+          "   GOOGLE_CLIENT_ID=\"your-client-id.apps.googleusercontent.com\"\n" +
+          "   GOOGLE_CLIENT_SECRET=\"your-client-secret\"\n" +
+          "5. Restart the dev server (npm run dev)\n\n" +
+          "Until then, students can sign up with email + password (click 'Sign up as student →')."
+        );
+        return;
+      }
+    } catch {
+      // If the status check fails, proceed anyway — the popup will show the result.
+    }
+
     const callbackUrl = "/api/auth/google-link?popup=1";
     // NextAuth's Google signin endpoint — opening it in a popup runs the whole
     // OAuth flow inside that window and returns to our callback with ?popup=1.
+    // The NextAuth config uses prompt=select_account consent → forces Google to
+    // show the Chrome profile/account picker EVERY time (even with one account).
     const authUrl = `/api/auth/signin/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
     const w = 500;

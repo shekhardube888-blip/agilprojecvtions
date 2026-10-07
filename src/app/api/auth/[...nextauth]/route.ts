@@ -21,7 +21,11 @@ export const authOptions: NextAuthOptions = {
           GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            authorization: { params: { prompt: "select_account" } },
+            // Force the Google Chrome profile/account picker to show EVERY time
+            // (even if the user has only one Google account or an existing session).
+            // "select_account" → shows the list of Google accounts logged into Chrome.
+            // "consent" → forces the consent screen (so the user explicitly approves).
+            authorization: { params: { prompt: "select_account consent", access_type: "offline" } },
           }) as any,
         ]
       : []),

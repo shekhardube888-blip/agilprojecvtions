@@ -235,7 +235,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 h-10"
         >
           {loading ? <Loader2 className="size-4 animate-spin mr-2" /> : <LogIn className="size-4 mr-2" />}
-          Admin Sign In
+          Sign In
         </Button>
       </form>
 

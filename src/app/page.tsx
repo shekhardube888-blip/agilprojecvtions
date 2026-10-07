@@ -349,7 +349,7 @@ function LoginForm({ onLoggedIn, onSwitchToSignup }: { onLoggedIn: (u: PortalUse
           <div className="text-sm text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-center">{error}</div>
         )}
         <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:opacity-90 h-11 font-semibold shadow-lg shadow-cyan-500/20">
-          {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Admin Sign In</>}
+          {loading ? <><Loader2 className="size-4 animate-spin mr-2" /> Signing in…</> : <><LogIn className="size-4 mr-2" /> Sign In</>}
         </Button>
         <p className="text-center text-[11px] text-muted-foreground pt-1">
           Admin login only. Students use Google Sign-In or sign up below.
