@@ -6,12 +6,14 @@ import {
   LayoutDashboard, Users, FileText, CreditCard, Cpu, GraduationCap, FolderKanban,
   CalendarCheck, Award, BarChart3, Brain, Bell, Settings, X, RefreshCw, Loader2,
   CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink, LogOut,
+  History,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
@@ -35,7 +37,7 @@ type Cert = {
 };
 type MenuKey =
   | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
-  | "projects" | "attendance" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+  | "projects" | "attendance" | "user-mgmt" | "certificates" | "reports" | "ai" | "notifications" | "settings";
 
 const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
@@ -46,6 +48,7 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
   { key: "mentors", label: "Mentors", icon: <GraduationCap className="size-4" />, group: "Operations" },
   { key: "projects", label: "Projects", icon: <FolderKanban className="size-4" />, group: "Operations" },
   { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
+  { key: "user-mgmt", label: "User Management", icon: <Users className="size-4" />, group: "Lifecycle" },
   { key: "certificates", label: "Certificates", icon: <Award className="size-4" />, group: "Lifecycle" },
   { key: "reports", label: "Reports", icon: <BarChart3 className="size-4" />, group: "Lifecycle" },
   { key: "ai", label: "AI Analytics", icon: <Brain className="size-4" />, group: "Insights" },
@@ -149,6 +152,7 @@ function TabContent({ tab }: { tab: MenuKey }) {
     case "dashboard": return <DashboardTab />;
     case "students": return <StudentsTab />;
     case "applications": return <ApplicationsTab />;
+    case "user-mgmt": return <UserManagementTab />;
     case "certificates": return <CertificatesTab />;
     case "reports": return <ReportsTab />;
     case "mentors": return <MentorsTab />;
@@ -368,6 +372,250 @@ function AppGroup({ title, count, accent, students, empty, action }: { title: st
     </div>
   );
 }
+
+// ── User Management tab (reset password, lock/unlock, set expiry, history) ──
+function UserManagementTab() {
+  const { toast } = useToast();
+  const [accounts, setAccounts] = useState<AccountRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "unlocked" | "locked" | "permanent" | "expiring">("all");
+  const [actionDialog, setActionDialog] = useState<{ account: AccountRow; action: ActionType } | null>(null);
+  const [historyDialog, setHistoryDialog] = useState<{ account: AccountRow; history: HistoryEntry[] } | null>(null);
+  const [reason, setReason] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [expiryDays, setExpiryDays] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/accounts", { cache: "no-store" });
+      const d = await res.json();
+      if (d.ok) setAccounts(d.accounts);
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  type AccountRow = {
+    id: string; username: string; role: string; status: string; fullName: string | null;
+    note: string | null; passwordSetAt: string | null; expiresAt: string | null; createdAt: string;
+  };
+
+  const filtered = accounts.filter((a) => {
+    // Exclude admin accounts — they can't be managed here (no self-locking).
+    if (a.role === "admin") return false;
+    if (search && !a.username.toLowerCase().includes(search.toLowerCase()) && !(a.fullName || "").toLowerCase().includes(search.toLowerCase())) return false;
+    if (statusFilter === "unlocked" && a.status !== "unlocked") return false;
+    if (statusFilter === "locked" && a.status !== "locked") return false;
+    if (statusFilter === "permanent" && a.expiresAt !== null) return false;
+    if (statusFilter === "expiring" && !(a.expiresAt && new Date(a.expiresAt).getTime() < Date.now() + 3 * 24 * 60 * 60 * 1000)) return false;
+    return true;
+  });
+
+  async function performAction() {
+    if (!actionDialog) return;
+    if (!reason.trim()) { toast({ title: "Reason required", variant: "destructive" }); return; }
+    if (actionDialog.action === "reset-password" && newPassword.length < 8) {
+      toast({ title: "Password too short", description: "Min 8 characters.", variant: "destructive" }); return;
+    }
+    setBusy(true);
+    try {
+      const body: any = { accountId: actionDialog.account.id, action: actionDialog.action, reason: reason.trim() };
+      if (actionDialog.action === "reset-password") body.newPassword = newPassword;
+      if (actionDialog.action === "set-expiry" && expiryDays !== "") body.expiryDays = Number(expiryDays);
+      if (actionDialog.action === "unlock" && expiryDays !== "") body.expiryDays = Number(expiryDays);
+
+      const res = await fetch("/api/admin/user/manage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const d = await res.json();
+      if (!res.ok || !d.ok) throw new Error(d.error || "Action failed");
+      toast({ title: `✓ ${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
+      setActionDialog(null);
+      setReason(""); setNewPassword(""); setExpiryDays("");
+      load();
+    } catch (e) {
+      toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
+    } finally { setBusy(false); }
+  }
+
+  async function viewHistory(account: AccountRow) {
+    try {
+      const res = await fetch(`/api/admin/user/history?accountId=${account.id}`, { cache: "no-store" });
+      const d = await res.json();
+      if (d.ok) setHistoryDialog({ account, history: d.history });
+      else toast({ title: "Failed to load history", description: d.error, variant: "destructive" });
+    } catch (e) {
+      toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
+    }
+  }
+
+  if (loading) return <Loading />;
+
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">User Management</h3>
+      <p className="text-xs text-muted-foreground mb-4">Reset passwords, lock/unlock accounts, set expiry dates, and view the full action history. Every action requires a reason (logged for audit).</p>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        <Input placeholder="Search by email or name…" value={search} onChange={(e) => setSearch(e.target.value)} className="bg-muted border-border h-9 max-w-xs" />
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as any)} className="h-9 rounded-md border border-border bg-muted px-3 text-xs">
+          <option value="all">All ({accounts.length})</option>
+          <option value="unlocked">Unlocked</option>
+          <option value="locked">Locked</option>
+          <option value="permanent">Permanent (no expiry)</option>
+          <option value="expiring">Expiring (≤3 days)</option>
+        </select>
+      </div>
+
+      {filtered.length === 0 ? (
+        <Empty text="No accounts match your filter." />
+      ) : (
+        <div className="rounded-lg border border-border overflow-x-auto max-h-[60vh] overflow-y-auto">
+          <table className="w-full text-xs">
+            <thead className="sticky top-0 bg-popover z-10">
+              <tr className="text-left text-[10px] text-muted-foreground border-b border-border">
+                <th className="px-3 py-2">Student / Email</th>
+                <th className="px-3 py-2">Status</th>
+                <th className="px-3 py-2 hidden md:table-cell">Expiry</th>
+                <th className="px-3 py-2 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((a) => {
+                const expired = a.expiresAt && new Date(a.expiresAt).getTime() < Date.now();
+                const permanent = a.expiresAt === null;
+                const expiring = a.expiresAt && new Date(a.expiresAt).getTime() < Date.now() + 3 * 24 * 60 * 60 * 1000 && !expired;
+                return (
+                  <tr key={a.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+                    <td className="px-3 py-2">
+                      <div className="font-medium text-foreground">{a.fullName || a.username}</div>
+                      <div className="text-[10px] text-muted-foreground">{a.username}</div>
+                    </td>
+                    <td className="px-3 py-2">
+                      {a.status === "locked" ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 text-[10px] font-semibold"><Lock className="size-2.5" /> Locked</span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold"><CheckCircle2 className="size-2.5" /> Unlocked</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 hidden md:table-cell text-[10px]">
+                      {permanent ? <span className="text-emerald-500">Permanent</span> :
+                       expired ? <span className="text-rose-500">Expired</span> :
+                       expiring ? <span className="text-amber-500">{new Date(a.expiresAt!).toLocaleDateString("en-IN", { dateStyle: "medium" })}</span> :
+                       <span className="text-muted-foreground">{new Date(a.expiresAt!).toLocaleDateString("en-IN", { dateStyle: "medium" })}</span>}
+                    </td>
+                    <td className="px-3 py-2 text-right whitespace-nowrap">
+                      <button onClick={() => setActionDialog({ account: a, action: "reset-password" })} className="text-[10px] px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 mr-1" title="Reset password">Reset PW</button>
+                      {a.status === "locked" ? (
+                        <button onClick={() => setActionDialog({ account: a, action: "unlock" })} className="text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 mr-1">Unlock</button>
+                      ) : (
+                        <button onClick={() => setActionDialog({ account: a, action: "lock" })} className="text-[10px] px-2 py-1 rounded bg-rose-500/10 text-rose-500 dark:text-rose-400 hover:bg-rose-500/20 mr-1">Lock</button>
+                      )}
+                      <button onClick={() => setActionDialog({ account: a, action: "set-expiry" })} className="text-[10px] px-2 py-1 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 mr-1">Expiry</button>
+                      <button onClick={() => viewHistory(a)} className="text-[10px] px-2 py-1 rounded bg-slate-500/10 text-slate-600 dark:text-slate-400 hover:bg-slate-500/20" title="View action history"><History className="size-3 inline" /></button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Action dialog */}
+      {actionDialog && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => !busy && setActionDialog(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h4 className="font-bold text-foreground mb-1 capitalize">
+              {actionDialog.action.replace("-", " ")}: {actionDialog.account.fullName || actionDialog.account.username}
+            </h4>
+            <p className="text-xs text-muted-foreground mb-4">{actionDialog.account.username}</p>
+
+            {actionDialog.action === "reset-password" && (
+              <div className="space-y-2 mb-3">
+                <Label className="text-xs">New Password</Label>
+                <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters" className="bg-muted border-border" />
+                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. Share it securely (call/SMS) — it is never shown again.</p>
+              </div>
+            )}
+
+            {(actionDialog.action === "set-expiry" || actionDialog.action === "unlock") && (
+              <div className="space-y-2 mb-3">
+                <Label className="text-xs">Expiry (days from now)</Label>
+                <Input type="number" value={expiryDays} onChange={(e) => setExpiryDays(e.target.value)} placeholder="2 (default), 0 = permanent" className="bg-muted border-border" />
+                <p className="text-[10px] text-muted-foreground">Enter the number of days until the account expires. Use <strong>0</strong> for permanent access (no expiry).</p>
+              </div>
+            )}
+
+            {actionDialog.action === "lock" && (
+              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-xs text-rose-600 dark:text-rose-400 mb-3">
+                The student will be immediately locked out — they cannot log in until you unlock them.
+              </div>
+            )}
+
+            <div className="space-y-2 mb-4">
+              <Label className="text-xs">Reason (required — logged for audit)</Label>
+              <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Student reported login issue / Payment confirmed / Misuse of account" className="bg-muted border-border min-h-[60px]" />
+            </div>
+
+            <div className="flex gap-2 justify-end">
+              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setExpiryDays(""); }} disabled={busy}>Cancel</Button>
+              <Button size="sm" onClick={performAction} disabled={busy} className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
+                {busy ? <Loader2 className="size-3.5 animate-spin mr-1" /> : null}
+                Confirm {actionDialog.action.replace("-", " ")}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* History dialog */}
+      {historyDialog && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => setHistoryDialog(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h4 className="font-bold text-foreground mb-1 flex items-center gap-2"><History className="size-4" /> Activity History</h4>
+            <p className="text-xs text-muted-foreground mb-4">{historyDialog.account.fullName || historyDialog.account.username} · {historyDialog.account.username}</p>
+            {historyDialog.history.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-6">No actions recorded yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {historyDialog.history.map((h) => (
+                  <div key={h.id} className="p-3 rounded-lg border border-border bg-muted/30">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full",
+                        h.action === "lock" ? "bg-rose-500/15 text-rose-500" :
+                        h.action === "reset-password" ? "bg-violet-500/15 text-violet-600 dark:text-violet-400" :
+                        h.action === "unlock" ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" :
+                        "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400"
+                      )}>{h.action}</span>
+                      <span className="text-[10px] text-muted-foreground">{new Date(h.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</span>
+                    </div>
+                    {h.reason && <p className="text-xs text-foreground">{h.reason}</p>}
+                    <div className="text-[10px] text-muted-foreground mt-1">By: {h.adminUser}{h.expiresAt ? ` · Expiry set to ${new Date(h.expiresAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}` : ""}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="flex justify-end mt-4">
+              <Button size="sm" variant="outline" onClick={() => setHistoryDialog(null)}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+type ActionType = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew";
+type HistoryEntry = { id: string; adminUser: string; action: string; reason: string | null; expiresAt: string | null; createdAt: string };
+
 
 // ── Certificates tab (auto-generation + verify + download) ──
 function CertificatesTab() {

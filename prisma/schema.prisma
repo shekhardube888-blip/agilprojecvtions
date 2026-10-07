@@ -103,17 +103,20 @@ model Account {
   unlockLogs    UnlockLog[]
 }
 
-// Audit trail of every admin "unlock / payment received" action.
+// Audit trail of every admin action on a user account.
+// Actions: "unlock" | "lock" | "reset-password" | "set-expiry" | "renew"
 model UnlockLog {
   id        String   @id @default(cuid())
   accountId String
   account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  adminUser String                  // who unlocked
-  reason    String?                 // e.g. "Payment received"
-  expiresAt DateTime               // the new expiry that was set
+  adminUser String                  // who performed the action
+  action    String   @default("unlock")  // unlock | lock | reset-password | set-expiry | renew
+  reason    String?                 // e.g. "Student reported login issue"
+  expiresAt DateTime?              // the new expiry set (null for lock/reset-password)
   createdAt DateTime @default(now())
 
   @@index([accountId])
+  @@index([createdAt])
 }
 
 // ── Auto-issued certificates (verifiable, with a unique certificate number) ──
