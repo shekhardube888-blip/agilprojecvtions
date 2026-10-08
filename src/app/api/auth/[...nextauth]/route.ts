@@ -61,10 +61,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: { strategy: "jwt" },
+  // trustHost is required for NextAuth v4 when the app is accessed from a
+  // host that isn't localhost (e.g. a preview URL, a Vercel deployment, etc.).
+  // Without it, NextAuth silently fails with "NEXTAUTH_URL" / "UNSUPPORTED_API" errors.
+  trustHost: true,
   secret:
     process.env.NEXTAUTH_SECRET ||
     process.env.SESSION_SECRET ||
-    "dev-secret-change-me",
+    (process.env.NODE_ENV === "production" ? undefined : "dev-secret-change-me"),
+  // Custom error page — shows a helpful message + the debug link when OAuth fails.
+  pages: {
+    signIn: "/",
+    error: "/api/auth/debug-google",
+  },
+  // Log OAuth errors to the server console for debugging.
+  events: {
+    async signInError(error) {
+      console.error("[nextauth] signInError:", JSON.stringify(error, null, 2));
+    },
+  },
   callbacks: {
     async jwt({ token, account, user }) {
       if (account?.provider === "google" && user?.email) {
