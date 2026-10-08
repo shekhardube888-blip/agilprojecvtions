@@ -3,15 +3,32 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // SECURITY: the admin password is NEVER logged, NEVER returned in API responses,
-// NEVER shown in the UI. It is read from ADMIN_PASSWORD env var and compared
-// in constant time on the server. It is NOT persisted to the database by this
-// route (the local Account seeding in src/lib/auth.ts handles hashing+storage).
-const ADMIN_EMAIL = (
-  process.env.ADMIN_EMAIL || "admin@agileprojection.com"
-)
+// NEVER shown in the UI. It is read from ADMIN_PASSWORD env var and compared in
+// constant time on the server. It is NOT persisted to the database by this route
+// (the local Account seeding in src/lib/auth.ts handles hashing+storage).
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@agileprojection.com")
   .toLowerCase()
   .trim();
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123"; // dev fallback ONLY
+
+// NextAuth v4 REQUIRES a secret to sign cookies/JWTs. If NEXTAUTH_SECRET (or
+// SESSION_SECRET) is not set, we fall back to a dev secret + log a loud warning.
+// NEVER use the dev secret in production — always set NEXTAUTH_SECRET in .env.
+const FALLBACK_SECRET = "agileprojection-nextauth-dev-secret-DO-NOT-USE-IN-PROD";
+const NEXTAUTH_SECRET =
+  process.env.NEXTAUTH_SECRET || process.env.SESSION_SECRET || FALLBACK_SECRET;
+if (
+  process.env.NODE_ENV === "production" &&
+  !process.env.NEXTAUTH_SECRET &&
+  !process.env.SESSION_SECRET
+) {
+  console.warn(
+    "\n⚠⚠⚠  NEXTAUTH_SECRET is not set in production!  ⚠⚠⚠\n" +
+      "Generate one with: openssl rand -base64 32\n" +
+      "Add to .env: NEXTAUTH_SECRET=...\n" +
+      "The app is using an INSECURE fallback secret right now.\n"
+  );
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -23,15 +40,13 @@ export const authOptions: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             // Force the Google Chrome profile/account picker to show EVERY time
             // (even if the user has only one Google account or an existing session).
-            // "select_account" → shows the list of Google accounts logged into Chrome.
-            // "consent" → forces the consent screen (so the user explicitly approves).
-            authorization: { params: { prompt: "select_account consent", access_type: "offline" } },
+            authorization: {
+              params: { prompt: "select_account consent", access_type: "offline" },
+            },
           }) as any,
         ]
       : []),
     // Credentials provider — for admin only.
-    // The email must match ADMIN_EMAIL exactly; the password is compared in
-    // constant time via Buffer.equals after a length check.
     CredentialsProvider({
       name: "Admin",
       credentials: {
@@ -61,24 +76,29 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: { strategy: "jwt" },
-  // trustHost is required for NextAuth v4 when the app is accessed from a
-  // host that isn't localhost (e.g. a preview URL, a Vercel deployment, etc.).
-  // Without it, NextAuth silently fails with "NEXTAUTH_URL" / "UNSUPPORTED_API" errors.
+  // trustHost is required for NextAuth v4 when the app is accessed from a host
+  // that isn't localhost (preview URL, Vercel deployment, etc.). Without it,
+  // NextAuth silently fails with "NEXTAUTH_URL" / "UNSUPPORTED_API" errors.
   trustHost: true,
-  secret:
-    process.env.NEXTAUTH_SECRET ||
-    process.env.SESSION_SECRET ||
-    (process.env.NODE_ENV === "production" ? undefined : "dev-secret-change-me"),
-  // Custom error page — shows a helpful message + the debug link when OAuth fails.
+  // ALWAYS provide a secret — if it's undefined, NextAuth throws a 500 on
+  // internal endpoints like /api/auth/_log (which is what causes the
+  // CLIENT_FETCH_ERROR in the browser console).
+  secret: NEXTAUTH_SECRET,
+  // Custom pages — signIn uses the homepage; OAuth errors redirect there too
+  // (with ?error= in the query string, which the homepage detects + shows a toast).
   pages: {
     signIn: "/",
-    error: "/api/auth/debug-google",
+    error: "/",
   },
-  // Log OAuth errors to the server console for debugging.
-  events: {
-    async signInError(error) {
-      console.error("[nextauth] signInError:", JSON.stringify(error, null, 2));
+  // Logger — surfaces NextAuth errors in the server console for debugging.
+  logger: {
+    error(code: string, message: unknown) {
+      console.error("[next-auth] error:", code, typeof message === "object" ? JSON.stringify(message) : message);
     },
+    warn(code: string) {
+      console.warn("[next-auth] warn:", code);
+    },
+    debug() {},
   },
   callbacks: {
     async jwt({ token, account, user }) {
@@ -98,10 +118,6 @@ export const authOptions: NextAuthOptions = {
         token.googleEmail as string | undefined;
       return session;
     },
-  },
-  pages: {
-    // Use the homepage as the sign-in page (no separate /login route)
-    signIn: "/",
   },
 };
 

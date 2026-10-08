@@ -66,11 +66,11 @@ export default function Home() {
     //    back from Google → /api/auth/google-link (the backend route that
     //    links the Google email to the local portal session cookie), we land
     //    back on /?google=1. We refresh auth state + strip the query param.
-    //    On failure NextAuth redirects to /?error=google-failed → toast.
+    //    On failure NextAuth redirects to /?error=<code> → toast.
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const googleDone = params.get("google") === "1";
-      const googleError = params.get("error") === "google-failed";
+      const errorCode = params.get("error");
       if (googleDone) {
         refreshAuth();
         params.delete("google");
@@ -79,12 +79,22 @@ export default function Home() {
           window.location.pathname + (remaining ? `?${remaining}` : "") + window.location.hash;
         window.history.replaceState(null, "", newUrl);
       }
-      if (googleError) {
-        toast({
-          title: "Google sign-in failed",
-          description: "Please try again. If the problem persists, use admin login below.",
-          variant: "destructive",
-        });
+      if (errorCode) {
+        // Map NextAuth error codes to human-readable messages.
+        const errorMessages: Record<string, { title: string; description: string }> = {
+          "google-failed": { title: "Google sign-in failed", description: "Please try again." },
+          Configuration: { title: "Server configuration error", description: "NEXTAUTH_SECRET is missing. Add it to .env (see /api/auth/debug-google)." },
+          OAuthSigninError: { title: "Google OAuth error", description: "Google rejected the sign-in. Check your GOOGLE_CLIENT_ID + SECRET in .env + the redirect URI in Google Cloud Console." },
+          OAuthCallbackError: { title: "Google callback failed", description: "The redirect URI in Google Cloud Console doesn't match. Visit /api/auth/debug-google for the exact URI." },
+          OAuthCreateAccountError: { title: "Account creation failed", description: "Couldn't create the Google-linked account. Please try again." },
+          AccessDenied: { title: "Access denied", description: "You cancelled the Google consent. Try again and approve the permission request." },
+          Verification: { title: "Token verification failed", description: "Your session expired. Please sign in again." },
+        };
+        const msg = errorMessages[errorCode] || {
+          title: "Sign-in error",
+          description: `Error code: ${errorCode}. Visit /api/auth/debug-google for diagnostics.`,
+        };
+        toast({ title: msg.title, description: msg.description, variant: "destructive" });
         params.delete("error");
         const remaining = params.toString();
         const newUrl =
