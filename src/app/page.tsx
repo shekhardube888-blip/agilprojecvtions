@@ -160,7 +160,7 @@ export default function Home() {
                       {isAdmin ? "Admin Portal" : "Student Portal"} · NT-AI Network
                     </div>
                     <h2 className="font-bold text-2xl md:text-3xl text-foreground">
-                      Welcome, {user.fullName || user.username}
+                      Welcome, {user.fullName || user.username} 👋
                     </h2>
                     <p className="text-muted-foreground text-xs md:text-sm mt-1.5">
                       {isAdmin ? "Manage students, applications, certificates, reports, and more." : "Register, track your project, ask the AI mentor — all in one dashboard."}
@@ -176,30 +176,39 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quick-access cards */}
+          {/* Quick-access cards — each with a unique accent color for easy scanning */}
           <section className="px-5 md:px-[5%] max-w-7xl mx-auto pb-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {(isAdmin
                 ? [
-                    { label: "Students", icon: <Users className="size-4" />, desc: "Manage & approve" },
-                    { label: "Applications", icon: <FileText className="size-4" />, desc: "Approval center" },
-                    { label: "Certificates", icon: <Award className="size-4" />, desc: "Generate & verify" },
-                    { label: "Reports", icon: <BarChart3 className="size-4" />, desc: "Analytics" },
+                    { label: "Students", icon: <Users className="size-4" />, desc: "Manage & approve", accent: "emerald" },
+                    { label: "Applications", icon: <FileText className="size-4" />, desc: "Approval center", accent: "violet" },
+                    { label: "Certificates", icon: <Award className="size-4" />, desc: "Generate & verify", accent: "amber" },
+                    { label: "Reports", icon: <BarChart3 className="size-4" />, desc: "Analytics", accent: "cyan" },
                   ]
                 : [
-                    { label: "My Project", href: "#project-tracker", icon: <Search className="size-4" />, desc: "Track 6-stage journey" },
-                    { label: "AI Mentor", href: "#ai-assistant", icon: <Bot className="size-4" />, desc: "Learning assistant" },
-                    { label: "Schedule", href: "#schedule", icon: <Calendar className="size-4" />, desc: "Batch dates" },
-                    { label: "FAQ", href: "#faq", icon: <HelpCircle className="size-4" />, desc: "Questions" },
+                    { label: "My Project", href: "#project-tracker", icon: <Search className="size-4" />, desc: "Track 6-stage journey", accent: "cyan" },
+                    { label: "AI Mentor", href: "#ai-assistant", icon: <Bot className="size-4" />, desc: "Learning assistant", accent: "violet" },
+                    { label: "Schedule", href: "#schedule", icon: <Calendar className="size-4" />, desc: "Batch dates", accent: "emerald" },
+                    { label: "FAQ", href: "#faq", icon: <HelpCircle className="size-4" />, desc: "Questions", accent: "amber" },
                   ]
-              ).map((c) => (
-                <div key={c.label} className="bg-card border border-border rounded-xl p-4 hover:border-cyan-400/40 hover:shadow-md transition-all">
-                  <div className="size-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 grid place-items-center text-cyan-500 dark:text-cyan-400 mb-3">{c.icon}</div>
+              ).map((c) => {
+                const accents: Record<string, { bg: string; text: string; border: string; hover: string }> = {
+                  cyan: { bg: "bg-cyan-500/10", text: "text-cyan-500 dark:text-cyan-400", border: "border-cyan-500/20", hover: "hover:border-cyan-400/50" },
+                  violet: { bg: "bg-violet-500/10", text: "text-violet-500 dark:text-violet-400", border: "border-violet-500/20", hover: "hover:border-violet-400/50" },
+                  emerald: { bg: "bg-emerald-500/10", text: "text-emerald-600 dark:text-emerald-400", border: "border-emerald-500/20", hover: "hover:border-emerald-400/50" },
+                  amber: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-500/20", hover: "hover:border-amber-400/50" },
+                };
+                const a = accents[c.accent] || accents.cyan;
+                return (
+                <div key={c.label} className={cn("bg-card border rounded-xl p-4 hover:shadow-md transition-all", a.border, a.hover)}>
+                  <div className={cn("size-10 rounded-lg grid place-items-center mb-3", a.bg, a.text)}>{c.icon}</div>
                   <div className="font-semibold text-foreground text-sm">{c.label}</div>
                   <div className="text-[11px] text-muted-foreground">{c.desc}</div>
-                  <div className="text-[10px] text-cyan-500 dark:text-cyan-400 mt-2">{isAdmin ? "Open Admin Dashboard" : "Open"}</div>
+                  <div className={cn("text-[10px] mt-2 font-semibold", a.text)}>{isAdmin ? "Open Admin Dashboard" : "Open"}</div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 

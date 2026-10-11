@@ -946,7 +946,7 @@ function PaymentsTab() {
         {students.slice(0, 20).map(s => (
           <div key={s.id} className="flex items-center justify-between bg-card border border-border rounded-lg p-2">
             <div><div className="text-xs font-medium text-foreground">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.plan}</div></div>
-            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "Confirmed" : "Pending"}</span>
+            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border font-semibold", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "✅ Confirmed" : "⏳ Pending"}</span>
           </div>
         ))}
       </div>

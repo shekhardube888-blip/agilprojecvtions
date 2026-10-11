@@ -20,15 +20,15 @@ import { cn } from "@/lib/utils";
 
 type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "code" | "schedule" | "faq";
 
-const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string }[] = [
-  { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home" },
-  { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment" },
-  { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey" },
-  { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant" },
-  { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "Coming in v2.0" },
-  { key: "code", label: "Code Playground", icon: <Code2 className="size-4" />, desc: "HTML · CSS · JS live runner" },
-  { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches" },
-  { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, desc: "Questions & answers" },
+const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string; accent: string }[] = [
+  { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home", accent: "cyan" },
+  { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment", accent: "violet" },
+  { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey", accent: "cyan" },
+  { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant", accent: "violet" },
+  { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "Coming in v2.0", accent: "slate" },
+  { key: "code", label: "Code Playground", icon: <Code2 className="size-4" />, desc: "HTML · CSS · JS live runner", accent: "emerald" },
+  { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches", accent: "amber" },
+  { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, desc: "Questions & answers", accent: "amber" },
 ];
 
 const WRAP = "[&_section]:!py-4 [&_section]:!px-0 [&_section]:!max-w-none [&_section]:!mx-0 [&_section]:!scroll-mt-0";
@@ -62,21 +62,31 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
         </div>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {TABS.filter((t) => t.key !== "overview").map((t) => (
-          <button key={t.key} type="button" onClick={() => onJump(t.key)} className="group text-left bg-card border border-border rounded-xl p-4 ap-lift">
-            <div className="flex items-center gap-2 mb-2"><span className="size-8 rounded-lg ap-gradient-cyan grid place-items-center text-navy">{t.icon}</span><span className="font-semibold text-foreground text-sm">{t.label}</span></div>
+        {TABS.filter((t) => t.key !== "overview").map((t) => {
+          const accents: Record<string, { bg: string; text: string }> = {
+            cyan: { bg: "bg-cyan-500/10", text: "text-cyan-500 dark:text-cyan-400" },
+            violet: { bg: "bg-violet-500/10", text: "text-violet-500 dark:text-violet-400" },
+            emerald: { bg: "bg-emerald-500/10", text: "text-emerald-600 dark:text-emerald-400" },
+            amber: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400" },
+            slate: { bg: "bg-slate-500/10", text: "text-slate-500 dark:text-slate-400" },
+          };
+          const a = accents[t.accent] || accents.cyan;
+          return (
+          <button key={t.key} type="button" onClick={() => onJump(t.key)} className="group text-left bg-card border border-border rounded-xl p-4 ap-lift hover:border-cyan-400/40">
+            <div className="flex items-center gap-2 mb-2"><span className={cn("size-8 rounded-lg grid place-items-center", a.bg, a.text)}>{t.icon}</span><span className="font-semibold text-foreground text-sm">{t.label}</span></div>
             <div className="text-[11px] text-muted-foreground">{t.desc}</div>
-            <div className="text-[10px] text-cyan-400 mt-2 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">Open tab</div>
+            <div className={cn("text-[10px] mt-2 font-semibold", a.text)}>Open tab</div>
           </button>
-        ))}
+          );
+        })}
       </div>
       <div className="rounded-xl border border-border bg-card p-4">
-        <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2 flex items-center gap-1.5"><Sparkles className="size-3.5" /> How it works</div>
-        <ol className="space-y-1.5 text-xs text-foreground">
-          <li><span className="text-cyan-400 font-semibold">1.</span> <button onClick={() => onJump("register")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Register</button> for free.</li>
-          <li><span className="text-cyan-400 font-semibold">2.</span> Admin confirms your payment + starts your internship.</li>
-          <li><span className="text-cyan-400 font-semibold">3.</span> <button onClick={() => onJump("track")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training (LLM)".</li>
-          <li><span className="text-cyan-400 font-semibold">4.</span> <button onClick={() => onJump("ai-mentor")} className="text-cyan-500 dark:text-cyan-400 underline underline-offset-2">Ask the AI Mentor</button> for help.</li>
+        <div className="text-cyan-500 dark:text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2 flex items-center gap-1.5"><Sparkles className="size-3.5" /> How it works</div>
+        <ol className="space-y-2 text-xs text-foreground">
+          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-violet-500/15 text-violet-600 dark:text-violet-400 grid place-items-center text-[10px] font-bold shrink-0">1</span><span><button onClick={() => onJump("register")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Register</button> for free — choose your project + domain.</span></li>
+          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 grid place-items-center text-[10px] font-bold shrink-0">2</span><span>Admin confirms your payment + starts your internship.</span></li>
+          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 grid place-items-center text-[10px] font-bold shrink-0">3</span><span><button onClick={() => onJump("track")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training".</span></li>
+          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 grid place-items-center text-[10px] font-bold shrink-0">4</span><span><button onClick={() => onJump("ai-mentor")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Ask the AI Mentor</button> for help anytime.</span></li>
         </ol>
       </div>
     </div>

@@ -322,7 +322,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
             <Chip label="Plan" value={student.plan} accent="text-violet-600 dark:text-violet-400" />
             <Chip
               label="Payment"
-              value={student.paymentStatus === "confirmed" ? "Confirmed" : "Pending"}
+              value={student.paymentStatus === "confirmed" ? "✅ Confirmed" : "⏳ Pending"}
               accent={student.paymentStatus === "confirmed" ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}
             />
           </div>
