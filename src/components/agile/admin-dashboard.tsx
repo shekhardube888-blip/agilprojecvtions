@@ -384,8 +384,20 @@ function UserManagementTab() {
   const [historyDialog, setHistoryDialog] = useState<{ account: AccountRow; history: HistoryEntry[] } | null>(null);
   const [reason, setReason] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [expiryDays, setExpiryDays] = useState("");
   const [busy, setBusy] = useState(false);
+
+  // Generate a random 12-char password (letters + digits + symbols).
+  const generatePassword = useCallback(() => {
+    const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
+    let pw = "";
+    const arr = new Uint8Array(12);
+    crypto.getRandomValues(arr);
+    for (let i = 0; i < 12; i++) pw += chars[arr[i] % chars.length];
+    setNewPassword(pw);
+    setShowPw(true); // show the generated password so the admin can copy it
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -437,7 +449,7 @@ function UserManagementTab() {
       if (!res.ok || !d.ok) throw new Error(d.error || "Action failed");
       toast({ title: `✓ ${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
       setActionDialog(null);
-      setReason(""); setNewPassword(""); setExpiryDays("");
+      setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays("");
       load();
     } catch (e) {
       toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
@@ -540,9 +552,15 @@ function UserManagementTab() {
 
             {actionDialog.action === "reset-password" && (
               <div className="space-y-2 mb-3">
-                <Label className="text-xs">New Password</Label>
-                <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters" className="bg-muted border-border" />
-                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. Share it securely (call/SMS) — it is never shown again.</p>
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs">New Password</Label>
+                  <div className="flex gap-1">
+                    <button type="button" onClick={generatePassword} className="text-[10px] px-2 py-0.5 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 font-semibold">Generate</button>
+                    <button type="button" onClick={() => setShowPw(s => !s)} className="text-[10px] px-2 py-0.5 rounded bg-slate-500/10 text-slate-600 dark:text-slate-400 hover:bg-slate-500/20">{showPw ? "Hide" : "Show"}</button>
+                  </div>
+                </div>
+                <Input type={showPw ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters (or click Generate)" className="bg-muted border-border font-mono" />
+                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. Share it securely (call/SMS) — it is never shown again after you confirm.</p>
               </div>
             )}
 
@@ -566,7 +584,7 @@ function UserManagementTab() {
             </div>
 
             <div className="flex gap-2 justify-end">
-              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setExpiryDays(""); }} disabled={busy}>Cancel</Button>
+              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays(""); }} disabled={busy}>Cancel</Button>
               <Button size="sm" onClick={performAction} disabled={busy} className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
                 {busy ? <Loader2 className="size-3.5 animate-spin mr-1" /> : null}
                 Confirm {actionDialog.action.replace("-", " ")}
