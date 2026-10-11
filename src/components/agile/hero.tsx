@@ -146,8 +146,14 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* ─── RIGHT: enterprise trust stat card ─── */}
-        <div className="ap-fade-up">
+        {/* ─── RIGHT: hero image + enterprise trust stat card ─── */}
+        <div className="ap-fade-up space-y-4">
+          {/* Professional hero image — attracts students + visual impact */}
+          <img
+            src="/hero-students.png"
+            alt="Engineering students collaborating on AI/ML projects at AgileProjection"
+            className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10"
+          />
           <div className="relative rounded-2xl border border-border bg-card p-5 md:p-6 shadow-lg shadow-cyan-500/5">
             {/* header */}
             <div className="flex items-center gap-2 pb-4 mb-4 border-b border-border">

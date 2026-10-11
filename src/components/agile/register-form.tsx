@@ -52,6 +52,7 @@ type FormState = {
   mobile: string;
   degree: string;
   branch: string;
+  subject: string;       // ← NEW: field of interest (AI-ML, CS, MBA, BBA, Other)
   semester: string;
   plan: string;
   college: string;
@@ -60,6 +61,17 @@ type FormState = {
   notes: string;
 };
 
+const SUBJECTS = [
+  { key: "ai-ml", label: "AI / Machine Learning", desc: "Generative AI, LLMs, Computer Vision, NLP, Deep Learning" },
+  { key: "cs", label: "Computer Science", desc: "Full Stack, DSA, System Design, Cloud, DevOps" },
+  { key: "ece", label: "Electronics & Communication", desc: "Embedded Systems, IoT, VLSI, Signal Processing" },
+  { key: "mech", label: "Mechanical Engineering", desc: "CAD/CAM, Robotics, Automotive, Manufacturing" },
+  { key: "mba", label: "MBA / Management", desc: "Business Analytics, Marketing, Finance, Operations" },
+  { key: "bba", label: "BBA / Business", desc: "Entrepreneurship, Digital Marketing, HR, Supply Chain" },
+  { key: "civil", label: "Civil Engineering", desc: "Structural, Construction Mgmt, Smart Cities, GIS" },
+  { key: "other", label: "Other (coming in v2.0)", desc: "We're adding more domains — tell us yours in the notes" },
+];
+
 const EMPTY_FORM: FormState = {
   firstName: "",
   lastName: "",
@@ -67,6 +79,7 @@ const EMPTY_FORM: FormState = {
   mobile: "",
   degree: "",
   branch: "",
+  subject: "",
   semester: "",
   plan: "",
   college: "",
@@ -186,6 +199,7 @@ export function RegisterForm() {
     if (!/^[+\d][\d\s-]{8,}$/.test(form.mobile))
       e.mobile = "Valid mobile number required";
     if (!form.degree) e.degree = "Select your degree";
+    if (!form.subject) e.subject = "Select your subject / field of interest";
     if (!form.branch) e.branch = "Select your branch";
     if (!form.semester) e.semester = "Select semester";
     if (!form.plan) e.plan = "Select a plan";
@@ -257,6 +271,7 @@ export function RegisterForm() {
           email: activeEmail,
           mobile: form.mobile,
           degree: form.degree,
+          subject: form.subject,
           branch: form.branch,
           semester: form.semester,
           plan: form.plan,
@@ -608,6 +623,33 @@ export function RegisterForm() {
                     />
                   </Field>
 
+                  {/* Subject / Field of Interest — NEW: lets students pick their domain */}
+                  <Field label="Subject / Field of Interest" error={errors.subject} required>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {SUBJECTS.map((s) => {
+                        const selected = form.subject === s.key;
+                        const isOther = s.key === "other";
+                        return (
+                          <button
+                            key={s.key}
+                            type="button"
+                            onClick={() => setForm({ ...form, subject: s.key })}
+                            className={cn(
+                              "text-left p-2.5 rounded-lg border text-xs transition-all",
+                              selected
+                                ? "border-cyan-400/60 bg-cyan-500/10 ring-1 ring-cyan-400/30"
+                                : "border-border bg-muted/30 hover:border-cyan-400/30",
+                              isOther && "opacity-60",
+                            )}
+                          >
+                            <div className="font-semibold text-foreground text-[11px]">{s.label}</div>
+                            <div className="text-[9px] text-muted-foreground mt-0.5 leading-tight">{s.desc}</div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </Field>
+
                   <Field label="Degree" error={errors.degree} required>
                     <SelectField
                       value={form.degree}
@@ -722,6 +764,7 @@ export function RegisterForm() {
                       ["Email", activeEmail || form.email],
                       ["Mobile", form.mobile],
                       ["Degree", form.degree],
+                      ["Subject", SUBJECTS.find(s => s.key === form.subject)?.label || form.subject],
                       ["Branch", form.branch],
                       ["Semester", form.semester],
                       ["College", form.college],

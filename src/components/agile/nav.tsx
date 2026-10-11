@@ -54,14 +54,8 @@ const NAV_LINKS: NavLink[] = [
 
 function BrandLogo() {
   return (
-    <Link href="#top" className="flex items-center gap-1.5 font-bold text-lg shrink-0">
-      <span className="size-7 rounded-md ap-gradient-cyan grid place-items-center text-navy">
-        <Zap className="size-4" fill="currentColor" />
-      </span>
-      <span className="text-foreground">
-        Agile<span className="text-cyan-400">Projection</span>
-        <span className="text-muted-foreground text-xs font-semibold ml-0.5 hidden sm:inline">(NT-AI)</span>
-      </span>
+    <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
+      <img src="/agileprojection-logo.png" alt="AgileProjection logo" className="h-8 w-auto rounded-md" />
     </Link>
   );
 }

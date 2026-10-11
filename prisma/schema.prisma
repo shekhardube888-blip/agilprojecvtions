@@ -24,6 +24,7 @@ model Student {
   mobile      String
   degree      String
   branch      String
+  subject     String   @default("")  // field of interest: ai-ml, cs, mba, bba, etc.
   semester    String
   plan        String
   college     String

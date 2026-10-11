@@ -131,10 +131,7 @@ export default function Home() {
         {/* Top bar with LOGOUT */}
         <header className="fixed top-0 inset-x-0 z-50 h-16 bg-background/90 backdrop-blur-xl border-b border-border flex items-center justify-between px-4 md:px-[5%]">
           <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
-            <span className="size-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white">
-              <Zap className="size-4" fill="currentColor" />
-            </span>
-            <span className="text-foreground">Agile<span className="text-cyan-500">Projection</span></span>
+            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-9 w-auto rounded-md" />
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2">
@@ -233,10 +230,7 @@ export default function Home() {
         {/* Header */}
         <header className="flex items-center justify-between px-5 md:px-[5%] py-4">
           <Link href="#top" className="flex items-center gap-2 font-bold text-lg">
-            <span className="size-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white">
-              <Zap className="size-4" fill="currentColor" />
-            </span>
-            <span className="text-foreground">Agile<span className="text-cyan-500">Projection</span></span>
+            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-9 w-auto rounded-md" />
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -247,7 +241,7 @@ export default function Home() {
         {/* Main: login card + stats */}
         <main className="flex-1 flex items-center justify-center px-5 py-8">
           <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-8 items-center">
-            {/* Left: branding + stats */}
+            {/* Left: branding + hero image + stats */}
             <div className="text-center lg:text-left">
               <h1 className="font-bold text-3xl md:text-5xl text-foreground leading-tight">
                 Launch Your <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Engineering Career</span>
@@ -255,7 +249,13 @@ export default function Home() {
               <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-md mx-auto lg:mx-0">
                 Free engineering internships + 80+ AI/ML projects for BE / B.Tech / MCA / M.Tech students. Live mentoring, real projects, AICTE-aligned certificates.
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 max-w-md mx-auto lg:mx-0">
+              {/* Professional hero image — attracts students + visual impact */}
+              <img
+                src="/hero-students.png"
+                alt="Engineering students collaborating on AI/ML projects"
+                className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10 mt-5 hidden sm:block"
+              />
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 max-w-md mx-auto lg:mx-0">
                 {[{n:"10,000+",l:"Students"},{n:"500+",l:"Colleges"},{n:"80+",l:"Projects"},{n:"98%",l:"Completion"}].map(s => (
                   <div key={s.l} className="bg-card border border-border rounded-lg p-3 text-center shadow-sm">
                     <div className="font-bold text-lg bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{s.n}</div>

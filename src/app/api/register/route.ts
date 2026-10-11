@@ -50,6 +50,7 @@ export async function POST(req: Request) {
       "lastName",
       "mobile",
       "degree",
+      "subject",
       "branch",
       "semester",
       "plan",
@@ -74,6 +75,7 @@ export async function POST(req: Request) {
       email: googleEmail, // ← from Google session, NEVER from body
       mobile: String(body.mobile).trim(),
       degree: String(body.degree),
+      subject: String(body.subject || ""),
       branch: String(body.branch),
       semester: String(body.semester),
       plan: String(body.plan),
