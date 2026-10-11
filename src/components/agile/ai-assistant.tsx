@@ -267,8 +267,13 @@ function Bubble({ role, content }: { role: "user" | "assistant"; content: string
         {isUser ? (
           <p className="whitespace-pre-wrap break-words">{content}</p>
         ) : (
-          <div className="prose prose-sm prose-invert max-w-none prose-pre:bg-[#0a1422] prose-pre:border-[rgba(6,182,212,0.18)] prose-pre:text-slate-200 prose-code:text-cyan-300 prose-a:text-cyan-300 prose-headings:text-foreground prose-strong:text-slate-100 prose-ul:my-2 prose-li:my-0.5 prose-p:my-1.5">
-            <ReactMarkdown>{content}</ReactMarkdown>
+          <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap break-words prose-pre:bg-[#0a1422] prose-pre:border-[rgba(6,182,212,0.18)] prose-pre:text-slate-200 prose-code:text-cyan-300 prose-a:text-cyan-300 prose-headings:text-foreground prose-strong:text-slate-100 prose-ul:my-2 prose-li:my-0.5 prose-p:my-1.5 prose-img:rounded-lg prose-img:max-w-full">
+            <ReactMarkdown
+              components={{
+                img: ({ src, alt }) => <img src={typeof src === 'string' ? src : ''} alt={alt} className="rounded-lg max-w-full my-2" />,
+                p: ({ children }) => <p className="my-1.5">{children}</p>,
+              }}
+            >{content}</ReactMarkdown>
           </div>
         )}
       </div>

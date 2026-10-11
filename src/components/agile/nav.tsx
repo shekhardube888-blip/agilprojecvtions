@@ -56,6 +56,7 @@ function BrandLogo() {
   return (
     <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
       <img src="/agileprojection-logo.png" alt="AgileProjection logo" className="h-8 w-auto rounded-md" />
+      <span className="text-[10px] text-muted-foreground hidden sm:inline border-l border-border pl-2">NT-AI Network</span>
     </Link>
   );
 }

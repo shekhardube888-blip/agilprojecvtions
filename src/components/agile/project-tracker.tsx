@@ -437,8 +437,12 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
                             <X className="size-3.5" />
                           </button>
                         </div>
-                        <div className="prose prose-sm prose-invert max-w-none bg-muted border border-border rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
-                          <ReactMarkdown>{training[stageNum].content}</ReactMarkdown>
+                        <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap break-words bg-muted border border-border rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300 prose-img:rounded-lg">
+                          <ReactMarkdown
+                            components={{
+                              img: ({ src, alt }) => <img src={typeof src === 'string' ? src : ''} alt={alt} className="rounded-lg max-w-full my-2" />,
+                            }}
+                          >{training[stageNum].content}</ReactMarkdown>
                         </div>
                       </div>
                     ) : (

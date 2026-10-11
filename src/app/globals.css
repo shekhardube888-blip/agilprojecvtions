@@ -86,25 +86,26 @@
   --sidebar-ring: #06b6d4;
 }
 
+/* ── NT-AI Network brand theme: burgundy + cream + gold ── */
 .dark {
-  --background: #0B1929;
-  --foreground: #F8FAFC;
-  --card: #111f35;
-  --card-foreground: #F8FAFC;
-  --popover: #0e1b2e;
-  --popover-foreground: #F8FAFC;
-  --primary: #06B6D4;
-  --primary-foreground: #0B1929;
-  --secondary: #0F2340;
-  --secondary-foreground: #94A3B8;
-  --muted: #0a1422;
-  --muted-foreground: #94A3B8;
-  --accent: #0F2340;
-  --accent-foreground: #67E8F9;
+  --background: #2A0808;          /* deep burgundy (darkened from #5C0A0A) */
+  --foreground: #F5DEB3;          /* cream/beige text (wheat) */
+  --card: #3D0C0C;                /* slightly lighter burgundy */
+  --card-foreground: #F5DEB3;     /* cream text on cards */
+  --popover: #3D0C0C;            /* burgundy popover */
+  --popover-foreground: #F5DEB3;
+  --primary: #D4AF37;             /* gold (for buttons, links, accents) */
+  --primary-foreground: #2A0808;  /* dark text on gold buttons */
+  --secondary: #4A1010;           /* lighter burgundy for secondary elements */
+  --secondary-foreground: #F5DEB3;
+  --muted: #4A1010;               /* muted burgundy */
+  --muted-foreground: #C4A464;    /* muted gold-cream */
+  --accent: #4A1010;
+  --accent-foreground: #D4AF37;   /* gold accent text */
   --destructive: #ef4444;
-  --border: rgba(6,182,212,0.18);
-  --input: rgba(255,255,255,0.05);
-  --ring: #06B6D4;
+  --border: rgba(212,175,55,0.25); /* gold-tinted borders */
+  --input: rgba(245,222,179,0.08);
+  --ring: #D4AF37;                /* gold ring */
 }
 
 @layer base {
@@ -120,7 +121,7 @@
   }
 }
 
-/* ── Custom scrollbar (theme-aware) ── */
+/* ── Custom scrollbar (NT-AI brand: burgundy + gold) ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -136,16 +137,21 @@
   background: var(--ring);
 }
 
+/* Ensure emoji rendering in all elements */
+.emoji, .prose, [class*="prose"] {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", system-ui, sans-serif;
+}
+
 /* ── Utility classes ── */
 .ap-gradient-text {
-  background: linear-gradient(90deg, #06B6D4, #2563EB);
+  background: linear-gradient(90deg, #D4AF37, #F5DEB3);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .ap-gradient-cyan {
-  background: linear-gradient(135deg, #2563EB, #06B6D4);
+  background: linear-gradient(135deg, #D4AF37, #F5DEB3);
 }
 
 .ap-grid-pattern {
