@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { DEGREES } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { cn, safeJson } from "@/lib/utils";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -81,7 +81,7 @@ export function AIAssistant() {
           history,
         }),
       });
-      const data = await res.json();
+      const data = await safeJson(res);
       if (!res.ok || !data.ok) {
         throw new Error(data.error || "Request failed");
       }

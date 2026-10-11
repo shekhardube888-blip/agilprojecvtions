@@ -60,6 +60,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* No-flash theme script — applies the dark (NT-AI burgundy) theme
+            BEFORE React hydrates, so there's no flash of light theme. */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var stored = localStorage.getItem('ap-theme');
+              var isDark = stored !== 'light';
+              if (isDark) document.documentElement.classList.add('dark');
+            } catch(e) {
+              document.documentElement.classList.add('dark');
+            }
+          })();
+        ` }} />
+      </head>
       <body
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}

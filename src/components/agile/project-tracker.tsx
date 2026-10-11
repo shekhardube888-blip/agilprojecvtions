@@ -25,7 +25,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { PROJECT_STAGES } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
+import { cn, safeJson } from "@/lib/utils";
 
 type StudentTracker = {
   id: string;
@@ -66,7 +66,7 @@ export function ProjectTracker() {
   const fetchStudent = React.useCallback(async () => {
     try {
       const res = await fetch("/api/student/me", { cache: "no-store" });
-      const data = await res.json();
+      const data = await safeJson(res);
       if (res.ok && data.ok) {
         setStudent({ ...data.student, accountId: data.account?.id || null });
         setNoRegistration(false);
@@ -129,7 +129,7 @@ export function ProjectTracker() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), mobile: mobile.trim() }),
       });
-      const data = await res.json();
+      const data = await safeJson(res);
       if (!res.ok || !data.ok) {
         setError(data.error || "Lookup failed");
         return;
@@ -265,7 +265,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stage, project: student.project, categoryLabel: student.categoryLabel }),
       });
-      const data = await res.json();
+      const data = await safeJson(res);
       if (!res.ok || !data.ok) throw new Error(data.error || "Training generation failed");
       setTraining((t) => ({ ...t, [stage]: { content: data.content, loading: false } }));
       toast({ title: `Week ${stage} training ready`, description: data.title });
