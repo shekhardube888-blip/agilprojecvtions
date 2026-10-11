@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const maxDuration = 60;
 
 // POST /api/sales-chat  { sessionId, message, history? }

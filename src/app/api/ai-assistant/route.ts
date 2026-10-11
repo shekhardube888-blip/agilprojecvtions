@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+export const dynamic = "force-dynamic"; // prevents Next.js fetch interception that hangs the SDK
+export const fetchCache = "force-no-store";
 
 // AI Learning Assistant — POST /api/ai-assistant
 // Body: { sessionId, message, degree?, history?: [{role, content}] }
@@ -58,26 +60,39 @@ export async function POST(req: Request) {
     ];
 
     let reply = "";
+    let aiAvailable = true;
     try {
-      const ZAIModule = await import("z-ai-web-dev-sdk");
-      const ZAI = (ZAIModule as unknown as { default: { create: () => Promise<unknown> } }).default ?? (ZAIModule as unknown as { create: () => Promise<unknown> });
-      const zai = await ZAI.create();
-      const completion = await (zai as {
-        chat: {
-          completions: {
-            create: (args: { messages: ChatMsg[]; thinking: { type: string } }) => Promise<{
-              choices: { message?: { content?: string } }[];
-            }>;
+      // Wrap the LLM call in a timeout — if the SDK hangs (known issue in some
+      // Next.js contexts), we fall back gracefully instead of hanging the server.
+      const llmPromise = (async () => {
+        const ZAIModule = await import("z-ai-web-dev-sdk");
+        const ZAI = (ZAIModule as unknown as { default: { create: () => Promise<unknown> } }).default ?? (ZAIModule as unknown as { create: () => Promise<unknown> });
+        const zai = await ZAI.create();
+        const completion = await (zai as {
+          chat: {
+            completions: {
+              create: (args: { messages: ChatMsg[]; thinking: { type: string } }) => Promise<{
+                choices: { message?: { content?: string } }[];
+              }>;
+            };
           };
-        };
-      }).chat.completions.create({
-        messages,
-        thinking: { type: "disabled" },
-      });
-      reply = completion.choices?.[0]?.message?.content?.trim() || "";
+        }).chat.completions.create({
+          messages,
+          thinking: { type: "disabled" },
+        });
+        return completion.choices?.[0]?.message?.content?.trim() || "";
+      })();
+
+      const timeoutPromise = new Promise<string>((_, reject) =>
+        setTimeout(() => reject(new Error("LLM call timed out")), 45000)
+      );
+
+      reply = await Promise.race([llmPromise, timeoutPromise]);
     } catch (e) {
-      console.error("[ai-assistant] LLM call failed:", (e as Error).message);
-      reply = `I hit a snag reaching the AI service just now. Please try again in a moment — meanwhile, you can browse the 80+ AI/ML projects above or email hr@agileprojection.com and our team will reply within 24 hours.`;
+      const errMsg = (e as Error).message;
+      console.error("[ai-assistant] LLM call failed:", errMsg);
+      aiAvailable = false;
+      reply = `I'm unable to reach the AI service right now. This typically happens when the AI backend (z-ai-web-dev-sdk) isn't configured on this machine — it works on the **deployed portal** but may not work in local development.\n\n**What you can do:**\n- Browse the 80+ AI/ML projects in the Project Tracker\n- Email hr@agileprojection.com — our team replies within 24 hours\n- Try again in a few minutes (the service might recover)\n\n*Error: ${errMsg.slice(0, 100)}*`;
     }
 
     if (!reply) {
@@ -93,7 +108,7 @@ export async function POST(req: Request) {
       console.error("[ai-assistant] persist reply failed:", (e as Error).message);
     }
 
-    return NextResponse.json({ ok: true, reply, sessionId });
+    return NextResponse.json({ ok: true, reply, sessionId, aiAvailable });
   } catch (err) {
     console.error("[ai-assistant] error:", err);
     return NextResponse.json(

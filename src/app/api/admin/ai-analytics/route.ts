@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ensureAccountsSeeded, readSession } from "@/lib/auth";
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 export const maxDuration = 60;
 type ChatMsg = { role: "user" | "assistant"; content: string };
 export async function POST(req: Request) {
