@@ -560,7 +560,7 @@ function UserManagementTab() {
                   </div>
                 </div>
                 <Input type={showPw ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters (or click Generate)" className="bg-muted border-border font-mono" />
-                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. Share it securely (call/SMS) — it is never shown again after you confirm.</p>
+                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. This also <strong>unlocks</strong> the account + <strong>resets the expiry</strong> — the student can log in immediately. Share the password securely (call/SMS) — it is never shown again.</p>
               </div>
             )}
 

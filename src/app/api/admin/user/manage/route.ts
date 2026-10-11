@@ -79,8 +79,24 @@ export async function POST(req: Request) {
         // SECURITY: hash the new password — never store or log the plaintext.
         updateData.passwordHash = hashPassword(newPassword);
         updateData.passwordSetAt = new Date();
-        // Keep the existing status/expiry — resetting the password doesn't lock/unlock.
-        logExpiry = account.expiresAt;
+        // When the admin resets the password, ALSO unlock the account + reset
+        // the expiry. The admin expects "reset password" to mean "the student
+        // can now log in" — keeping a locked/expired status would make the new
+        // password useless.
+        // If the account was permanent (expiresAt === null, e.g. Google student
+        // or registered student), keep it permanent. Otherwise, give a fresh
+        // 2-day window.
+        updateData.status = "unlocked";
+        if (account.expiresAt === null) {
+          // Permanent account → stays permanent
+          logExpiry = null;
+          updateData.expiresAt = null;
+        } else {
+          // Was a finite-expiry account (2-day demo) → give a fresh 2-day window
+          const freshExpiry = expiryAfterUnlock();
+          logExpiry = freshExpiry;
+          updateData.expiresAt = freshExpiry;
+        }
         break;
       }
 
