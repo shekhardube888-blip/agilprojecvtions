@@ -11,6 +11,7 @@ import {
   GraduationCap,
   CheckCircle2,
   Quote,
+  Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -253,7 +254,7 @@ export function ShekharDubeMLProject() {
                 Reference Project · Curated by {AUTHOR.name}
               </div>
               <h2 id="sdml-h2" className="font-bold text-2xl md:text-4xl leading-tight">
-                🏠 {AUTHOR.name}&apos;s End-to-End ML Project —{" "}
+                {AUTHOR.name}&apos;s End-to-End ML Project —{" "}
                 <span className="ap-gradient-text">Housing Price Prediction</span>
               </h2>
               <p className="text-muted-foreground mt-3 max-w-3xl text-sm md:text-base leading-relaxed">
@@ -270,7 +271,7 @@ export function ShekharDubeMLProject() {
                   href={`mailto:${AUTHOR.email}`}
                   className="inline-flex items-center gap-1.5 text-[11px] text-cyan-300 hover:text-cyan-200 bg-muted/70 border border-border rounded-full px-2.5 py-1"
                 >
-                  ✉️ {AUTHOR.email}
+                  <Mail className="size-3" /> {AUTHOR.email}
                 </a>
               </div>
             </div>

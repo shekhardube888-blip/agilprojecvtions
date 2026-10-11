@@ -135,7 +135,7 @@ export function Nav() {
             +91 80955 57332
           </a>
           <Button asChild size="sm" className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90">
-            <Link href="#register">Register →</Link>
+            <Link href="#register">Register</Link>
           </Button>
         </div>
 
@@ -204,7 +204,7 @@ export function Nav() {
                     </a>
                   </div>
                   <Button asChild className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
-                    <Link href="#register" onClick={closeAll}>Register →</Link>
+                    <Link href="#register" onClick={closeAll}>Register</Link>
                   </Button>
                 </div>
               </div>

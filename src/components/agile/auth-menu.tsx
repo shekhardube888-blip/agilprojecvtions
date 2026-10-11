@@ -327,7 +327,7 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
           <div className="flex items-start gap-3">
             <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <div className="font-semibold text-emerald-300">Access active ✓</div>
+              <div className="font-semibold text-emerald-300">Access active</div>
               <p className="text-sm text-muted-foreground mt-1">
                 Your student account is active. Open the Student Dashboard to register, track your project, ask the AI mentor, and view the schedule.
               </p>

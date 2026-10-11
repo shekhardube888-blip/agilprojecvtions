@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Play, RotateCcw, Download, Code2, FileCode2, Palette, Braces, Eye,
-  Maximize2, Minimize2, Copy, Check, Loader2,
+  Maximize2, Minimize2, Copy, Check, Loader2, AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // ── Starter templates ──
 const STARTER_HTML = `<!-- Write your HTML here -->
 <div class="hero">
-  <h1>Hello, World! 👋</h1>
+  <h1>Hello, World!</h1>
   <p>Welcome to the AgileProjection Code Playground.</p>
   <button id="btn">Click me</button>
   <div id="counter">Clicks: 0</div>
@@ -197,7 +197,7 @@ export function CodeRunner() {
           </span>
           <div>
             <div className="font-semibold text-sm text-foreground">Code Playground</div>
-            <div className="text-[10px] text-muted-foreground">Write HTML · CSS · JS → live preview</div>
+            <div className="text-[10px] text-muted-foreground">Write HTML · CSS · JS — live preview</div>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
@@ -322,7 +322,7 @@ export function CodeRunner() {
                       l.type === "error" ? "text-rose-400" : l.type === "warn" ? "text-amber-400" : "text-zinc-300",
                     )}
                   >
-                    <span className="text-zinc-500 shrink-0">{l.type === "error" ? "✗" : l.type === "warn" ? "⚠" : "›"}</span>
+                    <span className="text-zinc-500 shrink-0 inline-flex items-center">{l.type === "error" ? "✗" : l.type === "warn" ? <AlertTriangle className="size-3" /> : "›"}</span>
                     <span className="break-all">{l.text}</span>
                   </div>
                 ))}

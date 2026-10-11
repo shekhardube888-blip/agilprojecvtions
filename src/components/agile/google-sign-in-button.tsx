@@ -46,7 +46,7 @@ export function GoogleSignInButton({
           "   GOOGLE_CLIENT_ID=\"your-client-id.apps.googleusercontent.com\"\n" +
           "   GOOGLE_CLIENT_SECRET=\"your-client-secret\"\n" +
           "5. Restart the dev server (npm run dev)\n\n" +
-          "Until then, students can sign up with email + password (click 'Sign up as student →')."
+          "Until then, students can sign up with email + password (click 'Sign up as student')."
         );
         return;
       }

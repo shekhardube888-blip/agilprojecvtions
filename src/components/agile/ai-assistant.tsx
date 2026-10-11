@@ -30,7 +30,7 @@ const SUGGESTIONS = [
 const WELCOME: Msg = {
   role: "assistant",
   content:
-    "Hi! I'm **AP-AI Mentor**, your AI learning assistant for AgileProjection. Ask me anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships or careers. Pick a degree (optional) below to tailor my answers, then type your question or tap a suggestion chip. 🚀",
+    "Hi! I'm **AP-AI Mentor**, your AI learning assistant for AgileProjection. Ask me anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships or careers. Pick a degree (optional) below to tailor my answers, then type your question or tap a suggestion chip.",
 };
 
 function genSessionId(): string {
@@ -125,8 +125,8 @@ export function AIAssistant() {
         <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
           AI Learning Assistant
         </div>
-        <h2 id="ai-h2" className="font-bold text-3xl md:text-4xl">
-          🤖 AP-AI Mentor — <span className="ap-gradient-text">Your Learning Assistant</span>
+        <h2 id="ai-h2" className="font-bold text-3xl md:text-4xl inline-flex items-center gap-2">
+          <Bot className="size-6 text-cyan-500 dark:text-cyan-400" /> AP-AI Mentor — <span className="ap-gradient-text">Your Learning Assistant</span>
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
           Ask anything about CS, AI/ML, Embedded, IoT, Full Stack, projects, internships &amp; careers. Built for BE / B.Tech / MCA / M.Tech students.

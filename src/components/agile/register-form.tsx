@@ -294,7 +294,7 @@ export function RegisterForm() {
         notification: data.notification,
       });
       toast({
-        title: "🎉 Enrolment Submitted!",
+        title: "Enrolment Submitted",
         description: `Your registration for "${project.name}" was saved. Open WhatsApp or email to confirm with Shekhar's team.`,
       });
     } catch (err) {
@@ -404,7 +404,7 @@ export function RegisterForm() {
                     <AlertTriangle className="size-5 text-cyan-500 dark:text-cyan-400 mt-0.5 shrink-0" />
                     <div className="flex-1">
                       <div className="font-semibold text-foreground text-sm">
-                        ⚠ Sign in to register.
+                        Sign in to register.
                       </div>
                       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                         Sign in with Google OR with your email+password. Your email will be used for
@@ -774,7 +774,7 @@ export function RegisterForm() {
                         <Loader2 className="size-4 animate-spin" /> Submitting…
                       </>
                     ) : (
-                      <>🚀 Submit Enrolment — It's Free →</>
+                      <>Submit Enrolment — Free</>
                     )}
                   </Button>
                   <Button
@@ -1048,7 +1048,7 @@ function SuccessPanel({
         <PartyPopper className="size-8" />
       </div>
       <h3 className="text-2xl md:text-3xl font-bold text-foreground">
-        🎉 Enrolment Submitted!
+        Enrolment Submitted
       </h3>
       <p className="text-sm text-muted-foreground max-w-xl mx-auto mt-3">
         Welcome aboard, <strong className="text-foreground">{result.student.name}</strong>! Your registration for{" "}
@@ -1083,7 +1083,7 @@ function SuccessPanel({
         onClick={onReset}
         className="mt-6 text-sm text-cyan-300 hover:text-cyan-200 underline underline-offset-4"
       >
-        Register another student →
+        Register another student
       </button>
     </div>
   );

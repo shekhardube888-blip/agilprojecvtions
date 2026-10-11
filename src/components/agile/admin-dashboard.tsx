@@ -274,7 +274,7 @@ function StudentsTab() {
       const res = await fetch("/api/admin/student/advance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) });
       const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
       const done = d.student.internshipStatus === "completed";
-      toast({ title: done ? `🎉 ${name} completed!` : `${name} → Stage ${d.student.currentStage}`, description: done ? "Ready for certificate." : `Stage ${d.student.currentStage}/6.` }); await load();
+      toast({ title: done ? `${name} completed` : `${name} → Stage ${d.student.currentStage}`, description: done ? "Ready for certificate." : `Stage ${d.student.currentStage}/6.` }); await load();
     } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(null); }
   }
@@ -447,7 +447,7 @@ function UserManagementTab() {
       });
       const d = await res.json();
       if (!res.ok || !d.ok) throw new Error(d.error || "Action failed");
-      toast({ title: `✓ ${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
+      toast({ title: `${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
       setActionDialog(null);
       setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays("");
       load();
@@ -946,7 +946,7 @@ function PaymentsTab() {
         {students.slice(0, 20).map(s => (
           <div key={s.id} className="flex items-center justify-between bg-card border border-border rounded-lg p-2">
             <div><div className="text-xs font-medium text-foreground">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.plan}</div></div>
-            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "✅ Paid" : "⏳ Pending"}</span>
+            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "Confirmed" : "Pending"}</span>
           </div>
         ))}
       </div>
@@ -970,7 +970,7 @@ function InternshipsTab() {
           </div>
         ))}
         <div className="bg-card border border-border rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-2"><span className="text-2xl">🚀</span><div><div className="font-semibold text-foreground text-sm">AI/ML Industry Internship</div><div className="text-[10px] text-muted-foreground">6 Weeks · 80+ Projects</div></div></div>
+          <div className="flex items-center gap-2 mb-2"><Rocket className="size-6 text-cyan-500 dark:text-cyan-400" /><div><div className="font-semibold text-foreground text-sm">AI/ML Industry Internship</div><div className="text-[10px] text-muted-foreground">6 Weeks · 80+ Projects</div></div></div>
           <p className="text-[11px] text-muted-foreground mb-2">End-to-end ML pipeline: {AIML_CURRICULUM.map(c => c.title.split(" ")[0]).join(" → ")}</p>
           <div className="text-[10px] text-muted-foreground">6 stages · LLM-generated training per week</div>
         </div>

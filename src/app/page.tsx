@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, Loader2, LogOut, Zap, LogIn, UserCircle2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Loader2, LogOut, Zap, LogIn, UserCircle2, ShieldCheck, Users, FileText, Award, BarChart3, Search, Bot, Calendar, HelpCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -160,7 +160,7 @@ export default function Home() {
                       {isAdmin ? "Admin Portal" : "Student Portal"} · NT-AI Network
                     </div>
                     <h2 className="font-bold text-2xl md:text-3xl text-foreground">
-                      Welcome, {user.fullName || user.username} 👋
+                      Welcome, {user.fullName || user.username}
                     </h2>
                     <p className="text-muted-foreground text-xs md:text-sm mt-1.5">
                       {isAdmin ? "Manage students, applications, certificates, reports, and more." : "Register, track your project, ask the AI mentor — all in one dashboard."}
@@ -181,23 +181,23 @@ export default function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {(isAdmin
                 ? [
-                    { label: "Students", icon: "👥", desc: "Manage & approve" },
-                    { label: "Applications", icon: "📋", desc: "Approval center" },
-                    { label: "Certificates", icon: "🏆", desc: "Generate & verify" },
-                    { label: "Reports", icon: "📊", desc: "Analytics" },
+                    { label: "Students", icon: <Users className="size-4" />, desc: "Manage & approve" },
+                    { label: "Applications", icon: <FileText className="size-4" />, desc: "Approval center" },
+                    { label: "Certificates", icon: <Award className="size-4" />, desc: "Generate & verify" },
+                    { label: "Reports", icon: <BarChart3 className="size-4" />, desc: "Analytics" },
                   ]
                 : [
-                    { label: "My Project", href: "#project-tracker", icon: "🔍", desc: "Track 6-stage journey" },
-                    { label: "AI Mentor", href: "#ai-assistant", icon: "🤖", desc: "Learning assistant" },
-                    { label: "Schedule", href: "#schedule", icon: "📅", desc: "Batch dates" },
-                    { label: "FAQ", href: "#faq", icon: "❓", desc: "Questions" },
+                    { label: "My Project", href: "#project-tracker", icon: <Search className="size-4" />, desc: "Track 6-stage journey" },
+                    { label: "AI Mentor", href: "#ai-assistant", icon: <Bot className="size-4" />, desc: "Learning assistant" },
+                    { label: "Schedule", href: "#schedule", icon: <Calendar className="size-4" />, desc: "Batch dates" },
+                    { label: "FAQ", href: "#faq", icon: <HelpCircle className="size-4" />, desc: "Questions" },
                   ]
               ).map((c) => (
                 <div key={c.label} className="bg-card border border-border rounded-xl p-4 hover:border-cyan-400/40 hover:shadow-md transition-all">
-                  <div className="text-2xl mb-2">{c.icon}</div>
+                  <div className="size-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 grid place-items-center text-cyan-500 dark:text-cyan-400 mb-3">{c.icon}</div>
                   <div className="font-semibold text-foreground text-sm">{c.label}</div>
                   <div className="text-[11px] text-muted-foreground">{c.desc}</div>
-                  <div className="text-[10px] text-cyan-500 dark:text-cyan-400 mt-2">{isAdmin ? "Open Admin Dashboard →" : "Open →"}</div>
+                  <div className="text-[10px] text-cyan-500 dark:text-cyan-400 mt-2">{isAdmin ? "Open Admin Dashboard" : "Open"}</div>
                 </div>
               ))}
             </div>
@@ -231,7 +231,7 @@ export default function Home() {
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Link href="#register" className="text-sm text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free →</Link>
+            <Link href="#register" className="text-sm text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link>
           </div>
         </header>
 
@@ -294,7 +294,7 @@ export default function Home() {
         <footer className="text-center py-4 text-xs text-muted-foreground">
           © 2026 AgileProjection (NT-AI) · <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link> · <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">agileprojection.com</a>
           <div className="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
-            ⚠ Version 1.0 — Test Version. Next comes after testing.
+            <AlertTriangle className="size-3" /> Version 1.0 — Test Version. Next comes after testing.
           </div>
         </footer>
       </div>
@@ -367,7 +367,7 @@ function LoginForm({ onLoggedIn, onSwitchToSignup }: { onLoggedIn: (u: PortalUse
         <p className="text-center text-xs text-muted-foreground pt-1">
           Don&apos;t have an account?{" "}
           <button type="button" onClick={onSwitchToSignup} className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600 font-semibold">
-            Sign up as student →
+            Sign up as student
           </button>
         </p>
       </form>

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import {
-  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare, Code2,
+  LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare, Code2, AlertTriangle,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -66,7 +66,7 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
           <button key={t.key} type="button" onClick={() => onJump(t.key)} className="group text-left bg-card border border-border rounded-xl p-4 ap-lift">
             <div className="flex items-center gap-2 mb-2"><span className="size-8 rounded-lg ap-gradient-cyan grid place-items-center text-navy">{t.icon}</span><span className="font-semibold text-foreground text-sm">{t.label}</span></div>
             <div className="text-[11px] text-muted-foreground">{t.desc}</div>
-            <div className="text-[10px] text-cyan-400 mt-2 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">Open tab →</div>
+            <div className="text-[10px] text-cyan-400 mt-2 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">Open tab</div>
           </button>
         ))}
       </div>
@@ -92,7 +92,7 @@ function NTAIChatbotTab() {
       </div>
       <h3 className="font-bold text-xl text-foreground">NT-AI Chatbot</h3>
       <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
-        ⚠ Coming in v2.0
+        <AlertTriangle className="size-3" /> Coming in v2.0
       </div>
       <p className="text-sm text-muted-foreground mt-3 max-w-md">
         The NT-AI Network chatbot (powered by OpenAI GPT) will be available in the next version.

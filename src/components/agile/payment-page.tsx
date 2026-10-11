@@ -55,7 +55,7 @@ export function PaymentPage({ planName, studentName, onPaid }: {
       setTxnId(txn);
       setDone(true);
       setProcessing(false);
-      toast({ title: "Payment Successful! ✓", description: `${plan.name} plan · ₹${amount} · ${methodLabel} · ${txn}` });
+      toast({ title: "Payment Successful", description: `${plan.name} plan · ₹${amount} · ${methodLabel} · ${txn}` });
       onPaid(methodLabel, txn);
     }, 2500);
   }

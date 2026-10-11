@@ -165,7 +165,7 @@ export function Footer() {
                   className="text-muted-foreground hover:text-cyan-300 inline-flex items-center gap-2"
                 >
                   <Linkedin className="size-4 text-cyan-400 shrink-0" />
-                  Jobs on LinkedIn →
+                  Jobs on LinkedIn
                 </a>
               </li>
             </ul>

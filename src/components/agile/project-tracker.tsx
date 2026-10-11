@@ -15,6 +15,9 @@ import {
   Rocket,
   GraduationCap,
   X,
+  MessageCircle,
+  Mail,
+  Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -181,7 +184,7 @@ export function ProjectTracker() {
             You&apos;re signed in, but you haven&apos;t chosen a project yet. Open the Student Dashboard and complete the registration form to start tracking your internship.
           </p>
           <Link href="#register" className="inline-flex items-center gap-1.5 text-sm text-cyan-500 dark:text-cyan-400 font-semibold hover:underline">
-            <Rocket className="size-4" /> Register for a project →
+            <Rocket className="size-4" /> Register for a project
           </Link>
         </div>
       ) : !student ? (
@@ -236,7 +239,7 @@ export function ProjectTracker() {
           <p className="text-center text-xs text-muted-foreground mt-4">
             Not registered yet?{" "}
             <Link href="#register" className="text-cyan-500 dark:text-cyan-400 underline underline-offset-4">
-              Register free →
+              Register free
             </Link>
           </p>
         </div>
@@ -280,7 +283,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-1">
-                {completed ? "🎉 Internship Completed" : notStarted ? "Awaiting Start" : "Internship In Progress"}
+                {completed ? "Internship Completed" : notStarted ? "Awaiting Start" : "Internship In Progress"}
               </div>
               <h3 className="font-bold text-xl">
                 {student.firstName} {student.lastName}
@@ -319,7 +322,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
             <Chip label="Plan" value={student.plan} accent="text-violet-600 dark:text-violet-400" />
             <Chip
               label="Payment"
-              value={student.paymentStatus === "confirmed" ? "✅ Confirmed" : "⏳ Pending"}
+              value={student.paymentStatus === "confirmed" ? "Confirmed" : "Pending"}
               accent={student.paymentStatus === "confirmed" ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}
             />
           </div>
@@ -338,10 +341,10 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               <a href="https://wa.me/918319985622" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30">
-                💬 WhatsApp +91 83199 85622
+                <MessageCircle className="size-3.5" /> WhatsApp +91 83199 85622
               </a>
               <a href="mailto:hr@agileprojection.com" className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/25">
-                ✉️ hr@agileprojection.com
+                <Mail className="size-3.5" /> hr@agileprojection.com
               </a>
             </div>
           </div>
@@ -353,7 +356,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5 mb-6 flex items-start gap-3">
           <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
           <div>
-            <div className="font-semibold text-emerald-300">🎉 Congratulations — internship completed!</div>
+            <div className="font-semibold text-emerald-300">Congratulations — internship completed!</div>
             <p className="text-sm text-muted-foreground mt-1">
               You finished all 6 stages of your project journey. Your merit certificate will be issued within 7 days.
               {student.completedAt && ` Completed on ${new Date(student.completedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}.`}
@@ -465,7 +468,7 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
           }}
           className="bg-popover border-border text-foreground hover:text-cyan-300"
         >
-          🤖 Ask AP-AI Mentor for help with a stage
+          <Bot className="size-3.5" /> Ask AP-AI Mentor for help with a stage
         </Button>
         <Button
           variant="outline"

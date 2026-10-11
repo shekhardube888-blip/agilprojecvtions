@@ -38,8 +38,8 @@ export function AIMLProgram() {
           <div className="text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-2">
             Flagship Internship
           </div>
-          <h2 id="aiml-h2" className="font-bold text-3xl md:text-4xl">
-            🚀 AI/ML Industry Internship — <span className="ap-gradient-text">80+ Industry Projects</span>
+          <h2 id="aiml-h2" className="font-bold text-3xl md:text-4xl inline-flex items-center gap-2">
+            <Rocket className="size-6 text-cyan-500 dark:text-cyan-400" /> AI/ML Industry Internship — <span className="ap-gradient-text">80+ Industry Projects</span>
           </h2>
           <p className="text-muted-foreground mt-3 max-w-3xl leading-relaxed text-sm md:text-base">
             A 6-week, project-based ML internship designed for <strong className="text-foreground">BE / B.Tech final-year, M.Tech and MCA students</strong>. You&apos;ll work through the complete ML lifecycle — data ingestion, EDA, feature engineering, model training, evaluation and deployment — using{" "}

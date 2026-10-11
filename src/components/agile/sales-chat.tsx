@@ -21,7 +21,7 @@ const SUGGESTIONS = [
 const WELCOME: Msg = {
   role: "assistant",
   content:
-    "Hi! I'm the **AP-Sales Assistant**. I can help you pick a track, understand the plans & pricing, batch dates, and get you registered. What would you like to know? 💬",
+    "Hi! I'm the **AP-Sales Assistant**. I can help you pick a track, understand the plans & pricing, batch dates, and get you registered. What would you like to know?",
 };
 
 function genSessionId(): string {

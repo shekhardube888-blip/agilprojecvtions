@@ -1,0 +1,1017 @@
+     1→"use client";
+     2→
+     3→import * as React from "react";
+     4→import { useEffect, useState, useCallback } from "react";
+     5→import {
+     6→  LayoutDashboard, Users, FileText, CreditCard, Cpu, GraduationCap, FolderKanban,
+     7→  CalendarCheck, Award, BarChart3, Brain, Bell, Settings, X, RefreshCw, Loader2,
+     8→  CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink, LogOut,
+     9→  History,
+    10→} from "lucide-react";
+    11→import {
+    12→  Dialog, DialogContent, DialogTitle, DialogDescription,
+    13→} from "@/components/ui/dialog";
+    14→import { Button } from "@/components/ui/button";
+    15→import { Input } from "@/components/ui/input";
+    16→import { Textarea } from "@/components/ui/textarea";
+    17→import { useToast } from "@/hooks/use-toast";
+    18→import { cn } from "@/lib/utils";
+    19→import { Label } from "@/components/ui/label";
+    20→import ReactMarkdown from "react-markdown";
+    21→import { MENTORS, CATEGORIES, DEGREES, BRANCHES, PLANS, STATES, SOURCES, PROGRAMS, AIML_CURRICULUM } from "@/lib/data";
+    22→import { MessageCircle, Mail } from "lucide-react";
+    23→import { CertificateView } from "@/components/agile/certificate-view";
+    24→
+    25→// ── types ──
+    26→type Student = {
+    27→  id: string; firstName: string; lastName: string; email: string; mobile: string;
+    28→  degree: string; branch: string; semester: string; plan: string; college: string;
+    29→  state: string; categoryLabel: string; project: string;
+    30→  paymentStatus: string; internshipStatus: string; currentStage: number;
+    31→  createdAt: string; completedAt?: string | null;
+    32→};
+    33→type Cert = {
+    34→  id: string; certificateNumber: string; type: string; eligibility: string;
+    35→  issuedAt: string;
+    36→  student: { firstName: string; lastName: string; email: string; degree: string; branch: string; college: string; project: string; categoryLabel: string; completedAt: string | null };
+    37→};
+    38→type MenuKey =
+    39→  | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
+    40→  | "projects" | "attendance" | "user-mgmt" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+    41→
+    42→const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
+    43→  { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
+    44→  { key: "students", label: "Students", icon: <Users className="size-4" />, group: "Overview" },
+    45→  { key: "applications", label: "Applications", icon: <FileText className="size-4" />, group: "Overview" },
+    46→  { key: "payments", label: "Payments", icon: <CreditCard className="size-4" />, group: "Operations" },
+    47→  { key: "internships", label: "Internships", icon: <Cpu className="size-4" />, group: "Operations" },
+    48→  { key: "mentors", label: "Mentors", icon: <GraduationCap className="size-4" />, group: "Operations" },
+    49→  { key: "projects", label: "Projects", icon: <FolderKanban className="size-4" />, group: "Operations" },
+    50→  { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
+    51→  { key: "user-mgmt", label: "User Management", icon: <Users className="size-4" />, group: "Lifecycle" },
+    52→  { key: "certificates", label: "Certificates", icon: <Award className="size-4" />, group: "Lifecycle" },
+    53→  { key: "reports", label: "Reports", icon: <BarChart3 className="size-4" />, group: "Lifecycle" },
+    54→  { key: "ai", label: "AI Analytics", icon: <Brain className="size-4" />, group: "Insights" },
+    55→  { key: "notifications", label: "Notifications", icon: <Bell className="size-4" />, group: "Insights" },
+    56→  { key: "settings", label: "Settings", icon: <Settings className="size-4" />, group: "Insights" },
+    57→];
+    58→
+    59→export function AdminDashboard({ initiallyOpen }: { initiallyOpen?: boolean } = {}) {
+    60→  const [open, setOpen] = useState(initiallyOpen || false);
+    61→  const [tab, setTab] = useState<MenuKey>("dashboard");
+    62→  const [viewCert, setViewCert] = useState<Cert | null>(null);
+    63→  const [certViewOpen, setCertViewOpen] = useState(false);
+    64→
+    65→  // Listen for "view-certificate" events from nested components (GenCertButton,
+    66→  // CertificatesTab) — fetches the full cert data + opens the visual certificate dialog.
+    67→  useEffect(() => {
+    68→    const handler = async (e: Event) => {
+    69→      const number = (e as CustomEvent).detail as string;
+    70→      if (!number) return;
+    71→      try {
+    72→        const res = await fetch(`/api/certificate/${encodeURIComponent(number)}?json=1`, { cache: "no-store" });
+    73→        const data = await res.json();
+    74→        if (res.ok && data.ok) {
+    75→          setViewCert(data.certificate);
+    76→          setCertViewOpen(true);
+    77→        }
+    78→      } catch { /* ignore */ }
+    79→    };
+    80→    window.addEventListener("view-certificate", handler);
+    81→    return () => window.removeEventListener("view-certificate", handler);
+    82→  }, []);
+    83→
+    84→  return (
+    85→    <>
+    86→      <Button
+    87→        onClick={() => { setOpen(true); setTab("dashboard"); }}
+    88→        size="lg"
+    89→        className="bg-gradient-to-r from-violet-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-12 px-6 shadow-lg shadow-violet-500/20"
+    90→      >
+    91→        <ShieldCheck className="size-5 mr-2" />
+    92→        Open Admin Dashboard
+    93→      </Button>
+    94→      {/* Visual certificate dialog — overlays the admin dashboard */}
+    95→      <CertificateView certificate={viewCert} open={certViewOpen} onOpenChange={setCertViewOpen} />
+    96→      <Dialog open={open} onOpenChange={setOpen}>
+    97→        <DialogContent className="bg-popover border-border text-foreground sm:max-w-3xl lg:sm:max-w-7xl max-h-[94vh] p-0 overflow-hidden">
+    98→          {/* Header */}
+    99→          <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-border bg-muted">
+   100→            <div className="flex items-center gap-2.5">
+   101→              <span className="size-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 grid place-items-center text-primary-foreground">
+   102→                <ShieldCheck className="size-4" />
+   103→              </span>
+   104→              <div>
+   105→                <DialogTitle className="font-bold text-base">Admin Dashboard</DialogTitle>
+   106→                <DialogDescription className="text-[11px] text-muted-foreground">NT-AI Network · enterprise admin suite</DialogDescription>
+   107→              </div>
+   108→            </div>
+   109→            <div className="flex items-center gap-2">
+   110→              <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); setOpen(false); window.dispatchEvent(new Event("auth-change")); }} className="inline-flex items-center gap-1.5 text-xs px-3 h-8 rounded-lg bg-rose-500/90 hover:bg-rose-500 text-primary-foreground font-semibold transition-colors">
+   111→                <LogOut className="size-3.5" /> Logout
+   112→              </button>
+   113→              <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-muted-foreground hover:text-cyan-500 dark:text-cyan-400 hover:bg-secondary">
+   114→                <X className="size-4" />
+   115→              </button>
+   116→            </div>
+   117→          </div>
+   118→          {/* Sidebar + content */}
+   119→          <div className="flex max-h-[calc(94vh-64px)]">
+   120→            <nav className="w-16 sm:w-52 shrink-0 border-r border-border bg-muted/60 overflow-y-auto p-2 flex flex-col gap-0.5">
+   121→              {MENU.map((m, i) => (
+   122→                <React.Fragment key={m.key}>
+   123→                  {i === 0 || MENU[i].group !== MENU[i - 1].group ? (
+   124→                    <div className="text-[9px] uppercase tracking-wider text-muted-foreground px-2 pt-3 pb-1 hidden sm:block">{m.group}</div>
+   125→                  ) : null}
+   126→                  <button
+   127→                    onClick={() => setTab(m.key)}
+   128→                    className={cn(
+   129→                      "flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg text-sm transition-colors text-left",
+   130→                      tab === m.key ? "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border border-cyan-500/30" : "text-foreground hover:bg-secondary hover:text-cyan-500 dark:text-cyan-400 border border-transparent"
+   131→                    )}
+   132→                    title={m.label}
+   133→                  >
+   134→                    {m.icon}
+   135→                    <span className="hidden sm:inline">{m.label}</span>
+   136→                  </button>
+   137→                </React.Fragment>
+   138→              ))}
+   139→            </nav>
+   140→            <div className="flex-1 overflow-y-auto p-5">
+   141→              <TabContent tab={tab} />
+   142→            </div>
+   143→          </div>
+   144→        </DialogContent>
+   145→      </Dialog>
+   146→    </>
+   147→  );
+   148→}
+   149→
+   150→function TabContent({ tab }: { tab: MenuKey }) {
+   151→  switch (tab) {
+   152→    case "dashboard": return <DashboardTab />;
+   153→    case "students": return <StudentsTab />;
+   154→    case "applications": return <ApplicationsTab />;
+   155→    case "user-mgmt": return <UserManagementTab />;
+   156→    case "certificates": return <CertificatesTab />;
+   157→    case "reports": return <ReportsTab />;
+   158→    case "mentors": return <MentorsTab />;
+   159→    case "attendance": return <AttendanceTab />;
+   160→    case "projects": return <ProjectsTab />;
+   161→    case "ai": return <AIAnalyticsTab />;
+   162→    case "notifications": return <NotificationsTab />;
+   163→    case "settings": return <SettingsTab />;
+   164→    case "payments": return <PaymentsTab />;
+   165→    case "internships": return <InternshipsTab />;
+   166→    default: return <StubTab tab={tab} />;
+   167→  }
+   168→}
+   169→
+   170→// ── shared data hook ──
+   171→function useStudents() {
+   172→  const [students, setStudents] = useState<Student[]>([]);
+   173→  const [loading, setLoading] = useState(true);
+   174→  const load = useCallback(async () => {
+   175→    setLoading(true);
+   176→    try {
+   177→      const res = await fetch("/api/admin/registrations?since=all&limit=500", { cache: "no-store" });
+   178→      const data = await res.json();
+   179→      if (data.ok) setStudents(data.recent || []);
+   180→    } catch { /* ignore */ }
+   181→    finally { setLoading(false); }
+   182→  }, []);
+   183→  useEffect(() => { load(); }, [load]);
+   184→  return { students, loading, load };
+   185→}
+   186→
+   187→// ── Dashboard tab (KPI cards) ──
+   188→function DashboardTab() {
+   189→  const { students, loading } = useStudents();
+   190→  const [certCount, setCertCount] = useState<number | null>(null);
+   191→  useEffect(() => {
+   192→    fetch("/api/admin/certificates", { cache: "no-store" })
+   193→      .then(r => r.json()).then(d => { if (d.ok) setCertCount(d.count); }).catch(() => {});
+   194→  }, [students]);
+   195→  const total = students.length;
+   196→  const pending = students.filter(s => s.paymentStatus !== "confirmed").length;
+   197→  const active = students.filter(s => s.internshipStatus === "in_progress").length;
+   198→  const completed = students.filter(s => s.internshipStatus === "completed").length;
+   199→  const kpis = [
+   200→    { label: "Total Students", value: total, icon: <Users className="size-5" />, accent: "from-cyan-500 to-blue-600" },
+   201→    { label: "Pending Approval", value: pending, icon: <FileText className="size-5" />, accent: "from-amber-500 to-rose-500", highlight: pending > 0 },
+   202→    { label: "Active Interns", value: active, icon: <Rocket className="size-5" />, accent: "from-violet-500 to-cyan-500", highlight: active > 0 },
+   203→    { label: "Completed", value: completed, icon: <CheckCircle2 className="size-5" />, accent: "from-emerald-500 to-cyan-500" },
+   204→    { label: "Certificates Issued", value: certCount ?? "—", icon: <Award className="size-5" />, accent: "from-blue-600 to-cyan-500" },
+   205→  ];
+   206→  return (
+   207→    <div>
+   208→      <h3 className="font-bold text-lg mb-1">Dashboard</h3>
+   209→      <p className="text-xs text-muted-foreground mb-4">Complete student lifecycle — registration to certificate.</p>
+   210→      {loading ? <Loading /> : (
+   211→        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+   212→          {kpis.map(k => (
+   213→            <div key={k.label} className={cn("bg-card rounded-xl p-4 border", k.highlight ? "border-cyan-400/50 shadow-[0_0_20px_-4px_rgba(6,182,212,0.3)]" : "border-border")}>
+   214→              <span className={cn("size-9 rounded-lg grid place-items-center text-primary-foreground bg-gradient-to-br mb-2", k.accent)}>{k.icon}</span>
+   215→              <div className="font-bold text-2xl ap-gradient-text leading-none">{k.value}</div>
+   216→              <div className="text-[11px] text-muted-foreground mt-1.5">{k.label}</div>
+   217→            </div>
+   218→          ))}
+   219→        </div>
+   220→      )}
+   221→      <div className="rounded-xl border border-border bg-card p-4">
+   222→        <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2">Pipeline</div>
+   223→        <div className="flex items-center gap-2 flex-wrap text-xs">
+   224→          <Pill color="amber" label="Pending" n={pending} />
+   225→          <span className="text-muted-foreground">→</span>
+   226→          <Pill color="cyan" label="Active" n={active} />
+   227→          <span className="text-muted-foreground">→</span>
+   228→          <Pill color="emerald" label="Completed" n={completed} />
+   229→          <span className="text-muted-foreground">→</span>
+   230→          <Pill color="blue" label="Certified" n={certCount ?? 0} />
+   231→        </div>
+   232→        <p className="text-[11px] text-muted-foreground mt-3">Approve payment → start internship → advance 6 stages → generate certificate. Use the Students / Applications / Certificates tabs to action each stage.</p>
+   233→      </div>
+   234→    </div>
+   235→  );
+   236→}
+   237→
+   238→function Pill({ color, label, n }: { color: "amber" | "cyan" | "emerald" | "blue"; label: string; n: number }) {
+   239→  const c = { amber: "bg-amber-500/15 text-amber-300 border-amber-500/30", cyan: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", blue: "bg-blue-500/15 text-blue-300 border-blue-500/30" }[color];
+   240→  return <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border font-semibold", c)}>{label} <strong className="tabular-nums">{n}</strong></span>;
+   241→}
+   242→
+   243→// ── Students tab (filters + actions) ──
+   244→function StudentsTab() {
+   245→  const { students, loading, load } = useStudents();
+   246→  const { toast } = useToast();
+   247→  const [busy, setBusy] = useState<string | null>(null);
+   248→  const [q, setQ] = useState("");
+   249→  const [filterStatus, setFilterStatus] = useState("all");
+   250→  const [filterCollege, setFilterCollege] = useState("all");
+   251→
+   252→  const colleges = Array.from(new Set(students.map(s => s.college).filter(Boolean))).sort();
+   253→  const filtered = students.filter(s => {
+   254→    if (q && !(`${s.firstName} ${s.lastName} ${s.email} ${s.project}`.toLowerCase().includes(q.toLowerCase()))) return false;
+   255→    if (filterStatus !== "all") {
+   256→      if (filterStatus === "pending" && s.paymentStatus === "confirmed") return false;
+   257→      if (filterStatus === "active" && s.internshipStatus !== "in_progress") return false;
+   258→      if (filterStatus === "completed" && s.internshipStatus !== "completed") return false;
+   259→    }
+   260→    if (filterCollege !== "all" && s.college !== filterCollege) return false;
+   261→    return true;
+   262→  });
+   263→
+   264→  async function start(id: string, name: string) {
+   265→    setBusy(id); try {
+   266→      const res = await fetch("/api/admin/student/start", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) });
+   267→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   268→      toast({ title: `Approved ${name}'s payment`, description: "Stage 1 unlocked." }); await load();
+   269→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   270→    finally { setBusy(null); }
+   271→  }
+   272→  async function advance(id: string, name: string) {
+   273→    setBusy(id + "-a"); try {
+   274→      const res = await fetch("/api/admin/student/advance", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) });
+   275→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   276→      const done = d.student.internshipStatus === "completed";
+   277→      toast({ title: done ? `🎉 ${name} completed!` : `${name} → Stage ${d.student.currentStage}`, description: done ? "Ready for certificate." : `Stage ${d.student.currentStage}/6.` }); await load();
+   278→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   279→    finally { setBusy(null); }
+   280→  }
+   281→
+   282→  return (
+   283→    <div>
+   284→      <h3 className="font-bold text-lg mb-1">Student Management</h3>
+   285→      <p className="text-xs text-muted-foreground mb-4">Filter, approve payments, advance stages, generate certificates.</p>
+   286→      <div className="flex flex-wrap gap-2 mb-3">
+   287→        <div className="relative flex-1 min-w-[180px]">
+   288→          <Search className="size-4 absolute left-2.5 top-2.5 text-muted-foreground" />
+   289→          <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search name / email / project…" className="bg-muted border-border pl-8 h-9 text-sm" />
+   290→        </div>
+   291→        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="bg-muted border border-border rounded-md h-9 px-2 text-xs text-foreground">
+   292→          <option value="all">All status</option><option value="pending">Pending</option><option value="active">Active</option><option value="completed">Completed</option>
+   293→        </select>
+   294→        <select value={filterCollege} onChange={e => setFilterCollege(e.target.value)} className="bg-muted border border-border rounded-md h-9 px-2 text-xs text-foreground max-w-[160px]">
+   295→          <option value="all">All colleges</option>{colleges.map(c => <option key={c} value={c}>{c}</option>)}
+   296→        </select>
+   297→        <Button variant="ghost" size="sm" onClick={load} disabled={loading} className="text-foreground hover:text-cyan-500 dark:text-cyan-400 h-9"><RefreshCw className={cn("size-3.5", loading && "animate-spin")} /></Button>
+   298→      </div>
+   299→      {loading ? <Loading /> : filtered.length === 0 ? <Empty text="No students match the filters." /> : (
+   300→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   301→          <table className="w-full text-sm">
+   302→            <thead className="sticky top-0 bg-popover z-10"><tr className="text-left text-[10px] text-muted-foreground border-b border-border">
+   303→              <th className="px-3 py-2">Student</th><th className="px-3 py-2 hidden md:table-cell">Project</th><th className="px-3 py-2">Status</th><th className="px-3 py-2 text-right">Action</th>
+   304→            </tr></thead>
+   305→            <tbody>
+   306→              {filtered.map(s => {
+   307→                const done = s.internshipStatus === "completed";
+   308→                const inProg = s.internshipStatus === "in_progress";
+   309→                return (
+   310→                  <tr key={s.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   311→                    <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.degree} · {s.college}</div></td>
+   312→                    <td className="px-3 py-2 hidden md:table-cell text-xs text-foreground max-w-[180px]"><div className="truncate" title={s.project}>{s.project}</div><div className="text-[10px] text-muted-foreground">{s.categoryLabel}</div></td>
+   313→                    <td className="px-3 py-2">{done ? <Badge color="emerald" icon={<CheckCircle2 className="size-2.5" />}>Done</Badge> : inProg ? <Badge color="cyan" icon={<Loader2 className="size-2.5" />}>Stage {s.currentStage}/6</Badge> : <Badge color="amber" icon={<Lock className="size-2.5" />}>Pending</Badge>}</td>
+   314→                    <td className="px-3 py-2 text-right whitespace-nowrap">
+   315→                      {done ? <GenCertButton studentId={s.id} name={s.firstName} small /> :
+   316→                        inProg ? <Button size="sm" variant="outline" onClick={() => advance(s.id, s.firstName)} disabled={busy === s.id + "-a"} className="h-7 text-[11px] bg-secondary border-border text-foreground hover:text-cyan-500 dark:text-cyan-400">{busy === s.id + "-a" ? <Loader2 className="size-3 animate-spin" /> : <Forward className="size-3.5" />}Advance</Button> :
+   317→                        <Button size="sm" onClick={() => start(s.id, s.firstName)} disabled={busy === s.id} className="h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90">{busy === s.id ? <Loader2 className="size-3 animate-spin" /> : <Rocket className="size-3.5" />}Approve & Start</Button>}
+   318→                    </td>
+   319→                  </tr>
+   320→                );
+   321→              })}
+   322→            </tbody>
+   323→          </table>
+   324→        </div>
+   325→      )}
+   326→    </div>
+   327→  );
+   328→}
+   329→
+   330→// ── Applications tab (approval center) ──
+   331→function ApplicationsTab() {
+   332→  const { students, loading, load } = useStudents();
+   333→  const { toast } = useToast();
+   334→  const [busy, setBusy] = useState<string | null>(null);
+   335→  const pending = students.filter(s => s.paymentStatus !== "confirmed");
+   336→  const active = students.filter(s => s.paymentStatus === "confirmed" && s.internshipStatus === "in_progress");
+   337→  const completed = students.filter(s => s.internshipStatus === "completed");
+   338→  async function start(id: string, name: string) {
+   339→    setBusy(id); try { const res = await fetch("/api/admin/student/start", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId: id }) }); const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error); toast({ title: `Approved ${name}`, description: "Internship started." }); await load(); } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); } finally { setBusy(null); }
+   340→  }
+   341→  return (
+   342→    <div>
+   343→      <h3 className="font-bold text-lg mb-1">Application Approval Center</h3>
+   344→      <p className="text-xs text-muted-foreground mb-4">Review and approve pending applications.</p>
+   345→      {loading ? <Loading /> : (
+   346→        <div className="space-y-4">
+   347→          <AppGroup title="Pending Review" count={pending.length} accent="amber" students={pending} empty="No pending applications — all approved!" action={(s) => <Button size="sm" onClick={() => start(s.id, s.firstName)} disabled={busy === s.id} className="h-7 text-[11px] bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90">{busy === s.id ? <Loader2 className="size-3 animate-spin" /> : <CheckCircle2 className="size-3.5" />}Approve</Button>} />
+   348→          <AppGroup title="Approved / In Progress" count={active.length} accent="cyan" students={active} empty="No active interns." action={() => <span className="text-[10px] text-muted-foreground">Use Students tab → Advance</span>} />
+   349→          <AppGroup title="Completed" count={completed.length} accent="emerald" students={completed} empty="No completed interns yet." action={(s) => <GenCertButton studentId={s.id} name={s.firstName} small />} />
+   350→        </div>
+   351→      )}
+   352→    </div>
+   353→  );
+   354→}
+   355→
+   356→function AppGroup({ title, count, accent, students, empty, action }: { title: string; count: number; accent: "amber" | "cyan" | "emerald"; students: Student[]; empty: string; action: (s: Student) => React.ReactNode }) {
+   357→  const c = { amber: "text-amber-300 border-amber-500/30", cyan: "text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "text-emerald-300 border-emerald-500/30" }[accent];
+   358→  return (
+   359→    <div>
+   360→      <div className="flex items-center gap-2 mb-1.5"><span className={cn("text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-muted border", c)}>{title}</span><span className="text-[10px] text-muted-foreground">{count}</span></div>
+   361→      {students.length === 0 ? <div className="text-[11px] text-muted-foreground py-2 px-3 border border-border rounded-lg bg-muted/40">{empty}</div> : (
+   362→        <div className="border border-border rounded-lg max-h-48 overflow-y-auto">
+   363→          <table className="w-full text-sm"><tbody>
+   364→            {students.map(s => <tr key={s.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   365→              <td className="px-2 py-1.5"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.degree} · {s.college}</div></td>
+   366→              <td className="px-2 py-1.5 hidden sm:table-cell text-xs text-foreground max-w-[140px] truncate" title={s.project}>{s.project}</td>
+   367→              <td className="px-2 py-1.5 text-right whitespace-nowrap">{action(s)}</td>
+   368→            </tr>)}
+   369→          </tbody></table>
+   370→        </div>
+   371→      )}
+   372→    </div>
+   373→  );
+   374→}
+   375→
+   376→// ── User Management tab (reset password, lock/unlock, set expiry, history) ──
+   377→function UserManagementTab() {
+   378→  const { toast } = useToast();
+   379→  const [accounts, setAccounts] = useState<AccountRow[]>([]);
+   380→  const [loading, setLoading] = useState(true);
+   381→  const [search, setSearch] = useState("");
+   382→  const [statusFilter, setStatusFilter] = useState<"all" | "unlocked" | "locked" | "permanent" | "expiring">("all");
+   383→  const [actionDialog, setActionDialog] = useState<{ account: AccountRow; action: ActionType } | null>(null);
+   384→  const [historyDialog, setHistoryDialog] = useState<{ account: AccountRow; history: HistoryEntry[] } | null>(null);
+   385→  const [reason, setReason] = useState("");
+   386→  const [newPassword, setNewPassword] = useState("");
+   387→  const [showPw, setShowPw] = useState(false);
+   388→  const [expiryDays, setExpiryDays] = useState("");
+   389→  const [busy, setBusy] = useState(false);
+   390→
+   391→  // Generate a random 12-char password (letters + digits + symbols).
+   392→  const generatePassword = useCallback(() => {
+   393→    const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%";
+   394→    let pw = "";
+   395→    const arr = new Uint8Array(12);
+   396→    crypto.getRandomValues(arr);
+   397→    for (let i = 0; i < 12; i++) pw += chars[arr[i] % chars.length];
+   398→    setNewPassword(pw);
+   399→    setShowPw(true); // show the generated password so the admin can copy it
+   400→  }, []);
+   401→
+   402→  const load = useCallback(async () => {
+   403→    setLoading(true);
+   404→    try {
+   405→      const res = await fetch("/api/admin/accounts", { cache: "no-store" });
+   406→      const d = await res.json();
+   407→      if (d.ok) setAccounts(d.accounts);
+   408→    } catch { /* ignore */ }
+   409→    finally { setLoading(false); }
+   410→  }, []);
+   411→
+   412→  useEffect(() => { load(); }, [load]);
+   413→
+   414→  type AccountRow = {
+   415→    id: string; username: string; role: string; status: string; fullName: string | null;
+   416→    note: string | null; passwordSetAt: string | null; expiresAt: string | null; createdAt: string;
+   417→  };
+   418→
+   419→  const filtered = accounts.filter((a) => {
+   420→    // Exclude admin accounts — they can't be managed here (no self-locking).
+   421→    if (a.role === "admin") return false;
+   422→    if (search && !a.username.toLowerCase().includes(search.toLowerCase()) && !(a.fullName || "").toLowerCase().includes(search.toLowerCase())) return false;
+   423→    if (statusFilter === "unlocked" && a.status !== "unlocked") return false;
+   424→    if (statusFilter === "locked" && a.status !== "locked") return false;
+   425→    if (statusFilter === "permanent" && a.expiresAt !== null) return false;
+   426→    if (statusFilter === "expiring" && !(a.expiresAt && new Date(a.expiresAt).getTime() < Date.now() + 3 * 24 * 60 * 60 * 1000)) return false;
+   427→    return true;
+   428→  });
+   429→
+   430→  async function performAction() {
+   431→    if (!actionDialog) return;
+   432→    if (!reason.trim()) { toast({ title: "Reason required", variant: "destructive" }); return; }
+   433→    if (actionDialog.action === "reset-password" && newPassword.length < 8) {
+   434→      toast({ title: "Password too short", description: "Min 8 characters.", variant: "destructive" }); return;
+   435→    }
+   436→    setBusy(true);
+   437→    try {
+   438→      const body: any = { accountId: actionDialog.account.id, action: actionDialog.action, reason: reason.trim() };
+   439→      if (actionDialog.action === "reset-password") body.newPassword = newPassword;
+   440→      if (actionDialog.action === "set-expiry" && expiryDays !== "") body.expiryDays = Number(expiryDays);
+   441→      if (actionDialog.action === "unlock" && expiryDays !== "") body.expiryDays = Number(expiryDays);
+   442→
+   443→      const res = await fetch("/api/admin/user/manage", {
+   444→        method: "POST",
+   445→        headers: { "Content-Type": "application/json" },
+   446→        body: JSON.stringify(body),
+   447→      });
+   448→      const d = await res.json();
+   449→      if (!res.ok || !d.ok) throw new Error(d.error || "Action failed");
+   450→      toast({ title: `✓ ${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
+   451→      setActionDialog(null);
+   452→      setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays("");
+   453→      load();
+   454→    } catch (e) {
+   455→      toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
+   456→    } finally { setBusy(false); }
+   457→  }
+   458→
+   459→  async function viewHistory(account: AccountRow) {
+   460→    try {
+   461→      const res = await fetch(`/api/admin/user/history?accountId=${account.id}`, { cache: "no-store" });
+   462→      const d = await res.json();
+   463→      if (d.ok) setHistoryDialog({ account, history: d.history });
+   464→      else toast({ title: "Failed to load history", description: d.error, variant: "destructive" });
+   465→    } catch (e) {
+   466→      toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
+   467→    }
+   468→  }
+   469→
+   470→  if (loading) return <Loading />;
+   471→
+   472→  return (
+   473→    <div>
+   474→      <h3 className="font-bold text-lg mb-1">User Management</h3>
+   475→      <p className="text-xs text-muted-foreground mb-4">Reset passwords, lock/unlock accounts, set expiry dates, and view the full action history. Every action requires a reason (logged for audit).</p>
+   476→
+   477→      {/* Filters */}
+   478→      <div className="flex flex-wrap gap-2 mb-4">
+   479→        <Input placeholder="Search by email or name…" value={search} onChange={(e) => setSearch(e.target.value)} className="bg-muted border-border h-9 max-w-xs" />
+   480→        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as any)} className="h-9 rounded-md border border-border bg-muted px-3 text-xs">
+   481→          <option value="all">All ({accounts.length})</option>
+   482→          <option value="unlocked">Unlocked</option>
+   483→          <option value="locked">Locked</option>
+   484→          <option value="permanent">Permanent (no expiry)</option>
+   485→          <option value="expiring">Expiring (≤3 days)</option>
+   486→        </select>
+   487→      </div>
+   488→
+   489→      {filtered.length === 0 ? (
+   490→        <Empty text="No accounts match your filter." />
+   491→      ) : (
+   492→        <div className="rounded-lg border border-border overflow-x-auto max-h-[60vh] overflow-y-auto">
+   493→          <table className="w-full text-xs">
+   494→            <thead className="sticky top-0 bg-popover z-10">
+   495→              <tr className="text-left text-[10px] text-muted-foreground border-b border-border">
+   496→                <th className="px-3 py-2">Student / Email</th>
+   497→                <th className="px-3 py-2">Status</th>
+   498→                <th className="px-3 py-2 hidden md:table-cell">Expiry</th>
+   499→                <th className="px-3 py-2 text-right">Actions</th>
+   500→              </tr>
+   501→            </thead>
+   502→            <tbody>
+   503→              {filtered.map((a) => {
+   504→                const expired = a.expiresAt && new Date(a.expiresAt).getTime() < Date.now();
+   505→                const permanent = a.expiresAt === null;
+   506→                const expiring = a.expiresAt && new Date(a.expiresAt).getTime() < Date.now() + 3 * 24 * 60 * 60 * 1000 && !expired;
+   507→                return (
+   508→                  <tr key={a.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   509→                    <td className="px-3 py-2">
+   510→                      <div className="font-medium text-foreground">{a.fullName || a.username}</div>
+   511→                      <div className="text-[10px] text-muted-foreground">{a.username}</div>
+   512→                    </td>
+   513→                    <td className="px-3 py-2">
+   514→                      {a.status === "locked" ? (
+   515→                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 text-[10px] font-semibold"><Lock className="size-2.5" /> Locked</span>
+   516→                      ) : (
+   517→                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold"><CheckCircle2 className="size-2.5" /> Unlocked</span>
+   518→                      )}
+   519→                    </td>
+   520→                    <td className="px-3 py-2 hidden md:table-cell text-[10px]">
+   521→                      {permanent ? <span className="text-emerald-500">Permanent</span> :
+   522→                       expired ? <span className="text-rose-500">Expired</span> :
+   523→                       expiring ? <span className="text-amber-500">{new Date(a.expiresAt!).toLocaleDateString("en-IN", { dateStyle: "medium" })}</span> :
+   524→                       <span className="text-muted-foreground">{new Date(a.expiresAt!).toLocaleDateString("en-IN", { dateStyle: "medium" })}</span>}
+   525→                    </td>
+   526→                    <td className="px-3 py-2 text-right whitespace-nowrap">
+   527→                      <button onClick={() => setActionDialog({ account: a, action: "reset-password" })} className="text-[10px] px-2 py-1 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 mr-1" title="Reset password">Reset PW</button>
+   528→                      {a.status === "locked" ? (
+   529→                        <button onClick={() => setActionDialog({ account: a, action: "unlock" })} className="text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 mr-1">Unlock</button>
+   530→                      ) : (
+   531→                        <button onClick={() => setActionDialog({ account: a, action: "lock" })} className="text-[10px] px-2 py-1 rounded bg-rose-500/10 text-rose-500 dark:text-rose-400 hover:bg-rose-500/20 mr-1">Lock</button>
+   532→                      )}
+   533→                      <button onClick={() => setActionDialog({ account: a, action: "set-expiry" })} className="text-[10px] px-2 py-1 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 mr-1">Expiry</button>
+   534→                      <button onClick={() => viewHistory(a)} className="text-[10px] px-2 py-1 rounded bg-slate-500/10 text-slate-600 dark:text-slate-400 hover:bg-slate-500/20" title="View action history"><History className="size-3 inline" /></button>
+   535→                    </td>
+   536→                  </tr>
+   537→                );
+   538→              })}
+   539→            </tbody>
+   540→          </table>
+   541→        </div>
+   542→      )}
+   543→
+   544→      {/* Action dialog */}
+   545→      {actionDialog && (
+   546→        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => !busy && setActionDialog(null)}>
+   547→          <div className="bg-popover border border-border rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+   548→            <h4 className="font-bold text-foreground mb-1 capitalize">
+   549→              {actionDialog.action.replace("-", " ")}: {actionDialog.account.fullName || actionDialog.account.username}
+   550→            </h4>
+   551→            <p className="text-xs text-muted-foreground mb-4">{actionDialog.account.username}</p>
+   552→
+   553→            {actionDialog.action === "reset-password" && (
+   554→              <div className="space-y-2 mb-3">
+   555→                <div className="flex items-center justify-between">
+   556→                  <Label className="text-xs">New Password</Label>
+   557→                  <div className="flex gap-1">
+   558→                    <button type="button" onClick={generatePassword} className="text-[10px] px-2 py-0.5 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 font-semibold">Generate</button>
+   559→                    <button type="button" onClick={() => setShowPw(s => !s)} className="text-[10px] px-2 py-0.5 rounded bg-slate-500/10 text-slate-600 dark:text-slate-400 hover:bg-slate-500/20">{showPw ? "Hide" : "Show"}</button>
+   560→                  </div>
+   561→                </div>
+   562→                <Input type={showPw ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 8 characters (or click Generate)" className="bg-muted border-border font-mono" />
+   563→                <p className="text-[10px] text-muted-foreground">The student will use this password to log in. This also <strong>unlocks</strong> the account + <strong>resets the expiry</strong> — the student can log in immediately. Share the password securely (call/SMS) — it is never shown again.</p>
+   564→              </div>
+   565→            )}
+   566→
+   567→            {(actionDialog.action === "set-expiry" || actionDialog.action === "unlock") && (
+   568→              <div className="space-y-2 mb-3">
+   569→                <Label className="text-xs">Expiry (days from now)</Label>
+   570→                <Input type="number" value={expiryDays} onChange={(e) => setExpiryDays(e.target.value)} placeholder="2 (default), 0 = permanent" className="bg-muted border-border" />
+   571→                <p className="text-[10px] text-muted-foreground">Enter the number of days until the account expires. Use <strong>0</strong> for permanent access (no expiry).</p>
+   572→              </div>
+   573→            )}
+   574→
+   575→            {actionDialog.action === "lock" && (
+   576→              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-xs text-rose-600 dark:text-rose-400 mb-3">
+   577→                The student will be immediately locked out — they cannot log in until you unlock them.
+   578→              </div>
+   579→            )}
+   580→
+   581→            <div className="space-y-2 mb-4">
+   582→              <Label className="text-xs">Reason (required — logged for audit)</Label>
+   583→              <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Student reported login issue / Payment confirmed / Misuse of account" className="bg-muted border-border min-h-[60px]" />
+   584→            </div>
+   585→
+   586→            <div className="flex gap-2 justify-end">
+   587→              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays(""); }} disabled={busy}>Cancel</Button>
+   588→              <Button size="sm" onClick={performAction} disabled={busy} className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
+   589→                {busy ? <Loader2 className="size-3.5 animate-spin mr-1" /> : null}
+   590→                Confirm {actionDialog.action.replace("-", " ")}
+   591→              </Button>
+   592→            </div>
+   593→          </div>
+   594→        </div>
+   595→      )}
+   596→
+   597→      {/* History dialog */}
+   598→      {historyDialog && (
+   599→        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => setHistoryDialog(null)}>
+   600→          <div className="bg-popover border border-border rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+   601→            <h4 className="font-bold text-foreground mb-1 flex items-center gap-2"><History className="size-4" /> Activity History</h4>
+   602→            <p className="text-xs text-muted-foreground mb-4">{historyDialog.account.fullName || historyDialog.account.username} · {historyDialog.account.username}</p>
+   603→            {historyDialog.history.length === 0 ? (
+   604→              <p className="text-sm text-muted-foreground text-center py-6">No actions recorded yet.</p>
+   605→            ) : (
+   606→              <div className="space-y-2">
+   607→                {historyDialog.history.map((h) => (
+   608→                  <div key={h.id} className="p-3 rounded-lg border border-border bg-muted/30">
+   609→                    <div className="flex items-center justify-between gap-2 mb-1">
+   610→                      <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full",
+   611→                        h.action === "lock" ? "bg-rose-500/15 text-rose-500" :
+   612→                        h.action === "reset-password" ? "bg-violet-500/15 text-violet-600 dark:text-violet-400" :
+   613→                        h.action === "unlock" ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" :
+   614→                        "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400"
+   615→                      )}>{h.action}</span>
+   616→                      <span className="text-[10px] text-muted-foreground">{new Date(h.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}</span>
+   617→                    </div>
+   618→                    {h.reason && <p className="text-xs text-foreground">{h.reason}</p>}
+   619→                    <div className="text-[10px] text-muted-foreground mt-1">By: {h.adminUser}{h.expiresAt ? ` · Expiry set to ${new Date(h.expiresAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}` : ""}</div>
+   620→                  </div>
+   621→                ))}
+   622→              </div>
+   623→            )}
+   624→            <div className="flex justify-end mt-4">
+   625→              <Button size="sm" variant="outline" onClick={() => setHistoryDialog(null)}>Close</Button>
+   626→            </div>
+   627→          </div>
+   628→        </div>
+   629→      )}
+   630→    </div>
+   631→  );
+   632→}
+   633→
+   634→type ActionType = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew";
+   635→type HistoryEntry = { id: string; adminUser: string; action: string; reason: string | null; expiresAt: string | null; createdAt: string };
+   636→
+   637→
+   638→// ── Certificates tab (auto-generation + verify + download) ──
+   639→function CertificatesTab() {
+   640→  const { toast } = useToast();
+   641→  const [certs, setCerts] = useState<Cert[]>([]);
+   642→  const [loading, setLoading] = useState(true);
+   643→  const load = useCallback(async () => {
+   644→    setLoading(true); try { const res = await fetch("/api/admin/certificates", { cache: "no-store" }); const d = await res.json(); if (d.ok) setCerts(d.certificates); } catch {} finally { setLoading(false); }
+   645→  }, []);
+   646→  useEffect(() => { load(); }, [load]);
+   647→  return (
+   648→    <div>
+   649→      <h3 className="font-bold text-lg mb-1">Certificate Management</h3>
+   650→      <p className="text-xs text-muted-foreground mb-4">Auto-issue verifiable certificates for completed students. Eligibility: project completed (6/6 stages) + mentor approved.</p>
+   651→      {loading ? <Loading /> : certs.length === 0 ? <Empty text="No certificates issued yet. Go to Students tab → find a completed student → click Generate Certificate." /> : (
+   652→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   653→          <table className="w-full text-sm">
+   654→            <thead className="sticky top-0 bg-popover z-10"><tr className="text-left text-[10px] text-muted-foreground border-b border-border"><th className="px-3 py-2">Certificate #</th><th className="px-3 py-2">Student</th><th className="px-3 py-2 hidden md:table-cell">Project</th><th className="px-3 py-2 text-right">Verify / Download</th></tr></thead>
+   655→            <tbody>
+   656→              {certs.map(c => (
+   657→                <tr key={c.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/40">
+   658→                  <td className="px-3 py-2"><div className="font-mono text-xs text-cyan-500 dark:text-cyan-400 font-semibold">{c.certificateNumber}</div><div className="text-[10px] text-muted-foreground">{new Date(c.issuedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}</div></td>
+   659→                  <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{c.student.firstName} {c.student.lastName}</div><div className="text-[10px] text-muted-foreground">{c.student.degree} · {c.student.college}</div></td>
+   660→                  <td className="px-3 py-2 hidden md:table-cell text-xs text-foreground max-w-[160px] truncate" title={c.student.project}>{c.student.project}</td>
+   661→                  <td className="px-3 py-2 text-right whitespace-nowrap">
+   662→                    <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("view-certificate", { detail: c.certificateNumber }))} className="inline-flex items-center gap-1 text-[11px] text-amber-500 dark:text-amber-400 hover:text-amber-300 font-semibold mr-2"><Award className="size-3" />View</button>
+   663→                    <a href={`/api/certificate/${c.certificateNumber}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200"><ExternalLink className="size-3" />Public</a>
+   664→                  </td>
+   665→                </tr>
+   666→              ))}
+   667→            </tbody>
+   668→          </table>
+   669→        </div>
+   670→      )}
+   671→      <p className="text-[11px] text-muted-foreground mt-3"><Award className="size-3 inline text-cyan-400 mr-1" />Each certificate has a unique number (e.g. AP-2026-XXXXXX) — anyone can verify it at <code className="text-cyan-500 dark:text-cyan-400">/api/certificate/&lt;number&gt;</code>.</p>
+   672→    </div>
+   673→  );
+   674→}
+   675→
+   676→// Generate Certificate button (used in Students + Applications tabs for completed students)
+   677→function GenCertButton({ studentId, name, small }: { studentId: string; name: string; small?: boolean }) {
+   678→  const { toast } = useToast();
+   679→  const [busy, setBusy] = useState(false);
+   680→  const [cert, setCert] = useState<{ certificateNumber: string } | null>(null);
+   681→  async function gen() {
+   682→    setBusy(true); try {
+   683→      const res = await fetch("/api/admin/certificate/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ studentId }) });
+   684→      const d = await res.json(); if (!res.ok || !d.ok) throw new Error(d.error);
+   685→      setCert({ certificateNumber: d.certificate.certificateNumber });
+   686→      toast({ title: `Certificate issued for ${name}`, description: d.certificate.certificateNumber + (d.certificate.alreadyExisted ? " (already existed)" : "") });
+   687→    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+   688→    finally { setBusy(false); }
+   689→  }
+   690→  if (cert) return <button type="button" onClick={() => window.dispatchEvent(new CustomEvent("view-certificate", { detail: cert.certificateNumber }))} className={cn("inline-flex items-center gap-1 text-[11px] text-cyan-500 dark:text-cyan-400 hover:text-cyan-200 font-semibold", small && "h-7")}><Award className="size-3" />{cert.certificateNumber}</button>;
+   691→  return <Button size="sm" onClick={gen} disabled={busy} className="h-7 text-[11px] bg-gradient-to-r from-amber-500 to-cyan-500 text-primary-foreground hover:opacity-90">{busy ? <Loader2 className="size-3 animate-spin" /> : <Award className="size-3.5" />}Generate Cert</Button>;
+   692→}
+   693→
+   694→// ── Reports tab (embeds the existing /api/admin/registrations analytics summary) ──
+   695→function ReportsTab() {
+   696→  const { students, loading } = useStudents();
+   697→  if (loading) return <Loading />;
+   698→  const byDegree: Record<string, number> = {};
+   699→  const byCategory: Record<string, number> = {};
+   700→  const byCollege: Record<string, number> = {};
+   701→  students.forEach(s => { byDegree[s.degree] = (byDegree[s.degree] || 0) + 1; byCategory[s.categoryLabel] = (byCategory[s.categoryLabel] || 0) + 1; byCollege[s.college] = (byCollege[s.college] || 0) + 1; });
+   702→  const sorted = (o: Record<string, number>) => Object.entries(o).sort((a, b) => b[1] - a[1]);
+   703→  return (
+   704→    <div>
+   705→      <h3 className="font-bold text-lg mb-1">Reports</h3>
+   706→      <p className="text-xs text-muted-foreground mb-4">College-wise, branch-wise, technology-wise breakdowns.</p>
+   707→      <div className="grid md:grid-cols-3 gap-4">
+   708→        <ReportList title="By Degree" data={sorted(byDegree)} />
+   709→        <ReportList title="By Technology" data={sorted(byCategory)} />
+   710→        <ReportList title="By College" data={sorted(byCollege)} />
+   711→      </div>
+   712→    </div>
+   713→  );
+   714→}
+   715→function ReportList({ title, data }: { title: string; data: [string, number][] }) {
+   716→  const max = Math.max(1, ...data.map(d => d[1]));
+   717→  return (
+   718→    <div className="bg-card border border-border rounded-xl p-4">
+   719→      <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold mb-3">{title}</div>
+   720→      <div className="space-y-1.5 max-h-56 overflow-y-auto">
+   721→        {data.length === 0 ? <div className="text-xs text-muted-foreground">No data.</div> : data.map(([k, n]) => (
+   722→          <div key={k} className="text-xs"><div className="flex justify-between mb-0.5"><span className="text-foreground truncate pr-2">{k}</span><span className="text-cyan-500 dark:text-cyan-400 font-semibold tabular-nums">{n}</span></div><div className="h-1.5 bg-muted rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-cyan-500 to-blue-600" style={{ width: `${(n / max) * 100}%` }} /></div></div>
+   723→        ))}
+   724→      </div>
+   725→    </div>
+   726→  );
+   727→}
+   728→
+   729→// ── Mentor Management ──
+   730→function MentorsTab() {
+   731→  const { students, loading } = useStudents();
+   732→  if (loading) return <Loading />;
+   733→  return (
+   734→    <div>
+   735→      <h3 className="font-bold text-lg mb-1">Mentor Management</h3>
+   736→      <p className="text-xs text-muted-foreground mb-4">{MENTORS.length} mentors · student counts by domain · workload.</p>
+   737→      <div className="grid sm:grid-cols-2 gap-3">
+   738→        {MENTORS.map((m) => {
+   739→          const assigned = students.filter(s => s.categoryLabel && s.categoryLabel.toLowerCase().includes(m.role.split(" — ")[0]?.toLowerCase() || "zzz"));
+   740→          const active = assigned.filter(s => s.internshipStatus === "in_progress");
+   741→          const completed = assigned.filter(s => s.internshipStatus === "completed");
+   742→          return (
+   743→            <div key={m.initials} className="bg-card border border-border rounded-xl p-4">
+   744→              <div className="flex items-center gap-3 mb-3">
+   745→                <span className="size-10 rounded-full grid place-items-center text-primary-foreground font-bold text-sm" style={{ background: m.color }}>{m.initials}</span>
+   746→                <div><div className="font-semibold text-foreground text-sm">{m.name}</div><div className="text-[11px] text-cyan-500">{m.role}</div></div>
+   747→              </div>
+   748→              <div className="text-[11px] text-muted-foreground mb-2">{m.exp}</div>
+   749→              <div className="flex gap-3 text-xs">
+   750→                <span className="text-foreground">Assigned: <strong className="text-cyan-500">{assigned.length}</strong></span>
+   751→                <span className="text-foreground">Active: <strong className="text-cyan-500">{active.length}</strong></span>
+   752→                <span className="text-foreground">Done: <strong className="text-emerald-500">{completed.length}</strong></span>
+   753→              </div>
+   754→            </div>
+   755→          );
+   756→        })}
+   757→      </div>
+   758→    </div>
+   759→  );
+   760→}
+   761→
+   762→// ── Attendance ──
+   763→function AttendanceTab() {
+   764→  const { students, loading } = useStudents();
+   765→  const [attendance, setAttendance] = useState<Record<string, string>>({});
+   766→  if (loading) return <Loading />;
+   767→  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+   768→  function mark(id: string, status: string) { setAttendance(a => ({ ...a, [id]: status })); }
+   769→  const present = Object.values(attendance).filter(s => s === "present").length;
+   770→  const absent = Object.values(attendance).filter(s => s === "absent").length;
+   771→  return (
+   772→    <div>
+   773→      <h3 className="font-bold text-lg mb-1">Attendance Management</h3>
+   774→      <p className="text-xs text-muted-foreground mb-4">Daily tracking — {new Date().toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</p>
+   775→      <div className="flex gap-3 mb-3 text-xs">
+   776→        <span className="px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">Present: {present}</span>
+   777→        <span className="px-2 py-1 rounded-full bg-rose-500/15 text-rose-500 border border-rose-500/30">Absent: {absent}</span>
+   778→      </div>
+   779→      {activeStudents.length === 0 ? <Empty text="No active students to track." /> : (
+   780→        <div className="border border-border rounded-lg max-h-[60vh] overflow-y-auto">
+   781→          <table className="w-full text-sm"><tbody>
+   782→            {activeStudents.map(s => (
+   783→              <tr key={s.id} className="border-b border-border/50 last:border-0">
+   784→                <td className="px-3 py-2"><div className="font-medium text-foreground text-xs">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">Stage {s.currentStage}/6</div></td>
+   785→                <td className="px-3 py-2 text-right whitespace-nowrap">
+   786→                  {["present", "absent", "leave", "late"].map(st => (
+   787→                    <button key={st} onClick={() => mark(s.id, st)} className={cn("ml-1 text-[10px] px-2 py-0.5 rounded-full border capitalize transition-colors",
+   788→                      attendance[s.id] === st ? (st === "present" ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40" : st === "absent" ? "bg-rose-500/20 text-rose-500 border-rose-500/40" : st === "leave" ? "bg-amber-500/20 text-amber-500 border-amber-500/40" : "bg-blue-500/20 text-blue-500 border-blue-500/40")
+   789→                      : "bg-muted/50 text-muted-foreground border-border hover:text-foreground")}>{st}</button>
+   790→                  ))}
+   791→                </td>
+   792→              </tr>
+   793→            ))}
+   794→          </tbody></table>
+   795→        </div>
+   796→      )}
+   797→    </div>
+   798→  );
+   799→}
+   800→
+   801→// ── Projects ──
+   802→function ProjectsTab() {
+   803→  const { students, loading } = useStudents();
+   804→  if (loading) return <Loading />;
+   805→  const totalProjects = CATEGORIES.reduce((sum, c) => sum + c.projects.length, 0);
+   806→  return (
+   807→    <div>
+   808→      <h3 className="font-bold text-lg mb-1">Project Management</h3>
+   809→      <p className="text-xs text-muted-foreground mb-4">{totalProjects} projects across {CATEGORIES.length} domains · {students.length} student assignments.</p>
+   810→      <div className="space-y-3 max-h-[65vh] overflow-y-auto">
+   811→        {CATEGORIES.map(cat => {
+   812→          const assigned = students.filter(s => s.category === cat.key);
+   813→          return (
+   814→            <div key={cat.key} className="bg-card border border-border rounded-xl p-3">
+   815→              <div className="flex items-center justify-between mb-2">
+   816→                <div className="flex items-center gap-2"><span className="text-lg">{cat.icon}</span><span className="font-semibold text-foreground text-sm">{cat.label}</span></div>
+   817→                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-500 border border-cyan-500/30">{cat.projects.length} templates · {assigned.length} assigned</span>
+   818→              </div>
+   819→              {assigned.length > 0 ? (
+   820→                <div className="flex flex-wrap gap-1.5">{assigned.map(s => <span key={s.id} className="text-[10px] px-2 py-0.5 rounded-md bg-muted/50 border border-border text-muted-foreground">{s.firstName} {s.lastName[0]}.</span>)}</div>
+   821→              ) : <div className="text-[10px] text-muted-foreground">No students assigned yet.</div>}
+   822→              <details className="mt-2"><summary className="text-[10px] text-cyan-500 cursor-pointer">View {cat.projects.length} projects</summary><ul className="mt-1 space-y-0.5">{cat.projects.slice(0, 5).map(p => <li key={p.id} className="text-[10px] text-muted-foreground">#{p.id} {p.name} <span className="text-muted-foreground">({p.tags})</span></li>)}{cat.projects.length > 5 && <li className="text-[10px] text-muted-foreground">… +{cat.projects.length - 5} more</li>}</ul></details>
+   823→            </div>
+   824→          );
+   825→        })}
+   826→      </div>
+   827→    </div>
+   828→  );
+   829→}
+   830→
+   831→// ── AI Analytics ──
+   832→function AIAnalyticsTab() {
+   833→  const { toast } = useToast();
+   834→  const [insights, setInsights] = useState("");
+   835→  const [loadingAI, setLoadingAI] = useState(false);
+   836→  async function generate() {
+   837→    setLoadingAI(true); setInsights("");
+   838→    try {
+   839→      const res = await fetch("/api/admin/ai-analytics", { method: "POST" });
+   840→      const data = await res.json();
+   841→      if (!res.ok || !data.ok) throw new Error(data.error);
+   842→      setInsights(data.insights);
+   843→      toast({ title: "AI insights generated" });
+   844→    } catch (e) { toast({ title: "AI analytics failed", description: (e as Error).message, variant: "destructive" }); }
+   845→    finally { setLoadingAI(false); }
+   846→  }
+   847→  return (
+   848→    <div>
+   849→      <h3 className="font-bold text-lg mb-1">AI Analytics Dashboard</h3>
+   850→      <p className="text-xs text-muted-foreground mb-4">ML-powered insights: dropout risk, performance forecast, certificate eligibility.</p>
+   851→      <Button onClick={generate} disabled={loadingAI} className="mb-4 bg-gradient-to-r from-violet-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-9">
+   852→        {loadingAI ? <><Loader2 className="size-4 animate-spin mr-2" />Analyzing…</> : <><Brain className="size-4 mr-2" />Generate AI Insights</>}
+   853→      </Button>
+   854→      {insights ? (
+   855→        <div className="prose prose-sm max-w-none bg-muted/30 border border-border rounded-lg p-4 prose-h2:text-cyan-500 prose-h2:text-sm prose-strong:text-foreground prose-ul:my-2 prose-li:my-0.5 prose-p:my-1.5">
+   856→          <ReactMarkdown>{insights}</ReactMarkdown>
+   857→        </div>
+   858→      ) : !loadingAI && <p className="text-xs text-muted-foreground">Click "Generate AI Insights" to analyze student lifecycle data.</p>}
+   859→    </div>
+   860→  );
+   861→}
+   862→
+   863→// ── Notifications ──
+   864→function NotificationsTab() {
+   865→  const { students, loading } = useStudents();
+   866→  const [selected, setSelected] = useState("");
+   867→  const [message, setMessage] = useState("");
+   868→  const activeStudents = students.filter(s => s.paymentStatus === "confirmed");
+   869→  const student = students.find(s => s.id === selected);
+   870→  function sendWhatsApp() {
+   871→    if (!student || !message.trim()) return;
+   872→    window.open(`https://wa.me/${student.mobile.replace(/[\s+]/g, "").replace(/^91/, "91")}?text=${encodeURIComponent(`*AgileProjection NT-AI*\n\nHi ${student.firstName},\n\n${message}`)}`, "_blank");
+   873→  }
+   874→  function sendEmail() {
+   875→    if (!student || !message.trim()) return;
+   876→    window.open(`mailto:${student.email}?subject=${encodeURIComponent("AgileProjection — Notification")}&body=${encodeURIComponent(message)}`, "_blank");
+   877→  }
+   878→  return (
+   879→    <div>
+   880→      <h3 className="font-bold text-lg mb-1">Notification Center</h3>
+   881→      <p className="text-xs text-muted-foreground mb-4">Send WhatsApp / email notifications to students.</p>
+   882→      {loading ? <Loading /> : activeStudents.length === 0 ? <Empty text="No approved students to notify." /> : (
+   883→        <div className="space-y-3">
+   884→          <div><Label className="text-xs">Select Student</Label><select value={selected} onChange={e => setSelected(e.target.value)} className="w-full mt-1 bg-muted/50 border border-border rounded-md h-9 px-2 text-sm text-foreground"><option value="">— Select —</option>{activeStudents.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} ({s.email})</option>)}</select></div>
+   885→          <div><Label className="text-xs">Message</Label><textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} placeholder="e.g. Your batch starts tomorrow at 6 PM IST." className="w-full mt-1 bg-muted/50 border border-border rounded-md p-2 text-sm text-foreground resize-none" /></div>
+   886→          <div className="flex gap-2">
+   887→            <Button onClick={sendWhatsApp} disabled={!student || !message.trim()} className="bg-gradient-to-r from-emerald-600 to-cyan-500 text-primary-foreground hover:opacity-90 h-9"><MessageCircle className="size-4 mr-2" />Send WhatsApp</Button>
+   888→            <Button onClick={sendEmail} disabled={!student || !message.trim()} variant="outline" className="bg-muted/50 border-border text-foreground hover:text-cyan-500 h-9"><Mail className="size-4 mr-2" />Send Email</Button>
+   889→          </div>
+   890→        </div>
+   891→      )}
+   892→      <div className="mt-4 rounded-lg border border-border bg-card p-3">
+   893→        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Quick Templates</div>
+   894→        <div className="flex flex-wrap gap-1.5">{["Batch starts tomorrow at 6 PM IST","Your assignment is due in 2 days","Attendance warning: below 75%","Your certificate is ready!","Project submission deadline extended"].map(t => <button key={t} onClick={() => setMessage(t)} className="text-[10px] px-2 py-1 rounded-md bg-muted/50 border border-border text-muted-foreground hover:text-cyan-500 hover:border-cyan-500/30">{t}</button>)}</div>
+   895→      </div>
+   896→    </div>
+   897→  );
+   898→}
+   899→
+   900→// ── Settings ──
+   901→function SettingsTab() {
+   902→  const lists = [
+   903→    { label: "Degrees", items: DEGREES }, { label: "Branches", items: BRANCHES },
+   904→    { label: "Plans", items: PLANS }, { label: "States", items: STATES },
+   905→    { label: "Sources", items: SOURCES }, { label: "Internship Tracks", items: PROGRAMS.map(p => p.title) },
+   906→    { label: "AI/ML Domains", items: CATEGORIES.map(c => c.label) }, { label: "Mentors", items: MENTORS.map(m => m.name) },
+   907→  ];
+   908→  return (
+   909→    <div>
+   910→      <h3 className="font-bold text-lg mb-1">Settings</h3>
+   911→      <p className="text-xs text-muted-foreground mb-4">Configurable lists · roles · permissions.</p>
+   912→      <div className="grid sm:grid-cols-2 gap-3 mb-4">
+   913→        {lists.map(l => (
+   914→          <div key={l.label} className="bg-card border border-border rounded-xl p-3">
+   915→            <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">{l.label} ({l.items.length})</div>
+   916→            <div className="flex flex-wrap gap-1">{l.items.map(i => <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-muted-foreground">{i}</span>)}</div>
+   917→          </div>
+   918→        ))}
+   919→      </div>
+   920→      <div className="bg-card border border-border rounded-xl p-4">
+   921→        <div className="text-[11px] uppercase tracking-wider text-cyan-500 font-semibold mb-2">Roles & Permissions</div>
+   922→        <table className="w-full text-xs"><thead><tr className="text-left text-muted-foreground border-b border-border"><th className="py-1.5">Role</th><th>Access</th></tr></thead><tbody>
+   923→          {[{r:"Super Admin",a:"Full access — all modules + settings + roles"},{r:"Admin",a:"Students, Applications, Payments, Certificates, Reports, Notifications"},{r:"Mentor",a:"Assigned students, attendance, project reviews"},{r:"College Coordinator",a:"College-wise student reports"},{r:"Student",a:"Dashboard, track project, AI mentor, certificates"}].map(x => <tr key={x.r} className="border-b border-border/50 last:border-0"><td className="py-1.5 font-semibold text-foreground">{x.r}</td><td className="text-muted-foreground">{x.a}</td></tr>)}
+   924→        </tbody></table>
+   925→      </div>
+   926→    </div>
+   927→  );
+   928→}
+   929→
+   930→// ── Payments ──
+   931→function PaymentsTab() {
+   932→  const { students, loading } = useStudents();
+   933→  if (loading) return <Loading />;
+   934→  const pending = students.filter(s => s.paymentStatus !== "confirmed");
+   935→  const confirmed = students.filter(s => s.paymentStatus === "confirmed");
+   936→  return (
+   937→    <div>
+   938→      <h3 className="font-bold text-lg mb-1">Payment Management</h3>
+   939→      <p className="text-xs text-muted-foreground mb-4">Track payment status · refunds · revenue.</p>
+   940→      <div className="grid grid-cols-3 gap-3 mb-4">
+   941→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-amber-500">{pending.length}</div><div className="text-[10px] text-muted-foreground">Pending</div></div>
+   942→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-emerald-500">{confirmed.length}</div><div className="text-[10px] text-muted-foreground">Completed</div></div>
+   943→        <div className="bg-card border border-border rounded-xl p-3 text-center"><div className="font-bold text-xl text-cyan-500">₹{confirmed.length * 2499}</div><div className="text-[10px] text-muted-foreground">Est. Revenue</div></div>
+   944→      </div>
+   945→      <div className="space-y-2 max-h-[50vh] overflow-y-auto">
+   946→        {students.slice(0, 20).map(s => (
+   947→          <div key={s.id} className="flex items-center justify-between bg-card border border-border rounded-lg p-2">
+   948→            <div><div className="text-xs font-medium text-foreground">{s.firstName} {s.lastName}</div><div className="text-[10px] text-muted-foreground">{s.plan}</div></div>
+   949→            <span className={cn("text-[10px] px-2 py-0.5 rounded-full border", s.paymentStatus === "confirmed" ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30" : "bg-amber-500/15 text-amber-500 border-amber-500/30")}>{s.paymentStatus === "confirmed" ? "✅ Paid" : "⏳ Pending"}</span>
+   950→          </div>
+   951→        ))}
+   952→      </div>
+   953→    </div>
+   954→  );
+   955→}
+   956→
+   957→// ── Internships ──
+   958→function InternshipsTab() {
+   959→  return (
+   960→    <div>
+   961→      <h3 className="font-bold text-lg mb-1">Internship Management</h3>
+   962→      <p className="text-xs text-muted-foreground mb-4">{PROGRAMS.length} active tracks + AI/ML industry internship.</p>
+   963→      <div className="grid sm:grid-cols-2 gap-3">
+   964→        {PROGRAMS.map(p => (
+   965→          <div key={p.id} className="bg-card border border-border rounded-xl p-4">
+   966→            <div className="flex items-center gap-2 mb-2"><span className="text-2xl">{p.icon}</span><div><div className="font-semibold text-foreground text-sm">{p.title}</div><div className="text-[10px] text-muted-foreground">{p.badge}</div></div></div>
+   967→            <p className="text-[11px] text-muted-foreground mb-2">{p.desc.slice(0, 100)}…</p>
+   968→            <div className="flex flex-wrap gap-1 mb-2">{p.tags.slice(0, 3).map(t => <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-muted/50 border border-border text-muted-foreground">{t}</span>)}</div>
+   969→            <div className="flex gap-3 text-[10px] text-muted-foreground">{p.meta.map((m, i) => <span key={i}>{m.strong} {m.label}</span>)}</div>
+   970→          </div>
+   971→        ))}
+   972→        <div className="bg-card border border-border rounded-xl p-4">
+   973→          <div className="flex items-center gap-2 mb-2"><span className="text-2xl">🚀</span><div><div className="font-semibold text-foreground text-sm">AI/ML Industry Internship</div><div className="text-[10px] text-muted-foreground">6 Weeks · 80+ Projects</div></div></div>
+   974→          <p className="text-[11px] text-muted-foreground mb-2">End-to-end ML pipeline: {AIML_CURRICULUM.map(c => c.title.split(" ")[0]).join(" → ")}</p>
+   975→          <div className="text-[10px] text-muted-foreground">6 stages · LLM-generated training per week</div>
+   976→        </div>
+   977→      </div>
+   978→    </div>
+   979→  );
+   980→}
+   981→
+   982→// ── Stub (fallback) ──
+   983→function StubTab({ tab }: { tab: MenuKey }) {
+   984→  const labels: Record<string, { title: string; desc: string; features: string[] }> = {
+   985→    payments: { title: "Payment Management", desc: "For future paid programs — track payments, refunds, invoices, GST reports.", features: ["Payment Pending / Completed", "Refund Requests", "Invoice Download", "Revenue + GST Reports"] },
+   986→    internships: { title: "Internship Management", desc: "Create and configure internship tracks.", features: ["Create Internship (title, duration, mentor, technology, max students, dates)", "AI/ML · Full Stack · IoT · Embedded · Campus Ambassador"] },
+   987→    mentors: { title: "Mentor Management", desc: "Add mentors, assign students/batches, track performance + workload.", features: ["Add Mentor", "Assign Students + Batches", "Performance Tracking", "Workload Monitoring"] },
+   988→    projects: { title: "Project Management", desc: "Project library, templates, assignments, submission + evaluation.", features: ["Project Library (84+ templates)", "Assignments", "Submission", "Evaluation (Assigned → Reviewed → Approved)"] },
+   989→    attendance: { title: "Attendance Management", desc: "Daily tracking — Present / Absent / Leave / Late + analytics.", features: ["Daily Tracking", "Attendance %", "Batch-wise + College-wise analytics", "Daily Progress Monitoring"] },
+   990→    ai: { title: "AI Analytics Dashboard", desc: "ML-powered insights on student outcomes.", features: ["Dropout Prediction", "Student Risk Score", "Performance Prediction", "Attendance Trends", "Certificate Eligibility Forecast", "AI Mentor Analytics (most-asked questions, learning gaps)"] },
+   991→    notifications: { title: "Notification Center", desc: "Send notifications across channels.", features: ["Email", "SMS", "WhatsApp", "Portal Notifications", "Templates: Batch Started / Assignment Due / Attendance Warning / Certificate Available"] },
+   992→    settings: { title: "Settings (Super Admin)", desc: "Manage colleges, courses, technologies, mentors, roles, permissions.", features: ["Manage Colleges / Courses / Technologies / Mentors", "Roles: Super Admin · Admin · Mentor · College Coordinator · Student", "Permissions"] },
+   993→  };
+   994→  const info = labels[tab] || { title: String(tab), desc: "", features: [] };
+   995→  return (
+   996→    <div>
+   997→      <h3 className="font-bold text-lg mb-1">{info.title}</h3>
+   998→      <p className="text-xs text-muted-foreground mb-4">{info.desc}</p>
+   999→      <div className="rounded-xl border border-dashed border-border bg-card/50 p-6 text-center">
+  1000→        <div className="size-12 rounded-xl bg-secondary border border-border grid place-items-center text-cyan-400 mx-auto mb-3"><Brain className="size-6" /></div>
+  1001→        <div className="font-semibold text-foreground text-sm">Part of the NT-AI enterprise admin suite</div>
+  1002→        <p className="text-xs text-muted-foreground mt-1 max-w-md mx-auto">This module is scaffolded in the sidebar. Planned features:</p>
+  1003→        <ul className="text-xs text-muted-foreground mt-3 max-w-md mx-auto space-y-1 text-left">
+  1004→          {info.features.map(f => <li key={f} className="flex items-start gap-1.5"><CheckCircle2 className="size-3 text-cyan-400 mt-0.5 shrink-0" />{f}</li>)}
+  1005→        </ul>
+  1006→      </div>
+  1007→    </div>
+  1008→  );
+  1009→}
+  1010→
+  1011→function Loading() { return <div className="py-10 text-center text-sm text-muted-foreground"><Loader2 className="size-5 animate-spin mx-auto mb-2" /> Loading…</div>; }
+  1012→function Empty({ text }: { text: string }) { return <div className="py-8 text-center text-sm text-muted-foreground border border-dashed border-border rounded-lg">{text}</div>; }
+  1013→function Badge({ color, icon, children }: { color: "amber" | "cyan" | "emerald"; icon: React.ReactNode; children: React.ReactNode }) {
+  1014→  const c = { amber: "bg-amber-500/15 text-amber-300 border-amber-500/30", cyan: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30", emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" }[color];
+  1015→  return <span className={cn("inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full border", c)}>{icon}{children}</span>;
+  1016→}
+  1017→
