@@ -259,6 +259,12 @@ export default function Home() {
                 alt="Engineering students collaborating on AI/ML projects"
                 className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10 mt-5 hidden sm:block"
               />
+              {/* NT-AI Network analytics brand image — data visualizations + NT-AI logo */}
+              <img
+                src="/ntai-analytics.png"
+                alt="NT-AI Network — Empowering Talent. Enabling Transformation."
+                className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10 mt-3 hidden sm:block"
+              />
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 max-w-md mx-auto lg:mx-0">
                 {[{n:"10,000+",l:"Students"},{n:"500+",l:"Colleges"},{n:"80+",l:"Projects"},{n:"98%",l:"Completion"}].map(s => (
                   <div key={s.l} className="bg-card border border-border rounded-lg p-3 text-center shadow-sm">
