@@ -705,3 +705,137 @@ Verification (Agent Browser end-to-end):
 
 Stage Summary:
 - 29 agile component files + `globals.css` scrollbar + Recharts tooltips are now fully theme-aware. Internal panels (cards, forms, chat windows, tooltips, axis labels, scrollbars, dashboard banners, register category cards, AI assistant bubbles, project tracker roadmap cards, sales chat, footer, nav, hero badges, all the small cards) now correctly change colour when the user toggles between LIGHT (Cyan Breeze) and DARK (navy) themes via the theme toggle button in the header / login page. The "internal panel colours not changing" bug is fixed end-to-end.
+
+---
+Task ID: 28-BACKEND
+Agent: Z.ai Code (general-purpose — Google OAuth + admin password security, BACKEND ONLY)
+
+Task: Implement Google OAuth for student login + admin-password-from-env security on a Next.js 16 + Prisma + TypeScript internship portal. Backend only — did NOT touch `src/app/page.tsx`, `src/components/agile/auth-menu.tsx`, `src/components/agile/register-form.tsx`, or `src/app/layout.tsx` (another agent handles the UI side).
+
+Work Log:
+- Read `/home/z/my-project/worklog.md` (recent entries up to Task 27) to understand the existing custom HMAC `ap_session` cookie auth (`/api/auth/login`, `/api/auth/me`, `/api/auth/logout`) and the Prisma `Account` + `Student` schemas. Confirmed `next-auth@4.24.11` already installed, and that existing admin API routes (`/api/admin/accounts`, `/api/admin/registrations`) already use `select:` without `passwordHash` — left untouched.
+- **Task 1 — Created `/home/z/my-project/src/app/api/auth/[...nextauth]/route.ts`:**
+  - NextAuth v4 `authOptions` exporting `GET` + `POST` handlers.
+  - **GoogleProvider** for students — only registered when both `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` env vars are present (conditional spread). Uses `prompt: "select_account"` so users with multiple Google accounts get the account picker.
+  - **CredentialsProvider** for admin only — `credentials: { email, password }`. `authorize()` lowercases + trims the email and compares to `ADMIN_EMAIL`; the password is compared in constant time via `Buffer.from(...).equals(Buffer.from(...))` after a length check. **No `console.log` ever prints the password**. Returns `{ id: "admin", email: ADMIN_EMAIL, name: "AgileProjection Admin", role: "admin" }` only on success.
+  - `session.strategy = "jwt"`; `secret` = `NEXTAUTH_SECRET || SESSION_SECRET || "dev-secret-change-me"` (env-driven, with safe dev fallback).
+  - `jwt` callback: stamps `token.role = "guest"` + `token.googleEmail` for Google auth; `token.role = "admin"` for credentials auth.
+  - `session` callback: exposes `session.user.role` + `session.user.googleEmail` to the client.
+  - `pages.signIn = "/"` so the homepage is the sign-in page (no separate /login route).
+  - Exported `authOptions` for use by other server routes (google-link + register).
+- **Task 2 — Created `/home/z/my-project/src/app/api/auth/google-link/route.ts`:**
+  - `GET /api/auth/google-link` runs after Google sign-in completes. `getServerSession(authOptions)` reads the NextAuth session; if there's no `session.user.email`, redirects to `/?error=google-failed`.
+  - Looks up the local `Account` by `username = email`. If none, creates one with: `passwordHash` = a random **unusable** value (`randomBytes(48).toString("hex") + ":" + randomBytes(64).toString("hex")` — never matches any real password and never matches a salt:hash pair the `verifyPassword` helper would accept), `role = "guest"`, `status = "unlocked"`, `expiresAt = null` (permanent), `passwordSetAt = null`, `fullName = session.user.name || email`, `note = "Google-linked account (no password — login via Google OAuth)"`.
+  - If the account already exists but is locked or has an expiry, it is re-`update`d to `unlocked` + `expiresAt = null` so the Google user gets permanent access again.
+  - Sets the existing local HMAC `ap_session` cookie via `makeSessionCookie({ username: account.username, role: "guest", scope: "agileprojection-portal" })` so the existing `/api/auth/me` route works unchanged for Google users.
+  - Redirects to `/?google=1` with the cookie set. The `error` path (no session or exception) redirects to `/?error=google-failed`. No credentials are ever logged — only the generic error message.
+- **Task 3 — Updated `/home/z/my-project/src/lib/auth.ts`:**
+  - Added module-level constants: `ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === "production" ? "" : "admin123")` and `ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@agileprojection.com").toLowerCase().trim()`.
+  - Added one-time-warn helper: `let adminPasswordWarned = false; function warnAdminPasswordMissing() { ... console.warn("[auth] WARNING: ADMIN_PASSWORD not set. Admin login disabled.") }` — logs exactly once per process.
+  - Added a SECURITY comment block at the top of the admin-credentials section: *"the admin password is NEVER logged, NEVER returned in API responses, NEVER shown in the UI. It is read from ADMIN_PASSWORD env var and hashed before storage."*
+  - Replaced the hardcoded `SEED_ACCOUNTS` const-array with a `buildSeedSpecs()` function that returns:
+    - The admin account ONLY when `ADMIN_PASSWORD` is non-empty (always — both dev + prod).
+    - The `student@agileprojection.com` demo student + `guest1`..`guest5` ONLY when `process.env.NODE_ENV !== "production"`.
+    - In production + `ADMIN_PASSWORD === ""`: `warnAdminPasswordMissing()` is called and `list` stays empty (admin login disabled, no demo accounts seeded).
+  - The admin `Account`'s `passwordHash` is now `hashPassword(ADMIN_PASSWORD)` (scrypt + random salt + 64-byte hash, same as before) — only when `ADMIN_PASSWORD` is non-empty. In production without the env var, the admin Account is skipped entirely.
+  - `ensureAccountsSeeded()` now re-evaluates `buildSeedSpecs()` at runtime (so env vars set after module load still take effect on the first request), warns once if empty, and otherwise iterates the specs with the same per-row idempotency as before (`findUnique` → skip if found; else `create`).
+  - Exported `ADMIN_CREDENTIALS = { email: ADMIN_EMAIL, hasPassword: ADMIN_PASSWORD.length > 0 }` for other server modules to query (read-only — never the password itself).
+  - Verified NO `console.log`/`console.error`/`console.warn` anywhere in `auth.ts` prints the password, `passwordHash`, or any credential — only the one-time warn message (which is just the static string "ADMIN_PASSWORD not set. Admin login disabled.") and the per-error message string from a thrown exception (which never contains a credential).
+- **Task 4 — Updated `/home/z/my-project/src/app/api/register/route.ts`:**
+  - Reads the NextAuth session server-side via `getServerSession(authOptions)` (imported from the new `[...nextauth]/route.ts`).
+  - If `!session?.user?.email` → returns 401 `{ ok: false, error: "You must sign in with Google before registering.", code: "NO_GOOGLE_SESSION" }`.
+  - `googleEmail = session.user.email.toLowerCase().trim()` — this is the source of truth for the student's email.
+  - Removed `"email"` from the `required` field list (it now comes from the session, not the body). Body `email` field is IGNORED entirely — a malicious client sending a different email in the body cannot override the Google email.
+  - Added duplicate check: `db.student.findFirst({ where: { email: googleEmail } })` — if found, returns 409 `{ ok: false, error: "You are already registered. Log in with your Google account to continue.", code: "DUPLICATE" }`.
+  - Persists the Student row with `email: googleEmail` (overriding any body value).
+  - Notification logic (`notifyRegistration` + persisting `emailSent`/`waSent` on the Student row) is left intact — still sends the email/WhatsApp stubs to `SITE.email` + `SITE.whatsapp`.
+  - Replaces the old "auto-create Account with mobile-as-password" logic with the same Google-link logic: `findUnique({ where: { username: googleEmail } })`; if not found, `create` with a random **unusable** `passwordHash` (same shape as google-link), `role = "guest"`, `status = "unlocked"`, `expiresAt = null`, `passwordSetAt = null`, `note = "Auto-created at registration — login via Google OAuth"`. If found but locked/expiring, `update` to `unlocked` + `expiresAt = null` + fresh `fullName`.
+  - Returns the same success response shape as before (`{ ok, id, student: { name, email, project, categoryLabel }, notification: { to, whatsappNumber, whatsappUrl, mailtoUrl, smtpSent, logPersisted } }`), and additionally sets the local `ap_session` cookie via `makeSessionCookie({ username: googleEmail, role: "guest", scope: "agileprojection-portal" })` so the user is logged in immediately after registration even if they bypassed `/api/auth/google-link`.
+  - `console.error` lines now log only `(err as Error).message` — never credentials.
+  - `GET /api/register` (admin listing) is unchanged.
+- **Task 5 — Created `/home/z/my-project/.env.example` (file did not exist before):**
+  - Preserved `DATABASE_URL` + `SESSION_SECRET` (legacy HMAC cookie auth).
+  - Added `GOOGLE_CLIENT_ID=""`, `GOOGLE_CLIENT_SECRET=""` with a comment linking to https://console.cloud.google.com/apis/credentials and noting the redirect URI `https://YOUR_DOMAIN/api/auth/callback/google`.
+  - Added `NEXTAUTH_URL="http://localhost:3000"` and `NEXTAUTH_SECRET="generate-with: openssl rand -base64 32"`.
+  - Added `ADMIN_EMAIL="admin@agileprojection.com"` and `ADMIN_PASSWORD="change-this-to-a-strong-password"` with a comment that this MUST be set in production (admin login is disabled otherwise).
+- **Task 6 — Updated `/home/z/my-project/.env`:**
+  - Kept the existing `DATABASE_URL=file:/home/z/my-project/db/custom.db`.
+  - Added back `SESSION_SECRET="agileprojection-portal-dev-secret-change-in-production"` (it was being read from env in `auth.ts` but was missing from `.env` — now explicit).
+  - Added `GOOGLE_CLIENT_ID=""`, `GOOGLE_CLIENT_SECRET=""` (empty → Google provider disabled in dev until the user fills them in).
+  - Added `NEXTAUTH_URL="http://localhost:3000"`, `NEXTAUTH_SECRET="dev-nextauth-secret-change-me-in-production"`.
+  - Added `ADMIN_EMAIL="admin@agileprojection.com"`, `ADMIN_PASSWORD="admin123"` (matches the dev fallback in `auth.ts`, so admin login keeps working in dev with the existing demo credentials).
+
+Verification:
+- `cd /home/z/my-project && bun run lint` → exit code 0, no errors, no warnings. (Initial run flagged one "Unused eslint-disable directive" warning on the NextAuth route — removed the unnecessary `// eslint-disable-next-line @typescript-eslint/no-explicit-any` comment since the rule is already off globally; second run is clean.)
+- `bun build` on all four entry files (`[...nextauth]/route.ts`, `google-link/route.ts`, `register/route.ts`, `lib/auth.ts`) succeeded — 4 bundles, 315 modules, no compile errors. Confirmed `next-auth/providers/google` + `next-auth/providers/credentials` resolve correctly from the installed `next-auth@4.24.11`.
+- Sanity-checked security invariants:
+  - **Admin password**: only ever read from `process.env.ADMIN_PASSWORD`; never returned in any API response (the NextAuth Credentials `authorize()` returns only `{ id, email, name, role }`; the existing `/api/auth/me` returns `{ username, role, status, fullName, expiresAt }`; `/api/admin/accounts` already uses `select:` without `passwordHash`). Never logged — every `console.error`/`console.warn` in `auth.ts`, `[...nextauth]/route.ts`, `google-link/route.ts`, and `register/route.ts` prints only a static label or the caught `Error.message` (which never contains the password).
+  - **Google email immutability**: `register/route.ts` reads `email` exclusively from the verified NextAuth session and ignores the body field. `google-link/route.ts` does the same. A student cannot register or log in with a non-Google email.
+  - **Duplicate registration prevention**: `register/route.ts` returns 409 with `code: "DUPLICATE"` if a Student with the Google email already exists. Same google-email cannot create two Student rows.
+  - **Profile linking**: `google-link/route.ts` + `register/route.ts` both use `db.account.findUnique({ where: { username: email } })` → `create` if missing, `update` if locked/expiring. Same Account row is reused across Google sign-ins and across register/relate flows — one Google email → one local Account → one Student row.
+
+Stage Summary:
+- The portal's auth backend now has TWO complementary auth flows:
+  1. **Google OAuth (NextAuth)** — students sign in with their Google account; the email is the identity. The `/api/auth/google-link` route binds the Google identity to a local `Account` row (with an unusable random `passwordHash`) and sets the existing HMAC `ap_session` cookie so `/api/auth/me` works unchanged. The `/api/register` route refuses registration without a Google session and forces the Student's `email` to be the Google email — so duplicate + mismatched-email registrations are impossible.
+  2. **Admin via Credentials (NextAuth) or the existing `/api/auth/login`** — admin email comes from `ADMIN_EMAIL`; admin password comes from `ADMIN_PASSWORD`. The env var is the single source of truth for both routes (the NextAuth `authorize()` compares in constant time without touching the DB; `auth.ts`'s `ensureAccountsSeeded` hashes the same env var into the local `Account` row so the legacy username/password route still works). The password is never logged, never returned in any API response, never shown in the UI.
+- The frontend agent (Task 28-FRONTEND or similar) can now:
+  - Use `signIn("google")` from `next-auth/react` to start the Google flow → after callback, hit `/api/auth/google-link` to set the local cookie → `/api/auth/me` then returns the student user.
+  - Use `signIn("credentials", { email, password })` for admin → OR continue using the existing `POST /api/auth/login` with `username: "admin"` + the `ADMIN_PASSWORD` value.
+  - Render the registration form with `email` as a **read-only, auto-filled** field sourced from the Google session (the body field is ignored server-side, so it's safe to even leave it out of the POST).
+- All env vars the user/operator needs to set in production: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` (and the existing `DATABASE_URL` + `SESSION_SECRET`). In dev, only `DATABASE_URL` is required — the rest fall back to safe dev values.
+
+---
+Task ID: 28-FRONTEND
+Agent: Z.ai Code (frontend — Google OAuth + admin-password security pass)
+Task: Implement the frontend for Google OAuth student login + admin password-from-env security for the AgileProjection portal. Backend agent (28-BACKEND) was simultaneously adding NextAuth route, google-link callback, .env keys, and /api/register duplicate-prevention. The frontend pieces must NOT touch backend route files, src/lib/auth.ts, or .env.
+
+Files created:
+- `src/components/providers/session-provider.tsx` — a tiny `"use client"` wrapper that re-exports NextAuth v4's `SessionProvider` so any client component can call `useSession()`. Mounted once at the root layout.
+- `src/components/agile/google-sign-in-button.tsx` — a `"use client"` button that calls `signIn("google", { callbackUrl: "/api/auth/google-link" })` on click. Renders the official Google "G" logo as an inline SVG (the four-path `M22.56 12.25c0-...` Google logo, brand colors #4285F4 / #34A853 / #FBBC05 / #EA4335) — NO external image dependency. Style: white bg, zinc-800 text, border, hover shadow, full-width, h-12, rounded-lg, focus ring. Accepts `label` (default "Sign in with Google") and `className` props.
+
+Files modified:
+- `src/app/layout.tsx` — added `import { SessionProvider } from "@/components/providers/session-provider"`. Wrapped `{children}` and `<Toaster />` inside `<SessionProvider>…</SessionProvider>` inside `<body>`. All existing metadata, Geist/Geist_Mono fonts, `suppressHydrationWarning`, body className, and `<Toaster />` kept exactly as-is.
+- `src/app/page.tsx` (login page — NOT logged-in dashboard):
+  - Added `import { GoogleSignInButton }`.
+  - Added `const { toast } = useToast()` to the `Home` component (used by the new `?google=1` / `?error=google-failed` handlers).
+  - Added a `useEffect` block (after the auth bootstrap) that detects `?google=1` in `window.location.search` → calls `refreshAuth()` and strips the query param via `history.replaceState`; and detects `?error=google-failed` → fires a destructive toast and strips the param.
+  - Replaced the login-card hint `"Students: use your registration email + mobile. Admin: admin / admin123."` with `"Students: sign in with Google. Admin: use your credentials."` — no admin password on screen.
+  - In the embedded `LoginForm`: DELETED the `<button>admin / admin123</button>` autofill button AND the `<button>student demo</button>` autofill button (admin password never displayed).
+  - Added `<GoogleSignInButton />` ABOVE the existing credentials form + a divider ("or") between Google and admin form.
+  - Renamed the username/password labels to "Admin Username / Email" and "Admin Password" and the submit button to "Admin Sign In".
+  - Added a small note UNDER the admin form: `"Admin login only. Students must use Google Sign-In above."`
+  - Kept ALL existing functionality (submit handler, form state, fetch to /api/auth/login, redirect via onLoggedIn, toast on success).
+- `src/components/agile/auth-menu.tsx` (the dialog login form — kept for the admin-console account unlocker):
+  - DELETED the `CredentialButton` component definition (was the autofill demo-credential chip — gone).
+  - DELETED all four `<CredentialButton>` instances (admin/guest1/guest2/guest3) and the "Demo accounts (click to autofill)" wrapper.
+  - DELETED the `fill()` and `copy()` helpers (no longer needed) and the `copied` state.
+  - Removed the now-unused imports: `Copy`, `Check`, `LayoutDashboard`. Removed the unused `const { toast } = useToast()` from the LoginForm (no toasts fired from there now).
+  - Replaced the dialog description `"Sign in with your account. Students: use your registration email + mobile number. Admin: admin / admin123."` with `"Sign in with Google for student access. Admin: use your credentials."` — no admin password.
+  - Replaced the "Students start locked (demo accounts)…" help block with: `"Students sign in with Google. Registered students get permanent access. Admin manages students from the dashboard."`
+  - Added `<GoogleSignInButton />` at the top of the dialog body (inside the `<div>` after `<DialogHeader>`), followed by a divider "or", followed by the (admin-only) username/password form (preserved as-is — submit handler, error toast, fetch to /api/auth/login, `onLoggedIn(data.user)` all intact).
+- `src/components/agile/register-form.tsx` (the 4-step registration wizard):
+  - Added `import { useSession } from "next-auth/react"` and `import { GoogleSignInButton } from "@/components/agile/google-sign-in-button"` and the `AlertTriangle` lucide icon.
+  - At the top of `RegisterForm`: `const { data: session, status } = useSession();` → `const googleEmail = session?.user?.email?.toLowerCase().trim() || "";` → `const isSignedIn = !!googleEmail && status === "authenticated";` → `const authLoading = status === "loading";`. Added a new `duplicateEmail` state.
+  - Email `<Input>` (Step 3): now `value={googleEmail}`, `readOnly`, no `onChange`, `placeholder="Sign in with Google first"`, `className="bg-muted/50 … cursor-not-allowed"`, with an `aria-describedby="email-from-google-help"` help span: "Read-only — taken from your Google session. Sign out & back in with another Google account to change it."
+  - `validateStep3()`: removed the email-format regex check (email comes from Google — guaranteed valid; backend re-validates against session). All other validations (firstName, lastName, mobile format, degree, branch, semester, plan, college, state) preserved.
+  - `submit()`: early-returns with a destructive toast `"Sign in with Google first"` when `!googleEmail`. Uses `email: googleEmail` in the POST body (NOT `form.email`) so a logged-in student can never register a different email. After response, detects `data.code === "DUPLICATE"` (or `/duplicate/i.test(data.error)`) → sets `duplicateEmail` state, fires a toast, and short-circuits (no `SuccessPanel`).
+  - Step 4 SummaryCard: `"Email"` row now shows `googleEmail || form.email`.
+  - New duplicate-detection banner ABOVE the wizard: amber `AlertTriangle` + "You are already registered with this Google account." + the duplicate email shown in mono + a "Log in with Google" link (`/?google=1`) + a "Dismiss" button. `resetAll()` clears `duplicateEmail`.
+  - New not-signed-in banner ABOVE the wizard (when `!isSignedIn`): cyan `AlertTriangle` + "⚠ Sign in with Google to register." + the explanation text + `<GoogleSignInButton label="Sign in with Google to register" />`. While `authLoading`, shows a spinner + "Checking your Google session…".
+  - The wizard (StepIndicator + Steps 1–4) is wrapped in `<div aria-disabled={!isSignedIn} className={cn("transition-all", !isSignedIn && "pointer-events-none opacity-50 select-none")}>` so the wizard is greyed out + non-interactive until the student signs in with Google. Once signed in, full opacity + interactive.
+  - All other fields (firstName, lastName, mobile, degree, branch, semester, plan, college, state, source, notes, consent checkboxes) and the entire 4-step wizard flow, the PaymentPage, and the SuccessPanel are preserved unchanged.
+
+What the user will see:
+- Login page (`/`): a white "Sign in with Google" button (with the official Google G logo) at the top of the login card, then a divider "or", then the admin-only username/password form (no demo-account autofill chips, no visible admin password anywhere). Hint text reads "Students: sign in with Google. Admin: use your credentials." Under the form: "Admin login only. Students must use Google Sign-In above."
+- Auth-menu dialog (admin unlock console): same Google button + divider + admin credentials form, with an "Access guide" info block instead of demo-credential chips.
+- Register form (`#register`): if not signed in with Google, a prominent cyan banner with "⚠ Sign in with Google to register" + a "Sign in with Google to register" button. The wizard below is greyed out and pointer-events-none until signed in. Once signed in, the Email field is read-only and pre-filled with the Google email (with a help line: "Read-only — taken from your Google session…"). On a duplicate registration, an amber banner appears: "You are already registered with this Google account." with a "Log in with Google" link.
+- After Google OAuth completes (backend redirects to `/?google=1`), the homepage useEffect calls `refreshAuth()` (which fetches `/api/auth/me` — the local cookie was set by `/api/auth/google-link`), strips the query param, and the student dashboard auto-mounts. On `?error=google-failed`, a destructive toast: "Google sign-in failed. Please try again."
+
+Security properties delivered:
+- Admin password is NEVER displayed anywhere — autofill chips and "admin / admin123" hints removed from BOTH the page.tsx LoginForm AND the auth-menu.tsx dialog LoginForm.
+- Student email on registration is read-only and sourced from the Google session — a student cannot register a different email than the one they used to sign in with Google.
+- Duplicate registration by the same Google email is detected by the backend and surfaced with an inline "Log in" link (no silent data overwrite).
+- `signIn("google", { callbackUrl: "/api/auth/google-link" })` routes the OAuth flow through the backend route that links the Google session to the local portal cookie — the existing /api/auth/me + /api/auth/login flow is untouched (admin still uses /api/auth/login with email + password from .env).
+
+Lint status: `cd /home/z/my-project && bun run lint` → exit code 0, no errors, no warnings. All my new/modified files (session-provider.tsx, google-sign-in-button.tsx, layout.tsx, page.tsx, auth-menu.tsx, register-form.tsx) are lint-clean.
+TypeScript sanity: `bunx tsc --noEmit` reports zero errors in any of my modified files (the remaining TS errors are all pre-existing in unrelated files: admin-dashboard.tsx, student-dashboard.tsx, api/register/route.ts, api/pages/route.ts — and the example/skills scripts which are out of scope).
