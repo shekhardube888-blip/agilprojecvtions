@@ -131,7 +131,9 @@ export default function Home() {
         {/* Top bar with LOGOUT */}
         <header className="fixed top-0 inset-x-0 z-50 h-16 bg-background/90 backdrop-blur-xl border-b border-border flex items-center justify-between px-4 md:px-[5%]">
           <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
-            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-9 w-auto rounded-md" />
+            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-7 w-auto rounded-md" />
+            <span className="text-muted-foreground/40 hidden sm:inline">|</span>
+            <img src="/ntai-logo.png" alt="NT-AI Network" className="h-7 w-auto rounded-md" />
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2">
@@ -230,7 +232,9 @@ export default function Home() {
         {/* Header */}
         <header className="flex items-center justify-between px-5 md:px-[5%] py-4">
           <Link href="#top" className="flex items-center gap-2 font-bold text-lg">
-            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-9 w-auto rounded-md" />
+            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-8 w-auto rounded-md" />
+            <span className="text-muted-foreground/40 hidden sm:inline">|</span>
+            <img src="/ntai-logo.png" alt="NT-AI Network" className="h-8 w-auto rounded-md" />
           </Link>
           <div className="flex items-center gap-2">
             <ThemeToggle />

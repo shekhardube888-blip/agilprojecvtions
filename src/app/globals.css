@@ -86,25 +86,25 @@
   --sidebar-ring: #06b6d4;
 }
 
-/* ── NT-AI Network brand theme: burgundy + cream + gold ── */
+/* ── NT-AI Network brand theme: deep navy + gold (from the NT-AI logo) ── */
 .dark {
-  --background: #2A0808;          /* deep burgundy (darkened from #5C0A0A) */
-  --foreground: #F5DEB3;          /* cream/beige text (wheat) */
-  --card: #3D0C0C;                /* slightly lighter burgundy */
-  --card-foreground: #F5DEB3;     /* cream text on cards */
-  --popover: #3D0C0C;            /* burgundy popover */
-  --popover-foreground: #F5DEB3;
-  --primary: #D4AF37;             /* gold (for buttons, links, accents) */
-  --primary-foreground: #2A0808;  /* dark text on gold buttons */
-  --secondary: #4A1010;           /* lighter burgundy for secondary elements */
-  --secondary-foreground: #F5DEB3;
-  --muted: #4A1010;               /* muted burgundy */
-  --muted-foreground: #C4A464;    /* muted gold-cream */
-  --accent: #4A1010;
+  --background: #0d1642;          /* deep navy blue (from the NT-AI logo background) */
+  --foreground: #F5F5F5;          /* near-white text for readability */
+  --card: #15205c;                /* slightly lighter navy for cards */
+  --card-foreground: #F5F5F5;
+  --popover: #15205c;            /* navy popover */
+  --popover-foreground: #F5F5F5;
+  --primary: #D4AF37;             /* gold (from the NT-AI logo text/icon) */
+  --primary-foreground: #0d1642;  /* navy text on gold buttons */
+  --secondary: #1a237e;           /* mid navy for secondary elements */
+  --secondary-foreground: #E6C55F; /* lighter gold */
+  --muted: #1a237e;               /* muted navy */
+  --muted-foreground: #8B93C7;    /* muted navy-lavender */
+  --accent: #1a237e;
   --accent-foreground: #D4AF37;   /* gold accent text */
   --destructive: #ef4444;
-  --border: rgba(212,175,55,0.25); /* gold-tinted borders */
-  --input: rgba(245,222,179,0.08);
+  --border: rgba(212,175,55,0.22); /* gold-tinted borders */
+  --input: rgba(255,255,255,0.06);
   --ring: #D4AF37;                /* gold ring */
 }
 
