@@ -179,11 +179,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
           <LogIn className="size-5 text-cyan-400" /> Portal Login
         </DialogTitle>
         <DialogDescription className="text-muted-foreground">
-<<<<<<< HEAD
           Sign in with Google for student access. Admin: use your credentials.
-=======
-          Sign in with your account. <strong className="text-foreground">Students:</strong> use your registration email + mobile number. Admin: admin / admin123.
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
         </DialogDescription>
       </DialogHeader>
 
@@ -207,11 +203,7 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
             autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-<<<<<<< HEAD
             placeholder="admin email"
-=======
-            placeholder="your email  /  admin"
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
             className="bg-muted border-border"
             required
           />
@@ -247,79 +239,19 @@ function LoginForm({ onLoggedIn }: { onLoggedIn: (u: User) => void }) {
         </Button>
       </form>
 
-<<<<<<< HEAD
       {/* Info note — no demo credentials shown (admin password is never displayed) */}
-=======
-      {/* Demo credentials helper */}
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
       <div className="mt-5 rounded-xl border border-border bg-muted/70 p-4">
         <div className="text-[11px] uppercase tracking-wider text-cyan-400 font-semibold mb-2 flex items-center gap-1.5">
           <ShieldCheck className="size-3.5" /> Access guide
         </div>
-<<<<<<< HEAD
         <p className="text-[11px] text-muted-foreground leading-relaxed">
           Students sign in with Google. Registered students get permanent access. Admin manages students from the dashboard.
-=======
-        <div className="grid grid-cols-2 gap-2">
-          <CredentialButton label="admin" sub="admin123" onClick={() => fill("admin", "admin123")} onCopy={() => copy("admin123", "admin")} copied={copied === "admin"} role="admin" />
-          <CredentialButton label="guest1" sub="guest1" onClick={() => fill("guest1", "guest1")} onCopy={() => copy("guest1", "guest1")} copied={copied === "guest1"} />
-          <CredentialButton label="guest2" sub="guest2" onClick={() => fill("guest2", "guest2")} onCopy={() => copy("guest2", "guest2")} copied={copied === "guest2"} />
-          <CredentialButton label="guest3" sub="guest3" onClick={() => fill("guest3", "guest3")} onCopy={() => copy("guest3", "guest3")} copied={copied === "guest3"} />
-        </div>
-        <p className="text-[11px] text-muted-foreground mt-2.5 leading-relaxed">
-          Students start <span className="text-amber-300">locked</span> (demo accounts). <strong className="text-foreground">Registered students</strong> log in with their email + mobile (auto-created at registration). Sign in as <span className="text-cyan-300 font-semibold">admin</span> to unlock demo accounts or manage students.
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
         </p>
       </div>
     </div>
   );
 }
 
-<<<<<<< HEAD
-=======
-function CredentialButton({
-  label,
-  sub,
-  onClick,
-  onCopy,
-  copied,
-  role,
-}: {
-  label: string;
-  sub: string;
-  onClick: () => void;
-  onCopy: () => void;
-  copied: boolean;
-  role?: "admin";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md bg-secondary border border-border hover:border-cyan-500/40 transition-colors text-left"
-    >
-      <div>
-        <div className="text-xs font-semibold text-foreground flex items-center gap-1">
-          {role === "admin" && <ShieldCheck className="size-3 text-cyan-400" />}
-          {label}
-        </div>
-        <div className="text-[10px] text-muted-foreground">pass: {sub}</div>
-      </div>
-      <span
-        role="button"
-        tabIndex={0}
-        onClick={(e) => { e.stopPropagation(); onCopy(); }}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); e.preventDefault(); onCopy(); } }}
-        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-muted-foreground hover:text-cyan-300"
-        title="Copy password"
-      >
-        {copied ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
-      </span>
-    </button>
-  );
-}
-
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
 // ── Student panel (was "Guest panel"; role=guest is labeled "Student" in the UI) ──
 function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
   // Registered students have expiresAt=null (permanent access). Demo accounts
@@ -395,11 +327,7 @@ function GuestPanel({ user, onLogout }: { user: User; onLogout: () => void }) {
           <div className="flex items-start gap-3">
             <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
             <div className="flex-1">
-<<<<<<< HEAD
               <div className="font-semibold text-emerald-300">Access active</div>
-=======
-              <div className="font-semibold text-emerald-300">Access active ✓</div>
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
               <p className="text-sm text-muted-foreground mt-1">
                 Your student account is active. Open the Student Dashboard to register, track your project, ask the AI mentor, and view the schedule.
               </p>

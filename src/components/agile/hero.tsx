@@ -80,16 +80,10 @@ export function Hero() {
       <div className="relative max-w-7xl mx-auto px-5 md:px-[5%] grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
         {/* ─── LEFT: enterprise headline + CTAs + trust signals ─── */}
         <div className="ap-fade-up">
-<<<<<<< HEAD
           {/* Compliance / accreditation badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-cyan-500 dark:text-cyan-400 mb-5">
             <ShieldCheck className="size-3.5" />
             AICTE-Aligned · Industry Mentor-Led · Verifiable Certificates
-=======
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1.5 text-xs text-cyan-300 font-medium mb-5">
-            <span className="ap-pulse size-2 rounded-full bg-cyan-400" />
-            Free Online Internships · 2025–26 Batch Open
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
           </div>
 
           <h1
@@ -101,7 +95,6 @@ export function Hero() {
           </h1>
 
           <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-<<<<<<< HEAD
             Industry-Grade Internship Programs in AI, ML &amp; Full Stack
             Development. AgileProjection · NT-AI Network delivers mentor-led,
             project-based training for BE / B.Tech / ME / M.Tech / MCA students —
@@ -117,21 +110,6 @@ export function Hero() {
             <strong className="text-foreground font-semibold">50+</strong>{" "}
             colleges
           </p>
-=======
-            AgileProjection · NT-AI Network runs <strong className="text-foreground">live, mentor-led, project-based internship programs</strong> for BE / B.Tech / ME / M.Tech / MCA students — in Embedded, IoT, AI/ML, Full Stack &amp; Campus Ambassador tracks. Build a real project, earn a verifiable certificate, and get career support — at <strong className="text-cyan-300">zero cost</strong>.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2">
-            {TRACK_PILLS.map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs text-muted-foreground"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
 
           {/* CTAs */}
           <div className="mt-7 flex flex-col sm:flex-row gap-3">
@@ -148,17 +126,12 @@ export function Hero() {
               asChild
               size="lg"
               variant="outline"
-<<<<<<< HEAD
               className="h-12 px-6 border-border text-foreground hover:bg-secondary hover:text-cyan-500 dark:hover:text-cyan-400"
-=======
-              className="h-12 px-6 border-border text-foreground hover:bg-secondary hover:text-cyan-300"
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
             >
               <Link href="#programs">Explore 80+ Projects</Link>
             </Button>
           </div>
 
-<<<<<<< HEAD
           {/* Trust signals — small badge row */}
           <ul className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
             {TRUST_SIGNALS.map((t) => (
@@ -168,19 +141,11 @@ export function Hero() {
               >
                 <t.icon className="size-3.5 text-cyan-500 dark:text-cyan-400 shrink-0" />
                 <span className="truncate">{t.label}</span>
-=======
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground">
-            {TRUST.map((t) => (
-              <li key={t.label} className="inline-flex items-center gap-1.5">
-                <t.icon className="size-4 text-cyan-400" />
-                {t.label}
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
               </li>
             ))}
           </ul>
         </div>
 
-<<<<<<< HEAD
         {/* ─── RIGHT: hero image + enterprise trust stat card ─── */}
         <div className="ap-fade-up space-y-4">
           {/* Professional hero image — attracts students + visual impact */}
@@ -194,20 +159,6 @@ export function Hero() {
             <div className="flex items-center gap-2 pb-4 mb-4 border-b border-border">
               <div className="size-9 rounded-lg ap-gradient-cyan grid place-items-center">
                 <Sparkles className="size-4 text-white" />
-=======
-        {/* Right: stat cards */}
-        <div className="ap-fade-up grid gap-4">
-          {HERO_STATS.map((s, i) => (
-            <div
-              key={s.label}
-              className="ap-lift bg-card border border-border rounded-xl p-5 flex items-center justify-between"
-              style={{ marginLeft: i === 1 ? "1.5rem" : i === 2 ? "3rem" : 0 }}
-            >
-              <div>
-                <div className="text-3xl md:text-4xl font-bold ap-gradient-text">{s.num}</div>
-                <div className="text-sm text-foreground mt-1">{s.label}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">{s.sub}</div>
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
               </div>
               <div>
                 <div className="text-sm font-semibold text-foreground leading-tight">

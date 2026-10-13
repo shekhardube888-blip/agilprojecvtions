@@ -45,11 +45,7 @@ export function CustomPages() {
           <div className="sticky top-0 -mx-6 -mt-6 mb-2 px-6 py-3 bg-popover/95 backdrop-blur border-b border-border flex items-center gap-3 z-10">
             <span className="size-8 rounded-lg bg-secondary grid place-items-center text-cyan-400 border border-border"><LayoutGrid className="size-4" /></span>
             <div className="flex-1"><DialogTitle className="font-bold text-base">{active ? active.title : "Custom Pages"}</DialogTitle><DialogDescription className="text-[11px] text-muted-foreground">{active ? `/${active.slug}` : "Open any page in a popup"}</DialogDescription></div>
-<<<<<<< HEAD
             {active && <Button variant="ghost" size="sm" onClick={() => setActiveSlug(null)} className="text-muted-foreground hover:text-cyan-300 h-8"><ArrowLeft className="size-3.5 mr-1" /> All pages</Button>}
-=======
-            {active && <Button variant="ghost" size="sm" onClick={() => setActiveSlug(null)} className="text-muted-foreground hover:text-cyan-300 h-8">← All pages</Button>}
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
             <button onClick={() => setOpen(false)} aria-label="Close" className="size-8 rounded-md grid place-items-center text-muted-foreground hover:text-cyan-300 hover:bg-secondary"><X className="size-4" /></button>
           </div>
           <div className="px-1 pb-2">
@@ -62,11 +58,7 @@ export function CustomPages() {
                     <span className="size-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 grid place-items-center text-white mb-2"><FileText className="size-4" /></span>
                     <div className="font-semibold text-foreground text-sm">{p.title}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">/{p.slug}</div>
-<<<<<<< HEAD
                     <div className="text-[10px] text-cyan-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Open</div>
-=======
-                    <div className="text-[10px] text-cyan-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Open →</div>
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
                   </button>
                 ))}
               </div>

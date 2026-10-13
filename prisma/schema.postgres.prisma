@@ -111,45 +111,15 @@ model Account {
   unlockLogs    UnlockLog[]
 }
 
-// Audit trail of every admin action on a user account.
-// Actions: "unlock" | "lock" | "reset-password" | "set-expiry" | "renew"
+// Audit trail of every admin "unlock / payment received" action.
 model UnlockLog {
   id        String   @id @default(cuid())
   accountId String
   account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  adminUser String                  // who performed the action
-  action    String   @default("unlock")  // unlock | lock | reset-password | set-expiry | renew
-  reason    String?                 // e.g. "Student reported login issue"
-  expiresAt DateTime?              // the new expiry set (null for lock/reset-password)
+  adminUser String                  // who unlocked
+  reason    String?                 // e.g. "Payment received"
+  expiresAt DateTime               // the new expiry that was set
   createdAt DateTime @default(now())
 
   @@index([accountId])
-  @@index([createdAt])
 }
-<<<<<<< HEAD
-
-// ── Auto-issued certificates (verifiable, with a unique certificate number) ──
-model Certificate {
-  id              String   @id @default(cuid())
-  certificateNumber String @unique  // e.g. AP-2026-A1B2C3
-  studentId       String
-  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  type            String   @default("Internship Completion")
-  eligibility     String   // "attendance>75%, project completed, mentor approved"
-  issuedAt        DateTime @default(now())
-  createdAt       DateTime @default(now())
-
-  @@index([studentId])
-}
-
-// ── Colleges (student-selectable + student-added) ──
-model College {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  state     String?
-  source    String   @default("seed")  // "seed" | "student-added"
-  createdAt DateTime @default(now())
-  @@index([name])
-}
-=======
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d

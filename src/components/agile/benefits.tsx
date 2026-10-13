@@ -66,12 +66,8 @@ export function Benefits() {
           <span className="ap-gradient-text">career outcomes</span>
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
-<<<<<<< HEAD
           Free does not mean low-quality. Every cohort is mentor-led,
           project-driven, and structured to make you job-ready on completion.
-=======
-          Free doesn&apos;t mean low-quality. We invest in live mentoring, project work, and career support so you graduate ready for real industry jobs.
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
         </p>
       </div>
 
@@ -79,7 +75,6 @@ export function Benefits() {
         {BENEFITS_ENTERPRISE.map((b) => (
           <article
             key={b.title}
-<<<<<<< HEAD
             className="ap-lift bg-card border border-border rounded-xl p-5 md:p-6"
           >
             <div className="flex items-start gap-4">
@@ -95,15 +90,6 @@ export function Benefits() {
                 </p>
               </div>
             </div>
-=======
-            className="ap-lift bg-card border border-border rounded-xl p-6"
-          >
-            <div className="size-12 rounded-xl bg-secondary border border-border grid place-items-center text-2xl mb-4">
-              <span aria-hidden>{b.icon}</span>
-            </div>
-            <h3 className="text-base font-semibold text-foreground">{b.title}</h3>
-            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{b.desc}</p>
->>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
           </article>
         ))}
       </div>
