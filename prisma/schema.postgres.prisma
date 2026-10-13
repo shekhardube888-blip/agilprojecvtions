@@ -57,8 +57,6 @@ model Student {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  certificates Certificate[]
-
   @@index([email])
   @@index([category])
   @@index([email, mobile])
@@ -128,6 +126,7 @@ model UnlockLog {
   @@index([accountId])
   @@index([createdAt])
 }
+<<<<<<< HEAD
 
 // ── Auto-issued certificates (verifiable, with a unique certificate number) ──
 model Certificate {
@@ -152,3 +151,5 @@ model College {
   createdAt DateTime @default(now())
   @@index([name])
 }
+=======
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d

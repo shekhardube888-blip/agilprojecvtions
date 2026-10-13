@@ -66,9 +66,13 @@ export function HowItWorks() {
           <span className="ap-gradient-text">registration to certificate</span>
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
+<<<<<<< HEAD
           Five structured steps — no fee, no friction. Register, get approved,
           start training, ship a real project, and earn a verifiable
           certificate.
+=======
+          Five clear steps — no fee, no documents, no friction. Pick a track, register free, attend live sessions, build your project, and earn your certificate.
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
         </p>
       </div>
 
@@ -98,6 +102,7 @@ export function HowItWorks() {
                 {s.num}
               </span>
             </div>
+<<<<<<< HEAD
 
             <h3 className="text-base font-semibold text-foreground">
               {s.title}
@@ -105,6 +110,10 @@ export function HowItWorks() {
             <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
               {s.desc}
             </p>
+=======
+            <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
+            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{s.desc}</p>
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
           </li>
         ))}
       </ol>

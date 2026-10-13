@@ -52,6 +52,7 @@ const COUNTERS_ENTERPRISE: Counter[] = [
 export function Counters() {
   return (
     <section
+<<<<<<< HEAD
       aria-label="Program metrics"
       className="border-y border-border bg-muted"
     >
@@ -60,6 +61,16 @@ export function Counters() {
         <div className="text-center mb-6 md:mb-8">
           <div className="text-cyan-500 dark:text-cyan-400 text-[11px] font-semibold tracking-widest uppercase">
             Outcomes that matter
+=======
+      aria-label="Quick metrics"
+      className="border-y border-border bg-muted"
+    >
+      <div className="max-w-7xl mx-auto px-5 md:px-[5%] py-8 md:py-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {COUNTERS.map((c) => (
+          <div key={c.label} className="text-center">
+            <div className="text-2xl md:text-3xl font-bold ap-gradient-text">{c.num}</div>
+            <div className="text-xs md:text-sm text-muted-foreground mt-1">{c.label}</div>
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             Industry-grade metrics, updated every cohort.

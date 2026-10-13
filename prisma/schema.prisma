@@ -1,22 +1,14 @@
-// ── AgileProjection · NT-AI Network — DEFAULT schema (SQLite) ──
-// This is the default schema, used for local dev + the sandbox preview.
-// DATABASE_URL should point at a local SQLite file, e.g. file:../db/custom.db
-//
-// For Supabase / Postgres deployment (Vercel + Supabase): use prisma/schema.postgres.prisma
-//   - Local: bun run db:generate:pg && bun run db:push:pg  (with DATABASE_URL = your Supabase URL)
-//   - Vercel: vercel.json runs `prisma generate --schema=prisma/schema.postgres.prisma && next build`
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
 }
 
-// Student registration record (covers BE / B.Tech / ME / M.Tech / MCA / B.Sc Engg students)
 model Student {
+<<<<<<< HEAD
   id          String   @id @default(cuid())
   firstName   String
   lastName    String
@@ -43,67 +35,85 @@ model Student {
   paymentStatus    String   @default("pending")     // pending | confirmed
   internshipStatus String   @default("not_started")  // not_started | in_progress | completed
   currentStage     Int      @default(0)              // 0 = not started, 1-6 = stage in progress, 7 = all done
+=======
+  id               String    @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String
+  mobile           String
+  degree           String
+  branch           String
+  semester         String
+  plan             String
+  college          String
+  state            String
+  source           String?
+  notes            String?
+  category         String
+  categoryLabel    String
+  project          String
+  projectId        Int?
+  consentWa        Boolean   @default(true)
+  consentEm        Boolean   @default(true)
+  emailSent        Boolean   @default(false)
+  waSent           Boolean   @default(false)
+  paymentStatus    String    @default("pending")
+  internshipStatus String    @default("not_started")
+  currentStage     Int       @default(0)
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
   startedAt        DateTime?
   completedAt      DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  certificates Certificate[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@index([email])
   @@index([category])
   @@index([email, mobile])
 }
 
-// Newsletter subscribers
 model Subscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
 }
 
-// ── Visitor analytics (page views + unique visitors) ──
 model Visitor {
   id        String   @id @default(cuid())
-  uniqueId  String   @unique              // cookie-based stable ID
+  uniqueId  String   @unique
   firstSeen DateTime @default(now())
   lastSeen  DateTime @default(now())
-  views     Int      @default(1)          // page-view count from this visitor
+  views     Int      @default(1)
 
   @@index([lastSeen])
 }
 
-// AI assistant chat messages (for analytics / follow-up)
 model ChatMessage {
   id        String   @id @default(cuid())
   sessionId String
-  role      String   // 'user' | 'assistant'
+  role      String
   content   String
-  degree    String?  // student degree context (BE / MCA / M.Tech ...)
+  degree    String?
   createdAt DateTime @default(now())
 
   @@index([sessionId])
 }
 
-// ── Login accounts ──
-// Admin account (never expires, always unlocked) + guest accounts (guest1, guest2, …)
-// whose access expires 2 days after the admin "unlocks" (payment received) them.
 model Account {
-  id            String   @id @default(cuid())
-  username      String   @unique
-  passwordHash  String                 // scrypt hash, salt-prefixed
-  role          String   @default("guest") // "admin" | "guest"
-  status        String   @default("locked") // "locked" | "unlocked"
-  passwordSetAt DateTime?              // when the 2-day window started
-  expiresAt     DateTime?              // passwordSetAt + 2 days
+  id            String      @id @default(cuid())
+  username      String      @unique
+  passwordHash  String
+  role          String      @default("guest")
+  status        String      @default("locked")
+  passwordSetAt DateTime?
+  expiresAt     DateTime?
   fullName      String?
-  note          String?                // e.g. "Payment received ₹X"
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  note          String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   unlockLogs    UnlockLog[]
 }
 
+<<<<<<< HEAD
 // Audit trail of every admin action on a user account.
 // Actions: "unlock" | "lock" | "reset-password" | "set-expiry" | "renew"
 model UnlockLog {
@@ -114,11 +124,21 @@ model UnlockLog {
   action    String   @default("unlock")  // unlock | lock | reset-password | set-expiry | renew
   reason    String?                 // e.g. "Student reported login issue"
   expiresAt DateTime?              // the new expiry set (null for lock/reset-password)
+=======
+model UnlockLog {
+  id        String   @id @default(cuid())
+  accountId String
+  adminUser String
+  reason    String?
+  expiresAt DateTime
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
   createdAt DateTime @default(now())
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
   @@index([createdAt])
 }
+<<<<<<< HEAD
 
 // ── Auto-issued certificates (verifiable, with a unique certificate number) ──
 model Certificate {
@@ -143,3 +163,5 @@ model College {
   createdAt DateTime @default(now())
   @@index([name])
 }
+=======
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d

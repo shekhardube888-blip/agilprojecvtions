@@ -164,6 +164,7 @@ export function ProjectTracker() {
           Project <span className="ap-gradient-text">Tracker</span> — step-by-step
         </h2>
         <p className="text-muted-foreground max-w-2xl mx-auto mt-3">
+<<<<<<< HEAD
           Already registered? Enter your email + mobile number below to{" "}
           <strong className="text-foreground">sign in &amp; track</strong> your 6-stage project journey.
           You&apos;ll be logged in automatically. Once the admin confirms your payment and starts your
@@ -196,6 +197,15 @@ export function ProjectTracker() {
               You&apos;ll be logged in automatically.
             </p>
           </div>
+=======
+          Registered? Enter your email + mobile to track your 6-stage project journey. Once the admin
+          confirms your payment and starts your internship, your stages unlock one by one.
+        </p>
+      </div>
+
+      {!student ? (
+        <div className="max-w-md mx-auto bg-card border border-border rounded-2xl p-6">
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
           <form onSubmit={lookup} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="tk-email">Email (your login username)</Label>
@@ -292,9 +302,14 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
                 {student.degree} · {student.branch} · {student.college}
               </p>
             </div>
+<<<<<<< HEAD
             <Button variant="outline" size="sm" onClick={onRefresh} disabled={refreshing} className="bg-secondary border-border text-foreground hover:text-cyan-500 dark:hover:text-cyan-400">
               {refreshing ? <Loader2 className="size-3.5 mr-1 animate-spin" /> : <RefreshCw className="size-3.5 mr-1" />}
               {refreshing ? "Refreshing…" : "Refresh"}
+=======
+            <Button variant="outline" size="sm" onClick={onReset} className="bg-secondary border-border text-foreground hover:text-cyan-300">
+              <RefreshCw className="size-3.5 mr-1" /> Look up another
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
             </Button>
           </div>
 
@@ -356,7 +371,11 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5 mb-6 flex items-start gap-3">
           <CheckCircle2 className="size-5 text-emerald-400 mt-0.5 shrink-0" />
           <div>
+<<<<<<< HEAD
             <div className="font-semibold text-emerald-300">Congratulations — internship completed!</div>
+=======
+            <div className="font-semibold text-emerald-300">🎉 Congratulations — internship completed!</div>
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
             <p className="text-sm text-muted-foreground mt-1">
               You finished all 6 stages of your project journey. Your merit certificate will be issued within 7 days.
               {student.completedAt && ` Completed on ${new Date(student.completedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}.`}
@@ -437,12 +456,17 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
                             <X className="size-3.5" />
                           </button>
                         </div>
+<<<<<<< HEAD
                         <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap break-words bg-muted border border-border rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300 prose-img:rounded-lg">
                           <ReactMarkdown
                             components={{
                               img: ({ src, alt }) => <img src={typeof src === 'string' ? src : ''} alt={alt} className="rounded-lg max-w-full my-2" />,
                             }}
                           >{training[stageNum].content}</ReactMarkdown>
+=======
+                        <div className="prose prose-sm prose-invert max-w-none bg-muted border border-border rounded-lg p-3 prose-headings:text-foreground prose-h2:text-sm prose-h2:mt-3 prose-h2:mb-1.5 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-slate-100 prose-code:text-cyan-300 prose-pre:bg-[#0B1929] prose-pre:border-[rgba(6,182,212,0.15)] prose-a:text-cyan-300">
+                          <ReactMarkdown>{training[stageNum].content}</ReactMarkdown>
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
                         </div>
                       </div>
                     ) : (

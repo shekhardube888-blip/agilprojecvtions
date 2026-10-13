@@ -121,7 +121,11 @@
   }
 }
 
+<<<<<<< HEAD
 /* ── Custom scrollbar (NT-AI brand: burgundy + gold) ── */
+=======
+/* ── Custom scrollbar (theme-aware) ── */
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -135,11 +139,14 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ring);
+<<<<<<< HEAD
 }
 
 /* Ensure emoji rendering in all elements */
 .emoji, .prose, [class*="prose"] {
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", system-ui, sans-serif;
+=======
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
 }
 
 /* ── Utility classes ── */

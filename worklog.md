@@ -839,6 +839,7 @@ Security properties delivered:
 
 Lint status: `cd /home/z/my-project && bun run lint` → exit code 0, no errors, no warnings. All my new/modified files (session-provider.tsx, google-sign-in-button.tsx, layout.tsx, page.tsx, auth-menu.tsx, register-form.tsx) are lint-clean.
 TypeScript sanity: `bunx tsc --noEmit` reports zero errors in any of my modified files (the remaining TS errors are all pre-existing in unrelated files: admin-dashboard.tsx, student-dashboard.tsx, api/register/route.ts, api/pages/route.ts — and the example/skills scripts which are out of scope).
+<<<<<<< HEAD
 
 ---
 Task ID: 29-LAYOUT
@@ -930,3 +931,5 @@ Work Log:
 - Total colorful-emoji count removed: ~25 literal emojis (8 in page.tsx quick-access cards + 👋 in welcome + ⚠ in test-version badge + 4 in admin-dashboard.tsx [🎉, ✓, ✅, ⏳, 🚀] + 4 in register-form.tsx [🎉 ×2, ⚠, 🚀] + ⚠ in student-dashboard.tsx + 🎉 in code-runner starter HTML + ⚠ in code-runner log indicator + 🎉/✅/⏳/💬/✉️/🎉/🤖 in project-tracker.tsx + 🚀 in aiml-program.tsx + 🏠/✉️ ×2 in nt-ai-ml-project + shekhar-dube-ml-project + 🤖 in ai-assistant.tsx + 💬 in sales-chat.tsx + ✓ in auth-menu.tsx + ✓ in payment-page.tsx). Plus ~12 trailing CTA arrows (`→` at end of "X →" button/link labels) replaced with plain text.
 
 Lint status: `cd /home/z/my-project && bun run lint` → exit code 0, no errors, no warnings. All 17 modified files are lint-clean. `bunx tsc --noEmit` reports zero new TypeScript errors in any of the modified files (the remaining TS errors are all pre-existing in unrelated files: `examples/websocket/`, `skills/`, `src/app/api/admin/pages/route.ts`, `src/app/api/auth/[...nextauth]/route.ts`, `src/app/api/pages/route.ts`, `src/app/api/register/route.ts`, `src/app/api/student/lookup-and-login/route.ts`, `src/app/api/student/me/route.ts`, plus the pre-existing admin-dashboard.tsx:812 `category` typo and student-dashboard.tsx:42 `disabled` prop on intrinsic element — none of these lines were touched by this task).
+=======
+>>>>>>> c9094364ff9c76b34705551efe8b0a64d934664d
