@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Student {
+  id               String    @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String
+  mobile           String
+  degree           String
+  branch           String
+  semester         String
+  plan             String
+  college          String
+  state            String
+  source           String?
+  notes            String?
+  category         String
+  categoryLabel    String
+  project          String
+  projectId        Int?
+  consentWa        Boolean   @default(true)
+  consentEm        Boolean   @default(true)
+  emailSent        Boolean   @default(false)
+  waSent           Boolean   @default(false)
+  paymentStatus    String    @default("pending")
+  internshipStatus String    @default("not_started")
+  currentStage     Int       @default(0)
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([email])
+  @@index([category])
+  @@index([email, mobile])
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Visitor {
+  id        String   @id @default(cuid())
+  uniqueId  String   @unique
+  firstSeen DateTime @default(now())
+  lastSeen  DateTime @default(now())
+  views     Int      @default(1)
+
+  @@index([lastSeen])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String
+  degree    String?
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+model Account {
+  id            String      @id @default(cuid())
+  username      String      @unique
+  passwordHash  String
+  role          String      @default("guest")
+  status        String      @default("locked")
+  passwordSetAt DateTime?
+  expiresAt     DateTime?
+  fullName      String?
+  note          String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  unlockLogs    UnlockLog[]
+}
+
+model UnlockLog {
+  id        String   @id @default(cuid())
+  accountId String
+  adminUser String
+  reason    String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+}
