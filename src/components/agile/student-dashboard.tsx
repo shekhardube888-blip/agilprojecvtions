@@ -4,6 +4,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Rocket, Search, Bot, Calendar, HelpCircle, X, Sparkles, LogOut, ExternalLink, MessageSquare, Code2, AlertTriangle,
+  BookOpen, PlayCircle, TrendingUp, CheckCircle2, Loader2, Award,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -48,19 +49,185 @@ function TabBody({ k, onJump }: { k: TabKey; onJump: (k: TabKey) => void }) {
 }
 
 function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
-  return (
-    <div className="space-y-5">
-      <div className="rounded-xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40">
-        <div className="rounded-xl bg-popover p-5">
-          <div className="text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-1">Welcome to AgileProjection · NT-AI Network</div>
-          <h3 className="font-bold text-xl">Your student dashboard</h3>
-          <p className="text-muted-foreground text-sm mt-2 leading-relaxed">Free engineering internships + 80+ AI/ML projects for BE / B.Tech / ME / M.Tech / MCA students. Everything you need is one tab away.</p>
-          <div className="mt-4 bg-muted/70 border border-border rounded-lg px-3 py-2 inline-block">
-            <div className="text-[9px] uppercase tracking-wider text-muted-foreground mb-1">Live portal traffic</div>
-            <VisitorStats />
+  const [dash, setDash] = useState<any>(null);
+  const [dashLoading, setDashLoading] = useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/student/dashboard", { cache: "no-store" });
+        const data = await res.json();
+        if (!cancelled && data.ok) setDash(data.dashboard);
+      } catch { /* ignore */ }
+      finally { if (!cancelled) setDashLoading(false); }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // ── Personalized dashboard cards ──
+  const renderPersonalizedDashboard = () => {
+    if (dashLoading) return (
+      <div className="flex items-center gap-2 text-xs text-muted-foreground py-4">
+        <Loader2 className="size-4 animate-spin text-cyan-500 dark:text-cyan-400" /> Loading your dashboard…
+      </div>
+    );
+
+    if (!dash) return (
+      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-center">
+        <p className="text-xs text-muted-foreground mb-2">You haven't registered for an internship yet.</p>
+        <button onClick={() => onJump("register")} className="text-xs text-cyan-500 dark:text-cyan-400 font-semibold hover:underline">Register now →</button>
+      </div>
+    );
+
+    const s = dash.student;
+    const i = dash.internship;
+    const t = dash.training;
+    const na = dash.nextAction;
+    const c = dash.certificate;
+
+    return (
+      <div className="space-y-4">
+        {/* Welcome banner — personalized with student name + project */}
+        <div className="rounded-xl p-[1px] bg-gradient-to-r from-blue-600/40 via-cyan-500/40 to-blue-600/40">
+          <div className="rounded-xl bg-popover p-5">
+            <div className="text-cyan-500 dark:text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-1">
+              {i.status === "completed" ? "Internship Completed" : i.status === "in_progress" ? "Internship In Progress" : "Welcome to NT-AI Network"}
+            </div>
+            <h3 className="font-bold text-xl text-foreground">Welcome back, {s.name}</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              {s.project !== "Not selected yet" ? (
+                <>Project: <span className="text-foreground font-semibold">{s.project}</span> · {s.categoryLabel}</>
+              ) : (
+                "Complete your registration to choose a project."
+              )}
+            </p>
+            <div className="flex items-center gap-4 mt-3 text-[10px] text-muted-foreground">
+              <span>{s.degree}</span>
+              <span>·</span>
+              <span>{s.college}</span>
+              {s.subject && <><span>·</span><span>{s.subject}</span></>}
+            </div>
           </div>
         </div>
+
+        {/* Dashboard cards — LearnVern-style progress + metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {/* My Internship */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="size-8 rounded-lg bg-cyan-500/10 grid place-items-center text-cyan-500 dark:text-cyan-400 mb-2"><Rocket className="size-4" /></div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">My Internship</div>
+            <div className="text-xs font-semibold text-foreground mt-0.5 truncate" title={s.project}>{s.project !== "Not selected yet" ? s.project.slice(0, 20) + "…" : "Not selected"}</div>
+          </div>
+
+          {/* Learning Progress */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="size-8 rounded-lg bg-violet-500/10 grid place-items-center text-violet-500 dark:text-violet-400 mb-2"><TrendingUp className="size-4" /></div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Learning Progress</div>
+            <div className="text-xs font-bold text-foreground mt-0.5">{i.completionPercent}%</div>
+            <div className="h-1.5 bg-muted rounded-full mt-1.5 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all" style={{ width: `${i.completionPercent}%` }} />
+            </div>
+          </div>
+
+          {/* Training Modules */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="size-8 rounded-lg bg-emerald-500/10 grid place-items-center text-emerald-600 dark:text-emerald-400 mb-2"><BookOpen className="size-4" /></div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Modules Generated</div>
+            <div className="text-xs font-bold text-foreground mt-0.5">{t.modulesGenerated} / {t.totalModules}</div>
+            <div className="text-[10px] text-muted-foreground mt-0.5">{t.totalModules - t.modulesGenerated} pending</div>
+          </div>
+
+          {/* Certificate Eligibility */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className={cn("size-8 rounded-lg grid place-items-center mb-2", c.eligible ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-muted text-muted-foreground")}>
+              <Award className="size-4" />
+            </div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Certificate</div>
+            <div className={cn("text-xs font-bold mt-0.5", c.eligible ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}>
+              {c.issued ? "Issued" : c.eligible ? "Eligible!" : "Not eligible"}
+            </div>
+            {c.number && <div className="text-[9px] font-mono text-amber-500 dark:text-amber-400 mt-0.5 truncate">{c.number}</div>}
+          </div>
+        </div>
+
+        {/* Next recommended action — LearnVern-style "continue where you left off" */}
+        <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="size-9 rounded-lg bg-cyan-500/15 grid place-items-center text-cyan-500 dark:text-cyan-400 shrink-0">
+                <PlayCircle className="size-5" />
+              </div>
+              <div>
+                <div className="text-[10px] text-cyan-500 dark:text-cyan-400 uppercase tracking-wider font-semibold">Next Action</div>
+                <div className="text-sm font-semibold text-foreground mt-0.5">{na.title}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">{na.description}</div>
+              </div>
+            </div>
+            <button
+              onClick={() => onJump(na.action as TabKey)}
+              className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 font-semibold hover:bg-cyan-500/25 transition-colors whitespace-nowrap"
+            >
+              Go →
+            </button>
+          </div>
+        </div>
+
+        {/* Pending stages (if any) */}
+        {t.pendingStages.length > 0 && i.paymentStatus === "confirmed" && (
+          <div className="rounded-xl border border-border bg-card p-4">
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-2">Pending Training Modules</div>
+            <div className="flex flex-wrap gap-2">
+              {t.pendingStages.map((ps: any) => (
+                <span key={ps.stage} className="text-[10px] px-2 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                  {ps.week}: {ps.title}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Internship timeline */}
+        <div className="rounded-xl border border-border bg-card p-4">
+          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold mb-3">Internship Timeline</div>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: i.totalStages }, (_, idx) => {
+              const stageNum = idx + 1;
+              const done = stageNum <= i.currentStage;
+              const current = stageNum === i.currentStage && i.status === "in_progress";
+              return (
+                <div key={idx} className="flex-1 flex flex-col items-center gap-1">
+                  <div className={cn(
+                    "size-7 rounded-full grid place-items-center text-[10px] font-bold transition-colors",
+                    done ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" :
+                    current ? "bg-cyan-500/20 text-cyan-500 dark:text-cyan-400 ring-2 ring-cyan-500/30" :
+                    "bg-muted text-muted-foreground"
+                  )}>
+                    {done ? <CheckCircle2 className="size-3.5" /> : stageNum}
+                  </div>
+                  <span className={cn("text-[8px] text-center leading-tight", current ? "text-cyan-500 dark:text-cyan-400 font-semibold" : "text-muted-foreground")}>
+                    Wk {stageNum}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          {i.startedAt && (
+            <div className="text-[10px] text-muted-foreground mt-3 text-center">
+              Started: {new Date(i.startedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}
+              {i.completedAt && ` · Completed: ${new Date(i.completedAt).toLocaleDateString("en-IN", { dateStyle: "medium" })}`}
+            </div>
+          )}
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="space-y-5">
+      {renderPersonalizedDashboard()}
+
+      {/* Quick-access tab cards */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {TABS.filter((t) => t.key !== "overview").map((t) => {
           const accents: Record<string, { bg: string; text: string }> = {
@@ -79,15 +246,6 @@ function Overview({ onJump }: { onJump: (k: TabKey) => void }) {
           </button>
           );
         })}
-      </div>
-      <div className="rounded-xl border border-border bg-card p-4">
-        <div className="text-cyan-500 dark:text-cyan-400 text-[11px] font-semibold tracking-widest uppercase mb-2 flex items-center gap-1.5"><Sparkles className="size-3.5" /> How it works</div>
-        <ol className="space-y-2 text-xs text-foreground">
-          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-violet-500/15 text-violet-600 dark:text-violet-400 grid place-items-center text-[10px] font-bold shrink-0">1</span><span><button onClick={() => onJump("register")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Register</button> for free — choose your project + domain.</span></li>
-          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 grid place-items-center text-[10px] font-bold shrink-0">2</span><span>Admin confirms your payment + starts your internship.</span></li>
-          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 grid place-items-center text-[10px] font-bold shrink-0">3</span><span><button onClick={() => onJump("track")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Track your project</button> — 6 stages unlock; click "Start Week X Training".</span></li>
-          <li className="flex items-start gap-2"><span className="size-5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 grid place-items-center text-[10px] font-bold shrink-0">4</span><span><button onClick={() => onJump("ai-mentor")} className="text-cyan-500 dark:text-cyan-400 font-semibold underline underline-offset-2">Ask the AI Mentor</button> for help anytime.</span></li>
-        </ol>
       </div>
     </div>
   );
