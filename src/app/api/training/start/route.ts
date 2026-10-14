@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { PROJECT_STAGES } from "@/lib/data";
+import { db } from "@/lib/db";
+import { readSession } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
-export const dynamic = "force-dynamic"; // prevents Next.js fetch interception that hangs the SDK
+export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
@@ -46,6 +48,31 @@ export async function POST(req: Request) {
     const stage = PROJECT_STAGES[stageNum - 1];
     if (!stage) return NextResponse.json({ ok: false, error: "unknown stage" }, { status: 400 });
 
+    // ── CACHE CHECK: look up the student's email from the session cookie,
+    // then check if a TrainingModule already exists for this student+stage.
+    // If yes → return the cached version (NO LLM call). If no → generate + save.
+    const session = readSession(req.headers.get("cookie"));
+    const studentEmail = session?.username?.toLowerCase().trim() || "";
+
+    if (studentEmail) {
+      const cached = await db.trainingModule.findUnique({
+        where: { studentEmail_stage: { studentEmail, stage: stageNum } },
+      });
+      if (cached) {
+        // Return the cached module — no LLM call needed!
+        return NextResponse.json({
+          ok: true,
+          stage: stageNum,
+          week: stage.week,
+          title: stage.title,
+          content: cached.content,
+          aiAvailable: cached.aiAvailable,
+          cached: true,  // ← tells the client this was from the DB
+        });
+      }
+    }
+
+    // ── No cached module → generate from the LLM (or fallback)
     const systemPrompt = `You are "AP-Mentor", an AgileProjection instructor. The student is building: "${project}" in the "${categoryLabel}" domain. Generate a Markdown training module for ${stage.week} — Stage ${stage.step}: "${stage.title}". Focus: ${stage.desc} Deliverable: ${stage.deliverable}. Structure with H2 sections: 🎯 Learning Objectives (3-5 bullets), 📝 Step-by-Step Guide (numbered + ONE code block ~15-25 lines), 🔗 Resources (3-4 topics), 🛠️ Hands-on Exercise (tied to their project), ✅ Completion Checklist (4-6 items). Tailor to "${project}" + "${categoryLabel}". ~400 words.`;
     const messages: ChatMsg[] = [
       { role: "assistant", content: systemPrompt },
@@ -94,7 +121,34 @@ ${stage.desc}
 > 💡 The AI training generator works on the **deployed portal** (the live version). In local development, the AI service may not be configured.`;
     }
 
-    return NextResponse.json({ ok: true, stage: stageNum, week: stage.week, title: stage.title, content: reply, aiAvailable: !aiError });
+    // ── SAVE the generated module to the DB so subsequent visits return the
+    // cached version (no LLM call). Idempotent: upsert by (studentEmail, stage).
+    const aiOk = !aiError;
+    if (studentEmail) {
+      try {
+        await db.trainingModule.upsert({
+          where: { studentEmail_stage: { studentEmail, stage: stageNum } },
+          create: {
+            studentEmail,
+            stage: stageNum,
+            project,
+            categoryLabel,
+            content: reply,
+            aiAvailable: aiOk,
+          },
+          update: {
+            project,
+            categoryLabel,
+            content: reply,
+            aiAvailable: aiOk,
+          },
+        });
+      } catch (e) {
+        console.error("[training] cache save failed:", (e as Error).message);
+      }
+    }
+
+    return NextResponse.json({ ok: true, stage: stageNum, week: stage.week, title: stage.title, content: reply, aiAvailable: aiOk, cached: false });
   } catch (err) {
     console.error("[training] error:", err);
     return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 500 });

@@ -94,6 +94,22 @@ model ChatMessage {
   @@index([sessionId])
 }
 
+// Cached LLM-generated training modules — stored per student per stage.
+model TrainingModule {
+  id             String   @id @default(cuid())
+  studentEmail   String
+  stage          Int
+  project        String
+  categoryLabel  String
+  content        String
+  aiAvailable    Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([studentEmail, stage])
+  @@index([studentEmail])
+}
+
 // ── Login accounts ──
 // Admin account (never expires, always unlocked) + guest accounts (guest1, guest2, …)
 // whose access expires 2 days after the admin "unlocks" (payment received) them.
