@@ -143,7 +143,18 @@ export function RegisterForm() {
   const [category, setCategory] = React.useState<Category | null>(null);
   const [project, setProject] = React.useState<Project | null>(null);
   const [search, setSearch] = React.useState("");
-  const [form, setForm] = React.useState<FormState>(EMPTY_FORM);
+  // Read the pre-selected subject from localStorage (set when the visitor
+  // clicked a category card on the landing page).
+  const [form, setForm] = React.useState<FormState>(() => {
+    try {
+      const preselected = localStorage.getItem("selected-subject");
+      if (preselected) {
+        localStorage.removeItem("selected-subject");
+        return { ...EMPTY_FORM, subject: preselected };
+      }
+    } catch { /* ignore */ }
+    return EMPTY_FORM;
+  });
   const [errors, setErrors] = React.useState<Partial<Record<keyof FormState, string>>>({});
   const [consentWa, setConsentWa] = React.useState(true);
   const [consentEm, setConsentEm] = React.useState(true);

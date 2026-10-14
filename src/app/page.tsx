@@ -15,6 +15,7 @@ import { VisitorStats } from "@/components/agile/visitor-stats";
 import { SalesChat } from "@/components/agile/sales-chat";
 import { ProjectTracker } from "@/components/agile/project-tracker";
 import { CourseCatalog } from "@/components/agile/course-catalog";
+import { CategorySelector } from "@/components/agile/category-selector";
 import { Footer } from "@/components/agile/footer";
 import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import { SignupForm } from "@/components/agile/signup-form";
@@ -60,7 +61,20 @@ export default function Home() {
   useEffect(() => {
     // 1. Bootstrap auth state on mount.
     refreshAuth();
-    const handler = () => refreshAuth();
+    const handler = () => {
+      refreshAuth();
+      // Check if a category was selected on the landing page → redirect to register
+      try {
+        const redirect = localStorage.getItem("redirect-after-login");
+        if (redirect === "register") {
+          localStorage.removeItem("redirect-after-login");
+          // The dashboard will auto-open; the register form reads the selected-subject
+          // from localStorage + pre-selects it.
+          // Dispatch an event the StudentDashboard can listen for:
+          setTimeout(() => window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "register" })), 500);
+        }
+      } catch { /* ignore */ }
+    };
     window.addEventListener("auth-change", handler);
 
     // 2. Google OAuth callback handling. After NextAuth redirects the user
@@ -255,6 +269,9 @@ export default function Home() {
 
       {/* ── 4. Programs (internship programs) ── */}
       <Programs />
+
+      {/* ── 4b. Category Selector — choose domain → auto-prompt login → register ── */}
+      <CategorySelector />
 
       {/* ── 5. Benefits ── */}
       <Benefits />
