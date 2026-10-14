@@ -239,6 +239,9 @@ export function LearningPath() {
                   {/* Assignment / Deliverable section — student submits their work here */}
                   <AssignmentSection stage={mod.stage} deliverable={mod.deliverable} />
 
+                  {/* Quiz section — student takes the module quiz */}
+                  <QuizSection stage={mod.stage} week={mod.week} />
+
                   {/* Module complete badge */}
                   {moduleComplete && (
                     <div className="px-4 py-2 bg-emerald-500/10 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
@@ -355,6 +358,122 @@ function AssignmentSection({ stage, deliverable }: { stage: number; deliverable:
         <div className="mt-2 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
           <CheckCircle className="size-3" /> Approved by your mentor. This module's assignment is complete!
         </div>
+      )}
+    </div>
+  );
+}
+
+// ── Quiz Section — student takes the module MCQ quiz ──
+function QuizSection({ stage, week }: { stage: number; week: string }) {
+  const [quiz, setQuiz] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const { toast } = useToast();
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/student/quiz?stage=${stage}`, { cache: "no-store" });
+      const data = await safeJson(res);
+      if (data.ok) setQuiz(data);
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }, [stage]);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function submit() {
+    const unanswered = quiz?.questions?.filter((q: any) => answers[q.id] === undefined);
+    if (unanswered?.length > 0) { toast({ title: "Answer all questions", description: `${unanswered.length} question(s) unanswered.`, variant: "destructive" }); return; }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/student/quiz/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage, answers: Object.entries(answers).map(([questionId, selectedOption]) => ({ questionId, selectedOption })) }),
+      });
+      const data = await safeJson(res);
+      if (!res.ok || !data.ok) throw new Error(data.error);
+      setResult(data);
+      toast({ title: data.passed ? "🎉 Quiz passed!" : "Quiz not passed", description: `Score: ${data.score}% (${data.correctCount}/${data.totalQuestions})`, variant: data.passed ? "default" : "destructive" });
+      await load(); // refresh best score
+    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+    finally { setSubmitting(false); }
+  }
+
+  if (loading || !quiz) return null;
+
+  return (
+    <div className="px-4 py-3 border-t border-border/50 bg-muted/20">
+      <div className="flex items-center gap-2 mb-2">
+        <CheckCircle2 className="size-4 text-violet-500 dark:text-violet-400" />
+        <span className="text-[11px] font-semibold text-foreground">Module Quiz</span>
+        {quiz.passed && <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold ml-auto">✓ Passed ({quiz.bestScore}%)</span>}
+        {quiz.attemptCount > 0 && !quiz.passed && <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 font-semibold ml-auto">Best: {quiz.bestScore}% · Retake</span>}
+      </div>
+
+      {result && (
+        <div className={cn("mb-3 p-2 rounded-lg text-[10px]", result.passed ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-rose-500/10 border border-rose-500/20")}>
+          <span className="font-semibold">Score: {result.score}%</span> ({result.correctCount}/{result.totalQuestions})
+          {result.passed ? " — Passed!" : ` — Need ${result.passThreshold}% to pass. Retake to improve.`}
+        </div>
+      )}
+
+      {/* Questions */}
+      <div className="space-y-3 mb-3">
+        {quiz.questions?.map((q: any, qi: number) => {
+          const userAns = answers[q.id];
+          const r = result?.results?.find((x: any) => x.questionId === q.id);
+          return (
+            <div key={q.id} className="text-[11px]">
+              <div className="font-medium text-foreground mb-1">{qi + 1}. {q.question}</div>
+              <div className="space-y-1">
+                {q.options.map((opt: string, oi: number) => {
+                  const selected = userAns === oi;
+                  const isCorrect = r && oi === r.correctOption;
+                  const isWrongSelected = r && selected && !r.correct;
+                  return (
+                    <button
+                      key={oi}
+                      type="button"
+                      onClick={() => !result && setAnswers((a) => ({ ...a, [q.id]: oi }))}
+                      disabled={!!result}
+                      className={cn(
+                        "block w-full text-left px-2.5 py-1.5 rounded-lg border text-[10px] transition-colors",
+                        result
+                          ? isCorrect ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                            : isWrongSelected ? "bg-rose-500/15 border-rose-500/30 text-rose-500 dark:text-rose-400"
+                            : "bg-muted border-border text-muted-foreground"
+                          : selected ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-500 dark:text-cyan-400"
+                            : "bg-muted/50 border-border text-foreground hover:border-cyan-500/20"
+                      )}
+                    >
+                      {String.fromCharCode(65 + oi)}. {opt}
+                      {result && isCorrect && " ✓"}
+                      {result && isWrongSelected && " ✗"}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {!result ? (
+        <Button size="sm" onClick={submit} disabled={submitting} className="h-7 text-[10px] bg-gradient-to-r from-violet-500 to-cyan-500 text-white">
+          {submitting ? <Loader2 className="size-3 animate-spin mr-1" /> : null}
+          Submit Quiz
+        </Button>
+      ) : (
+        <button
+          onClick={() => { setResult(null); setAnswers({}); }}
+          className="text-[10px] px-3 py-1 rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 font-semibold"
+        >
+          Retake Quiz
+        </button>
       )}
     </div>
   );

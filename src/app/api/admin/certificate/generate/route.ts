@@ -30,6 +30,39 @@ export async function POST(req: Request) {
         error: "Student hasn't completed the internship yet. Advance them through all 6 stages first.",
       }, { status: 400 });
     }
+
+    // ── Certificate eligibility check (#6): ALL requirements must be met ──
+    // 1. All 6 module assignments must be approved
+    const approvedSubs = await db.submission.count({
+      where: { studentEmail: student.email.toLowerCase(), status: "approved" },
+    });
+    // 2. All 21 lessons must be completed
+    const completedLessons = await db.lessonProgress.count({
+      where: { studentEmail: student.email.toLowerCase() },
+    });
+    // 3. All 6 module quizzes must be passed
+    const passedQuizzes = await db.assessmentAttempt.findMany({
+      where: { studentEmail: student.email.toLowerCase(), passed: true },
+      select: { stage: true },
+    });
+
+    const { PROJECT_STAGES, LESSONS } = await import("@/lib/data");
+    const totalModules = PROJECT_STAGES.length;
+    const totalLessons = LESSONS.length;
+    const passedStages = new Set(passedQuizzes.map((q) => q.stage));
+
+    const missing: string[] = [];
+    if (approvedSubs < totalModules) missing.push(`Assignments approved: ${approvedSubs}/${totalModules}`);
+    if (completedLessons < totalLessons) missing.push(`Lessons completed: ${completedLessons}/${totalLessons}`);
+    if (passedStages.size < totalModules) missing.push(`Quizzes passed: ${passedStages.size}/${totalModules}`);
+
+    if (missing.length > 0) {
+      return NextResponse.json({
+        ok: false,
+        error: `Certificate not eligible yet. Missing: ${missing.join(", ")}`,
+        missing,
+      }, { status: 400 });
+    }
     // Idempotent: if a certificate already exists, return it.
     const existing = await db.certificate.findFirst({ where: { studentId } });
     if (existing) {

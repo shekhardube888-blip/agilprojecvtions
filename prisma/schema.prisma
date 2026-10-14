@@ -121,18 +121,33 @@ model Submission {
   id            String   @id @default(cuid())
   studentEmail  String
   studentName   String?
-  stage         Int                       // which module (1-6)
+  stage         Int
   project       String?
-  content       String                    // the submission (text, GitHub link, etc.)
-  status        String   @default("submitted")  // submitted | approved | rejected
-  mentorFeedback String?                 // admin's feedback on review
-  reviewedBy    String?                  // admin username who reviewed
+  content       String
+  status        String   @default("submitted")
+  mentorFeedback String?
+  reviewedBy    String?
   submittedAt   DateTime @default(now())
   reviewedAt    DateTime?
 
-  @@unique([studentEmail, stage])        // one submission per student per module
+  @@unique([studentEmail, stage])
   @@index([studentEmail])
   @@index([status])
+}
+
+// Assessment attempts — student quiz scores per module. Certificate eligibility
+// requires passing all module quizzes (score >= threshold).
+model AssessmentAttempt {
+  id           String   @id @default(cuid())
+  studentEmail String
+  stage        Int                        // which module (1-6)
+  score        Int                        // percentage (0-100)
+  passed       Boolean                    // score >= pass threshold (60%)
+  answers      String                     // JSON: [{questionId, selectedOption, correct}]
+  attemptedAt  DateTime @default(now())
+
+  @@index([studentEmail, stage])
+  @@index([studentEmail])
 }
 
 // ── Login accounts ──

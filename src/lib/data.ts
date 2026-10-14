@@ -644,6 +644,49 @@ export const LESSONS: Lesson[] = [
   { id: "6-3", stage: 6, title: "Capstone Demo Prep", desc: "Prepare a 10-minute demo: problem statement, EDA highlights, model choice, evaluation metrics, live API + dashboard. Present to the panel.", duration: 40 },
 ];
 
+// ── MCQ question bank — 3 questions per module (18 total) ──
+export type QuizQuestion = {
+  id: string;
+  stage: number;
+  question: string;
+  options: string[];
+  correct: number; // index 0-3
+};
+
+export const QUIZ_QUESTIONS: QuizQuestion[] = [
+  // Stage 1: Data Ingestion
+  { id: "q1-1", stage: 1, question: "Which Pandas method reads a CSV file into a DataFrame?", options: ["pd.read_excel()", "pd.read_csv()", "pd.load_csv()", "pd.import_csv()"], correct: 1 },
+  { id: "q1-2", stage: 1, question: "What does df.shape return?", options: ["Number of rows only", "Number of columns only", "A tuple (rows, columns)", "Data types of all columns"], correct: 2 },
+  { id: "q1-3", stage: 1, question: "Which method checks for missing values in a DataFrame?", options: ["df.isnull()", "df.missing()", "df.check_nulls()", "df.isnan()"], correct: 0 },
+
+  // Stage 2: EDA
+  { id: "q2-1", stage: 2, question: "Which plot is best for visualizing the distribution of a single numeric variable?", options: ["Pie chart", "Histogram", "Scatter plot", "Bar chart"], correct: 1 },
+  { id: "q2-2", stage: 2, question: "What does a correlation heatmap show?", options: ["Missing values", "Pairwise correlations between features", "Data types", "Row counts"], correct: 1 },
+  { id: "q2-3", stage: 2, question: "Which statistic measures the asymmetry of a distribution?", options: ["Kurtosis", "Skewness", "Variance", "Standard deviation"], correct: 1 },
+
+  // Stage 3: Feature Engineering
+  { id: "q3-1", stage: 3, question: "Which Scikit-Learn class handles missing values by replacing them?", options: ["StandardScaler", "SimpleImputer", "OneHotEncoder", "PCA"], correct: 1 },
+  { id: "q3-2", stage: 3, question: "What does OneHotEncoder do?", options: ["Scales numeric features", "Reduces dimensionality", "Converts categorical values to binary columns", "Imputes missing data"], correct: 2 },
+  { id: "q3-3", stage: 3, question: "Why use a Scikit-Learn Pipeline?", options: ["To visualize data", "To chain preprocessing + modeling steps reproducibly", "To speed up training", "To reduce memory"], correct: 1 },
+
+  // Stage 4: Model Training
+  { id: "q4-1", stage: 4, question: "Which metric is used for regression model evaluation?", options: ["Accuracy", "RMSE", "F1-score", "Precision"], correct: 1 },
+  { id: "q4-2", stage: 4, question: "What does cross-validation help prevent?", options: ["Overfitting", "Underfitting", "Data leakage", "Slow training"], correct: 0 },
+  { id: "q4-3", stage: 4, question: "Which method saves a trained model to disk?", options: ["model.save()", "joblib.dump()", "model.export()", "pickle.write()"], correct: 1 },
+
+  // Stage 5: Evaluation
+  { id: "q5-1", stage: 5, question: "What does a confusion matrix show?", options: ["Feature importance", "True/False positives + negatives", "Training time", "Model complexity"], correct: 1 },
+  { id: "q5-2", stage: 5, question: "What does SHAP help with?", options: ["Faster training", "Explaining which features drive predictions", "Reducing dataset size", "Encoding categories"], correct: 1 },
+  { id: "q5-3", stage: 5, question: "Which plot is used to check regression residuals for normality?", options: ["Q-Q plot", "Bar chart", "Pie chart", "Heatmap"], correct: 0 },
+
+  // Stage 6: Deployment
+  { id: "q6-1", stage: 6, question: "Which Python framework is commonly used to serve ML models as APIs?", options: ["Django", "FastAPI", "Flask-SQLAlchemy", "Tkinter"], correct: 1 },
+  { id: "q6-2", stage: 6, question: "What does Docker help with in ML deployment?", options: ["Faster training", "Containerizing the app for reproducible deployment", "Data cleaning", "Feature engineering"], correct: 1 },
+  { id: "q6-3", stage: 6, question: "What is a capstone demo?", options: ["A written exam", "A final project presentation to an industry panel", "A coding contest", "A group discussion"], correct: 1 },
+];
+
+export const QUIZ_PASS_THRESHOLD = 60; // 60% to pass
+
 // ── College seed list (Indian engineering colleges) ──
 // Used to auto-seed the College table on first API call. Students can also
 // add new colleges during registration (saved with source = "student-added").

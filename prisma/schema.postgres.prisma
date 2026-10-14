@@ -199,3 +199,17 @@ model Submission {
   @@index([studentEmail])
   @@index([status])
 }
+
+// Assessment attempts — student quiz scores per module.
+model AssessmentAttempt {
+  id           String   @id @default(cuid())
+  studentEmail String
+  stage        Int
+  score        Int
+  passed       Boolean
+  answers      String
+  attemptedAt  DateTime @default(now())
+
+  @@index([studentEmail, stage])
+  @@index([studentEmail])
+}
