@@ -37,7 +37,7 @@ type Cert = {
 };
 type MenuKey =
   | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
-  | "projects" | "attendance" | "user-mgmt" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+  | "projects" | "attendance" | "user-mgmt" | "submissions" | "certificates" | "reports" | "ai" | "notifications" | "settings";
 
 const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
@@ -49,6 +49,7 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
   { key: "projects", label: "Projects", icon: <FolderKanban className="size-4" />, group: "Operations" },
   { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
   { key: "user-mgmt", label: "User Management", icon: <Users className="size-4" />, group: "Lifecycle" },
+  { key: "submissions", label: "Submissions", icon: <FileText className="size-4" />, group: "Lifecycle" },
   { key: "certificates", label: "Certificates", icon: <Award className="size-4" />, group: "Lifecycle" },
   { key: "reports", label: "Reports", icon: <BarChart3 className="size-4" />, group: "Lifecycle" },
   { key: "ai", label: "AI Analytics", icon: <Brain className="size-4" />, group: "Insights" },
@@ -153,6 +154,7 @@ function TabContent({ tab }: { tab: MenuKey }) {
     case "students": return <StudentsTab />;
     case "applications": return <ApplicationsTab />;
     case "user-mgmt": return <UserManagementTab />;
+    case "submissions": return <SubmissionsTab />;
     case "certificates": return <CertificatesTab />;
     case "reports": return <ReportsTab />;
     case "mentors": return <MentorsTab />;
@@ -634,6 +636,121 @@ function UserManagementTab() {
 type ActionType = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew";
 type HistoryEntry = { id: string; adminUser: string; action: string; reason: string | null; expiresAt: string | null; createdAt: string };
 
+
+// ── Submissions tab (student assignment reviews) ──
+function SubmissionsTab() {
+  const { toast } = useToast();
+  const [subs, setSubs] = useState<any[]>([]);
+  const [stats, setStats] = useState({ total: 0, submitted: 0, approved: 0, rejected: 0 });
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("submitted");
+  const [reviewDialog, setReviewDialog] = useState<any | null>(null);
+  const [feedback, setFeedback] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/submissions?status=${filter}`, { cache: "no-store" });
+      const d = await res.json();
+      if (d.ok) { setSubs(d.submissions); setStats(d.stats); }
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }, [filter]);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function review(status: string) {
+    if (!reviewDialog) return;
+    if (status === "rejected" && !feedback.trim()) { toast({ title: "Feedback required for rejection", variant: "destructive" }); return; }
+    setBusy(true);
+    try {
+      const res = await fetch("/api/admin/assignment/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ submissionId: reviewDialog.id, status, feedback: feedback.trim() || null }),
+      });
+      const d = await res.json();
+      if (!res.ok || !d.ok) throw new Error(d.error);
+      toast({ title: status === "approved" ? "✓ Approved" : "✗ Rejected", description: feedback.trim() || undefined });
+      setReviewDialog(null); setFeedback("");
+      load();
+    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+    finally { setBusy(false); }
+  }
+
+  if (loading) return <Loading />;
+
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Assignment Submissions</h3>
+      <p className="text-xs text-muted-foreground mb-4">Review student submissions for each module's deliverable. Approve or reject with feedback. All modules must be approved for certificate eligibility.</p>
+
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-2 mb-4">
+        <div className="bg-card border border-border rounded-lg p-2 text-center"><div className="text-lg font-bold text-foreground">{stats.total}</div><div className="text-[9px] text-muted-foreground">Total</div></div>
+        <div className="bg-card border border-amber-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-amber-600 dark:text-amber-400">{stats.submitted}</div><div className="text-[9px] text-muted-foreground">Pending</div></div>
+        <div className="bg-card border border-emerald-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{stats.approved}</div><div className="text-[9px] text-muted-foreground">Approved</div></div>
+        <div className="bg-card border border-rose-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-rose-500 dark:text-rose-400">{stats.rejected}</div><div className="text-[9px] text-muted-foreground">Rejected</div></div>
+      </div>
+
+      {/* Filter */}
+      <div className="flex gap-1.5 mb-4">
+        {[{k:"submitted",l:"Pending"},{k:"approved",l:"Approved"},{k:"rejected",l:"Rejected"},{k:"all",l:"All"}].map(f => (
+          <button key={f.k} onClick={() => setFilter(f.k)} className={cn("text-[10px] px-3 py-1 rounded-lg font-semibold", filter === f.k ? "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border border-cyan-500/30" : "bg-muted text-muted-foreground border border-border")}>{f.l}</button>
+        ))}
+      </div>
+
+      {/* Submissions list */}
+      {subs.length === 0 ? <Empty text="No submissions to review." /> : (
+        <div className="space-y-2 max-h-[55vh] overflow-y-auto">
+          {subs.map((s) => (
+            <div key={s.id} className="bg-card border border-border rounded-lg p-3">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div>
+                  <span className="text-xs font-semibold text-foreground">{s.studentName || s.studentEmail}</span>
+                  <span className="text-[10px] text-muted-foreground ml-2">Module {s.stage} · {s.project?.slice(0,30) || ""}</span>
+                </div>
+                <span className={cn("text-[9px] px-2 py-0.5 rounded-full font-semibold",
+                  s.status === "approved" ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" :
+                  s.status === "rejected" ? "bg-rose-500/15 text-rose-500 dark:text-rose-400" :
+                  "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                )}>{s.status}</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground line-clamp-2 mb-2">{s.content}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] text-muted-foreground">{new Date(s.submittedAt).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })}</span>
+                <button onClick={() => { setReviewDialog(s); setFeedback(s.mentorFeedback || ""); }} className="text-[10px] px-2 py-1 rounded bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold">Review</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Review dialog */}
+      {reviewDialog && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => !busy && setReviewDialog(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h4 className="font-bold text-foreground mb-1">Review: Module {reviewDialog.stage}</h4>
+            <p className="text-xs text-muted-foreground mb-3">{reviewDialog.studentName || reviewDialog.studentEmail} · {reviewDialog.project}</p>
+            <div className="bg-muted border border-border rounded-lg p-3 mb-3 max-h-40 overflow-y-auto">
+              <p className="text-[11px] text-foreground whitespace-pre-wrap">{reviewDialog.content}</p>
+            </div>
+            <div className="space-y-2 mb-4">
+              <Label className="text-xs">Mentor Feedback {reviewDialog.status === "rejected" && "(required)"}</Label>
+              <Textarea value={feedback} onChange={(e) => setFeedback(e.target.value)} placeholder="Provide feedback for the student…" className="bg-muted border-border min-h-[60px] text-xs" />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button size="sm" variant="outline" onClick={() => { setReviewDialog(null); setFeedback(""); }} disabled={busy}>Cancel</Button>
+              <Button size="sm" onClick={() => review("rejected")} disabled={busy} className="bg-rose-500/90 text-white hover:bg-rose-500">Reject</Button>
+              <Button size="sm" onClick={() => review("approved")} disabled={busy} className="bg-emerald-600 text-white hover:bg-emerald-500">Approve</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ── Certificates tab (auto-generation + verify + download) ──
 function CertificatesTab() {

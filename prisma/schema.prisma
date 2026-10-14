@@ -103,17 +103,36 @@ model TrainingModule {
 }
 
 // Lesson progress tracking — which lessons has the student completed?
-// Enables auto-resume (return to last incomplete lesson) + prerequisite
-// unlocking (Lesson 2 locked until Lesson 1 is done).
 model LessonProgress {
   id           String   @id @default(cuid())
   studentEmail String
-  stage        Int                        // which module (1-6)
-  lessonId     String                     // unique lesson identifier (e.g. "1-1")
+  stage        Int
+  lessonId     String
   completedAt  DateTime @default(now())
 
-  @@unique([studentEmail, lessonId])      // one progress record per lesson per student
+  @@unique([studentEmail, lessonId])
   @@index([studentEmail, stage])
+}
+
+// Assignment submissions — student submits their work for each module's
+// deliverable. Admin/mentor reviews → approve/reject + feedback.
+// Certificate eligibility requires ALL submissions to be approved.
+model Submission {
+  id            String   @id @default(cuid())
+  studentEmail  String
+  studentName   String?
+  stage         Int                       // which module (1-6)
+  project       String?
+  content       String                    // the submission (text, GitHub link, etc.)
+  status        String   @default("submitted")  // submitted | approved | rejected
+  mentorFeedback String?                 // admin's feedback on review
+  reviewedBy    String?                  // admin username who reviewed
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+
+  @@unique([studentEmail, stage])        // one submission per student per module
+  @@index([studentEmail])
+  @@index([status])
 }
 
 // ── Login accounts ──

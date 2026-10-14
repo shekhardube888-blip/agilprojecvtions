@@ -180,3 +180,22 @@ model LessonProgress {
   @@unique([studentEmail, lessonId])
   @@index([studentEmail, stage])
 }
+
+// Assignment submissions — student submits work per module; admin reviews.
+model Submission {
+  id            String   @id @default(cuid())
+  studentEmail  String
+  studentName   String?
+  stage         Int
+  project       String?
+  content       String
+  status        String   @default("submitted")
+  mentorFeedback String?
+  reviewedBy    String?
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+
+  @@unique([studentEmail, stage])
+  @@index([studentEmail])
+  @@index([status])
+}

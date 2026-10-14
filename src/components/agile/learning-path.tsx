@@ -3,12 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import {
   BookOpen, CheckCircle2, Lock, PlayCircle, Clock, ChevronDown, ChevronRight,
-  Loader2, Award, TrendingUp,
+  Loader2, Award, TrendingUp, FileText, Send, CheckCircle, XCircle, MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { safeJson } from "@/lib/utils";
+import { cn, safeJson } from "@/lib/utils";
 
 type Lesson = {
   id: string; stage: number; title: string; desc: string; duration: number;
@@ -236,6 +236,9 @@ export function LearningPath() {
                     </div>
                   ))}
 
+                  {/* Assignment / Deliverable section — student submits their work here */}
+                  <AssignmentSection stage={mod.stage} deliverable={mod.deliverable} />
+
                   {/* Module complete badge */}
                   {moduleComplete && (
                     <div className="px-4 py-2 bg-emerald-500/10 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
@@ -248,6 +251,111 @@ export function LearningPath() {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+// ── Assignment Section — student submits their module deliverable ──
+function AssignmentSection({ stage, deliverable }: { stage: number; deliverable: string }) {
+  const [assignment, setAssignment] = useState<{ submission: any } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch("/api/student/assignments", { cache: "no-store" });
+      const data = await safeJson(res);
+      if (data.ok) {
+        const a = data.assignments.find((x: any) => x.stage === stage);
+        setAssignment(a || null);
+        if (a?.submission?.content) setContent(a.submission.content);
+      }
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }, [stage]);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function submit() {
+    if (!content.trim()) { toast({ title: "Empty submission", description: "Paste your work or a GitHub link.", variant: "destructive" }); return; }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/student/assignment/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage, content: content.trim() }),
+      });
+      const data = await safeJson(res);
+      if (!res.ok || !data.ok) throw new Error(data.error);
+      toast({ title: "Submitted!", description: "Your mentor will review this assignment. Check back for feedback." });
+      await load();
+    } catch (e) {
+      toast({ title: "Submission failed", description: (e as Error).message, variant: "destructive" });
+    } finally { setSubmitting(false); }
+  }
+
+  if (loading) return null;
+  const sub = assignment?.submission;
+  const status = sub?.status;
+
+  return (
+    <div className="px-4 py-3 border-t border-border/50 bg-muted/20">
+      <div className="flex items-center gap-2 mb-2">
+        <FileText className="size-4 text-amber-500 dark:text-amber-400" />
+        <span className="text-[11px] font-semibold text-foreground">Module Assignment</span>
+        {status && (
+          <span className={cn(
+            "text-[9px] px-2 py-0.5 rounded-full font-semibold ml-auto",
+            status === "approved" ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" :
+            status === "rejected" ? "bg-rose-500/15 text-rose-500 dark:text-rose-400" :
+            "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+          )}>
+            {status === "approved" ? "✓ Approved" : status === "rejected" ? "✗ Needs revision" : "⏳ Pending review"}
+          </span>
+        )}
+      </div>
+      <p className="text-[10px] text-muted-foreground mb-2 leading-relaxed">
+        <strong className="text-foreground">Deliverable:</strong> {deliverable}
+      </p>
+
+      {/* Mentor feedback (if reviewed) */}
+      {sub?.mentorFeedback && (
+        <div className="mb-2 p-2 rounded-lg bg-cyan-500/5 border border-cyan-500/20 text-[10px]">
+          <div className="flex items-center gap-1 text-cyan-500 dark:text-cyan-400 font-semibold mb-0.5">
+            <MessageSquare className="size-3" /> Mentor Feedback
+          </div>
+          <p className="text-foreground">{sub.mentorFeedback}</p>
+        </div>
+      )}
+
+      {/* Submission textarea */}
+      <Textarea
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder="Paste your work here — code, a GitHub repo link, notes, or a summary of what you did for this module's deliverable…"
+        className="bg-background border-border min-h-[80px] text-xs mb-2"
+        disabled={submitting}
+      />
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[9px] text-muted-foreground">{content.length} chars</span>
+        <Button
+          size="sm"
+          onClick={submit}
+          disabled={submitting || !content.trim()}
+          className="h-7 text-[10px] bg-gradient-to-r from-amber-500 to-cyan-500 text-white hover:opacity-90"
+        >
+          {submitting ? <Loader2 className="size-3 animate-spin mr-1" /> : <Send className="size-3 mr-1" />}
+          {sub ? "Re-submit" : "Submit Assignment"}
+        </Button>
+      </div>
+
+      {status === "approved" && (
+        <div className="mt-2 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
+          <CheckCircle className="size-3" /> Approved by your mentor. This module's assignment is complete!
+        </div>
+      )}
     </div>
   );
 }
