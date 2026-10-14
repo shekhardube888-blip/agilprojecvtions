@@ -17,12 +17,14 @@ import { AIAssistant } from "@/components/agile/ai-assistant";
 import { Schedule } from "@/components/agile/schedule";
 import { FAQ } from "@/components/agile/faq";
 import { CodeRunner } from "@/components/agile/code-runner";
+import { LearningPath } from "@/components/agile/learning-path";
 import { cn } from "@/lib/utils";
 
-type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "code" | "schedule" | "faq";
+type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "code" | "learning" | "schedule" | "faq";
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string; accent: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home", accent: "cyan" },
+  { key: "learning", label: "Learning Path", icon: <BookOpen className="size-4" />, desc: "Structured lessons + progress", accent: "emerald" },
   { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment", accent: "violet" },
   { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey", accent: "cyan" },
   { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant", accent: "violet" },
@@ -42,6 +44,7 @@ function TabBody({ k, onJump }: { k: TabKey; onJump: (k: TabKey) => void }) {
     case "ai-mentor": return <div className={WRAP}><AIAssistant /></div>;
     case "ntai-chat": return <NTAIChatbotTab disabled />;
     case "code": return <CodeRunner />;
+    case "learning": return <LearningPath />;
     case "schedule": return <div className={WRAP}><Schedule /></div>;
     case "faq": return <div className={WRAP}><FAQ /></div>;
     default: return null;

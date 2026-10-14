@@ -168,3 +168,15 @@ model College {
   createdAt DateTime @default(now())
   @@index([name])
 }
+
+// Lesson progress tracking — which lessons has the student completed?
+model LessonProgress {
+  id           String   @id @default(cuid())
+  studentEmail String
+  stage        Int
+  lessonId     String
+  completedAt  DateTime @default(now())
+
+  @@unique([studentEmail, lessonId])
+  @@index([studentEmail, stage])
+}

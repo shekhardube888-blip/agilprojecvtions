@@ -599,6 +599,51 @@ export const PROJECT_STAGES: ProjectStage[] = [
   { step: 6, week: "Week 6", title: "Deployment & Capstone Demo", desc: "Serve the model behind a FastAPI endpoint + a Streamlit dashboard. Containerise with Docker. Present the end-to-end project to an industry panel + hand off on GitHub.", deliverable: "Live API + dashboard + a 10-min capstone demo to the panel.", icon: "🚀" },
 ];
 
+// ── Structured lessons per stage (3-4 lessons per module = ~21 total) ──
+// Each lesson has: id (stage-lessonNum), stage, title, desc, duration (mins)
+export type Lesson = {
+  id: string;        // e.g. "1-1" (stage 1, lesson 1)
+  stage: number;     // 1-6
+  title: string;
+  desc: string;
+  duration: number;  // estimated minutes
+};
+
+export const LESSONS: Lesson[] = [
+  // Stage 1: Data Ingestion & Setup
+  { id: "1-1", stage: 1, title: "Setting Up Your Environment", desc: "Install Python 3.10+, create a virtual env, install Pandas/NumPy/Scikit-Learn. Set up the project folder structure (notebooks/, src/, models/, data/).", duration: 30 },
+  { id: "1-2", stage: 1, title: "Loading Data with Pandas", desc: "Read CSV/Excel into a DataFrame. Inspect shape, dtypes, head/tail. Handle encoding issues + parse dates.", duration: 45 },
+  { id: "1-3", stage: 1, title: "Data Quality Check", desc: "Count nulls per column. Identify duplicates. Check for mixed types. Write a data-quality report function.", duration: 40 },
+  { id: "1-4", stage: 1, title: "Git Setup + Project Skeleton", desc: "Initialize a Git repo, create .gitignore, commit the project skeleton. Push to GitHub.", duration: 25 },
+
+  // Stage 2: EDA
+  { id: "2-1", stage: 2, title: "Univariate Analysis", desc: "Plot distributions (histograms, box plots) for each numeric feature. Identify skewness + outliers.", duration: 40 },
+  { id: "2-2", stage: 2, title: "Bivariate Analysis + Correlations", desc: "Scatter plots, correlation heatmaps. Identify the features most correlated with the target.", duration: 45 },
+  { id: "2-3", stage: 2, title: "Categorical Analysis", desc: "Group-by aggregations, bar charts for categorical features. Chi-square tests for independence.", duration: 35 },
+  { id: "2-4", stage: 2, title: "EDA Findings Write-up", desc: "Summarize 4-6 key findings from your EDA. What features matter? What needs cleaning? What patterns did you find?", duration: 30 },
+
+  // Stage 3: Feature Engineering
+  { id: "3-1", stage: 3, title: "Handling Missing Data", desc: "SimpleImputer, KNN imputer. Decide drop vs impute based on null percentage + feature importance.", duration: 40 },
+  { id: "3-2", stage: 3, title: "Encoding Categorical Variables", desc: "OneHotEncoder, OrdinalEncoder, target encoding. When to use each. Avoid the dummy variable trap.", duration: 45 },
+  { id: "3-3", stage: 3, title: "Building a Scikit-Learn Pipeline", desc: "Create a ColumnTransformer + Pipeline. Combine numeric + categorical preprocessing. Make it reproducible.", duration: 50 },
+  { id: "3-4", stage: 3, title: "Train/Validation Split", desc: "Stratified train/val split. Why stratify? Set up the split so the pipeline sees only training data.", duration: 25 },
+
+  // Stage 4: Model Training
+  { id: "4-1", stage: 4, title: "Baseline Models", desc: "Train Linear/DecisionTree/RandomForest/GradientBoosting. Compare cross-validation scores (RMSE/accuracy).", duration: 50 },
+  { id: "4-2", stage: 4, title: "Hyperparameter Tuning", desc: "RandomizedSearchCV on the best baseline. Tune n_estimators, max_depth, learning_rate. Use parallel jobs.", duration: 60 },
+  { id: "4-3", stage: 4, title: "Model Persistence", desc: "Save the tuned model with joblib. Load + verify. Create a predict() function for inference.", duration: 25 },
+
+  // Stage 5: Evaluation
+  { id: "5-1", stage: 5, title: "Test-Set Evaluation", desc: "Score on the held-out test set. Compare with validation. Check for overfitting/underfitting.", duration: 35 },
+  { id: "5-2", stage: 5, title: "Residual / Confusion Matrix Analysis", desc: "For regression: residual plots, Q-Q plots. For classification: confusion matrix, precision/recall, ROC curve.", duration: 45 },
+  { id: "5-3", stage: 5, title: "Model Explainability with SHAP", desc: "Install SHAP. Generate a beeswarm plot. Explain which features drive individual predictions.", duration: 50 },
+
+  // Stage 6: Deployment
+  { id: "6-1", stage: 6, title: "FastAPI Model Endpoint", desc: "Create a FastAPI app with a /predict endpoint. Load the saved model. Accept JSON input, return predictions.", duration: 55 },
+  { id: "6-2", stage: 6, title: "Streamlit Dashboard", desc: "Build a Streamlit dashboard with input widgets + a prediction display. Connect to the FastAPI backend.", duration: 50 },
+  { id: "6-3", stage: 6, title: "Capstone Demo Prep", desc: "Prepare a 10-minute demo: problem statement, EDA highlights, model choice, evaluation metrics, live API + dashboard. Present to the panel.", duration: 40 },
+];
+
 // ── College seed list (Indian engineering colleges) ──
 // Used to auto-seed the College table on first API call. Students can also
 // add new colleges during registration (saved with source = "student-added").
