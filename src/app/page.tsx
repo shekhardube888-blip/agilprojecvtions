@@ -221,106 +221,124 @@ export default function Home() {
   }
 
   // ════════════════════════════════════════════════════════════
-  // NOT LOGGED IN → BEAUTIFUL LOGIN PAGE
+  // NOT LOGGED IN → MARKETING LANDING PAGE + LOGIN WALL
+  // Visitors see the full marketing page (hero, stats, programs, benefits, etc.)
+  // but can't access the dashboard, project tracker, or course catalog without logging in.
+  // The login/signup card is a section on the page (#login) so visitors can sign in.
   // ════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* Decorative gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl" aria-hidden />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" aria-hidden />
+    <div className="min-h-screen flex flex-col bg-background" id="top">
+      {/* ── Sticky header ── */}
+      <header className="sticky top-0 z-50 flex items-center justify-between px-5 md:px-[5%] py-3 bg-background/90 backdrop-blur-xl border-b border-border">
+        <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
+          <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-8 w-auto rounded-md" />
+          <span className="text-muted-foreground/40 hidden sm:inline">|</span>
+          <img src="/ntai-logo.png" alt="NT-AI Network" className="h-8 w-auto rounded-md" />
+        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <a href="#login" className="hidden sm:inline text-sm text-muted-foreground hover:text-cyan-500 dark:hover:text-cyan-400">Sign In</a>
+          <a href="#login" className="text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:opacity-90 transition-opacity">
+            Get Started
+          </a>
+        </div>
+      </header>
 
-      <div className="relative z-10 flex-1 flex flex-col">
-        {/* Header */}
-        <header className="flex items-center justify-between px-5 md:px-[5%] py-4">
-          <Link href="#top" className="flex items-center gap-2 font-bold text-lg">
-            <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-8 w-auto rounded-md" />
-            <span className="text-muted-foreground/40 hidden sm:inline">|</span>
-            <img src="/ntai-logo.png" alt="NT-AI Network" className="h-8 w-auto rounded-md" />
-          </Link>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Link href="#register" className="text-sm text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link>
+      {/* ── 1. Hero section ── */}
+      <Hero />
+
+      {/* ── 2. Stats / Counters ── */}
+      <Counters />
+
+      {/* ── 3. How it works (5-step timeline) ── */}
+      <HowItWorks />
+
+      {/* ── 4. Programs (internship programs) ── */}
+      <Programs />
+
+      {/* ── 5. Benefits ── */}
+      <Benefits />
+
+      {/* ── 6. Testimonials ── */}
+      <Testimonials />
+
+      {/* ── 7. About ── */}
+      <About />
+
+      {/* ── 8. Login / Signup section (the login wall) ── */}
+      <section id="login" className="py-16 md:py-24 px-5 md:px-[5%] max-w-5xl mx-auto scroll-mt-20">
+        <div className="text-center mb-8">
+          <div className="text-cyan-500 dark:text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
+            {authView === "login" ? "Portal Login" : "Create Account"}
           </div>
-        </header>
+          <h2 className="font-bold text-2xl md:text-3xl text-foreground">
+            {authView === "login" ? "Sign in to access your dashboard" : "Sign up to start your internship"}
+          </h2>
+          <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
+            {authView === "login"
+              ? "Students: sign in with Google or email+password. Admin: use your credentials."
+              : "Create a free student account — permanent access, no expiry."}
+          </p>
+        </div>
 
-        {/* Main: login card + stats */}
-        <main className="flex-1 flex items-center justify-center px-5 py-8">
-          <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-8 items-center">
-            {/* Left: branding + hero image + stats */}
-            <div className="text-center lg:text-left">
-              <h1 className="font-bold text-3xl md:text-5xl text-foreground leading-tight">
-                Launch Your <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Engineering Career</span>
-              </h1>
-              <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-md mx-auto lg:mx-0">
-                Free engineering internships + 80+ AI/ML projects for BE / B.Tech / MCA / M.Tech students. Live mentoring, real projects, AICTE-aligned certificates.
-              </p>
-              {/* Professional hero image — attracts students + visual impact */}
-              <img
-                src="/hero-students.png"
-                alt="Engineering students collaborating on AI/ML projects"
-                className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10 mt-5 hidden sm:block"
-              />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 max-w-md mx-auto lg:mx-0">
-                {[{n:"10,000+",l:"Students"},{n:"500+",l:"Colleges"},{n:"80+",l:"Projects"},{n:"98%",l:"Completion"}].map(s => (
-                  <div key={s.l} className="bg-card border border-border rounded-lg p-3 text-center shadow-sm">
-                    <div className="font-bold text-lg bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{s.n}</div>
-                    <div className="text-[10px] text-muted-foreground">{s.l}</div>
-                  </div>
-                ))}
-              </div>
-              {/* NT-AI Network presentation image — lower section, below stats */}
-              <img
-                src="/ntai-presentation.png"
-                alt="NT-AI Network training presentation with data dashboards"
-                className="w-full rounded-2xl border border-border shadow-lg shadow-cyan-500/10 mt-5 hidden sm:block"
-              />
-            </div>
-
-            {/* Right: login/signup card */}
-            <div className="bg-card backdrop-blur-xl border border-border rounded-2xl p-6 md:p-8 shadow-2xl">
-              <div className="text-center mb-5">
-                <div className="size-14 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 grid place-items-center text-white mx-auto mb-3 shadow-lg">
-                  {authView === "login" ? <LogIn className="size-7" /> : <UserCircle2 className="size-7" />}
-                </div>
-                <h2 className="font-bold text-xl text-foreground">
-                  {authView === "login" ? "Portal Login" : "Create Student Account"}
-                </h2>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {authView === "login"
-                    ? "Students: sign in with Google or sign up. Admin: use your credentials."
-                    : "Sign up with your email + password. Student accounts only — permanent access."}
-                </p>
-              </div>
-
-              {authView === "login" ? (
-                <LoginForm
-                  onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
-                  onSwitchToSignup={() => setAuthView("signup")}
-                />
-              ) : (
-                <SignupForm
-                  onSignedUp={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
-                  onSwitchToLogin={() => setAuthView("login")}
-                />
-              )}
-            </div>
+        <div className="max-w-md mx-auto bg-card backdrop-blur-xl border border-border rounded-2xl p-6 md:p-8 shadow-2xl">
+          {/* Toggle between login + signup */}
+          <div className="flex gap-1 p-1 bg-muted rounded-lg mb-5">
+            <button
+              type="button"
+              onClick={() => setAuthView("login")}
+              className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "login" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setAuthView("signup")}
+              className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "signup" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}
+            >
+              Sign Up
+            </button>
           </div>
-        </main>
 
-        {/* Project Tracker — visitors can sign in + track with email + mobile */}
-        <ProjectTracker />
+          {authView === "login" ? (
+            <LoginForm
+              onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
+              onSwitchToSignup={() => setAuthView("signup")}
+            />
+          ) : (
+            <SignupForm
+              onSignedUp={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
+              onSwitchToLogin={() => setAuthView("login")}
+            />
+          )}
+        </div>
 
-        {/* Course Catalog — searchable, filterable project discovery */}
-        <CourseCatalog />
+        {/* Trust signals below the login card */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-[10px] text-muted-foreground">
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> AICTE-Aligned</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Industry Mentor-Led</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Verifiable Certificates</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> 100% Online</span>
+        </div>
+      </section>
 
-        {/* Footer */}
-        <footer className="text-center py-4 text-xs text-muted-foreground">
-          © 2026 AgileProjection (NT-AI) · <Link href="#register" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">Register Free</Link> · <a href="https://agileprojection.com" target="_blank" rel="noopener noreferrer" className="text-cyan-500 dark:text-cyan-400 hover:text-cyan-600">agileprojection.com</a>
-          <div className="mt-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
-            <AlertTriangle className="size-3" /> Version 1.0 — Test Version. Next comes after testing.
-          </div>
-        </footer>
-      </div>
+      {/* ── 9. FAQ ── */}
+      <FAQ />
+
+      {/* ── 10. Newsletter ── */}
+      <Newsletter />
+
+      {/* ── Footer ── */}
+      <Footer />
+
+      {/* Floating Sign In button (mobile) */}
+      <a
+        href="#login"
+        className="sm:hidden fixed bottom-4 right-4 z-50 size-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white grid place-items-center shadow-lg shadow-cyan-500/30"
+        aria-label="Sign In"
+      >
+        <LogIn className="size-5" />
+      </a>
     </div>
   );
 }
