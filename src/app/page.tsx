@@ -14,6 +14,7 @@ import { CustomPages } from "@/components/agile/custom-pages";
 import { VisitorStats } from "@/components/agile/visitor-stats";
 import { SalesChat } from "@/components/agile/sales-chat";
 import { ProjectTracker } from "@/components/agile/project-tracker";
+import { CourseCatalog } from "@/components/agile/course-catalog";
 import { Footer } from "@/components/agile/footer";
 import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import { SignupForm } from "@/components/agile/signup-form";
@@ -308,6 +309,9 @@ export default function Home() {
 
         {/* Project Tracker — visitors can sign in + track with email + mobile */}
         <ProjectTracker />
+
+        {/* Course Catalog — searchable, filterable project discovery */}
+        <CourseCatalog />
 
         {/* Footer */}
         <footer className="text-center py-4 text-xs text-muted-foreground">
