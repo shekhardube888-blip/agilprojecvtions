@@ -17,6 +17,7 @@ import { ProjectTracker } from "@/components/agile/project-tracker";
 import { CourseCatalog } from "@/components/agile/course-catalog";
 import { CategorySelector } from "@/components/agile/category-selector";
 import { Footer } from "@/components/agile/footer";
+import { Nav } from "@/components/agile/nav";
 import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import { SignupForm } from "@/components/agile/signup-form";
 import { cn } from "@/lib/utils";
@@ -242,21 +243,8 @@ export default function Home() {
   // ════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen flex flex-col bg-background" id="top">
-      {/* ── Sticky header ── */}
-      <header className="sticky top-0 z-50 flex items-center justify-between px-5 md:px-[5%] py-3 bg-background/90 backdrop-blur-xl border-b border-border">
-        <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
-          <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-8 w-auto rounded-md" />
-          <span className="text-muted-foreground/40 hidden sm:inline">|</span>
-          <img src="/ntai-logo.png" alt="NT-AI Network" className="h-8 w-auto rounded-md" />
-        </Link>
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <a href="#login" className="hidden sm:inline text-sm text-muted-foreground hover:text-cyan-500 dark:hover:text-cyan-400">Sign In</a>
-          <a href="#login" className="text-sm px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:opacity-90 transition-opacity">
-            Get Started
-          </a>
-        </div>
-      </header>
+      {/* ── Professional dropdown nav (like agileprojection.com) ── */}
+      <Nav />
 
       {/* ── 1. Hero section ── */}
       <Hero />
