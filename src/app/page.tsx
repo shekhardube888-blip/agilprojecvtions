@@ -18,6 +18,7 @@ import { CourseCatalog } from "@/components/agile/course-catalog";
 import { CategorySelector } from "@/components/agile/category-selector";
 import { Footer } from "@/components/agile/footer";
 import { Nav } from "@/components/agile/nav";
+import { SectionNavigator } from "@/components/agile/section-navigator";
 import { GoogleSignInButton } from "@/components/agile/google-sign-in-button";
 import { SignupForm } from "@/components/agile/signup-form";
 import { cn } from "@/lib/utils";
@@ -246,14 +247,26 @@ export default function Home() {
       {/* ── Professional dropdown nav (like agileprojection.com) ── */}
       <Nav />
 
+      {/* Floating section navigator (dots on the right) */}
+      <SectionNavigator />
+
       {/* ── 1. Hero section ── */}
       <Hero />
+
+      {/* divider */}
+      <div className="ap-divider" />
 
       {/* ── 2. Stats / Counters ── */}
       <Counters />
 
+      {/* divider */}
+      <div className="ap-divider" />
+
       {/* ── 3. How it works (5-step timeline) ── */}
       <HowItWorks />
+
+      {/* divider */}
+      <div className="ap-divider" />
 
       {/* ── 4. Programs (internship programs) ── */}
       <Programs />
@@ -261,14 +274,26 @@ export default function Home() {
       {/* ── 4b. Category Selector — choose domain → auto-prompt login → register ── */}
       <CategorySelector />
 
+      {/* divider */}
+      <div className="ap-divider" />
+
       {/* ── 5. Benefits ── */}
       <Benefits />
+
+      {/* divider */}
+      <div className="ap-divider" />
 
       {/* ── 6. Testimonials ── */}
       <Testimonials />
 
+      {/* divider */}
+      <div className="ap-divider" />
+
       {/* ── 7. About ── */}
       <About />
+
+      {/* divider */}
+      <div className="ap-divider" />
 
       {/* ── 8. Login / Signup section (the login wall) ── */}
       <section id="login" className="py-16 md:py-24 px-5 md:px-[5%] max-w-5xl mx-auto scroll-mt-20">
@@ -327,8 +352,14 @@ export default function Home() {
         </div>
       </section>
 
+      {/* divider */}
+      <div className="ap-divider" />
+
       {/* ── 9. FAQ ── */}
       <FAQ />
+
+      {/* divider */}
+      <div className="ap-divider" />
 
       {/* ── 10. Newsletter ── */}
       <Newsletter />
