@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn, safeJson } from "@/lib/utils";
+import { DemoProjectRequest } from "@/components/agile/demo-project-request";
 
 type Lesson = {
   id: string; stage: number; title: string; desc: string; duration: number;
@@ -254,6 +255,10 @@ export function LearningPath() {
           );
         })}
       </div>
+
+      {/* Demo Project Request — student asks for a custom project */}
+      <DemoProjectRequest />
+
     </div>
   );
 }

@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, FileText, CreditCard, Cpu, GraduationCap, FolderKanban,
   CalendarCheck, Award, BarChart3, Brain, Bell, Settings, X, RefreshCw, Loader2,
   CheckCircle2, Lock, Rocket, Forward, ShieldCheck, Search, Download, ExternalLink, LogOut,
-  History,
+  History, Lightbulb, Send,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogTitle, DialogDescription,
@@ -37,7 +37,7 @@ type Cert = {
 };
 type MenuKey =
   | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
-  | "projects" | "attendance" | "user-mgmt" | "submissions" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+  | "projects" | "attendance" | "user-mgmt" | "submissions" | "demo-projects" | "certificates" | "reports" | "ai" | "notifications" | "settings";
 
 const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
@@ -50,6 +50,7 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
   { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
   { key: "user-mgmt", label: "User Management", icon: <Users className="size-4" />, group: "Lifecycle" },
   { key: "submissions", label: "Submissions", icon: <FileText className="size-4" />, group: "Lifecycle" },
+  { key: "demo-projects", label: "Demo Projects", icon: <Lightbulb className="size-4" />, group: "Lifecycle" },
   { key: "certificates", label: "Certificates", icon: <Award className="size-4" />, group: "Lifecycle" },
   { key: "reports", label: "Reports", icon: <BarChart3 className="size-4" />, group: "Lifecycle" },
   { key: "ai", label: "AI Analytics", icon: <Brain className="size-4" />, group: "Insights" },
@@ -155,6 +156,7 @@ function TabContent({ tab }: { tab: MenuKey }) {
     case "applications": return <ApplicationsTab />;
     case "user-mgmt": return <UserManagementTab />;
     case "submissions": return <SubmissionsTab />;
+    case "demo-projects": return <DemoProjectsTab />;
     case "certificates": return <CertificatesTab />;
     case "reports": return <ReportsTab />;
     case "mentors": return <MentorsTab />;
@@ -744,6 +746,115 @@ function SubmissionsTab() {
               <Button size="sm" variant="outline" onClick={() => { setReviewDialog(null); setFeedback(""); }} disabled={busy}>Cancel</Button>
               <Button size="sm" onClick={() => review("rejected")} disabled={busy} className="bg-rose-500/90 text-white hover:bg-rose-500">Reject</Button>
               <Button size="sm" onClick={() => review("approved")} disabled={busy} className="bg-emerald-600 text-white hover:bg-emerald-500">Approve</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Demo Projects tab (student requests for custom demo projects) ──
+function DemoProjectsTab() {
+  const { toast } = useToast();
+  const [reqs, setReqs] = useState<any[]>([]);
+  const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("pending");
+  const [reviewDialog, setReviewDialog] = useState<any | null>(null);
+  const [mentorReply, setMentorReply] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/demo-projects?status=${filter}`, { cache: "no-store" });
+      const d = await res.json();
+      if (d.ok) { setReqs(d.requests); setStats(d.stats); }
+    } catch { /* ignore */ }
+    finally { setLoading(false); }
+  }, [filter]);
+
+  useEffect(() => { load(); }, [load]);
+
+  async function review(status: string) {
+    if (!reviewDialog) return;
+    if (!mentorReply.trim()) { toast({ title: status === "approved" ? "Demo project description required" : "Reason required", variant: "destructive" }); return; }
+    setBusy(true);
+    try {
+      const res = await fetch("/api/admin/demo-project/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: reviewDialog.id, status, mentorReply: mentorReply.trim() }),
+      });
+      const d = await res.json();
+      if (!res.ok || !d.ok) throw new Error(d.error);
+      toast({ title: status === "approved" ? "✓ Approved + emailed" : "✗ Rejected", description: reviewDialog.studentName || reviewDialog.studentEmail });
+      setReviewDialog(null); setMentorReply("");
+      load();
+    } catch (e) { toast({ title: "Failed", description: (e as Error).message, variant: "destructive" }); }
+    finally { setBusy(false); }
+  }
+
+  if (loading) return <Loading />;
+
+  return (
+    <div>
+      <h3 className="font-bold text-lg mb-1">Demo Project Requests</h3>
+      <p className="text-xs text-muted-foreground mb-4">Students request custom demo projects based on their subject + requirements. Review → provide a project description → approve (sent to student's email) or reject.</p>
+
+      <div className="grid grid-cols-4 gap-2 mb-4">
+        <div className="bg-card border border-border rounded-lg p-2 text-center"><div className="text-lg font-bold text-foreground">{stats.total}</div><div className="text-[9px] text-muted-foreground">Total</div></div>
+        <div className="bg-card border border-amber-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-amber-600 dark:text-amber-400">{stats.pending}</div><div className="text-[9px] text-muted-foreground">Pending</div></div>
+        <div className="bg-card border border-emerald-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{stats.approved}</div><div className="text-[9px] text-muted-foreground">Approved</div></div>
+        <div className="bg-card border border-rose-500/30 rounded-lg p-2 text-center"><div className="text-lg font-bold text-rose-500 dark:text-rose-400">{stats.rejected}</div><div className="text-[9px] text-muted-foreground">Rejected</div></div>
+      </div>
+
+      <div className="flex gap-1.5 mb-4">
+        {[{k:"pending",l:"Pending"},{k:"approved",l:"Approved"},{k:"rejected",l:"Rejected"},{k:"all",l:"All"}].map(f => (
+          <button key={f.k} onClick={() => setFilter(f.k)} className={cn("text-[10px] px-3 py-1 rounded-lg font-semibold", filter === f.k ? "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border border-cyan-500/30" : "bg-muted text-muted-foreground border border-border")}>{f.l}</button>
+        ))}
+      </div>
+
+      {reqs.length === 0 ? <Empty text="No demo project requests." /> : (
+        <div className="space-y-2 max-h-[55vh] overflow-y-auto">
+          {reqs.map((r) => (
+            <div key={r.id} className="bg-card border border-border rounded-lg p-3">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div>
+                  <span className="text-xs font-semibold text-foreground">{r.studentName || r.studentEmail}</span>
+                  <span className="text-[10px] text-muted-foreground ml-2">Subject: {r.subject} {r.project ? `· ${r.project.slice(0,30)}` : ""}</span>
+                </div>
+                <span className={cn("text-[9px] px-2 py-0.5 rounded-full font-semibold", r.status === "approved" ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : r.status === "rejected" ? "bg-rose-500/15 text-rose-500 dark:text-rose-400" : "bg-amber-500/15 text-amber-600 dark:text-amber-400")}>{r.status}</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground line-clamp-3 mb-2">{r.requirements}</p>
+              {r.mentorReply && <div className="mb-2 p-2 rounded-lg bg-cyan-500/5 border border-cyan-500/20 text-[10px] text-foreground">{r.mentorReply}</div>}
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] text-muted-foreground">{new Date(r.requestedAt).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })}</span>
+                <button onClick={() => { setReviewDialog(r); setMentorReply(r.mentorReply || ""); }} className="text-[10px] px-2 py-1 rounded bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold">Review</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {reviewDialog && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm" onClick={() => !busy && setReviewDialog(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-lg w-full mx-4 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h4 className="font-bold text-foreground mb-1 flex items-center gap-2"><Lightbulb className="size-4 text-amber-500" /> Demo Project Request</h4>
+            <p className="text-xs text-muted-foreground mb-3">{reviewDialog.studentName || reviewDialog.studentEmail} · Subject: {reviewDialog.subject}</p>
+            <div className="bg-muted border border-border rounded-lg p-3 mb-3">
+              <div className="text-[10px] text-muted-foreground font-semibold mb-1">Student's Requirements:</div>
+              <p className="text-[11px] text-foreground whitespace-pre-wrap">{reviewDialog.requirements}</p>
+            </div>
+            <div className="space-y-2 mb-4">
+              <Label className="text-xs">{reviewDialog.status === "approved" ? "Demo Project Description (will be emailed to student)" : "Mentor Reply / Reason"}</Label>
+              <Textarea value={mentorReply} onChange={(e) => setMentorReply(e.target.value)} placeholder="Provide a complete demo project description: title, objectives, tech stack, step-by-step approach, expected output, resources…" className="bg-muted border-border min-h-[120px] text-xs" />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button size="sm" variant="outline" onClick={() => { setReviewDialog(null); setMentorReply(""); }} disabled={busy}>Cancel</Button>
+              <Button size="sm" onClick={() => review("rejected")} disabled={busy} className="bg-rose-500/90 text-white hover:bg-rose-500">Reject</Button>
+              <Button size="sm" onClick={() => review("approved")} disabled={busy} className="bg-emerald-600 text-white hover:bg-emerald-500"><Send className="size-3.5 mr-1" />Approve + Email</Button>
             </div>
           </div>
         </div>

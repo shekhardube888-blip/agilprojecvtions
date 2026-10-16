@@ -135,19 +135,39 @@ model Submission {
   @@index([status])
 }
 
-// Assessment attempts — student quiz scores per module. Certificate eligibility
-// requires passing all module quizzes (score >= threshold).
+// Assessment attempts — student quiz scores per module.
 model AssessmentAttempt {
   id           String   @id @default(cuid())
   studentEmail String
-  stage        Int                        // which module (1-6)
-  score        Int                        // percentage (0-100)
-  passed       Boolean                    // score >= pass threshold (60%)
-  answers      String                     // JSON: [{questionId, selectedOption, correct}]
+  stage        Int
+  score        Int
+  passed       Boolean
+  answers      String
   attemptedAt  DateTime @default(now())
 
   @@index([studentEmail, stage])
   @@index([studentEmail])
+}
+
+// Demo Project Requests — student asks for a custom demo project based on
+// their subject + current requirements. Mentor reviews → approves/rejects
+// + provides a project description. The approved project is emailed to the student.
+model DemoProjectRequest {
+  id            String   @id @default(cuid())
+  studentEmail  String
+  studentName   String?
+  subject       String                    // AI-ML, CS, MBA, etc.
+  project       String?                   // current internship project
+  requirements  String                    // what the student needs (their description)
+  status        String   @default("pending")  // pending | approved | rejected
+  mentorReply   String?                  // the approved demo project description
+  reviewedBy    String?                  // admin username
+  emailedAt     DateTime?                // when the reply was emailed
+  requestedAt   DateTime @default(now())
+  reviewedAt   DateTime?
+
+  @@index([studentEmail])
+  @@index([status])
 }
 
 // ── Login accounts ──

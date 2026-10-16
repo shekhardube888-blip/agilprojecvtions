@@ -213,3 +213,22 @@ model AssessmentAttempt {
   @@index([studentEmail, stage])
   @@index([studentEmail])
 }
+
+// Demo Project Requests — student asks for a custom demo project.
+model DemoProjectRequest {
+  id            String   @id @default(cuid())
+  studentEmail  String
+  studentName   String?
+  subject       String
+  project       String?
+  requirements  String
+  status        String   @default("pending")
+  mentorReply   String?
+  reviewedBy    String?
+  emailedAt     DateTime?
+  requestedAt   DateTime @default(now())
+  reviewedAt   DateTime?
+
+  @@index([studentEmail])
+  @@index([status])
+}
