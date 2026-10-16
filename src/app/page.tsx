@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowRight, Loader2, LogOut, Zap, LogIn, UserCircle2, ShieldCheck, Users, FileText, Award, BarChart3, Search, Bot, Calendar, HelpCircle, AlertTriangle } from "lucide-react";
+import { ArrowRight, Loader2, LogOut, Zap, LogIn, UserCircle2, ShieldCheck, Users, FileText, Award, BarChart3, Search, Bot, Calendar, HelpCircle, AlertTriangle, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -244,76 +244,36 @@ export default function Home() {
   // ════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen flex flex-col bg-background" id="top">
-      {/* ── Professional dropdown nav (like agileprojection.com) ── */}
+      {/* ── Professional dropdown nav ── */}
       <Nav />
 
-      {/* Floating section navigator (dots on the right) */}
-      <SectionNavigator />
+      {/* ── Hero (fills the first screen — no scrolling needed to see the key message) ── */}
+      <div className="flex-1 flex items-center">
+        <Hero />
+      </div>
 
-      {/* ── 1. Hero section ── */}
-      <Hero />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 2. Stats / Counters ── */}
-      <Counters />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 3. How it works (5-step timeline) ── */}
-      <HowItWorks />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 4. Programs (internship programs) ── */}
-      <Programs />
-
-      {/* ── 4b. Category Selector — choose domain → auto-prompt login → register ── */}
+      {/* ── Category Selector — the main action: choose your internship domain ── */}
       <CategorySelector />
 
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 5. Benefits ── */}
-      <Benefits />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 6. Testimonials ── */}
-      <Testimonials />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 7. About ── */}
-      <About />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 8. Login / Signup section (the login wall) ── */}
-      <section id="login" className="py-16 md:py-24 px-5 md:px-[5%] max-w-5xl mx-auto scroll-mt-20">
-        <div className="text-center mb-8">
-          <div className="text-cyan-500 dark:text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-3">
+      {/* ── Login / Signup section (the login wall) ── */}
+      <section id="login" className="py-12 md:py-16 px-5 md:px-[5%] max-w-md mx-auto scroll-mt-20">
+        <div className="text-center mb-6">
+          <div className="text-cyan-500 dark:text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-2">
             {authView === "login" ? "Portal Login" : "Create Account"}
           </div>
-          <h2 className="font-bold text-2xl md:text-3xl text-foreground">
+          <h2 className="font-bold text-xl md:text-2xl text-foreground">
             {authView === "login" ? "Sign in to access your dashboard" : "Sign up to start your internship"}
           </h2>
-          <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
+          <p className="text-muted-foreground text-xs mt-1.5 max-w-sm mx-auto">
             {authView === "login"
               ? "Students: sign in with Google or email+password. Admin: use your credentials."
               : "Create a free student account — permanent access, no expiry."}
           </p>
         </div>
 
-        <div className="max-w-md mx-auto bg-card backdrop-blur-xl border border-border rounded-2xl p-6 md:p-8 shadow-2xl">
+        <div className="bg-card backdrop-blur-xl border border-border rounded-2xl p-5 md:p-6 shadow-2xl">
           {/* Toggle between login + signup */}
-          <div className="flex gap-1 p-1 bg-muted rounded-lg mb-5">
+          <div className="flex gap-1 p-1 bg-muted rounded-lg mb-4">
             <button
               type="button"
               onClick={() => setAuthView("login")}
@@ -343,26 +303,17 @@ export default function Home() {
           )}
         </div>
 
-        {/* Trust signals below the login card */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-[10px] text-muted-foreground">
+        {/* Trust signals */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-4 text-[10px] text-muted-foreground">
           <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> AICTE-Aligned</span>
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Industry Mentor-Led</span>
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Verifiable Certificates</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Mentor-Led</span>
+          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Certificate</span>
           <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> 100% Online</span>
         </div>
       </section>
 
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 9. FAQ ── */}
-      <FAQ />
-
-      {/* divider */}
-      <div className="ap-divider" />
-
-      {/* ── 10. Newsletter ── */}
-      <Newsletter />
+      {/* ── Collapsible marketing sections — hidden by default, expand on click ── */}
+      <CollapsibleSections />
 
       {/* ── Footer ── */}
       <Footer />
@@ -376,6 +327,47 @@ export default function Home() {
         <LogIn className="size-5" />
       </a>
     </div>
+  );
+}
+
+// ── Collapsible marketing sections — hidden by default, expand on click ──
+function CollapsibleSections() {
+  const [open, setOpen] = useState<string | null>(null);
+  const sections = [
+    { key: "how", label: "How It Works", icon: <BarChart3 className="size-4" />, component: <HowItWorks /> },
+    { key: "programs", label: "Programs", icon: <Rocket className="size-4" />, component: <Programs /> },
+    { key: "benefits", label: "Benefits", icon: <ShieldCheck className="size-4" />, component: <Benefits /> },
+    { key: "testimonials", label: "Testimonials", icon: <Users className="size-4" />, component: <Testimonials /> },
+    { key: "about", label: "About", icon: <UserCircle2 className="size-4" />, component: <About /> },
+    { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, component: <FAQ /> },
+  ];
+  return (
+    <section className="py-8 px-5 md:px-[5%] max-w-5xl mx-auto">
+      <div className="text-center mb-6">
+        <p className="text-xs text-muted-foreground">Want to learn more? Click to expand:</p>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+        {sections.map((s) => (
+          <button
+            key={s.key}
+            onClick={() => setOpen(open === s.key ? null : s.key)}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-semibold transition-all",
+              open === s.key
+                ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-500 dark:text-cyan-400"
+                : "bg-card border-border text-foreground hover:border-cyan-400/30"
+            )}
+          >
+            {s.icon} {s.label}
+          </button>
+        ))}
+      </div>
+      {open && (
+        <div className="rounded-xl border border-border overflow-hidden">
+          {sections.find((s) => s.key === open)?.component}
+        </div>
+      )}
+    </section>
   );
 }
 
