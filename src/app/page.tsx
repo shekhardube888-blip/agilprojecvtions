@@ -244,130 +244,93 @@ export default function Home() {
   // ════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen flex flex-col bg-background" id="top">
-      {/* ── Professional dropdown nav ── */}
+      {/* ── Professional dropdown nav (sticky, with theme toggle) ── */}
       <Nav />
 
-      {/* ── Hero (fills the first screen — no scrolling needed to see the key message) ── */}
-      <div className="flex-1 flex items-center">
+      {/* ── Section 1: Hero (full screen) ── */}
+      <div className="min-h-screen flex items-center pt-16 scroll-mt-16" id="hero-section">
         <Hero />
       </div>
 
-      {/* ── Category Selector — the main action: choose your internship domain ── */}
-      <CategorySelector />
+      {/* ── Section 2: Category Selector (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16">
+        <CategorySelector />
+      </div>
 
-      {/* ── Login / Signup section (the login wall) ── */}
-      <section id="login" className="py-12 md:py-16 px-5 md:px-[5%] max-w-md mx-auto scroll-mt-20">
-        <div className="text-center mb-6">
-          <div className="text-cyan-500 dark:text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-2">
-            {authView === "login" ? "Portal Login" : "Create Account"}
+      {/* ── Section 3: Login / Signup (full screen) ── */}
+      <section id="login" className="min-h-screen flex items-center justify-center px-5 py-20 scroll-mt-16">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="text-cyan-500 dark:text-cyan-400 text-xs font-semibold tracking-widest uppercase mb-2">
+              {authView === "login" ? "Portal Login" : "Create Account"}
+            </div>
+            <h2 className="font-bold text-xl md:text-2xl text-foreground">
+              {authView === "login" ? "Sign in to access your dashboard" : "Sign up to start your internship"}
+            </h2>
+            <p className="text-muted-foreground text-xs mt-1.5 max-w-sm mx-auto">
+              {authView === "login"
+                ? "Students: sign in with Google or email+password. Admin: use your credentials."
+                : "Create a free student account — permanent access, no expiry."}
+            </p>
           </div>
-          <h2 className="font-bold text-xl md:text-2xl text-foreground">
-            {authView === "login" ? "Sign in to access your dashboard" : "Sign up to start your internship"}
-          </h2>
-          <p className="text-muted-foreground text-xs mt-1.5 max-w-sm mx-auto">
-            {authView === "login"
-              ? "Students: sign in with Google or email+password. Admin: use your credentials."
-              : "Create a free student account — permanent access, no expiry."}
-          </p>
-        </div>
-
-        <div className="bg-card backdrop-blur-xl border border-border rounded-2xl p-5 md:p-6 shadow-2xl">
-          {/* Toggle between login + signup */}
-          <div className="flex gap-1 p-1 bg-muted rounded-lg mb-4">
-            <button
-              type="button"
-              onClick={() => setAuthView("login")}
-              className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "login" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => setAuthView("signup")}
-              className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "signup" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}
-            >
-              Sign Up
-            </button>
+          <div className="bg-card backdrop-blur-xl border border-border rounded-2xl p-5 md:p-6 shadow-2xl">
+            <div className="flex gap-1 p-1 bg-muted rounded-lg mb-4">
+              <button type="button" onClick={() => setAuthView("login")} className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "login" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}>Sign In</button>
+              <button type="button" onClick={() => setAuthView("signup")} className={cn("flex-1 py-2 rounded-md text-xs font-semibold transition-colors", authView === "signup" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}>Sign Up</button>
+            </div>
+            {authView === "login" ? (
+              <LoginForm onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }} onSwitchToSignup={() => setAuthView("signup")} />
+            ) : (
+              <SignupForm onSignedUp={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }} onSwitchToLogin={() => setAuthView("login")} />
+            )}
           </div>
-
-          {authView === "login" ? (
-            <LoginForm
-              onLoggedIn={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
-              onSwitchToSignup={() => setAuthView("signup")}
-            />
-          ) : (
-            <SignupForm
-              onSignedUp={(u) => { setUser(u); window.dispatchEvent(new Event("auth-change")); }}
-              onSwitchToLogin={() => setAuthView("login")}
-            />
-          )}
-        </div>
-
-        {/* Trust signals */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-4 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> AICTE-Aligned</span>
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Mentor-Led</span>
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Certificate</span>
-          <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> 100% Online</span>
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-4 text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> AICTE-Aligned</span>
+            <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Mentor-Led</span>
+            <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> Certificate</span>
+            <span className="flex items-center gap-1"><ShieldCheck className="size-3 text-emerald-500" /> 100% Online</span>
+          </div>
         </div>
       </section>
 
-      {/* ── Collapsible marketing sections — hidden by default, expand on click ── */}
-      <CollapsibleSections />
+      {/* ── Section 4: How It Works (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16" id="how">
+        <HowItWorks />
+      </div>
+
+      {/* ── Section 5: Programs (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16">
+        <Programs />
+      </div>
+
+      {/* ── Section 6: Benefits (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16" id="benefits">
+        <Benefits />
+      </div>
+
+      {/* ── Section 7: Testimonials (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16">
+        <Testimonials />
+      </div>
+
+      {/* ── Section 8: About (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16" id="about">
+        <About />
+      </div>
+
+      {/* ── Section 9: FAQ (full screen) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16" id="faq">
+        <FAQ />
+      </div>
 
       {/* ── Footer ── */}
       <Footer />
 
       {/* Floating Sign In button (mobile) */}
-      <a
-        href="#login"
-        className="sm:hidden fixed bottom-4 right-4 z-50 size-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white grid place-items-center shadow-lg shadow-cyan-500/30"
-        aria-label="Sign In"
-      >
+      <a href="#login" className="sm:hidden fixed bottom-4 right-4 z-50 size-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white grid place-items-center shadow-lg shadow-cyan-500/30" aria-label="Sign In">
         <LogIn className="size-5" />
       </a>
     </div>
-  );
-}
-
-// ── Collapsible marketing sections — hidden by default, expand on click ──
-function CollapsibleSections() {
-  const [open, setOpen] = useState<string | null>(null);
-  const sections = [
-    { key: "how", label: "How It Works", icon: <BarChart3 className="size-4" />, component: <HowItWorks /> },
-    { key: "programs", label: "Programs", icon: <Rocket className="size-4" />, component: <Programs /> },
-    { key: "benefits", label: "Benefits", icon: <ShieldCheck className="size-4" />, component: <Benefits /> },
-    { key: "testimonials", label: "Testimonials", icon: <Users className="size-4" />, component: <Testimonials /> },
-    { key: "about", label: "About", icon: <UserCircle2 className="size-4" />, component: <About /> },
-    { key: "faq", label: "FAQ", icon: <HelpCircle className="size-4" />, component: <FAQ /> },
-  ];
-  return (
-    <section className="py-8 px-5 md:px-[5%] max-w-5xl mx-auto">
-      <div className="text-center mb-6">
-        <p className="text-xs text-muted-foreground">Want to learn more? Click to expand:</p>
-      </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-        {sections.map((s) => (
-          <button
-            key={s.key}
-            onClick={() => setOpen(open === s.key ? null : s.key)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-semibold transition-all",
-              open === s.key
-                ? "bg-cyan-500/15 border-cyan-500/30 text-cyan-500 dark:text-cyan-400"
-                : "bg-card border-border text-foreground hover:border-cyan-400/30"
-            )}
-          >
-            {s.icon} {s.label}
-          </button>
-        ))}
-      </div>
-      {open && (
-        <div className="rounded-xl border border-border overflow-hidden">
-          {sections.find((s) => s.key === open)?.component}
-        </div>
-      )}
-    </section>
   );
 }
 
