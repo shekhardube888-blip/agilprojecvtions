@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AuthMenu } from "@/components/agile/auth-menu";
+import { ThemeToggle } from "@/components/agile/theme-toggle";
 
 type NavLink = {
   label: string;
@@ -139,6 +140,7 @@ export function Nav() {
         </ul>
 
         <div className="hidden lg:flex items-center gap-3 shrink-0">
+          <ThemeToggle />
           <AuthMenu />
           <a
             href="#login"
@@ -214,6 +216,10 @@ export function Nav() {
                   ))}
                 </ul>
                 <div className="mt-4 flex flex-col gap-2 px-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Theme</span>
+                    <ThemeToggle />
+                  </div>
                   <AuthMenu />
                   <a
                     href="#login"
