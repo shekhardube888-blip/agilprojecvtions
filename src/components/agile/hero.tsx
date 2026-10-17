@@ -90,7 +90,7 @@ export function Hero() {
             id="hero-h1"
             className="font-bold text-4xl sm:text-5xl md:text-6xl leading-[1.05] tracking-tight"
           >
-            Launch Your Engineering Career with{" "}
+            Launch Your Professional Career with{" "}
             <span className="ap-gradient-text">Industry-Grade Internships</span>
           </h1>
 
