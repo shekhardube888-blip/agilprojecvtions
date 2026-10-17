@@ -183,64 +183,54 @@ export function CategorySelector() {
             </div>
           </div>
 
-          {/* Hierarchical list: Category → Projects (accordion) */}
+          {/* Hierarchical list: Category → Projects (all expanded, numbered) */}
           <div className="space-y-3">
             {subjectCategories.map((catData) => {
               const cat = catData as { key: string; label: string; sub: string; icon: string; projects: { id: number; name: string; tags: string }[] };
-              const isExpanded = expandedCats.has(cat.key) || !!search; // auto-expand when searching
               const projectCount = cat.projects.length;
+              if (projectCount === 0) return null;
               return (
                 <div key={cat.key} className="bg-card border border-border rounded-xl overflow-hidden">
-                  {/* Category header (click to expand) */}
-                  <button
-                    onClick={() => toggleCat(cat.key)}
-                    className="w-full flex items-center justify-between gap-3 p-4 hover:bg-secondary/30 transition-colors text-left"
-                  >
+                  {/* Category header (always visible) */}
+                  <div className="flex items-center justify-between gap-3 p-4 bg-muted/30 border-b border-border">
                     <div className="flex items-center gap-3">
                       <span className="text-xl">{cat.icon}</span>
                       <div>
-                        <div className="font-semibold text-sm text-foreground">{cat.label}</div>
+                        <div className="font-bold text-sm text-foreground">{cat.label}</div>
                         <div className="text-[10px] text-muted-foreground">{cat.sub}</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 font-semibold">
-                        {projectCount} {projectCount === 1 ? "project" : "projects"}
-                      </span>
-                      <ChevronRight className={cn("size-4 text-muted-foreground transition-transform", isExpanded && "rotate-90")} />
-                    </div>
-                  </button>
+                    <span className="text-[10px] px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 font-semibold shrink-0">
+                      {projectCount} {projectCount === 1 ? "project" : "projects"}
+                    </span>
+                  </div>
 
-                  {/* Project list (expanded) */}
-                  {isExpanded && projectCount > 0 && (
-                    <div className="border-t border-border divide-y divide-border/50">
-                      {cat.projects.map((p) => (
-                        <div key={p.id} className="flex items-start justify-between gap-3 p-3 hover:bg-secondary/20 transition-colors">
+                  {/* Project list (always expanded, numbered) */}
+                  <div className="divide-y divide-border/50">
+                    {cat.projects.map((p, idx) => (
+                      <div key={p.id} className="flex items-start justify-between gap-3 p-3 hover:bg-secondary/20 transition-colors">
+                        <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                          <span className="size-5 rounded-full bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 grid place-items-center text-[10px] font-bold shrink-0 mt-0.5">
+                            {idx + 1}
+                          </span>
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium text-xs text-foreground">{p.name}</div>
+                            <div className="font-medium text-xs text-foreground leading-tight">{p.name}</div>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {p.tags.split(" · ").map((tag, i) => (
                                 <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{tag}</span>
                               ))}
                             </div>
                           </div>
-                          <button
-                            onClick={proceedToRegistration}
-                            className="text-[10px] px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold whitespace-nowrap flex items-center gap-1 shrink-0"
-                          >
-                            {isLoggedIn ? <><CheckCircle2 className="size-3" /> Register</> : <>Select <ChevronRight className="size-3" /></>}
-                          </button>
                         </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Empty state for search */}
-                  {isExpanded && projectCount === 0 && (
-                    <div className="border-t border-border p-3 text-center text-[10px] text-muted-foreground">
-                      No projects match your search in this category.
-                    </div>
-                  )}
+                        <button
+                          onClick={proceedToRegistration}
+                          className="text-[10px] px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold whitespace-nowrap flex items-center gap-1 shrink-0"
+                        >
+                          {isLoggedIn ? <><CheckCircle2 className="size-3" /> Register</> : <>Select <ChevronRight className="size-3" /></>}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               );
             })}
