@@ -151,6 +151,8 @@ export default function Home() {
             <img src="/agileprojection-logo.png" alt="AgileProjection" className="h-7 w-auto rounded-md" />
             <span className="text-muted-foreground/40 hidden sm:inline">|</span>
             <img src="/ntai-logo.png" alt="NT-AI Network" className="h-7 w-auto rounded-md" />
+            <span className="text-muted-foreground/40 hidden sm:inline">|</span>
+            <img src="/skillgorilla-logo.png" alt="SkillGorilla" className="h-7 w-auto rounded-md" />
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-2">
@@ -303,22 +305,22 @@ export default function Home() {
         <Programs />
       </div>
 
-      {/* ── Section 6: Benefits (full screen) ── */}
+      {/* ── Section 6: Why AgileProjection (Benefits) ── */}
       <div className="min-h-screen flex items-center scroll-mt-16" id="benefits">
         <Benefits />
       </div>
 
-      {/* ── Section 7: Testimonials (full screen) ── */}
-      <div className="min-h-screen flex items-center scroll-mt-16">
+      {/* ── Section 7: Student Stories (Testimonials) ── */}
+      <div className="min-h-screen flex items-center scroll-mt-16" id="testimonials">
         <Testimonials />
       </div>
 
-      {/* ── Section 8: About (full screen) ── */}
+      {/* ── Section 8: About AgileProjection ── */}
       <div className="min-h-screen flex items-center scroll-mt-16" id="about">
         <About />
       </div>
 
-      {/* ── Section 9: FAQ (full screen) ── */}
+      {/* ── Section 9: Frequently Asked (FAQ) ── */}
       <div className="min-h-screen flex items-center scroll-mt-16" id="faq">
         <FAQ />
       </div>

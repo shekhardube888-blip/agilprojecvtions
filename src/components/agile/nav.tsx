@@ -23,7 +23,7 @@ type NavLink = {
 
 const NAV_LINKS: NavLink[] = [
   {
-    label: "Internship Subjects",
+    label: "Internship",
     href: "#categories",
     children: [
       { label: "AI / Machine Learning", href: "#categories?subject=ai-ml", desc: "Generative AI · LLMs · Computer Vision · NLP" },
@@ -37,7 +37,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   {
-    label: "Projects",
+    label: "Categories",
     href: "#categories",
     children: [
       { label: "Generative AI & LLM", href: "#categories", desc: "10 projects · RAG, Chatbots, LLMs" },
@@ -49,10 +49,12 @@ const NAV_LINKS: NavLink[] = [
       { label: "Cybersecurity + AI", href: "#categories", desc: "7 projects · Malware, Intrusion" },
     ],
   },
+  { label: "Portal Login", href: "#login" },
   { label: "How It Works", href: "#how" },
-  { label: "Benefits", href: "#benefits" },
-  { label: "About", href: "#about" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Why AgileProjection", href: "#benefits" },
+  { label: "Student Stories", href: "#testimonials" },
+  { label: "About AgileProjection", href: "#about" },
+  { label: "Frequently Asked", href: "#faq" },
 ];
 
 function BrandLogo() {
@@ -61,6 +63,8 @@ function BrandLogo() {
       <img src="/agileprojection-logo.png" alt="AgileProjection logo" className="h-7 w-auto rounded-md" />
       <span className="text-muted-foreground/40 hidden sm:inline">|</span>
       <img src="/ntai-logo.png" alt="NT-AI Network logo" className="h-7 w-auto rounded-md" />
+      <span className="text-muted-foreground/40 hidden sm:inline">|</span>
+      <img src="/skillgorilla-logo.png" alt="SkillGorilla logo" className="h-7 w-auto rounded-md" />
     </Link>
   );
 }
