@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Bot, Cpu, Code2, Brain, Briefcase, Building2, HardHat, MoreHorizontal, ChevronRight, X, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Bot, Cpu, Code2, Brain, Briefcase, Building2, HardHat, MoreHorizontal, ChevronRight, X, Search, FolderTree, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CATEGORIES } from "@/lib/data";
 
@@ -16,49 +16,74 @@ const SUBJECT_TO_CATEGORY: Record<string, string[]> = {
   "other": [],
 };
 
-const CATEGORIES_MAP: Record<string, { label: string; sub: string; projects: { id: number; name: string; tags: string }[] }> = 
+const CATEGORIES_MAP: Record<string, { label: string; sub: string; icon: string; projects: { id: number; name: string; tags: string }[] }> =
   Object.fromEntries(CATEGORIES.map((c) => [c.key, c]));
 
 export function CategorySelector() {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
+
+  // Check if student is already logged in
+  useEffect(() => {
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setIsLoggedIn(d.ok && !!d.user))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
 
   function selectCategory(key: string) {
     setSelectedSubject(key);
-    // Store for login redirect
+    setExpandedCats(new Set()); // reset expanded
     try {
       localStorage.setItem("selected-subject", key);
       localStorage.setItem("redirect-after-login", "register");
     } catch { /* ignore */ }
-    // Scroll to the project list
     setTimeout(() => {
       document.getElementById("project-list")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   }
 
-  function scrollToLogin() {
+  // If logged in → go to dashboard register tab; if not → scroll to login
+  function proceedToRegistration() {
     try {
       localStorage.setItem("redirect-after-login", "register");
     } catch { /* ignore */ }
-    document.querySelector("#login")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (isLoggedIn) {
+      // Already logged in → dispatch event to open dashboard + register tab
+      window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "register" }));
+    } else {
+      // Not logged in → scroll to login
+      document.querySelector("#login")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
-  // Get all projects for the selected subject
-  const subjectProjects = selectedSubject
-    ? SUBJECT_TO_CATEGORY[selectedSubject]?.flatMap((catKey: string) => {
+  // Get projects grouped by category (hierarchical)
+  const subjectCategories = selectedSubject
+    ? SUBJECT_TO_CATEGORY[selectedSubject]?.map((catKey: string) => {
         const cat = CATEGORIES_MAP[catKey];
-        return cat ? cat.projects.map((p) => ({ ...p, categoryLabel: cat.label, categoryKey: catKey })) : [];
-      }) || []
+        if (!cat) return null;
+        const projects = search
+          ? cat.projects.filter((p) =>
+              p.name.toLowerCase().includes(search.toLowerCase()) ||
+              p.tags.toLowerCase().includes(search.toLowerCase())
+            )
+          : cat.projects;
+        return { key: catKey, label: cat.label, sub: cat.sub, icon: cat.icon, projects };
+      }).filter(Boolean) || []
     : [];
 
-  // Filter by search
-  const filteredProjects = search
-    ? subjectProjects.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.tags.toLowerCase().includes(search.toLowerCase()) ||
-        p.categoryLabel.toLowerCase().includes(search.toLowerCase())
-      )
-    : subjectProjects;
+  const totalProjects = subjectCategories.reduce((sum, c) => sum + (c?.projects.length || 0), 0);
+
+  function toggleCat(key: string) {
+    setExpandedCats((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
 
   const CATEGORIES_CARDS = [
     { key: "ai-ml", label: "AI / Machine Learning", desc: "Generative AI, LLMs, Computer Vision, NLP, Deep Learning", icon: Bot, accent: "cyan" },
@@ -95,7 +120,7 @@ export function CategorySelector() {
           Choose Your <span className="ap-gradient-text">Domain</span>
         </h2>
         <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-2xl mx-auto">
-          Select your field of interest to see available projects. {CATEGORIES_CARDS.length} domains, 84+ projects.
+          Select your field of interest to see available projects organized by category. {CATEGORIES_CARDS.length} domains, 84+ projects.
         </p>
       </div>
 
@@ -127,19 +152,20 @@ export function CategorySelector() {
         })}
       </div>
 
-      {/* Project list for selected subject */}
+      {/* Hierarchical project list for selected subject */}
       {selectedSubject && selectedCat && (
         <div id="project-list" className="mt-8 scroll-mt-20">
           <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-            <div>
-              <h3 className="font-bold text-lg text-foreground">
-                Projects in {selectedCat.label}
-              </h3>
-              <p className="text-xs text-muted-foreground">{filteredProjects.length} projects available</p>
+            <div className="flex items-center gap-2">
+              <FolderTree className="size-5 text-cyan-500 dark:text-cyan-400" />
+              <div>
+                <h3 className="font-bold text-lg text-foreground">{selectedCat.label} — Project Catalog</h3>
+                <p className="text-xs text-muted-foreground">{subjectCategories.length} categories · {totalProjects} projects total</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               {search && (
-                <button onClick={() => setSearch("")} className="text-[10px] text-rose-500 font-semibold">Clear</button>
+                <button onClick={() => setSearch("")} className="text-[10px] text-rose-500 font-semibold">Clear search</button>
               )}
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -151,52 +177,93 @@ export function CategorySelector() {
                   className="pl-8 pr-3 h-8 rounded-lg border border-border bg-muted text-xs text-foreground w-48"
                 />
               </div>
-              <button onClick={() => setSelectedSubject(null)} className="text-[10px] px-2 py-1 rounded bg-muted border border-border text-muted-foreground hover:text-foreground flex items-center gap-1">
+              <button onClick={() => { setSelectedSubject(null); setSearch(""); }} className="text-[10px] px-2 py-1 rounded bg-muted border border-border text-muted-foreground hover:text-foreground flex items-center gap-1">
                 <X className="size-3" /> Close
               </button>
             </div>
           </div>
 
-          {filteredProjects.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No projects match your search.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {filteredProjects.map((p) => {
-                const a = ACCENTS[Object.keys(ACCENTS).find((k) => CATEGORIES_MAP[p.categoryKey]?.label?.includes(k)) || "cyan"] || ACCENTS.cyan;
-                return (
-                  <div key={`${p.categoryKey}-${p.id}`} className="group bg-card border border-border rounded-xl p-4 hover:border-cyan-400/40 hover:shadow-md transition-all">
-                    <div className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full border inline-block mb-2", a.bg, a.text, a.border)}>
-                      {p.categoryLabel}
+          {/* Hierarchical list: Category → Projects (accordion) */}
+          <div className="space-y-3">
+            {subjectCategories.map((catData) => {
+              const cat = catData as { key: string; label: string; sub: string; icon: string; projects: { id: number; name: string; tags: string }[] };
+              const isExpanded = expandedCats.has(cat.key) || !!search; // auto-expand when searching
+              const projectCount = cat.projects.length;
+              return (
+                <div key={cat.key} className="bg-card border border-border rounded-xl overflow-hidden">
+                  {/* Category header (click to expand) */}
+                  <button
+                    onClick={() => toggleCat(cat.key)}
+                    className="w-full flex items-center justify-between gap-3 p-4 hover:bg-secondary/30 transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{cat.icon}</span>
+                      <div>
+                        <div className="font-semibold text-sm text-foreground">{cat.label}</div>
+                        <div className="text-[10px] text-muted-foreground">{cat.sub}</div>
+                      </div>
                     </div>
-                    <h4 className="font-semibold text-sm text-foreground leading-tight mb-2 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">
-                      {p.name}
-                    </h4>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {p.tags.split(" · ").map((tag, i) => (
-                        <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{tag}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 font-semibold">
+                        {projectCount} {projectCount === 1 ? "project" : "projects"}
+                      </span>
+                      <ChevronRight className={cn("size-4 text-muted-foreground transition-transform", isExpanded && "rotate-90")} />
+                    </div>
+                  </button>
+
+                  {/* Project list (expanded) */}
+                  {isExpanded && projectCount > 0 && (
+                    <div className="border-t border-border divide-y divide-border/50">
+                      {cat.projects.map((p) => (
+                        <div key={p.id} className="flex items-start justify-between gap-3 p-3 hover:bg-secondary/20 transition-colors">
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-xs text-foreground">{p.name}</div>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {p.tags.split(" · ").map((tag, i) => (
+                                <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{tag}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <button
+                            onClick={proceedToRegistration}
+                            className="text-[10px] px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold whitespace-nowrap flex items-center gap-1 shrink-0"
+                          >
+                            {isLoggedIn ? <><CheckCircle2 className="size-3" /> Register</> : <>Select <ChevronRight className="size-3" /></>}
+                          </button>
+                        </div>
                       ))}
                     </div>
-                    <button
-                      onClick={scrollToLogin}
-                      className="text-[10px] font-semibold text-cyan-500 dark:text-cyan-400 flex items-center gap-1 hover:gap-1.5 transition-all"
-                    >
-                      Register for this project <ChevronRight className="size-3" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  )}
+
+                  {/* Empty state for search */}
+                  {isExpanded && projectCount === 0 && (
+                    <div className="border-t border-border p-3 text-center text-[10px] text-muted-foreground">
+                      No projects match your search in this category.
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
 
           {/* CTA */}
           <div className="text-center mt-6">
             <button
-              onClick={scrollToLogin}
-              className="text-sm px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:opacity-90"
+              onClick={proceedToRegistration}
+              className="text-sm px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold hover:opacity-90 inline-flex items-center gap-2"
             >
-              Sign In to Register →
+              {isLoggedIn ? (
+                <><CheckCircle2 className="size-4" /> Go to Registration →</>
+              ) : (
+                <>Sign In to Register →</>
+              )}
             </button>
-            <p className="text-[10px] text-muted-foreground mt-2">Plans from ₹1,499 · UPI / Card / Net Banking · AICTE-Aligned Certificate</p>
+            <p className="text-[10px] text-muted-foreground mt-2">
+              {isLoggedIn
+                ? "You're logged in — click to go straight to the registration form"
+                : "Plans from ₹1,499 · UPI / Card / Net Banking · AICTE-Aligned Certificate"
+              }
+            </p>
           </div>
         </div>
       )}
