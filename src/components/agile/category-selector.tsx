@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Bot, Cpu, Code2, Briefcase, Building2, HardHat, MoreHorizontal, ChevronRight, X, Search, CheckCircle2, GitBranch, FileText, Award, BarChart3, Folder, FolderOpen, Layers } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Bot, Cpu, Code2, Briefcase, Building2, HardHat, MoreHorizontal, ChevronRight, X, Search, CheckCircle2, GitBranch, FileText, Award, BarChart3, Folder, FolderOpen, Layers, Eye, CreditCard, Loader2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CATEGORIES } from "@/lib/data";
+import { PaymentPage } from "@/components/agile/payment-page";
+import { useToast } from "@/hooks/use-toast";
 
 // ── AI & Machine Learning hierarchy ──
 // Category → Subcategory → Project (with details + student progress)
@@ -167,6 +169,40 @@ export function CategorySelector() {
     }
   }
 
+  // ── Project Preview + Payment Gateway ──
+  const [previewProject, setPreviewProject] = useState<Project | null>(null);
+  const [payProject, setPayProject] = useState<Project | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string>("Standard");
+  const [showPlanPicker, setShowPlanPicker] = useState<Project | null>(null);
+  const { toast } = useToast();
+
+  function openPreview(p: Project) {
+    setPreviewProject(p);
+  }
+
+  function openPlanPicker(p: Project) {
+    if (!isLoggedIn) {
+      proceedToRegistration();
+      return;
+    }
+    setShowPlanPicker(p);
+  }
+
+  function startPayment(plan: string) {
+    setSelectedPlan(plan);
+    setPayProject(showPlanPicker);
+    setShowPlanPicker(null);
+  }
+
+  function onPaid(method: string, txnId: string) {
+    toast({ title: "Payment Successful!", description: `Plan: ${selectedPlan} · ${method} · ${txnId}` });
+    setPayProject(null);
+    // Proceed to registration after payment
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("switch-dashboard-tab", { detail: "register" }));
+    }, 500);
+  }
+
   function toggleCat(key: string) {
     setExpandedCats((prev) => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
   }
@@ -300,10 +336,15 @@ export function CategorySelector() {
                                           {p.certificate && <span className="flex items-center gap-0.5 text-amber-500 dark:text-amber-400"><Award className="size-2.5" /> Certificate</span>}
                                         </div>
                                       </div>
-                                      {/* Register button */}
-                                      <button onClick={proceedToRegistration} className="text-[10px] px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 hover:bg-cyan-500/20 font-semibold whitespace-nowrap flex items-center gap-1 shrink-0">
-                                        {isLoggedIn ? <><CheckCircle2 className="size-3" /> Register</> : <>Select <ChevronRight className="size-3" /></>}
-                                      </button>
+                                      {/* Preview + Pay & Enroll buttons */}
+                                      <div className="flex flex-col gap-1.5 shrink-0">
+                                        <button onClick={() => openPreview(p)} className="text-[10px] px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-500/20 font-semibold flex items-center gap-1">
+                                          <Eye className="size-3" /> Preview
+                                        </button>
+                                        <button onClick={() => openPlanPicker(p)} className="text-[10px] px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white hover:opacity-90 font-semibold flex items-center gap-1">
+                                          <CreditCard className="size-3" /> Pay & Enroll
+                                        </button>
+                                      </div>
                                     </div>
                                   );
                                 })}
@@ -335,6 +376,110 @@ export function CategorySelector() {
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">Full project hierarchy for {CATEGORIES_CARDS.find((c) => c.key === selectedSubject)?.label} is being prepared. Meanwhile, select "AI / Machine Learning" to see the complete hierarchy in action.</p>
             <button onClick={() => setSelectedSubject("ai-ml")} className="mt-4 text-sm px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-500 dark:text-cyan-400 font-semibold hover:bg-cyan-500/20">View AI/ML Hierarchy →</button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Project Preview Modal ── */}
+      {previewProject && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setPreviewProject(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-bold text-foreground flex items-center gap-2"><Eye className="size-5 text-violet-500" /> Project Preview</h4>
+              <button onClick={() => setPreviewProject(null)} className="text-muted-foreground hover:text-foreground"><X className="size-5" /></button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Project Title</div>
+                <div className="font-semibold text-sm text-foreground">{previewProject.title}</div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <span className={cn("text-[10px] px-2.5 py-1 rounded-full border font-semibold", DIFFICULTY_STYLES[previewProject.difficulty])}>{previewProject.difficulty}</span>
+                <span className={cn("text-[10px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1", PROGRESS_STYLES[previewProject.progress].bg, PROGRESS_STYLES[previewProject.progress].text)}>
+                  {React.createElement(PROGRESS_STYLES[previewProject.progress].icon, { className: "size-3" })} {previewProject.progress}
+                </span>
+              </div>
+              <div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Technology Stack</div>
+                <div className="flex flex-wrap gap-1">
+                  {previewProject.techStack.map((tech, i) => (<span key={i} className="text-[10px] px-2 py-1 rounded bg-muted text-foreground border border-border/30">{tech}</span>))}
+                </div>
+              </div>
+              {previewProject.github && (
+                <div className="flex items-center gap-2 text-xs">
+                  <GitBranch className="size-4 text-cyan-500" />
+                  <a href={`https://${previewProject.github}`} target="_blank" rel="noopener noreferrer" className="text-cyan-500 dark:text-cyan-400 hover:underline">{previewProject.github}</a>
+                </div>
+              )}
+              <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
+                {previewProject.docs && <span className="flex items-center gap-1"><FileText className="size-3.5" /> Documentation: {previewProject.docs}</span>}
+                {previewProject.certificate && <span className="flex items-center gap-1 text-amber-500 dark:text-amber-400"><Award className="size-3.5" /> Certificate Included</span>}
+              </div>
+              <div className="p-3 rounded-lg bg-muted/30 border border-border/50 text-[11px] text-muted-foreground">
+                <strong className="text-foreground">What you'll learn:</strong> Build this project end-to-end with 6-week structured training. Each week covers a stage: Data Ingestion → EDA → Feature Engineering → Model Training → Evaluation → Deployment. Mentor-reviewed assignments, MCQ quizzes, and a verifiable certificate on completion.
+              </div>
+            </div>
+            <div className="flex gap-2 mt-5">
+              <button onClick={() => setPreviewProject(null)} className="flex-1 text-xs px-3 py-2 rounded-lg border border-border text-muted-foreground hover:text-foreground">Close</button>
+              <button onClick={() => { setPreviewProject(null); openPlanPicker(previewProject); }} className="flex-1 text-xs px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold flex items-center justify-center gap-1.5">
+                <CreditCard className="size-3.5" /> Pay & Enroll
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Plan Picker Modal ── */}
+      {showPlanPicker && (
+        <div className="fixed inset-0 z-[80] grid place-items-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowPlanPicker(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-bold text-foreground flex items-center gap-2"><CreditCard className="size-5 text-emerald-500" /> Choose Your Plan</h4>
+              <button onClick={() => setShowPlanPicker(null)} className="text-muted-foreground hover:text-foreground"><X className="size-5" /></button>
+            </div>
+            <div className="text-[11px] text-muted-foreground mb-3">Project: <strong className="text-foreground">{showPlanPicker.title}</strong></div>
+            <div className="space-y-2">
+              {[
+                { name: "Basic", price: 1499, desc: "Stage guidance + certificate", features: ["6-week training modules", "Project tracker", "Verifiable certificate", "Email support"] },
+                { name: "Standard", price: 2499, desc: "1:1 mentor + LLM training", features: ["Everything in Basic", "1:1 mentor support", "AI-generated training", "Assignment reviews", "Priority email support"] },
+                { name: "Professional", price: 3999, desc: "Live sessions + project review", features: ["Everything in Standard", "Live weekend sessions", "Project code review", "Demo project requests", "WhatsApp support"] },
+                { name: "Premium", price: 4999, desc: "Job-oriented + placement prep", features: ["Everything in Professional", "Resume builder", "Mock interviews", "Placement assistance", "Dedicated mentor"] },
+              ].map((plan) => (
+                <button key={plan.name} onClick={() => startPayment(plan.name)} className="w-full text-left p-3 rounded-lg border border-border hover:border-cyan-400/40 hover:bg-cyan-500/5 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-sm text-foreground">{plan.name} — ₹{plan.price}</div>
+                      <div className="text-[10px] text-muted-foreground">{plan.desc}</div>
+                    </div>
+                    <ChevronRight className="size-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-1.5">
+                    {plan.features.map((f, i) => (<span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{f}</span>))}
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 mt-4 text-[10px] text-muted-foreground">
+              <ShieldCheck className="size-3 text-emerald-500" /> Secure payment · UPI / Card / Net Banking · AICTE-aligned certificate
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Payment Gateway Modal ── */}
+      {payProject && (
+        <div className="fixed inset-0 z-[90] grid place-items-center bg-black/60 backdrop-blur-sm p-4" onClick={() => setPayProject(null)}>
+          <div className="bg-popover border border-border rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-bold text-foreground flex items-center gap-2"><CreditCard className="size-5 text-emerald-500" /> Payment Gateway</h4>
+              <button onClick={() => setPayProject(null)} className="text-muted-foreground hover:text-foreground"><X className="size-5" /></button>
+            </div>
+            <div className="text-[11px] text-muted-foreground mb-3">Project: <strong className="text-foreground">{payProject.title}</strong> · Plan: <strong className="text-cyan-500 dark:text-cyan-400">{selectedPlan}</strong></div>
+            <PaymentPage
+              planName={selectedPlan}
+              studentName="Student"
+              onPaid={onPaid}
+            />
           </div>
         </div>
       )}
