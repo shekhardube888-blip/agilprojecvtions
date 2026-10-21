@@ -61,10 +61,7 @@ function BrandLogo() {
   return (
     <Link href="#top" className="flex items-center gap-2 font-bold text-lg shrink-0">
       <img src="/agileprojection-logo.png" alt="AgileProjection logo" className="h-7 w-auto rounded-md" />
-      <span className="text-muted-foreground/40 hidden sm:inline">|</span>
-      <img src="/ntai-logo.png" alt="NT-AI Network logo" className="h-7 w-auto rounded-md" />
-      <span className="text-muted-foreground/40 hidden sm:inline">|</span>
-      <img src="/skillgorilla-logo.png" alt="SkillGorilla logo" className="h-7 w-auto rounded-md" />
+
     </Link>
   );
 }
