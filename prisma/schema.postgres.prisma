@@ -57,8 +57,6 @@ model Student {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  certificates Certificate[]
-
   @@index([email])
   @@index([category])
   @@index([email, mobile])
@@ -94,22 +92,6 @@ model ChatMessage {
   @@index([sessionId])
 }
 
-// Cached LLM-generated training modules — stored per student per stage.
-model TrainingModule {
-  id             String   @id @default(cuid())
-  studentEmail   String
-  stage          Int
-  project        String
-  categoryLabel  String
-  content        String
-  aiAvailable    Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@unique([studentEmail, stage])
-  @@index([studentEmail])
-}
-
 // ── Login accounts ──
 // Admin account (never expires, always unlocked) + guest accounts (guest1, guest2, …)
 // whose access expires 2 days after the admin "unlocks" (payment received) them.
@@ -129,106 +111,15 @@ model Account {
   unlockLogs    UnlockLog[]
 }
 
-// Audit trail of every admin action on a user account.
-// Actions: "unlock" | "lock" | "reset-password" | "set-expiry" | "renew"
+// Audit trail of every admin "unlock / payment received" action.
 model UnlockLog {
   id        String   @id @default(cuid())
   accountId String
   account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  adminUser String                  // who performed the action
-  action    String   @default("unlock")  // unlock | lock | reset-password | set-expiry | renew
-  reason    String?                 // e.g. "Student reported login issue"
-  expiresAt DateTime?              // the new expiry set (null for lock/reset-password)
+  adminUser String                  // who unlocked
+  reason    String?                 // e.g. "Payment received"
+  expiresAt DateTime               // the new expiry that was set
   createdAt DateTime @default(now())
 
   @@index([accountId])
-  @@index([createdAt])
-}
-
-// ── Auto-issued certificates (verifiable, with a unique certificate number) ──
-model Certificate {
-  id              String   @id @default(cuid())
-  certificateNumber String @unique  // e.g. AP-2026-A1B2C3
-  studentId       String
-  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  type            String   @default("Internship Completion")
-  eligibility     String   // "attendance>75%, project completed, mentor approved"
-  issuedAt        DateTime @default(now())
-  createdAt       DateTime @default(now())
-
-  @@index([studentId])
-}
-
-// ── Colleges (student-selectable + student-added) ──
-model College {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  state     String?
-  source    String   @default("seed")  // "seed" | "student-added"
-  createdAt DateTime @default(now())
-  @@index([name])
-}
-
-// Lesson progress tracking — which lessons has the student completed?
-model LessonProgress {
-  id           String   @id @default(cuid())
-  studentEmail String
-  stage        Int
-  lessonId     String
-  completedAt  DateTime @default(now())
-
-  @@unique([studentEmail, lessonId])
-  @@index([studentEmail, stage])
-}
-
-// Assignment submissions — student submits work per module; admin reviews.
-model Submission {
-  id            String   @id @default(cuid())
-  studentEmail  String
-  studentName   String?
-  stage         Int
-  project       String?
-  content       String
-  status        String   @default("submitted")
-  mentorFeedback String?
-  reviewedBy    String?
-  submittedAt   DateTime @default(now())
-  reviewedAt    DateTime?
-
-  @@unique([studentEmail, stage])
-  @@index([studentEmail])
-  @@index([status])
-}
-
-// Assessment attempts — student quiz scores per module.
-model AssessmentAttempt {
-  id           String   @id @default(cuid())
-  studentEmail String
-  stage        Int
-  score        Int
-  passed       Boolean
-  answers      String
-  attemptedAt  DateTime @default(now())
-
-  @@index([studentEmail, stage])
-  @@index([studentEmail])
-}
-
-// Demo Project Requests — student asks for a custom demo project.
-model DemoProjectRequest {
-  id            String   @id @default(cuid())
-  studentEmail  String
-  studentName   String?
-  subject       String
-  project       String?
-  requirements  String
-  status        String   @default("pending")
-  mentorReply   String?
-  reviewedBy    String?
-  emailedAt     DateTime?
-  requestedAt   DateTime @default(now())
-  reviewedAt   DateTime?
-
-  @@index([studentEmail])
-  @@index([status])
 }
