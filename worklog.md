@@ -930,3 +930,50 @@ Work Log:
 - Total colorful-emoji count removed: ~25 literal emojis (8 in page.tsx quick-access cards + 👋 in welcome + ⚠ in test-version badge + 4 in admin-dashboard.tsx [🎉, ✓, ✅, ⏳, 🚀] + 4 in register-form.tsx [🎉 ×2, ⚠, 🚀] + ⚠ in student-dashboard.tsx + 🎉 in code-runner starter HTML + ⚠ in code-runner log indicator + 🎉/✅/⏳/💬/✉️/🎉/🤖 in project-tracker.tsx + 🚀 in aiml-program.tsx + 🏠/✉️ ×2 in nt-ai-ml-project + shekhar-dube-ml-project + 🤖 in ai-assistant.tsx + 💬 in sales-chat.tsx + ✓ in auth-menu.tsx + ✓ in payment-page.tsx). Plus ~12 trailing CTA arrows (`→` at end of "X →" button/link labels) replaced with plain text.
 
 Lint status: `cd /home/z/my-project && bun run lint` → exit code 0, no errors, no warnings. All 17 modified files are lint-clean. `bunx tsc --noEmit` reports zero new TypeScript errors in any of the modified files (the remaining TS errors are all pre-existing in unrelated files: `examples/websocket/`, `skills/`, `src/app/api/admin/pages/route.ts`, `src/app/api/auth/[...nextauth]/route.ts`, `src/app/api/pages/route.ts`, `src/app/api/register/route.ts`, `src/app/api/student/lookup-and-login/route.ts`, `src/app/api/student/me/route.ts`, plus the pre-existing admin-dashboard.tsx:812 `category` typo and student-dashboard.tsx:42 `disabled` prop on intrinsic element — none of these lines were touched by this task).
+
+---
+Task ID: PROJECT-LIBRARY
+Agent: main (claude code)
+Task: Implement Project Library feature (5 ready-made projects, browse + download with 1-project-per-student rule) + add "Preview Code" button to weekly training modules.
+
+Work Log:
+- Added 3 Prisma models to BOTH schema.prisma (SQLite) AND schema.postgres.prisma (Postgres): ProjectLibraryItem, ProjectDownload, ProjectSubmission.
+- Ran db:generate + db:push on the SQLite dev DB to materialise the new tables.
+- Added PROJECT_STAGE_CODE const (6 weekly code samples, ~15-25 lines each) to src/lib/data.ts for the "Preview Code" button.
+- Created 5 API routes:
+  * /api/admin/project-library (GET list + POST create)
+  * /api/admin/project-library/[id] (GET + PATCH + DELETE)
+  * /api/admin/project-library/submission (GET list + POST review)
+  * /api/student/project-library (GET list — shows student's chosen project + submissions)
+  * /api/student/project-library/[id] (GET detail)
+  * /api/student/project-library/[id]/download?file=<fileName> (GET — streams file, enforces 1-project-per-student)
+  * /api/student/project-library/submission (GET my submissions + POST submit work)
+- Created src/components/agile/project-library.tsx (student): card grid + detail dialog + starter file preview + download + submit work form.
+- Created src/components/agile/admin-project-library.tsx (admin): CRUD + featured/archive toggles + submission review workflow.
+- Wired new "library" tab into StudentDashboard TABS array + TabBody switch.
+- Wired new "library" menu item into AdminDashboard MENU array + tab switch.
+- Added "Preview Code" button next to "Start Week X Training (LLM)" in project-tracker.tsx + modal showing sample code with Copy button.
+- Created seed-project-library-neon.sql (Neon SQL editor, dollar-quoted JSON) AND scripts/seed-project-library.mjs (Node script — works on both SQLite + Postgres).
+- Ran the Node seed script → 5 projects inserted into the SQLite dev DB.
+- Verified with curl + Agent Browser:
+  * Home page loads (HTTP 200)
+  * Unauth GET /api/student/project-library → 401 ✓
+  * Unauth GET /api/admin/project-library → 403 ✓
+  * Authed GET /api/admin/project-library → 200 with all 5 projects ✓
+  * Authed GET /api/student/project-library → 200 + student's chosen project + submissions ✓
+  * Download flow: first download OK → second project BLOCKED (403 with helpful message) → re-download of chosen project OK (200) ✓
+  * Admin dashboard shows "Project Library" tab with 5 cards + Star/Archive/Edit/Delete buttons ✓
+  * Student dashboard shows "Project Library" tab with 5 cards + Available/Downloaded/Submitted badges ✓
+  * "Project chosen" banner appears after first download ✓
+  * Preview Code modal renders Week 1 Python code (683 chars) ✓
+  * Lint clean (only pre-existing warnings in unrelated file)
+
+Stage Summary:
+- All 5 user-requested projects seeded: AI Procurement Assistant, AI Resume Screening, Enterprise AI Chatbot, Smart Business Dashboard, Internship PM Portal.
+- Each project ships inline starter files (README + source code + DB schema + API routes) as JSON — no ZIP upload needed.
+- "One ready-made project per student" rule enforced via ProjectDownload.studentEmail @unique constraint.
+- Mentor review workflow: submitted → under_review → approved/rejected with markdown feedback.
+- Preview Code button on every weekly training card shows language-appropriate sample code (Python for all 6 stages of the AIML curriculum).
+- Verified by Agent Browser end-to-end: login → admin tab → student tab → download enforcement → preview code modal.
+- Files created: 7 API routes, 2 components, 1 const in data.ts, 1 SQL seed, 1 Node seed script.
+- Files modified: 2 prisma schemas, 2 dashboard components (student + admin), 1 project-tracker.tsx.

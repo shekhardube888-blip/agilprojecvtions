@@ -18,12 +18,14 @@ import {
   MessageCircle,
   Mail,
   Bot,
+  Code2,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { PROJECT_STAGES } from "@/lib/data";
+import { PROJECT_STAGES, PROJECT_STAGE_CODE } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import { cn, safeJson } from "@/lib/utils";
 
@@ -256,6 +258,8 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
   const current = student.currentStage; // 0 = not started, 1-6 = in-progress stage, 7 = done
   const { toast } = useToast();
   const [training, setTraining] = useState<Record<number, { content: string; loading: boolean }>>({});
+  const [previewStage, setPreviewStage] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function startTraining(stage: number) {
     setTraining((t) => ({ ...t, [stage]: { content: t[stage]?.content || "", loading: true } }));
@@ -446,10 +450,21 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
                         </div>
                       </div>
                     ) : (
-                      <Button size="sm" onClick={() => startTraining(stageNum)} disabled={training[stageNum]?.loading} className="h-8 text-xs bg-gradient-to-r from-violet-600 to-cyan-500 text-white hover:opacity-90">
-                        {training[stageNum]?.loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <GraduationCap className="size-3.5 mr-1.5" />}
-                        {training[stageNum]?.loading ? "Generating training\u2026" : `Start ${s.week} Training (LLM)`}
-                      </Button>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Button size="sm" onClick={() => startTraining(stageNum)} disabled={training[stageNum]?.loading} className="h-8 text-xs bg-gradient-to-r from-violet-600 to-cyan-500 text-white hover:opacity-90">
+                          {training[stageNum]?.loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <GraduationCap className="size-3.5 mr-1.5" />}
+                          {training[stageNum]?.loading ? "Generating training\u2026" : `Start ${s.week} Training (LLM)`}
+                        </Button>
+                        {/* Preview Code — shows a sample starter snippet for this stage */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => { setPreviewStage(stageNum); setCopied(false); }}
+                          className="h-8 text-xs border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10"
+                        >
+                          <Code2 className="size-3.5 mr-1.5" /> Preview Code
+                        </Button>
+                      </div>
                     )}
                   </div>
                 )}
@@ -458,6 +473,80 @@ function StudentRoadmap({ student, onRefresh, refreshing }: { student: StudentTr
           );
         })}
       </ol>
+
+      {/* ── Preview Code modal ── */}
+      {previewStage !== null && (() => {
+        const sample = PROJECT_STAGE_CODE.find((c) => c.stage === previewStage);
+        if (!sample) return null;
+        return (
+          <div
+            className="fixed inset-0 z-[80] grid place-items-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setPreviewStage(null)}
+          >
+            <div
+              className="bg-popover border border-cyan-500/40 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[85vh] overflow-hidden flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal header */}
+              <div className="p-4 border-b border-border flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Code2 className="size-4 text-cyan-400 shrink-0" />
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-sm truncate">
+                      {sample.week} · {sample.title}
+                    </h3>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      Language: <code className="text-cyan-300">{sample.language}</code>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(sample.code);
+                        setCopied(true);
+                        toast({ title: "✓ Copied", description: "Code copied to clipboard" });
+                        setTimeout(() => setCopied(false), 2000);
+                      } catch {
+                        toast({ title: "Copy failed", variant: "destructive" });
+                      }
+                    }}
+                    className="h-7 text-[11px] px-2 text-cyan-300 hover:bg-cyan-500/10"
+                  >
+                    {copied ? <CheckCircle2 className="size-3 mr-1" /> : <Copy className="size-3 mr-1" />}
+                    {copied ? "Copied" : "Copy"}
+                  </Button>
+                  <button
+                    onClick={() => setPreviewStage(null)}
+                    className="text-muted-foreground hover:text-rose-300 p-1.5"
+                    aria-label="Close preview"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="px-4 pt-3 pb-2">
+                <p className="text-xs text-muted-foreground leading-relaxed">{sample.description}</p>
+              </div>
+
+              {/* Code block */}
+              <div className="px-4 pb-4 overflow-y-auto flex-1">
+                <pre className="text-[11px] leading-relaxed text-slate-200 bg-[#0B1929] border border-cyan-500/20 rounded-lg p-3 overflow-x-auto whitespace-pre font-mono">
+                  {sample.code}
+                </pre>
+                <p className="text-[10px] text-muted-foreground mt-2">
+                  💡 This is sample reference code for {sample.week}. Click <strong className="text-cyan-300">Start {sample.week} Training (LLM)</strong> to generate the full training module tailored to your project.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Help CTA */}
       <div className="text-center mt-6 flex flex-wrap items-center justify-center gap-3">

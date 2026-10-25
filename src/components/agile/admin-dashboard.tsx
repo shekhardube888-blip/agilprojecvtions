@@ -21,6 +21,7 @@ import ReactMarkdown from "react-markdown";
 import { MENTORS, CATEGORIES, DEGREES, BRANCHES, PLANS, STATES, SOURCES, PROGRAMS, AIML_CURRICULUM } from "@/lib/data";
 import { MessageCircle, Mail } from "lucide-react";
 import { CertificateView } from "@/components/agile/certificate-view";
+import { AdminProjectLibrary } from "@/components/agile/admin-project-library";
 
 // ── types ──
 type Student = {
@@ -37,7 +38,7 @@ type Cert = {
 };
 type MenuKey =
   | "dashboard" | "students" | "applications" | "payments" | "internships" | "mentors"
-  | "projects" | "attendance" | "user-mgmt" | "submissions" | "demo-projects" | "certificates" | "reports" | "ai" | "notifications" | "settings";
+  | "projects" | "library" | "attendance" | "user-mgmt" | "submissions" | "demo-projects" | "certificates" | "reports" | "ai" | "notifications" | "settings";
 
 const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string }[] = [
   { key: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" />, group: "Overview" },
@@ -47,6 +48,7 @@ const MENU: { key: MenuKey; label: string; icon: React.ReactNode; group: string 
   { key: "internships", label: "Internships", icon: <Cpu className="size-4" />, group: "Operations" },
   { key: "mentors", label: "Mentors", icon: <GraduationCap className="size-4" />, group: "Operations" },
   { key: "projects", label: "Projects", icon: <FolderKanban className="size-4" />, group: "Operations" },
+  { key: "library", label: "Project Library", icon: <FolderKanban className="size-4" />, group: "Operations" },
   { key: "attendance", label: "Attendance", icon: <CalendarCheck className="size-4" />, group: "Operations" },
   { key: "user-mgmt", label: "User Management", icon: <Users className="size-4" />, group: "Lifecycle" },
   { key: "submissions", label: "Submissions", icon: <FileText className="size-4" />, group: "Lifecycle" },
@@ -162,6 +164,7 @@ function TabContent({ tab }: { tab: MenuKey }) {
     case "mentors": return <MentorsTab />;
     case "attendance": return <AttendanceTab />;
     case "projects": return <ProjectsTab />;
+    case "library": return <AdminProjectLibrary />;
     case "ai": return <AIAnalyticsTab />;
     case "notifications": return <NotificationsTab />;
     case "settings": return <SettingsTab />;

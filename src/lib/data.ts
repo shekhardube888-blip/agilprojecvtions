@@ -787,3 +787,211 @@ export const COLLEGES_SEED: { name: string; state: string }[] = [
   { name: "Symbiosis Centre for Management Studies", state: "Maharashtra" },
   { name: "Mody University", state: "Rajasthan" },
 ];
+
+// ── Preview Code: sample starter code for each weekly stage ──
+// Shown when student clicks "Preview Code" on a training card. Each stage has
+// 1-2 representative snippets in the language that matches the curriculum.
+export type StageCodeSample = {
+  stage: number;
+  week: string;
+  title: string;
+  language: string;
+  description: string;
+  code: string;
+};
+
+export const PROJECT_STAGE_CODE: StageCodeSample[] = [
+  {
+    stage: 1,
+    week: "Week 1",
+    title: "Data Ingestion & Project Skeleton",
+    language: "python",
+    description: "Load a CSV with Pandas, inspect shape/dtypes/nulls, and set up the project structure.",
+    code: `import pandas as pd
+import os, sys
+
+# 1. Load the dataset
+DATA_PATH = "data/raw/dataset.csv"
+df = pd.read_csv(DATA_PATH)
+
+# 2. Quick shape + dtypes + null audit
+print(f"Rows: {df.shape[0]:,}  Cols: {df.shape[1]}")
+print("\\nDtypes:\\n", df.dtypes)
+print("\\nMissing values:\\n", df.isnull().sum().sort_values(ascending=False).head(10))
+
+# 3. Project skeleton (create folders so the team shares one layout)
+for d in ["data/raw", "data/processed", "notebooks", "src", "models", "reports"]:
+    os.makedirs(d, exist_ok=True)
+
+# 4. Save a clean copy + commit the snapshot
+df.to_parquet("data/processed/clean.parquet", index=False)
+print("✓ Clean copy saved to data/processed/clean.parquet")
+`,
+  },
+  {
+    stage: 2,
+    week: "Week 2",
+    title: "Exploratory Data Analysis (EDA)",
+    language: "python",
+    description: "Plot distributions, correlation heatmaps, and group scatters to find signal.",
+    code: `import pandas as pd, seaborn as sns, matplotlib.pyplot as plt
+
+df = pd.read_parquet("data/processed/clean.parquet")
+sns.set_theme(style="whitegrid", palette="viridis")
+
+# 1. Numeric distributions (4-up grid)
+num = df.select_dtypes("number").iloc[:, :4]
+fig, ax = plt.subplots(2, 2, figsize=(11, 8))
+for col, a in zip(num.columns, ax.ravel()):
+    sns.histplot(df[col].dropna(), kde=True, ax=a)
+fig.suptitle("Distributions"); plt.tight_layout(); plt.show()
+
+# 2. Correlation heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", center=0)
+plt.title("Correlation matrix"); plt.show()
+
+# 3. Top-3 features most correlated with target
+target = "target"
+top = df.corr(numeric_only=True)[target].abs().sort_values(ascending=False).iloc[1:4]
+print("Top correlated features:\\n", top)
+`,
+  },
+  {
+    stage: 3,
+    week: "Week 3",
+    title: "Feature Engineering & Pipeline",
+    language: "python",
+    description: "Build a scikit-learn Pipeline with a ColumnTransformer for reproducible preprocessing.",
+    code: `from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
+
+import pandas as pd
+df = pd.read_parquet("data/processed/clean.parquet")
+X = df.drop(columns=["target"]); y = df["target"]
+
+num_cols = X.select_dtypes("number").columns.tolist()
+cat_cols = X.select_dtypes(exclude="number").columns.tolist()
+
+num_pipe = Pipeline([("imp", SimpleImputer(strategy="median")),
+                     ("sc",  StandardScaler())])
+cat_pipe = Pipeline([("imp", SimpleImputer(strategy="most_frequent")),
+                     ("oh",  OneHotEncoder(handle_unknown="ignore"))])
+
+pre = ColumnTransformer([
+    ("num", num_pipe, num_cols),
+    ("cat", cat_pipe, cat_cols),
+])
+
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2,
+                                           stratify=y, random_state=42)
+print(f"Train: {X_tr.shape}  Test: {X_te.shape}")
+# Pre-fit so we can serialise the preprocessor alone for deployment
+pre.fit(X_tr)
+import joblib; joblib.dump(pre, "models/preprocessor.pkl")
+print("✓ Preprocessor saved → models/preprocessor.pkl")
+`,
+  },
+  {
+    stage: 4,
+    week: "Week 4",
+    title: "Model Training & Tuning",
+    language: "python",
+    description: "Train baselines, cross-validate, then RandomizedSearchCV the best estimator.",
+    code: `import joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import cross_val_score, RandomizedSearchCV
+from scipy.stats import randint
+
+pre = joblib.load("models/preprocessor.pkl")
+clf = Pipeline([("pre", pre),
+                ("clf", RandomForestClassifier(random_state=42))])
+
+# 1. Quick baseline comparison (3-fold CV)
+baselines = {
+    "LogReg":  LogisticRegression(max_iter=1000),
+    "Tree":    DecisionTreeClassifier(),
+    "Forest":  RandomForestClassifier(n_estimators=200, random_state=42),
+}
+for name, m in baselines.items():
+    pipe = Pipeline([("pre", pre), ("clf", m)])
+    score = cross_val_score(pipe, X_tr, y_tr, cv=3, scoring="f1").mean()
+    print(f"{name:8s}  F1={score:.3f}")
+
+# 2. RandomizedSearchCV on the winner
+param_dist = {"clf__n_estimators": randint(100, 500),
+              "clf__max_depth":    randint(4, 32),
+              "clf__min_samples_leaf": randint(1, 8)}
+search = RandomizedSearchCV(clf, param_dist, n_iter=20, cv=3,
+                            scoring="f1", n_jobs=-1, random_state=42)
+search.fit(X_tr, y_tr)
+print(f"\\nBest params: {search.best_params_}\\nBest F1: {search.best_score_:.3f}")
+joblib.dump(search.best_estimator_, "models/best_model.pkl")
+`,
+  },
+  {
+    stage: 5,
+    week: "Week 5",
+    title: "Evaluation & Explainability",
+    language: "python",
+    description: "Score on test set, plot confusion matrix, run SHAP for explainability.",
+    code: `import joblib, shap, matplotlib.pyplot as plt
+from sklearn.metrics import classification_report, ConfusionMatrixDisplay
+
+model = joblib.load("models/best_model.pkl")
+y_pred = model.predict(X_te)
+print(classification_report(y_te, y_pred))
+
+# Confusion matrix
+ConfusionMatrixDisplay.from_predictions(y_te, y_pred, cmap="Blues")
+plt.title("Test-set confusion matrix"); plt.show()
+
+# SHAP explainability — use the preprocessor output
+X_te_proc = model.named_steps["pre"].transform(X_te[:200])
+shap.initjs()
+explainer = shap.TreeExplainer(model.named_steps["clf"])
+sv = explainer(X_te_proc)
+shap.summary_plot(sv.values, feature_names=model.named_steps["pre"].get_feature_names_out())
+`,
+  },
+  {
+    stage: 6,
+    week: "Week 6",
+    title: "Deployment — FastAPI + Dockerfile",
+    language: "python",
+    description: "Serve the tuned model behind a FastAPI endpoint, containerise with Docker.",
+    code: `# app.py — FastAPI inference service
+import joblib, pandas as pd
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+model = joblib.load("models/best_model.pkl")
+app = FastAPI(title="AI Procurement Assistant")
+
+class Row(BaseModel):
+    features: dict
+
+@app.get("/health")
+def health(): return {"status": "ok"}
+
+@app.post("/predict")
+def predict(row: Row):
+    X = pd.DataFrame([row.features])
+    proba = float(model.predict_proba(X)[0, 1])
+    return {"prediction": int(proba > 0.5), "probability": proba}
+
+# ── Dockerfile ──
+# FROM python:3.11-slim
+# WORKDIR /app
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+# COPY . .
+# CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+`,
+  },
+];

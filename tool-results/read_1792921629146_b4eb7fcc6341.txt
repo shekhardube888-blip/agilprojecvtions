@@ -1,0 +1,790 @@
+     1→// AgileProjection · NT-AI Network — central data source
+     2→// Used by both the frontend (page.tsx / components) and backend (API routes).
+     3→
+     4→export const SITE = {
+     5→  brand: "AgileProjection",
+     6→  network: "NT-AI Network",
+     7→  email: "hr@agileprojection.com", // notifications destination
+     8→  trainingEmail: "training@agileprojection.com",
+     9→  phone: "+91 80955 57332",
+    10→  whatsapp: "918319985622", // WhatsApp number per request (8319985622)
+    11→  whatsappDisplay: "+91 83199 85622",
+    12→  founded: 2018,
+    13→};
+    14→
+    15→// ── Hero / counters ──
+    16→export const COUNTERS = [
+    17→  { num: "10,000+", label: "Students Enrolled" },
+    18→  { num: "98%", label: "Completion Rate" },
+    19→  { num: "500+", label: "Colleges Represented" },
+    20→  { num: "4.8 ★", label: "Average Student Rating" },
+    21→];
+    22→
+    23→export const ABOUT_STATS = [
+    24→  { num: "2018", label: "Founded" },
+    25→  { num: "10K+", label: "Students Trained" },
+    26→  { num: "500+", label: "Partner Colleges" },
+    27→  { num: "50+", label: "Expert Mentors" },
+    28→  { num: "4", label: "Program Tracks" },
+    29→  { num: "98%", label: "Completion Rate" },
+    30→];
+    31→
+    32→// ── How it works ──
+    33→export const STEPS = [
+    34→  { num: "01", title: "Choose Your Track", desc: "Pick from Embedded Systems, IoT, Campus Ambassador, Full Stack or AI/ML based on your interests and degree stream." },
+    35→  { num: "02", title: "Register Free", desc: "Fill in the online form — no fee, no documents required. You'll receive a confirmation within 24 hours." },
+    36→  { num: "03", title: "Attend Live Sessions", desc: "Join daily online classes with expert mentors. Ask questions, clear doubts, and track your progress." },
+    37→  { num: "04", title: "Build Your Project", desc: "Complete a real-world project as your final deliverable — a working prototype you can showcase in interviews." },
+    38→  { num: "05", title: "Get Certified", desc: "Earn a merit certificate recognised by hundreds of Indian engineering colleges for academic credit." },
+    39→];
+    40→
+    41→// ── Internship programs (cards) ──
+    42→export type Program = {
+    43→  id: string;
+    44→  title: string;
+    45→  badge: string;
+    46→  badgeType: "tech" | "non-tech" | "soon";
+    47→  icon: string;
+    48→  thumb: string;
+    49→  desc: string;
+    50→  tags: string[];
+    51→  meta: { strong: string; label: string }[];
+    52→  primaryCta: string;
+    53→};
+    54→
+    55→export const PROGRAMS: Program[] = [
+    56→  {
+    57→    id: "embedded",
+    58→    title: "Embedded Systems Internship",
+    59→    badge: "Technical",
+    60→    badgeType: "tech",
+    61→    icon: "⚙️",
+    62→    thumb: "linear-gradient(135deg,#0a2a20,#06142a)",
+    63→    desc: "A live online program where you'll master microcontrollers, real-time operating systems, and firmware development. Build a complete embedded project from scratch with expert mentoring at every step.",
+    64→    tags: ["C / C++", "ARM Cortex", "RTOS", "GPIO / UART / SPI"],
+    65→    meta: [
+    66→      { strong: "4 Weeks", label: "Duration" },
+    67→      { strong: "Free", label: "Cost" },
+    68→      { strong: "Daily", label: "Live Sessions" },
+    69→    ],
+    70→    primaryCta: "Register Now",
+    71→  },
+    72→  {
+    73→    id: "iot",
+    74→    title: "Internet of Things (IoT) Internship",
+    75→    badge: "Technical",
+    76→    badgeType: "tech",
+    77→    icon: "🌐",
+    78→    thumb: "linear-gradient(135deg,#06142a,#0a1a30)",
+    79→    desc: "Design and build an end-to-end IoT solution — from sensors and microcontrollers to cloud dashboards. Perfect for students who want to work at the intersection of hardware, software, and connectivity.",
+    80→    tags: ["Arduino / ESP32", "MQTT", "Cloud", "Python"],
+    81→    meta: [
+    82→      { strong: "4 Weeks", label: "Duration" },
+    83→      { strong: "Free", label: "Cost" },
+    84→      { strong: "Daily", label: "Live Sessions" },
+    85→    ],
+    86→    primaryCta: "Register Now",
+    87→  },
+    88→  {
+    89→    id: "cap",
+    90→    title: "Campus Ambassador Program",
+    91→    badge: "Non-Technical",
+    92→    badgeType: "non-tech",
+    93→    icon: "🎓",
+    94→    thumb: "linear-gradient(135deg,#06142a,#1a0a30)",
+    95→    desc: "Be the face of AgileProjection at your engineering college. Drive awareness, host events, and build a community — while earning a stipend, developing leadership skills, and gaining a standout resume entry.",
+    96→    tags: ["Marketing", "Leadership", "Event Mgmt", "Stipend"],
+    97→    meta: [
+    98→      { strong: "1 Month", label: "Duration" },
+    99→      { strong: "Stipend", label: "Paid" },
+   100→      { strong: "Flexible", label: "Schedule" },
+   101→    ],
+   102→    primaryCta: "Apply Now",
+   103→  },
+   104→  {
+   105→    id: "fullstack",
+   106→    title: "Full Stack Developer Track",
+   107→    badge: "Coming Soon",
+   108→    badgeType: "soon",
+   109→    icon: "🖥️",
+   110→    thumb: "linear-gradient(135deg,#06142a,#102000)",
+   111→    desc: "Master the MERN stack (MongoDB, Express, React, Node.js) plus core Data Structures & Algorithms. Build a production-ready capstone application that you can showcase in your portfolio and job interviews.",
+   112→    tags: ["React", "Node.js", "MongoDB", "DSA"],
+   113→    meta: [
+   114→      { strong: "4 Weeks", label: "Duration" },
+   115→      { strong: "Free", label: "Cost" },
+   116→      { strong: "TBA", label: "Batch Start" },
+   117→    ],
+   118→    primaryCta: "Get Notified",
+   119→  },
+   120→];
+   121→
+   122→// ── Program detail curriculum (tabs) ──
+   123→export type ProgramDetail = {
+   124→  id: string;
+   125→  title: string;
+   126→  intro: string[];
+   127→  curriculum: { week: string; text: string }[];
+   128→  build: string[];
+   129→  perks: string[];
+   130→  eligibility: string[];
+   131→};
+   132→
+   133→export const PROGRAM_DETAILS: ProgramDetail[] = [
+   134→  {
+   135→    id: "embedded",
+   136→    title: "Embedded Systems Internship",
+   137→    intro: [
+   138→      "This four-week live program gives engineering students a structured introduction to embedded firmware development. Starting from bare-metal C programming, you'll progress to peripheral interfacing and conclude with a complete RTOS-based project.",
+   139→      "Sessions are held daily (2 hours) by industry mentors with hands-on lab assignments after every session. A doubt-clearing session is available every alternate day, plus recorded playbacks for revision.",
+   140→    ],
+   141→    curriculum: [
+   142→      { week: "Week 1", text: "C Programming Fundamentals, Memory Model, Bit Manipulation, GCC Toolchain setup" },
+   143→      { week: "Week 2", text: "Microcontroller Architecture (ARM Cortex-M), GPIO, UART, Timers & Interrupts" },
+   144→      { week: "Week 3", text: "SPI, I2C, ADC/DAC, Sensor interfacing, Debugging with Logic Analyser" },
+   145→      { week: "Week 4", text: "FreeRTOS fundamentals, Task scheduling, Semaphores, Final project integration & demo" },
+   146→    ],
+   147→    build: [
+   148→      "Sensor data logger with UART output",
+   149→      "Real-time clock & display system",
+   150→      "Multi-sensor IoT node with RTOS",
+   151→      "Complete project documentation & demo video",
+   152→    ],
+   153→    perks: [
+   154→      "Merit-based digital certificate",
+   155→      "Project source code on GitHub",
+   156→      "Performance-based goodie packs & vouchers",
+   157→      "LinkedIn recommendation from mentors",
+   158→      "Access to recorded sessions for 3 months",
+   159→    ],
+   160→    eligibility: [
+   161→      "BE / B.Tech students (3rd – 8th semester)",
+   162→      "Branches: ECE, EEE, EI, CSE, IT, Mech",
+   163→      "Basic C programming knowledge preferred",
+   164→      "Laptop with internet connection required",
+   165→    ],
+   166→  },
+   167→  {
+   168→    id: "iot",
+   169→    title: "Internet of Things (IoT) Internship",
+   170→    intro: [
+   171→      "Build a complete end-to-end IoT solution from sensor to cloud. This four-week program bridges hardware and software — you'll wire up sensors, write firmware, connect to the cloud, and visualise data on a live dashboard.",
+   172→      "Ideal for students who enjoy both electronics and software. No prior IoT experience required — just a willingness to build and experiment.",
+   173→    ],
+   174→    curriculum: [
+   175→      { week: "Week 1", text: "IoT ecosystem overview, Arduino / ESP32 basics, Python scripting, Breadboard prototyping" },
+   176→      { week: "Week 2", text: "Sensors & actuators, DHT22, LDR, PIR, Serial & Wi-Fi communication, MQTT protocol" },
+   177→      { week: "Week 3", text: "Cloud platforms (AWS IoT / Firebase), REST APIs, real-time data streaming, JSON payloads" },
+   178→      { week: "Week 4", text: "Dashboard creation, alert systems, final project build, demo & presentation to industry panel" },
+   179→    ],
+   180→    build: [
+   181→      "Smart environment monitor (temp / humidity / air)",
+   182→      "Real-time cloud dashboard with charts",
+   183→      "SMS / email alert system on threshold breach",
+   184→      "End-to-end project report & demo",
+   185→    ],
+   186→    perks: [
+   187→      "Merit-based digital certificate",
+   188→      "Complete project on GitHub",
+   189→      "Cloud deployment walkthrough guide",
+   190→      "Performance-based vouchers & goodies",
+   191→      "90-day recorded session access",
+   192→    ],
+   193→    eligibility: [
+   194→      "BE / B.Tech students (3rd – 8th semester)",
+   195→      "Branches: ECE, CSE, EEE, IT, Mech",
+   196→      "Basic programming (any language) helpful",
+   197→      "Laptop with internet + Arduino kit (optional)",
+   198→    ],
+   199→  },
+   200→  {
+   201→    id: "cap",
+   202→    title: "Campus Ambassador Program (CAP)",
+   203→    intro: [
+   204→      "For students who are passionate about community building, marketing, and leadership. As an AgileProjection Campus Ambassador you'll represent the brand at your college, run awareness campaigns, and coordinate events — while receiving a monthly stipend and growing your professional network.",
+   205→      "No technical background required. If you communicate well, take initiative, and want your resume to stand out, CAP is for you.",
+   206→    ],
+   207→    curriculum: [
+   208→      { week: "Week 1", text: "Onboarding, brand training, understanding the student audience, setting campaign goals" },
+   209→      { week: "Week 2", text: "Social media content creation, campus outreach, peer-to-peer recruitment drives" },
+   210→      { week: "Week 3", text: "Host a campus webinar or info session, collect feedback, coordinate with regional team" },
+   211→      { week: "Week 4", text: "Performance review, final report, referral tallying, certificate & stipend disbursement" },
+   212→    ],
+   213→    build: [
+   214→      "Verified ambassador badge on LinkedIn",
+   215→      "Real event management experience",
+   216→      "Monthly stipend based on performance",
+   217→      "Letter of Recommendation from leadership",
+   218→    ],
+   219→    perks: [
+   220→      "Monthly stipend (performance-based)",
+   221→      "Official CAP certificate",
+   222→      "Free access to all AgileProjection technical resources",
+   223→      "Priority referral for technical programs",
+   224→      "Recognition in our national ambassador network",
+   225→    ],
+   226→    eligibility: [
+   227→      "Any engineering branch / year",
+   228→      "Strong communication & interpersonal skills",
+   229→      "Active on social media platforms",
+   230→      "Minimum 1 semester remaining in college",
+   231→    ],
+   232→  },
+   233→];
+   234→
+   235→// ── Schedule ──
+   236→export const SCHEDULE = [
+   237→  { name: "Embedded Systems Internship", start: "10 Aug 2026", last: "01 Aug 2026", duration: "4 Weeks", mode: "Online Live", status: "open" },
+   238→  { name: "IoT Internship", start: "01 Sep 2026", last: "20 Aug 2026", duration: "4 Weeks", mode: "Online Live", status: "open" },
+   239→  { name: "Campus Ambassador Program", start: "Rolling", last: "05 Sep 2026", duration: "1 Month", mode: "Hybrid", status: "open" },
+   240→  { name: "AI / ML Industry Internship", start: "15 Sep 2026", last: "05 Sep 2026", duration: "6 Weeks", mode: "Online Live", status: "open" },
+   241→  { name: "Full Stack Developer Track", start: "TBA", last: "TBA", duration: "4 Weeks", mode: "Online Live", status: "soon" },
+   242→];
+   243→
+   244→// ── Benefits ──
+   245→export const BENEFITS = [
+   246→  { icon: "📡", title: "Live Online Delivery", desc: "Every session is taught live — not pre-recorded. You interact with mentors in real time, ask questions, and get answers on the spot. Recorded playbacks are available within 2 hours for revision." },
+   247→  { icon: "👨‍🏫", title: "Expert Industry Mentors", desc: "Our mentors are active professionals with 8–20 years of embedded, IoT, and software experience. They bring real-world context to every concept — not just textbook theory." },
+   248→  { icon: "🛠️", title: "Project-Based Learning", desc: "Every program ends with a working project you can demo to recruiters and submit to your college. 70% of session time is hands-on lab work — debugging, building, testing." },
+   249→  { icon: "🔄", title: "Unlimited Doubt Clearing", desc: "Doubt-clearing sessions every alternate day, plus a dedicated Slack channel for async questions. No question goes unanswered — mentors respond within 4 hours on weekdays." },
+   250→  { icon: "🎓", title: "AICTE-Aligned Certificate", desc: "Our merit certificates are accepted by hundreds of engineering colleges for academic credit conversion, fulfilling AICTE and most university internship mandates." },
+   251→  { icon: "🏆", title: "Perks & Recognition", desc: "Quizzes, weekly challenges, and leaderboard competitions. Top performers receive goodie packs, Amazon vouchers, LinkedIn endorsements, and featured profiles on our platform." },
+   252→  { icon: "🤝", title: "Career Support", desc: "Resume review workshops (DISHA sessions), mock interview preparation, and job board access are included for all interns who complete the program successfully." },
+   253→  { icon: "💰", title: "100% Free — Always", desc: "No registration fee. No course fee. No hidden charges — ever. AgileProjection is committed to democratising quality technical education for every engineering student in India." },
+   254→];
+   255→
+   256→// ── Testimonials ──
+   257→export const TESTIMONIALS = [
+   258→  { name: "Aditya Sharma", info: "B.Tech ECE · VIT Vellore · Embedded Batch '25", color: "linear-gradient(135deg,#2563eb,#06b6d4)", quote: "The Embedded Systems internship was the best thing I did in my 3rd year. The mentors were incredibly patient and the project I built got me my first campus interview call. Completely free and genuinely worth every hour." },
+   259→  { name: "Priya Menon", info: "B.Tech CSE · NIT Trichy · IoT Batch '25", color: "linear-gradient(135deg,#7c3aed,#06b6d4)", quote: "I was sceptical about a free internship — thought it would be superficial. I was completely wrong. The IoT program had daily live sessions, real labs, and I ended up building a working smart home sensor. The certificate is on my CV and it gets noticed." },
+   260→  { name: "Rahul Joshi", info: "B.Tech Civil · BITS Pilani · CAP Batch '24", color: "linear-gradient(135deg,#059669,#06b6d4)", quote: "The Campus Ambassador Program taught me more about marketing and event management than any college subject did. I organised two successful college events and the stipend was a nice bonus. Highly recommend for non-CS students who want a strong internship." },
+   261→  { name: "Sneha Kulkarni", info: "B.Tech EEE · RVCE Bangalore · Embedded Batch '25", color: "linear-gradient(135deg,#dc2626,#f59e0b)", quote: "What I loved most was the doubt-clearing sessions — the mentors would stay back and explain until every student understood. That's rare. My project on an RTOS-based data logger was presented at my college tech fest and won first prize." },
+   262→  { name: "Kartik Verma", info: "B.Tech Mech · Delhi Technological Univ. · IoT Batch '24", color: "linear-gradient(135deg,#0891b2,#2563eb)", quote: "I joined the IoT program during my 5th semester summer break. In 4 weeks I went from barely knowing what ESP32 was to deploying a live cloud dashboard. The 70/30 practical split is real — we spent most time actually building, not listening to lectures." },
+   263→  { name: "Nidhi Patel", info: "B.Tech IT · Nirma University · Embedded Batch '24", color: "linear-gradient(135deg,#7c3aed,#ec4899)", quote: "The DISHA career workshop alone was worth it. They reviewed my resume, did a mock HR round, and helped me understand what companies actually look for. I got my internship offer within 3 weeks of completing the program." },
+   264→];
+   265→
+   266→// ── Mentors / Team ──
+   267→export const MENTORS = [
+   268→  { initials: "VK", name: "Vijay Kumar", role: "Lead Mentor — Embedded", exp: "Ex-Texas Instruments · 14 yrs experience", color: "linear-gradient(135deg,#2563eb,#06b6d4)" },
+   269→  { initials: "SR", name: "Supriya Rao", role: "IoT Program Lead", exp: "Ex-Bosch · 11 yrs in Industrial IoT", color: "linear-gradient(135deg,#7c3aed,#06b6d4)" },
+   270→  { initials: "AM", name: "Anand Mehta", role: "Firmware Engineer", exp: "Ex-Qualcomm · ARM Cortex specialist", color: "linear-gradient(135deg,#059669,#06b6d4)" },
+   271→  { initials: "PN", name: "Preethi Nair", role: "Career Coach & DISHA Lead", exp: "10 yrs in engineering placement", color: "linear-gradient(135deg,#dc2626,#f59e0b)" },
+   272→  { initials: "RB", name: "Rahul Bose", role: "Full Stack Track Lead", exp: "Ex-Infosys · MERN & DSA expert", color: "linear-gradient(135deg,#0891b2,#7c3aed)" },
+   273→];
+   274→
+   275→// ── FAQ ──
+   276→export const FAQS = [
+   277→  { q: "Is the internship really free? Are there any hidden charges?", a: "Yes, completely free. There is no registration fee, no course fee, no certificate fee, and no hidden charges of any kind. AgileProjection's mission is to make quality internship programs accessible to every engineering student in India, regardless of financial background." },
+   278→  { q: "Will my college accept this certificate for the internship credit requirement?", a: "Our certificates are accepted by 500+ engineering colleges across India and are designed to meet AICTE and most university internship mandate requirements. We recommend checking with your college's academic section first — most affiliated colleges accept them without any issue. We can also provide a letter of undertaking if your college needs one." },
+   279→  { q: "What equipment or software do I need?", a: "You need a laptop (Windows / Mac / Linux) with a stable internet connection. All software tools used (GCC toolchain, Arduino IDE, VS Code, Python, etc.) are free and open-source. For IoT track, having an Arduino Uno or ESP32 kit is helpful but not mandatory — simulated environments are available for students who don't have hardware." },
+   280→  { q: "What are the session timings? Can I attend if I have college classes?", a: "Sessions are typically scheduled in the evenings (6 PM – 8 PM IST) on weekdays, and Saturday mornings for lab sessions. This is designed to accommodate students who have daytime college schedules. All sessions are recorded and available within 2 hours for those who can't attend live." },
+   281→  { q: "I'm a B.E / B.Tech / MCA / M.Tech student. Which program is right for me?", a: "BE/B.Tech students (3rd semester onward) can join Embedded, IoT, or AI/ML tracks. MCA and M.Tech students are especially encouraged to join the AI/ML Industry Internship — it is designed with the depth required for postgraduate students. The Campus Ambassador Program is open to all degrees including B.Sc." },
+   282→  { q: "How is the certificate issued? Is it digital or physical?", a: "Certificates are issued digitally (PDF with a unique verification QR code) within 7 days of completing the program. They can be downloaded, printed, and shared on LinkedIn directly. A physical certificate can also be requested for a nominal courier charge. All certificates are verifiable online via our portal." },
+   283→  { q: "What if I miss a few sessions? Will I still get the certificate?", a: "Certificates are merit-based and require completing at least 80% of sessions (or watching recordings) and submitting the final project. Missing 1–2 sessions is fine as long as you catch up via recordings. If you anticipate a longer absence, reach out to your mentor early — we work with students to find solutions wherever possible." },
+   284→  { q: "Can non-engineering students apply?", a: "Our technical programs (Embedded, IoT, AI/ML) are designed specifically for engineering students. The Campus Ambassador Program is open to any college student who has strong communication skills and is passionate about outreach — engineering degree not required for CAP." },
+   285→];
+   286→
+   287→// ── Resources ──
+   288→export const RESOURCES = [
+   289→  { icon: "📚", title: "Technical Resource Library", desc: "Free course material covering Embedded C, Linux internals, IoT protocols, RTOS, ARM architecture, and more. Updated every quarter with new content from our mentors.", link: "Explore Library", href: "#ai-assistant" },
+   290→  { icon: "💬", title: "AI Learning Assistant", desc: "Ask our AI-powered assistant any technical or career question — from 'how do I start my final year AI project' to 'which domain suits my branch'. Built specifically for BE / B.Tech / MCA / M.Tech students.", link: "Ask the AI →", href: "#ai-assistant" },
+   291→  { icon: "📝", title: "NT-AI's End-to-End ML Project", desc: "A complete, in-portal walkthrough by NT-AI — building a Housing Price Prediction regression model from raw CSV to deployed API. Covers data ingestion, EDA, feature engineering, modelling, evaluation and deployment with real Python/Scikit-Learn code at every stage.", link: "Open the walkthrough →", href: "#nt-ai-ml" },
+   292→  { icon: "🎓", title: "Career & Technical Blog", desc: "Practical guides: building your first IoT project, cracking embedded systems interviews, writing a resume that gets callbacks, and understanding the AI/ML job market in 2026.", link: "Read Articles →", href: "#ai-assistant" },
+   293→];
+   294→
+   295→// ── IT Courses ──
+   296→export type Course = {
+   297→  icon: string;
+   298→  thumb: string;
+   299→  badges: { label: string; cls: string }[];
+   300→  title: string;
+   301→  desc: string;
+   302→  meta: string[];
+   303→  rating: string;
+   304→  reviews: string;
+   305→  price: string;
+   306→};
+   307→
+   308→export const COURSES: Course[] = [
+   309→  {
+   310→    icon: "⚙️",
+   311→    thumb: "linear-gradient(135deg,#071a30,#0a2a20)",
+   312→    badges: [{ label: "Bestseller", cls: "amber" }, { label: "SAP Certified", cls: "cyan" }],
+   313→    title: "SAP Ariba: Complete Procurement & Supply Chain Mastery",
+   314→    desc: "Hands-on training covering sourcing, contracts, supplier collaboration, and buying with real-world enterprise project scenarios. Includes live Ariba sandbox access.",
+   315→    meta: ["48 hrs content", "Live sessions", "Certificate included"],
+   316→    rating: "4.9", reviews: "3.2K", price: "FREE",
+   317→  },
+   318→  {
+   319→    icon: "☁️",
+   320→    thumb: "linear-gradient(135deg,#071a30,#1a0a30)",
+   321→    badges: [{ label: "Hot", cls: "red" }, { label: "Cloud", cls: "cyan" }],
+   322→    title: "SAP BTP: Business Technology Platform — Complete Guide",
+   323→    desc: "Master SAP's cloud platform for application development, integration, and AI services. Covers CAP framework, Fiori, KYMA, and real BTP system access throughout.",
+   324→    meta: ["36 hrs content", "Live sessions", "Certificate included"],
+   325→    rating: "4.8", reviews: "2.1K", price: "FREE",
+   326→  },
+   327→  {
+   328→    icon: "📦",
+   329→    thumb: "linear-gradient(135deg,#071a30,#1a1500)",
+   330→    badges: [{ label: "S/4HANA", cls: "cyan" }],
+   331→    title: "SAP MM: Materials Management Complete Guide",
+   332→    desc: "Master procurement cycles, inventory management, and materials planning with live S/4HANA system access. Covers P2P, vendor evaluation, invoice verification, and more.",
+   333→    meta: ["40 hrs content", "Live sessions", "Certificate included"],
+   334→    rating: "4.7", reviews: "1.8K", price: "FREE",
+   335→  },
+   336→  {
+   337→    icon: "🤖",
+   338→    thumb: "linear-gradient(135deg,#071a30,#1a0020)",
+   339→    badges: [{ label: "New", cls: "indigo" }, { label: "AI", cls: "red" }],
+   340→    title: "AI & Machine Learning for SAP — SAP AI Core & Launchpad",
+   341→    desc: "Build and deploy AI models on SAP's enterprise stack. Covers Generative AI, NLP, ML pipelines, SAP AI Core, and real enterprise AI use cases with Python and SAP tools.",
+   342→    meta: ["32 hrs content", "Live sessions", "Certificate included"],
+   343→    rating: "4.9", reviews: "980", price: "FREE",
+   344→  },
+   345→  {
+   346→    icon: "🖥️",
+   347→    thumb: "linear-gradient(135deg,#071a30,#102000)",
+   348→    badges: [{ label: "Popular", cls: "amber" }, { label: "Free", cls: "green" }],
+   349→    title: "Full Stack Web Development — MERN Stack + DSA",
+   350→    desc: "Complete full-stack bootcamp: React, Node.js, Express, MongoDB, REST APIs, authentication, cloud deployment, and interview-ready DSA preparation in one comprehensive program.",
+   351→    meta: ["60 hrs content", "Live sessions", "Certificate included"],
+   352→    rating: "4.8", reviews: "2.4K", price: "FREE",
+   353→  },
+   354→  {
+   355→    icon: "🔧",
+   356→    thumb: "linear-gradient(135deg,#071a30,#001a2a)",
+   357→    badges: [{ label: "AWS + Azure", cls: "cyan" }],
+   358→    title: "Cloud & DevOps: AWS, Azure, Docker, Kubernetes & CI/CD",
+   359→    desc: "From cloud fundamentals to deploying containerised microservices — covers AWS core services, Azure fundamentals, Docker, Kubernetes, Jenkins CI/CD, and Terraform IaC.",
+   360→    meta: ["44 hrs content", "Live sessions", "Certificate included"],
+   361→    rating: "4.7", reviews: "1.5K", price: "FREE",
+   362→  },
+   363→  {
+   364→    icon: "🔐",
+   365→    thumb: "linear-gradient(135deg,#071a30,#200a00)",
+   366→    badges: [{ label: "New 2026", cls: "indigo" }],
+   367→    title: "Cybersecurity Fundamentals — Ethical Hacking & SOC Analyst",
+   368→    desc: "Network security, penetration testing, vulnerability assessment, SIEM tools, and SOC operations. Aligned with CompTIA Security+ and CEH certification objectives.",
+   369→    meta: ["38 hrs content", "Live sessions", "Cert-aligned"],
+   370→    rating: "4.8", reviews: "760", price: "FREE",
+   371→  },
+   372→  {
+   373→    icon: "📊",
+   374→    thumb: "linear-gradient(135deg,#071a30,#001020)",
+   375→    badges: [{ label: "Trending", cls: "amber" }],
+   376→    title: "Data Analytics & Business Intelligence — Python, Power BI & SQL",
+   377→    desc: "End-to-end data analytics: SQL querying, Python (Pandas, NumPy, Matplotlib), Power BI dashboards, and storytelling with data for business decision-making.",
+   378→    meta: ["42 hrs content", "Live sessions", "Certificate included"],
+   379→    rating: "4.8", reviews: "1.9K", price: "FREE",
+   380→  },
+   381→];
+   382→
+   383→// ── AI/ML Project catalog (LOV) ──
+   384→export type Project = { id: number; name: string; tags: string };
+   385→export type Category = {
+   386→  key: string;
+   387→  icon: string;
+   388→  label: string;
+   389→  sub: string;
+   390→  projects: Project[];
+   391→};
+   392→
+   393→export const CATEGORIES: Category[] = [
+   394→  {
+   395→    key: "gen-ai", icon: "🤖", label: "Generative AI & LLM", sub: "10 projects · RAG, Chatbots, LLMs",
+   396→    projects: [
+   397→      { id: 1, name: "Enterprise RAG-Based AI Knowledge Assistant", tags: "RAG · LLM · Vector DB" },
+   398→      { id: 2, name: "AI Customer Support Chatbot using LLM + RAG", tags: "Chatbot · LangChain · FastAPI" },
+   399→      { id: 3, name: "AI Resume Screening & Job Recommendation System", tags: "NLP · Matching · HR AI" },
+   400→      { id: 4, name: "Multilingual AI Chatbot for Global Customer Service", tags: "Multilingual · LLM · APIs" },
+   401→      { id: 5, name: "AI Document Question-Answering System", tags: "QA · Embeddings · RAG" },
+   402→      { id: 6, name: "Intelligent PDF Research Assistant using RAG", tags: "PDF · RAG · LangChain" },
+   403→      { id: 7, name: "AI Meeting Summarization & Action-Item Generator", tags: "NLP · Summarization · Audio" },
+   404→      { id: 8, name: "AI Email Classification & Smart Reply Assistant", tags: "Email · NLP · BERT" },
+   405→      { id: 9, name: "LLM-Based Legal Document Analysis Assistant", tags: "Legal AI · NLP · Document" },
+   406→      { id: 10, name: "AI Research Paper Summarization System", tags: "Summarization · Transformers" },
+   407→    ],
+   408→  },
+   409→  {
+   410→    key: "cv", icon: "👁️", label: "Computer Vision", sub: "10 projects · YOLO, Detection, Classification",
+   411→    projects: [
+   412→      { id: 11, name: "Real-Time Object Detection & Tracking using YOLO", tags: "YOLO · OpenCV · Real-time" },
+   413→      { id: 12, name: "AI-Based Industrial Defect Detection", tags: "CNN · Quality Control · Vision" },
+   414→      { id: 13, name: "Smart Traffic Monitoring & Vehicle Detection", tags: "YOLO · Traffic · Analytics" },
+   415→      { id: 14, name: "Automatic Number Plate Recognition System", tags: "OCR · ANPR · OpenCV" },
+   416→      { id: 15, name: "Driver Drowsiness Detection System", tags: "Face Detection · Alert · Safety" },
+   417→      { id: 16, name: "PPE Safety Compliance Detection", tags: "YOLO · Safety · Industrial" },
+   418→      { id: 17, name: "AI-Based Face Recognition Attendance System", tags: "Face Recognition · Attendance" },
+   419→      { id: 18, name: "AI Retail Shelf Monitoring System", tags: "Object Detection · Retail · CV" },
+   420→      { id: 19, name: "AI-Based Crowd Density Detection", tags: "Density · Crowd · Vision" },
+   421→      { id: 20, name: "Satellite Image Classification using Deep Learning", tags: "CNN · Remote Sensing · GIS" },
+   422→    ],
+   423→  },
+   424→  {
+   425→    key: "ml", icon: "📊", label: "ML & Predictive Analytics", sub: "10 projects · Churn, Fraud, Forecasting",
+   426→    projects: [
+   427→      { id: 21, name: "Housing Price Prediction using Regression (End-to-End ML)", tags: "Regression · Feature Engg · Deployment" },
+   428→      { id: 22, name: "Customer Churn Prediction System", tags: "Classification · CRM · Business" },
+   429→      { id: 23, name: "Credit Risk Prediction using Machine Learning", tags: "Risk · Finance · XGBoost" },
+   430→      { id: 24, name: "Fraud Detection & Anomaly Detection System", tags: "Anomaly · Banking · ML" },
+   431→      { id: 25, name: "Sales Forecasting System", tags: "Time Series · Forecasting · ARIMA" },
+   432→      { id: 26, name: "Demand Forecasting for Retail", tags: "Retail · Inventory · ML" },
+   433→      { id: 27, name: "Student Placement Prediction System", tags: "Classification · Education · HR" },
+   434→      { id: 28, name: "Employee Attrition Prediction", tags: "HR Analytics · Classification" },
+   435→      { id: 29, name: "Loan Default Prediction", tags: "Finance · Risk · XGBoost" },
+   436→      { id: 30, name: "Predictive Maintenance System", tags: "IoT · Sensors · Maintenance" },
+   437→    ],
+   438→  },
+   439→  {
+   440→    key: "nlp", icon: "📝", label: "NLP & Transformers", sub: "10 projects · BERT, Sentiment, Classification",
+   441→    projects: [
+   442→      { id: 31, name: "Multilingual Customer Support Ticket Classification", tags: "NLP · BERT · Multilingual" },
+   443→      { id: 32, name: "Fake News Detection using Transformers", tags: "NLP · BERT · Classification" },
+   444→      { id: 33, name: "Sentiment Analysis of Product Reviews", tags: "Sentiment · NLP · E-commerce" },
+   445→      { id: 34, name: "AI News Article Summarizer", tags: "Summarization · NLP · Transformers" },
+   446→      { id: 35, name: "Spam & Phishing Email Detection using BERT", tags: "BERT · Email · Security" },
+   447→      { id: 36, name: "Text Classification using BERT", tags: "BERT · Classification · NLP" },
+   448→      { id: 37, name: "Named Entity Recognition System", tags: "NER · spaCy · Information Extraction" },
+   449→      { id: 38, name: "Multilingual Document Classification", tags: "Multilingual · NLP · BERT" },
+   450→      { id: 39, name: "AI Complaint Classification System", tags: "Classification · CRM · NLP" },
+   451→      { id: 40, name: "Voice-to-Text + NLP Analysis System", tags: "ASR · NLP · Speech AI" },
+   452→    ],
+   453→  },
+   454→  {
+   455→    key: "industry", icon: "🏭", label: "AI for Industry 4.0", sub: "10 projects · Manufacturing, Smart Factory",
+   456→    projects: [
+   457→      { id: 41, name: "AI Predictive Maintenance for Industrial Machines", tags: "IoT · Sensors · ML" },
+   458→      { id: 42, name: "AI Manufacturing Defect Detection", tags: "Computer Vision · Quality" },
+   459→      { id: 43, name: "Machine Failure Prediction using Sensor Data", tags: "Time Series · IoT · ML" },
+   460→      { id: 44, name: "AI Production Quality Prediction", tags: "Quality · Manufacturing · ML" },
+   461→      { id: 45, name: "Smart Factory Anomaly Detection", tags: "Anomaly · IIoT · Real-time" },
+   462→      { id: 46, name: "AI-Based Inventory Demand Forecasting", tags: "Inventory · Forecasting · ML" },
+   463→      { id: 47, name: "AI Supply Chain Optimization", tags: "Optimization · Logistics · ML" },
+   464→      { id: 48, name: "Industrial Safety Violation Detection", tags: "CV · Safety · PPE · YOLO" },
+   465→      { id: 49, name: "Digital Twin Analytics using AI", tags: "Digital Twin · Simulation · ML" },
+   466→      { id: 50, name: "AI Energy Consumption Prediction", tags: "Energy · IoT · Forecasting" },
+   467→    ],
+   468→  },
+   469→  {
+   470→    key: "healthcare", icon: "🏥", label: "Healthcare AI", sub: "8 projects · Medical Imaging, Disease Risk",
+   471→    projects: [
+   472→      { id: 51, name: "Disease Risk Prediction using ML", tags: "Healthcare · Classification · Risk" },
+   473→      { id: 52, name: "Medical Image Classification", tags: "CNN · Medical · Imaging" },
+   474→      { id: 53, name: "Pneumonia Detection from X-Ray Images", tags: "CNN · X-Ray · Medical AI" },
+   475→      { id: 54, name: "Patient Readmission Prediction", tags: "Healthcare · ML · Hospital" },
+   476→      { id: 55, name: "Healthcare Appointment Prediction", tags: "ML · Hospital · Scheduling" },
+   477→      { id: 56, name: "Medical Report Classification using NLP", tags: "NLP · Medical · BERT" },
+   478→      { id: 57, name: "AI-Based Symptom Analysis Assistant", tags: "Healthcare AI · NLP · Chatbot" },
+   479→      { id: 58, name: "Hospital Resource Demand Forecasting", tags: "Forecasting · Hospital · ML" },
+   480→    ],
+   481→  },
+   482→  {
+   483→    key: "cyber", icon: "🔐", label: "Cybersecurity + AI", sub: "7 projects · Malware, Intrusion, Fraud",
+   484→    projects: [
+   485→      { id: 59, name: "AI-Based Malware Classification", tags: "Security · ML · Malware" },
+   486→      { id: 60, name: "Phishing Email Detection using BERT", tags: "BERT · Phishing · NLP" },
+   487→      { id: 61, name: "Network Intrusion Detection using ML", tags: "IDS · Network · ML" },
+   488→      { id: 62, name: "Anomaly Detection in Network Traffic", tags: "Anomaly · Security · ML" },
+   489→      { id: 63, name: "AI-Based Fraud Transaction Detection", tags: "Fraud · Finance · ML" },
+   490→      { id: 64, name: "Bot Detection using Machine Learning", tags: "Bot · Security · Classification" },
+   491→      { id: 65, name: "Malicious URL Classification", tags: "URL · Security · NLP" },
+   492→    ],
+   493→  },
+   494→  {
+   495→    key: "recom", icon: "🎯", label: "Recommendation & Personalisation", sub: "7 projects · Movies, E-Commerce, Learning",
+   496→    projects: [
+   497→      { id: 66, name: "AI Movie Recommendation System", tags: "Collaborative Filtering · ML" },
+   498→      { id: 67, name: "E-Commerce Product Recommendation", tags: "Recommendation · Retail · ML" },
+   499→      { id: 68, name: "Job Recommendation Engine", tags: "NLP · Jobs · Matching" },
+   500→      { id: 69, name: "Personalized Learning Recommendation System", tags: "EdTech · NLP · ML" },
+   501→      { id: 70, name: "AI Travel Recommendation System", tags: "Travel · NLP · Filtering" },
+   502→      { id: 71, name: "News Recommendation Engine", tags: "NLP · News · Personalisation" },
+   503→      { id: 72, name: "Music Recommendation System", tags: "Audio · ML · Collaborative Filtering" },
+   504→    ],
+   505→  },
+   506→  {
+   507→    key: "advanced", icon: "🔬", label: "Advanced / Research AI", sub: "8 projects · XAI, Federated Learning, Edge AI",
+   508→    projects: [
+   509→      { id: 73, name: "Explainable AI using SHAP/LIME", tags: "XAI · Interpretability · ML" },
+   510→      { id: 74, name: "Federated Learning for Privacy-Preserving ML", tags: "Federated · Privacy · ML" },
+   511→      { id: 75, name: "Edge AI / TinyML Model Deployment", tags: "Edge · TinyML · IoT" },
+   512→      { id: 76, name: "Vision Transformer for Image Classification", tags: "ViT · Transformers · CV" },
+   513→      { id: 77, name: "Multimodal Vision-Language AI Assistant", tags: "Multimodal · LLM · Vision" },
+   514→      { id: 78, name: "Reinforcement Learning for Autonomous Decision Making", tags: "RL · Agent · Decision" },
+   515→      { id: 79, name: "AI-Based Semantic Image Search", tags: "Embeddings · CLIP · Search" },
+   516→      { id: 80, name: "AI Agent for Automated Business Processes", tags: "Agent · Automation · LLM" },
+   517→    ],
+   518→  },
+   519→  {
+   520→    key: "other", icon: "⚙️", label: "Embedded / IoT / Full Stack", sub: "Classic AgileProjection tracks",
+   521→    projects: [
+   522→      { id: 81, name: "Embedded Systems Internship", tags: "C/C++ · ARM · RTOS · Firmware" },
+   523→      { id: 82, name: "Internet of Things (IoT) Internship", tags: "ESP32 · MQTT · Cloud · Sensors" },
+   524→      { id: 83, name: "Full Stack Developer Track", tags: "MERN · React · Node.js · MongoDB" },
+   525→      { id: 84, name: "Campus Ambassador Program", tags: "Leadership · Marketing · Non-Tech" },
+   526→    ],
+   527→  },
+   528→];
+   529→
+   530→// ── AI/ML program curriculum (the 6-week ML pipeline, mapped to NT-AI's
+   531→//    in-portal end-to-end housing-price regression project at #nt-ai-ml) ──
+   532→export const AIML_CURRICULUM = [
+   533→  { week: "Week 1", title: "Python for ML · Data Ingestion", text: "NumPy / Pandas / Matplotlib, loading datasets (CSV, API, DB), handling missing values, basic EDA. You'll work with the California Housing dataset — the exact sandbox used in NT-AI's end-to-end ML project." },
+   534→  { week: "Week 2", title: "Exploratory Data Analysis & Visualisation", text: "Univariate & multivariate analysis, correlation heatmaps, geographical scatter (lat/long), feature-target relationships — the same EDA flow used in NT-AI's housing-price regression project (Stage 2)." },
+   535→  { week: "Week 3", title: "Feature Engineering & Pipeline Design", text: "Handling categorical & numerical attributes, custom transformers, full Scikit-Learn pipeline, train/val stratified split — replicating Stage 3 of NT-AI's ML project." },
+   536→  { week: "Week 4", title: "Model Training & Tuning", text: "Linear Regression, Decision Tree, Random Forest, Gradient Boosting. Cross-validation, RMSE evaluation, RandomizedSearchCV hyperparameter tuning — the model zoo from NT-AI's housing-price walkthrough (Stage 4)." },
+   537→  { week: "Week 5", title: "Model Evaluation & Explainability", text: "Feature importance, error analysis, SHAP/LIME interpretation, confidence intervals — understanding why your model makes the predictions it does (Stage 5)." },
+   538→  { week: "Week 6", title: "Deployment & Capstone Demo", text: "FastAPI serving, Streamlit dashboard, model versioning, presenting to an industry panel. You ship a working AI product, not just a notebook (Stage 6)." },
+   539→];
+   540→
+   541→export const AIML_FEATURES = [
+   542→  { icon: "🧠", title: "80+ Industry Projects", desc: "Pick from Gen-AI, Computer Vision, NLP, ML, Healthcare AI, Cybersecurity + AI, Recommendation Systems, Industry 4.0, Research AI, and more." },
+   543→  { icon: "📊", title: "End-to-End ML Pipeline", desc: "Built around the complete ML lifecycle (data ingestion → EDA → feature engineering → modelling → tuning → deployment) using NT-AI's housing-price regression project as the reference architecture." },
+   544→  { icon: "🎓", title: "PG-Depth Curriculum", desc: "Designed for BE / B.Tech final-year, M.Tech and MCA students. Project complexity and mentorship depth is calibrated for postgraduate learning outcomes." },
+   545→  { icon: "🏆", title: "Industry Mentor Reviews", desc: "Weekly code reviews by working ML engineers, capstone presentation to an industry panel, and a verifiable completion certificate with project GitHub link." },
+   546→];
+   547→
+   548→// ── Form option lists (shared by frontend + backend) ──
+   549→export const DEGREES = ["BE / B.Tech", "ME / M.Tech", "MCA", "B.Sc Engineering"];
+   550→export const BRANCHES = [
+   551→  "Computer Science Engineering",
+   552→  "Information Technology",
+   553→  "AI & Data Science",
+   554→  "AI & Machine Learning",
+   555→  "Electronics & Communication",
+   556→  "Electrical & Electronics",
+   557→  "Mechanical Engineering",
+   558→  "Other",
+   559→];
+   560→export const SEMESTERS = ["3rd Semester", "4th Semester", "5th Semester", "6th Semester", "7th Semester", "8th Semester"];
+   561→export const PLANS = [
+   562→  "Basic — ₹1,499",
+   563→  "Standard — ₹2,499",
+   564→  "Professional — ₹3,999",
+   565→  "Premium / Job-Oriented — ₹4,999",
+   566→];
+   567→export const STATES = [
+   568→  "Andhra Pradesh", "Assam", "Bihar", "Chhattisgarh", "Delhi", "Goa", "Gujarat", "Haryana",
+   569→  "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
+   570→  "Manipur", "Odisha", "Punjab", "Rajasthan", "Tamil Nadu", "Telangana", "Uttar Pradesh",
+   571→  "Uttarakhand", "West Bengal", "Other",
+   572→];
+   573→export const SOURCES = [
+   574→  "Social Media (Instagram / LinkedIn)",
+   575→  "Google Search",
+   576→  "Friend / Classmate Referral",
+   577→  "College Notice Board",
+   578→  "Email",
+   579→  "YouTube",
+   580→  "Other",
+   581→];
+   582→
+   583→// ── 6-stage internship journey (universal ML lifecycle). ──
+   584→export type ProjectStage = {
+   585→  step: number;
+   586→  week: string;
+   587→  title: string;
+   588→  desc: string;
+   589→  deliverable: string;
+   590→  icon: string;
+   591→};
+   592→
+   593→export const PROJECT_STAGES: ProjectStage[] = [
+   594→  { step: 1, week: "Week 1", title: "Data Ingestion & Setup", desc: "Pull the dataset for your chosen project. Load into Pandas, inspect shape/dtypes/nulls, set up the project structure (notebooks/, src/, models/, data/).", deliverable: "A clean DataFrame + project skeleton committed to GitHub.", icon: "📥" },
+   595→  { step: 2, week: "Week 2", title: "Exploratory Data Analysis (EDA)", desc: "Plot distributions, correlation heatmaps, and (where relevant) geographical/grouped scatters. Identify skew, outliers, and the features most correlated with the target.", deliverable: "An EDA notebook with 4-6 key charts + a findings write-up.", icon: "📊" },
+   596→  { step: 3, week: "Week 3", title: "Feature Engineering & Pipeline", desc: "Build a Scikit-Learn Pipeline: imputation, custom transformers, scaling, one-hot. Combine numeric + categorical in a ColumnTransformer so preprocessing is reproducible + deploy-safe.", deliverable: "A full preprocessing Pipeline + a stratified train/val split.", icon: "🔧" },
+   597→  { step: 4, week: "Week 4", title: "Model Training & Tuning", desc: "Train several baselines (e.g. Linear/DecisionTree/RandomForest/GradientBoosting). Cross-validate with RMSE/accuracy, then tune the best via RandomizedSearchCV. Persist with joblib.", deliverable: "A tuned model artifact (models/<name>.pkl) + CV scores.", icon: "🧠" },
+   598→  { step: 5, week: "Week 5", title: "Evaluation & Explainability", desc: "Score on the held-out test set. Residual / confusion-matrix analysis. Use SHAP/LIME to explain which features drive each prediction.", deliverable: "Test-set metrics + a SHAP beeswarm + a residual plot.", icon: "🎯" },
+   599→  { step: 6, week: "Week 6", title: "Deployment & Capstone Demo", desc: "Serve the model behind a FastAPI endpoint + a Streamlit dashboard. Containerise with Docker. Present the end-to-end project to an industry panel + hand off on GitHub.", deliverable: "Live API + dashboard + a 10-min capstone demo to the panel.", icon: "🚀" },
+   600→];
+   601→
+   602→// ── Structured lessons per stage (3-4 lessons per module = ~21 total) ──
+   603→// Each lesson has: id (stage-lessonNum), stage, title, desc, duration (mins)
+   604→export type Lesson = {
+   605→  id: string;        // e.g. "1-1" (stage 1, lesson 1)
+   606→  stage: number;     // 1-6
+   607→  title: string;
+   608→  desc: string;
+   609→  duration: number;  // estimated minutes
+   610→};
+   611→
+   612→export const LESSONS: Lesson[] = [
+   613→  // Stage 1: Data Ingestion & Setup
+   614→  { id: "1-1", stage: 1, title: "Setting Up Your Environment", desc: "Install Python 3.10+, create a virtual env, install Pandas/NumPy/Scikit-Learn. Set up the project folder structure (notebooks/, src/, models/, data/).", duration: 30 },
+   615→  { id: "1-2", stage: 1, title: "Loading Data with Pandas", desc: "Read CSV/Excel into a DataFrame. Inspect shape, dtypes, head/tail. Handle encoding issues + parse dates.", duration: 45 },
+   616→  { id: "1-3", stage: 1, title: "Data Quality Check", desc: "Count nulls per column. Identify duplicates. Check for mixed types. Write a data-quality report function.", duration: 40 },
+   617→  { id: "1-4", stage: 1, title: "Git Setup + Project Skeleton", desc: "Initialize a Git repo, create .gitignore, commit the project skeleton. Push to GitHub.", duration: 25 },
+   618→
+   619→  // Stage 2: EDA
+   620→  { id: "2-1", stage: 2, title: "Univariate Analysis", desc: "Plot distributions (histograms, box plots) for each numeric feature. Identify skewness + outliers.", duration: 40 },
+   621→  { id: "2-2", stage: 2, title: "Bivariate Analysis + Correlations", desc: "Scatter plots, correlation heatmaps. Identify the features most correlated with the target.", duration: 45 },
+   622→  { id: "2-3", stage: 2, title: "Categorical Analysis", desc: "Group-by aggregations, bar charts for categorical features. Chi-square tests for independence.", duration: 35 },
+   623→  { id: "2-4", stage: 2, title: "EDA Findings Write-up", desc: "Summarize 4-6 key findings from your EDA. What features matter? What needs cleaning? What patterns did you find?", duration: 30 },
+   624→
+   625→  // Stage 3: Feature Engineering
+   626→  { id: "3-1", stage: 3, title: "Handling Missing Data", desc: "SimpleImputer, KNN imputer. Decide drop vs impute based on null percentage + feature importance.", duration: 40 },
+   627→  { id: "3-2", stage: 3, title: "Encoding Categorical Variables", desc: "OneHotEncoder, OrdinalEncoder, target encoding. When to use each. Avoid the dummy variable trap.", duration: 45 },
+   628→  { id: "3-3", stage: 3, title: "Building a Scikit-Learn Pipeline", desc: "Create a ColumnTransformer + Pipeline. Combine numeric + categorical preprocessing. Make it reproducible.", duration: 50 },
+   629→  { id: "3-4", stage: 3, title: "Train/Validation Split", desc: "Stratified train/val split. Why stratify? Set up the split so the pipeline sees only training data.", duration: 25 },
+   630→
+   631→  // Stage 4: Model Training
+   632→  { id: "4-1", stage: 4, title: "Baseline Models", desc: "Train Linear/DecisionTree/RandomForest/GradientBoosting. Compare cross-validation scores (RMSE/accuracy).", duration: 50 },
+   633→  { id: "4-2", stage: 4, title: "Hyperparameter Tuning", desc: "RandomizedSearchCV on the best baseline. Tune n_estimators, max_depth, learning_rate. Use parallel jobs.", duration: 60 },
+   634→  { id: "4-3", stage: 4, title: "Model Persistence", desc: "Save the tuned model with joblib. Load + verify. Create a predict() function for inference.", duration: 25 },
+   635→
+   636→  // Stage 5: Evaluation
+   637→  { id: "5-1", stage: 5, title: "Test-Set Evaluation", desc: "Score on the held-out test set. Compare with validation. Check for overfitting/underfitting.", duration: 35 },
+   638→  { id: "5-2", stage: 5, title: "Residual / Confusion Matrix Analysis", desc: "For regression: residual plots, Q-Q plots. For classification: confusion matrix, precision/recall, ROC curve.", duration: 45 },
+   639→  { id: "5-3", stage: 5, title: "Model Explainability with SHAP", desc: "Install SHAP. Generate a beeswarm plot. Explain which features drive individual predictions.", duration: 50 },
+   640→
+   641→  // Stage 6: Deployment
+   642→  { id: "6-1", stage: 6, title: "FastAPI Model Endpoint", desc: "Create a FastAPI app with a /predict endpoint. Load the saved model. Accept JSON input, return predictions.", duration: 55 },
+   643→  { id: "6-2", stage: 6, title: "Streamlit Dashboard", desc: "Build a Streamlit dashboard with input widgets + a prediction display. Connect to the FastAPI backend.", duration: 50 },
+   644→  { id: "6-3", stage: 6, title: "Capstone Demo Prep", desc: "Prepare a 10-minute demo: problem statement, EDA highlights, model choice, evaluation metrics, live API + dashboard. Present to the panel.", duration: 40 },
+   645→];
+   646→
+   647→// ── MCQ question bank — 3 questions per module (18 total) ──
+   648→export type QuizQuestion = {
+   649→  id: string;
+   650→  stage: number;
+   651→  question: string;
+   652→  options: string[];
+   653→  correct: number; // index 0-3
+   654→};
+   655→
+   656→export const QUIZ_QUESTIONS: QuizQuestion[] = [
+   657→  // Stage 1: Data Ingestion
+   658→  { id: "q1-1", stage: 1, question: "Which Pandas method reads a CSV file into a DataFrame?", options: ["pd.read_excel()", "pd.read_csv()", "pd.load_csv()", "pd.import_csv()"], correct: 1 },
+   659→  { id: "q1-2", stage: 1, question: "What does df.shape return?", options: ["Number of rows only", "Number of columns only", "A tuple (rows, columns)", "Data types of all columns"], correct: 2 },
+   660→  { id: "q1-3", stage: 1, question: "Which method checks for missing values in a DataFrame?", options: ["df.isnull()", "df.missing()", "df.check_nulls()", "df.isnan()"], correct: 0 },
+   661→
+   662→  // Stage 2: EDA
+   663→  { id: "q2-1", stage: 2, question: "Which plot is best for visualizing the distribution of a single numeric variable?", options: ["Pie chart", "Histogram", "Scatter plot", "Bar chart"], correct: 1 },
+   664→  { id: "q2-2", stage: 2, question: "What does a correlation heatmap show?", options: ["Missing values", "Pairwise correlations between features", "Data types", "Row counts"], correct: 1 },
+   665→  { id: "q2-3", stage: 2, question: "Which statistic measures the asymmetry of a distribution?", options: ["Kurtosis", "Skewness", "Variance", "Standard deviation"], correct: 1 },
+   666→
+   667→  // Stage 3: Feature Engineering
+   668→  { id: "q3-1", stage: 3, question: "Which Scikit-Learn class handles missing values by replacing them?", options: ["StandardScaler", "SimpleImputer", "OneHotEncoder", "PCA"], correct: 1 },
+   669→  { id: "q3-2", stage: 3, question: "What does OneHotEncoder do?", options: ["Scales numeric features", "Reduces dimensionality", "Converts categorical values to binary columns", "Imputes missing data"], correct: 2 },
+   670→  { id: "q3-3", stage: 3, question: "Why use a Scikit-Learn Pipeline?", options: ["To visualize data", "To chain preprocessing + modeling steps reproducibly", "To speed up training", "To reduce memory"], correct: 1 },
+   671→
+   672→  // Stage 4: Model Training
+   673→  { id: "q4-1", stage: 4, question: "Which metric is used for regression model evaluation?", options: ["Accuracy", "RMSE", "F1-score", "Precision"], correct: 1 },
+   674→  { id: "q4-2", stage: 4, question: "What does cross-validation help prevent?", options: ["Overfitting", "Underfitting", "Data leakage", "Slow training"], correct: 0 },
+   675→  { id: "q4-3", stage: 4, question: "Which method saves a trained model to disk?", options: ["model.save()", "joblib.dump()", "model.export()", "pickle.write()"], correct: 1 },
+   676→
+   677→  // Stage 5: Evaluation
+   678→  { id: "q5-1", stage: 5, question: "What does a confusion matrix show?", options: ["Feature importance", "True/False positives + negatives", "Training time", "Model complexity"], correct: 1 },
+   679→  { id: "q5-2", stage: 5, question: "What does SHAP help with?", options: ["Faster training", "Explaining which features drive predictions", "Reducing dataset size", "Encoding categories"], correct: 1 },
+   680→  { id: "q5-3", stage: 5, question: "Which plot is used to check regression residuals for normality?", options: ["Q-Q plot", "Bar chart", "Pie chart", "Heatmap"], correct: 0 },
+   681→
+   682→  // Stage 6: Deployment
+   683→  { id: "q6-1", stage: 6, question: "Which Python framework is commonly used to serve ML models as APIs?", options: ["Django", "FastAPI", "Flask-SQLAlchemy", "Tkinter"], correct: 1 },
+   684→  { id: "q6-2", stage: 6, question: "What does Docker help with in ML deployment?", options: ["Faster training", "Containerizing the app for reproducible deployment", "Data cleaning", "Feature engineering"], correct: 1 },
+   685→  { id: "q6-3", stage: 6, question: "What is a capstone demo?", options: ["A written exam", "A final project presentation to an industry panel", "A coding contest", "A group discussion"], correct: 1 },
+   686→];
+   687→
+   688→export const QUIZ_PASS_THRESHOLD = 60; // 60% to pass
+   689→
+   690→// ── College seed list (Indian engineering colleges) ──
+   691→// Used to auto-seed the College table on first API call. Students can also
+   692→// add new colleges during registration (saved with source = "student-added").
+   693→export const COLLEGES_SEED: { name: string; state: string }[] = [
+   694→  { name: "VIT Vellore", state: "Tamil Nadu" },
+   695→  { name: "VIT Chennai", state: "Tamil Nadu" },
+   696→  { name: "VIT Bhopal", state: "Madhya Pradesh" },
+   697→  { name: "VIT AP", state: "Andhra Pradesh" },
+   698→  { name: "NIT Trichy", state: "Tamil Nadu" },
+   699→  { name: "NIT Surathkal", state: "Karnataka" },
+   700→  { name: "NIT Warangal", state: "Telangana" },
+   701→  { name: "NIT Calicut", state: "Kerala" },
+   702→  { name: "NIT Rourkela", state: "Odisha" },
+   703→  { name: "NIT Jaipur", state: "Rajasthan" },
+   704→  { name: "NIT Nagpur", state: "Maharashtra" },
+   705→  { name: "NIT Bhopal", state: "Madhya Pradesh" },
+   706→  { name: "BITS Pilani", state: "Rajasthan" },
+   707→  { name: "BITS Goa", state: "Goa" },
+   708→  { name: "BITS Hyderabad", state: "Telangana" },
+   709→  { name: "IIIT Hyderabad", state: "Telangana" },
+   710→  { name: "IIIT Bangalore", state: "Karnataka" },
+   711→  { name: "IIIT Delhi", state: "Delhi" },
+   712→  { name: "IIIT Allahabad", state: "Uttar Pradesh" },
+   713→  { name: "IIIT Lucknow", state: "Uttar Pradesh" },
+   714→  { name: "IIITDM Kancheepuram", state: "Tamil Nadu" },
+   715→  { name: "IIT Madras", state: "Tamil Nadu" },
+   716→  { name: "IIT Bombay", state: "Maharashtra" },
+   717→  { name: "IIT Delhi", state: "Delhi" },
+   718→  { name: "IIT Kanpur", state: "Uttar Pradesh" },
+   719→  { name: "IIT Kharagpur", state: "West Bengal" },
+   720→  { name: "IIT Roorkee", state: "Uttarakhand" },
+   721→  { name: "IIT Guwahati", state: "Assam" },
+   722→  { name: "IIT BHU Varanasi", state: "Uttar Pradesh" },
+   723→  { name: "IIT Indore", state: "Madhya Pradesh" },
+   724→  { name: "IIT Mandi", state: "Himachal Pradesh" },
+   725→  { name: "IIT Jodhpur", state: "Rajasthan" },
+   726→  { name: "IIT Patna", state: "Bihar" },
+   727→  { name: "IIT Ropar", state: "Punjab" },
+   728→  { name: "SRM Institute of Technology", state: "Tamil Nadu" },
+   729→  { name: "SRM University AP", state: "Andhra Pradesh" },
+   730→  { name: "Amrita Vishwa Vidyapeetham", state: "Tamil Nadu" },
+   731→  { name: "Manipal Institute of Technology", state: "Karnataka" },
+   732→  { name: "Symbiosis Institute of Technology", state: "Maharashtra" },
+   733→  { name: "Thapar Institute of Engineering & Technology", state: "Punjab" },
+   734→  { name: "RV College of Engineering (RVCE)", state: "Karnataka" },
+   735→  { name: "BMS College of Engineering", state: "Karnataka" },
+   736→  { name: "PES University", state: "Karnataka" },
+   737→  { name: "MS Ramaiah Institute of Technology", state: "Karnataka" },
+   738→  { name: "Delhi Technological University (DTU)", state: "Delhi" },
+   739→  { name: "NSUT Delhi", state: "Delhi" },
+   740→  { name: "IGDTUW Delhi", state: "Delhi" },
+   741→  { name: "Indraprastha Institute (IIIT-D)", state: "Delhi" },
+   742→  { name: "Jamia Millia Islamia", state: "Delhi" },
+   743→  { name: "Jadavpur University", state: "West Bengal" },
+   744→  { name: "KIIT Bhubaneswar", state: "Odisha" },
+   745→  { name: "SASTRA Thanjavur", state: "Tamil Nadu" },
+   746→  { name: "BITS Pilani Goa Campus", state: "Goa" },
+   747→  { name: "College of Engineering Pune (COEP)", state: "Maharashtra" },
+   748→  { name: "Veermata Jijabai Technological Institute (VJTI)", state: "Maharashtra" },
+   749→  { name: "Sardar Patel College of Engineering", state: "Maharashtra" },
+   750→  { name: "Nirma University", state: "Gujarat" },
+   751→  { name: "Nirma Institute of Technology", state: "Gujarat" },
+   752→  { name: "LD College of Engineering", state: "Gujarat" },
+   753→  { name: "NIT Surat (SVNIT)", state: "Gujarat" },
+   754→  { name: "Dhirubhai Ambani Institute (DA-IICT)", state: "Gujarat" },
+   755→  { name: "PDPU Gandhinagar", state: "Gujarat" },
+   756→  { name: "Chandigarh University", state: "Punjab" },
+   757→  { name: "Thapar University Patiala", state: "Punjab" },
+   758→  { name: "Guru Nanak Dev Engineering College", state: "Punjab" },
+   759→  { name: "Anna University", state: "Tamil Nadu" },
+   760→  { name: "Anna University (CEG)", state: "Tamil Nadu" },
+   761→  { name: "Anna University (MIT)", state: "Tamil Nadu" },
+   762→  { name: "SSN College of Engineering", state: "Tamil Nadu" },
+   763→  { name: "RMK Engineering College", state: "Tamil Nadu" },
+   764→  { name: "Sri Sairam Engineering College", state: "Tamil Nadu" },
+   765→  { name: "JNTUH College of Engineering", state: "Telangana" },
+   766→  { name: "JNTUK Kakinada", state: "Andhra Pradesh" },
+   767→  { name: "JNTUA Anantapur", state: "Andhra Pradesh" },
+   768→  { name: "CBIT Hyderabad", state: "Telangana" },
+   769→  { name: "MGIT Hyderabad", state: "Telangana" },
+   770→  { name: "VNR VJIET Hyderabad", state: "Telangana" },
+   771→  { name: "BVRIT Hyderabad", state: "Telangana" },
+   772→  { name: "UPES Dehradun", state: "Uttarakhand" },
+   773→  { name: "Graphic Era University", state: "Uttarakhand" },
+   774→  { name: "Amity University Noida", state: "Uttar Pradesh" },
+   775→  { name: "Amity University Lucknow", state: "Uttar Pradesh" },
+   776→  { name: "Sharda University", state: "Uttar Pradesh" },
+   777→  { name: "Galgotias University", state: "Uttar Pradesh" },
+   778→  { name: "GL Bajaj Institute", state: "Uttar Pradesh" },
+   779→  { name: "AKGEC Ghaziabad", state: "Uttar Pradesh" },
+   780→  { name: "KIET Group of Institutions", state: "Uttar Pradesh" },
+   781→  { name: "ABES Engineering College", state: "Uttar Pradesh" },
+   782→  { name: "JSS Academy of Technical Education", state: "Uttar Pradesh" },
+   783→  { name: "Ramaiah Institute of Technology", state: "Karnataka" },
+   784→  { name: "Dayananda Sagar College of Engineering", state: "Karnataka" },
+   785→  { name: "BNM Institute of Technology", state: "Karnataka" },
+   786→  { name: "Nitte Meenakshi Institute", state: "Karnataka" },
+   787→  { name: "Symbiosis Centre for Management Studies", state: "Maharashtra" },
+   788→  { name: "Mody University", state: "Rajasthan" },
+   789→];
+   790→

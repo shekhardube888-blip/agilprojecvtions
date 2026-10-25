@@ -228,3 +228,62 @@ model College {
   createdAt DateTime @default(now())
   @@index([name])
 }
+
+// ── Project Library: ready-made projects for students to browse + download ──
+// Each item is curated by admin, with starter-files stored as a JSON array
+// (avoids storing large ZIPs in the DB — only text starter code).
+model ProjectLibraryItem {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  description   String
+  techStack     String
+  difficulty    String   @default("Intermediate")  // Beginner | Intermediate | Advanced
+  category      String   @default("AI")             // AI | Web | Enterprise
+  features      String   @default("[]")              // JSON: string[]
+  starterFiles  String   @default("[]")              // JSON: [{ label, fileName, language, content }]
+  status        String   @default("published")       // draft | published | archived
+  accessLevel   String   @default("public")          // public | enrolled | assigned
+  featured      Boolean  @default(false)
+  createdBy     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  downloads     ProjectDownload[]
+  submissions   ProjectSubmission[]
+
+  @@index([status])
+  @@index([category])
+}
+
+// ── One download per student (rule: student can only download 1 ready-made project) ──
+model ProjectDownload {
+  id            String   @id @default(cuid())
+  studentEmail  String   @unique
+  projectId     String
+  project       ProjectLibraryItem @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  downloadedAt  DateTime @default(now())
+  @@index([projectId])
+}
+
+// ── Student's submitted work for a library project (mentor-reviewed) ──
+model ProjectSubmission {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       ProjectLibraryItem @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  studentEmail  String
+  studentName   String?
+  sourceCodeUrl String?   // GitHub / Drive link
+  reportText    String?   // inline markdown report
+  demoVideoUrl  String?
+  notes         String?
+  status        String   @default("submitted")    // submitted | under_review | approved | rejected
+  mentorFeedback String?
+  reviewedBy    String?
+  submittedAt   DateTime @default(now())
+  reviewedAt    DateTime?
+
+  @@unique([projectId, studentEmail])
+  @@index([projectId])
+  @@index([studentEmail])
+  @@index([status])
+}
