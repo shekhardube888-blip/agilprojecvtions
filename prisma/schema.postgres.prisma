@@ -86,6 +86,7 @@ model Account {
   unlockLogs    UnlockLog[]
 }
 
+// Audit trail of every admin "unlock / payment received" action.
 model UnlockLog {
   id        String    @id @default(cuid())
   accountId String

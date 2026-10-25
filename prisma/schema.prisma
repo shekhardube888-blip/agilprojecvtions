@@ -7,14 +7,16 @@ datasource db {
   url      = env("POSTGRES_PRISMA_URL")
 }
 
+
 model Student {
-  id               String    @id @default(cuid())
+  id               String        @id @default(cuid())
   firstName        String
   lastName         String
   email            String
   mobile           String
   degree           String
   branch           String
+  subject          String        @default("")
   semester         String
   plan             String
   college          String
@@ -25,17 +27,18 @@ model Student {
   categoryLabel    String
   project          String
   projectId        Int?
-  consentWa        Boolean   @default(true)
-  consentEm        Boolean   @default(true)
-  emailSent        Boolean   @default(false)
-  waSent           Boolean   @default(false)
-  paymentStatus    String    @default("pending")
-  internshipStatus String    @default("not_started")
-  currentStage     Int       @default(0)
-  startedAt        DateTime?
-  completedAt      DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  consentWa        Boolean       @default(true)
+  consentEm        Boolean       @default(true)
+  emailSent        Boolean       @default(false)
+  waSent           Boolean       @default(false)
+  paymentStatus    String        @default("pending")
+  internshipStatus String        @default("not_started")
+  currentStage     Int           @default(0)
+  startedAt        DateTime?     @db.Timestamp(6)
+  completedAt      DateTime?     @db.Timestamp(6)
+  createdAt        DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime      @updatedAt @db.Timestamp(6)
+  Certificate      Certificate[]
 
   @@index([email])
   @@index([category])
@@ -109,3 +112,4 @@ model TrainingModule {
   @@unique([studentEmail, stage])
   @@index([studentEmail])
 }
+
