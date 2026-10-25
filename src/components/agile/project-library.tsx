@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import {
   FolderKanban, Download, FileText, CheckCircle2, Loader2, X, Send,
-  ExternalLink, Sparkles, ArrowRight, Star, Github, Video, Award, AlertTriangle,
+  ExternalLink, Sparkles, ArrowRight, Star, Github, Video, Award, AlertTriangle, Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -65,6 +65,8 @@ export function ProjectLibrary() {
   const [items, setItems] = useState<ProjectItem[]>([]);
   const [downloadedProjectId, setDownloadedProjectId] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<Map<string, Submission>>(new Map());
+  const [assignedProjectId, setAssignedProjectId] = useState<string | null>(null);
+  const [assignedProjectTitle, setAssignedProjectTitle] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState<ProjectDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -88,6 +90,8 @@ export function ProjectLibrary() {
         setItems(d.items || []);
         setDownloadedProjectId(d.downloadedProjectId);
         setSubmissions(new Map(Object.entries(d.submissions || {})));
+        setAssignedProjectId(d.assignedProjectId || null);
+        setAssignedProjectTitle(d.assignedProjectTitle || null);
       } else {
         toast({ title: "Failed to load projects", description: d.error, variant: "destructive" });
       }
@@ -120,12 +124,22 @@ export function ProjectLibrary() {
 
   const downloadFile = useCallback(async (file: StarterFile) => {
     if (!detail || !file.fileName) return;
-    // First download → warn about the "1 project per student" rule
-    if (!downloadedProjectId) {
-      const ok = window.confirm(
-        `You can download only ONE ready-made project during your internship. Once you download from "${detail.title}", you cannot download from any other project.\n\nContinue downloading "${file.fileName}"?`
-      );
-      if (!ok) return;
+    // Admin-controlled rule: student can only download their assigned project
+    if (!assignedProjectId) {
+      toast({
+        title: "No project assigned",
+        description: "Your admin has not assigned a project to you yet. Please contact your mentor.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (assignedProjectId !== detail.id) {
+      toast({
+        title: "Download blocked",
+        description: `You can only download your admin-assigned project: "${assignedProjectTitle || "another project"}".`,
+        variant: "destructive",
+      });
+      return;
     }
     setBusy(true);
     try {
@@ -137,7 +151,7 @@ export function ProjectLibrary() {
         const d = await safeJson(res);
         toast({
           title: "Download blocked",
-          description: d.error || "You've already downloaded a different project.",
+          description: d.error || "You don't have permission to download this project.",
           variant: "destructive",
         });
         return;
@@ -161,7 +175,7 @@ export function ProjectLibrary() {
         title: "✓ Downloaded",
         description: file.fileName,
       });
-      // Refresh state — student is now "locked" to this project
+      // Refresh state — student is now marked as having downloaded
       if (!downloadedProjectId) {
         setDownloadedProjectId(detail.id);
         await load();
@@ -171,7 +185,7 @@ export function ProjectLibrary() {
     } finally {
       setBusy(false);
     }
-  }, [detail, downloadedProjectId, toast, load]);
+  }, [detail, assignedProjectId, assignedProjectTitle, downloadedProjectId, toast, load]);
 
   const submitWork = useCallback(async () => {
     if (!detail) return;
@@ -230,20 +244,33 @@ export function ProjectLibrary() {
             </div>
             <p className="text-xs text-muted-foreground w-full mt-1">
               Browse curated internship starter projects. Each project ships with source code, schema, and docs.
-              You can download <strong className="text-cyan-300">only one</strong> project during your internship — choose carefully.
+              Only your <strong className="text-cyan-300">admin-assigned</strong> project can be downloaded — contact your mentor if you don't see one assigned.
             </p>
           </div>
         </div>
       </div>
 
-      {/* One-download rule banner */}
-      {downloadedProjectId && (
+      {/* Admin-assignment banner */}
+      {assignedProjectId ? (
         <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 flex items-start gap-3">
           <CheckCircle2 className="size-4 text-emerald-400 mt-0.5" />
           <div className="text-xs">
-            <p className="text-emerald-300 font-semibold">Project chosen</p>
+            <p className="text-emerald-300 font-semibold">Admin assigned you: {assignedProjectTitle}</p>
             <p className="text-muted-foreground mt-0.5">
-              You can only re-download files from your chosen project. Other projects are view-only.
+              You can download starter files from this project only. Other projects are view-only.
+              {downloadedProjectId === assignedProjectId && (
+                <span className="text-emerald-300"> ✓ You've downloaded the starter code.</span>
+              )}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 flex items-start gap-3">
+          <AlertTriangle className="size-4 text-amber-400 mt-0.5" />
+          <div className="text-xs">
+            <p className="text-amber-300 font-semibold">No project assigned yet</p>
+            <p className="text-muted-foreground mt-0.5">
+              Your admin/mentor will assign you a project from the User Management tab. You can browse the library below, but downloads are blocked until then.
             </p>
           </div>
         </div>
@@ -259,12 +286,15 @@ export function ProjectLibrary() {
           {items.map((p) => {
             const isDownloaded = downloadedProjectId === p.id;
             const sub = submissions.get(p.id) as Submission | undefined;
+            const isAssigned = assignedProjectId === p.id;
             return (
               <div
                 key={p.id}
                 className={cn(
                   "rounded-xl border p-4 transition-all hover:border-cyan-500/50 cursor-pointer",
-                  p.featured ? "border-cyan-500/40 bg-card shadow-[0_0_24px_-6px_rgba(6,182,212,0.2)]" : "border-border bg-card/50"
+                  isAssigned
+                    ? "border-cyan-500/50 bg-card shadow-[0_0_24px_-6px_rgba(6,182,212,0.3)] ring-1 ring-cyan-500/30"
+                    : p.featured ? "border-cyan-500/40 bg-card" : "border-border bg-card/50"
                 )}
                 onClick={() => openDetail(p.id)}
               >
@@ -282,6 +312,11 @@ export function ProjectLibrary() {
                   <span className="font-mono">{p.techStack}</span>
                 </div>
                 <div className="flex flex-wrap gap-1 mt-3">
+                  {isAssigned && (
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                      <Star className="size-3 fill-cyan-300" /> Admin-assigned
+                    </span>
+                  )}
                   {isDownloaded && (
                     <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                       <CheckCircle2 className="size-3" /> Downloaded
@@ -292,9 +327,14 @@ export function ProjectLibrary() {
                       <Send className="size-3" /> {sub.status.replace("_", " ")}
                     </span>
                   )}
-                  {!isDownloaded && !downloadedProjectId && (
-                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30">
-                      <Download className="size-3" /> Available
+                  {!isAssigned && assignedProjectId && (
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-slate-600/20 text-muted-foreground border border-slate-500/30">
+                      <Lock className="size-3" /> Locked
+                    </span>
+                  )}
+                  {!assignedProjectId && (
+                    <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-slate-600/20 text-muted-foreground border border-slate-500/30">
+                      <Lock className="size-3" /> Awaiting assignment
                     </span>
                   )}
                 </div>
@@ -394,12 +434,15 @@ export function ProjectLibrary() {
                               <Button
                                 size="sm"
                                 onClick={() => downloadFile(f)}
-                                disabled={busy}
+                                disabled={busy || !assignedProjectId || assignedProjectId !== detail.id}
+                                title={!assignedProjectId ? "No project assigned by admin" : assignedProjectId !== detail.id ? "This project is not assigned to you" : undefined}
                                 className={cn(
                                   "h-7 text-[11px] px-2",
                                   isDownloadedOrLocked(detail.id, downloadedProjectId)
                                     ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                                    : "bg-gradient-to-r from-violet-600 to-cyan-500 text-white"
+                                    : assignedProjectId === detail.id
+                                    ? "bg-gradient-to-r from-violet-600 to-cyan-500 text-white"
+                                    : "bg-muted text-muted-foreground cursor-not-allowed"
                                 )}
                               >
                                 {busy ? <Loader2 className="size-3 animate-spin mr-1" /> : <Download className="size-3 mr-1" />}
@@ -458,15 +501,20 @@ export function ProjectLibrary() {
                       <Send className="size-4 mr-2" />
                       {detailSub ? "Resubmit Work" : "Submit Completed Work"}
                     </Button>
-                  ) : downloadedProjectId ? (
+                  ) : !assignedProjectId ? (
                     <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300 flex items-start gap-2">
                       <AlertTriangle className="size-4 mt-0.5 shrink-0" />
-                      <span>You can only download/submit work for the project you've already chosen.</span>
+                      <span>Your admin has not assigned a project to you yet. Please contact your mentor to get one assigned.</span>
+                    </div>
+                  ) : assignedProjectId !== detail.id ? (
+                    <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300 flex items-start gap-2">
+                      <Lock className="size-4 mt-0.5 shrink-0" />
+                      <span>This project is not assigned to you. You can only download/submit work for your admin-assigned project.</span>
                     </div>
                   ) : (
                     <div className="mt-4 rounded-lg border border-border bg-card/30 p-3 text-xs text-muted-foreground flex items-start gap-2">
                       <Download className="size-4 mt-0.5 shrink-0 text-cyan-400" />
-                      <span>Download any starter file to lock in your project choice. You'll then be able to submit your work.</span>
+                      <span>Download any starter file to confirm your project choice. You'll then be able to submit your completed work for mentor review.</span>
                     </div>
                   )}
                 </div>

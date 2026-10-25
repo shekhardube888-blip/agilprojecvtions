@@ -8,10 +8,15 @@ export const maxDuration = 30;
 
 // GET: download a single starter file from a project.
 //
-// ENFORCEMENT — "one ready-made project per student":
-//   • If the student has NOT yet downloaded any project  → allow + record.
-//   • If the student has already downloaded THIS project  → allow re-download (same file).
-//   • If the student has already downloaded a DIFFERENT project → 403 with message.
+// ENFORCEMENT — admin-controlled "one ready-made project per student":
+//   1. Admin must have assigned a project to this student (Account.assignedProjectId).
+//      If null → 403 "Admin has not assigned you a project yet."
+//   2. The student can only download files from the ADMIN-ASSIGNED project.
+//      If the requested project != assigned project → 403 with the assigned project's title.
+//   3. Re-downloading from the assigned project is always allowed.
+//
+// (The earlier "first download locks the student to whichever project they
+//  chose first" rule is now REPLACED by admin-controlled assignment.)
 //
 // Query params:
 //   • file=<fileName>   — required, which starter file to download
@@ -73,32 +78,60 @@ export async function GET(
       );
     }
 
-    // ── 3. ENFORCE the "one ready-made project per student" rule ──
-    const existing = await db.projectDownload.findUnique({
-      where: { studentEmail },
-      select: { projectId: true, project: { select: { title: true } } },
+    // ── 3. ENFORCE the admin-assigned project rule ──
+    const account = await db.account.findUnique({
+      where: { username: studentEmail },
+      select: { assignedProjectId: true },
     });
+    const assignedId = account?.assignedProjectId || null;
 
-    if (existing && existing.projectId !== id) {
+    if (!assignedId) {
       return NextResponse.json(
         {
           ok: false,
-          error: `You can only download one ready-made project. You already chose: "${existing.project?.title || "another project"}".`,
-          code: "ALREADY_DOWNLOADED_OTHER",
-          chosenProjectId: existing.projectId,
+          error:
+            "Your admin has not assigned a project to you yet. Please contact your mentor to get a project assigned in User Management.",
+          code: "NO_ASSIGNED_PROJECT",
         },
         { status: 403 }
       );
     }
 
-    // First download from this project → record it
+    if (assignedId !== id) {
+      // Look up the assigned project's title for a helpful error message
+      const assigned = await db.projectLibraryItem.findUnique({
+        where: { id: assignedId },
+        select: { title: true },
+      });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: `You can only download your admin-assigned project: "${assigned?.title || "another project"}". This project is not assigned to you.`,
+          code: "NOT_ASSIGNED_PROJECT",
+          assignedProjectId: assignedId,
+        },
+        { status: 403 }
+      );
+    }
+
+    // ── 4. Record the download (idempotent — re-downloads just update the timestamp) ──
+    const existing = await db.projectDownload.findUnique({
+      where: { studentEmail },
+    });
     if (!existing) {
       await db.projectDownload.create({
         data: { studentEmail, projectId: id },
       });
+    } else if (existing.projectId !== id) {
+      // Edge case: admin reassigned the project after the student already
+      // downloaded a different one. Update the row to the new project.
+      await db.projectDownload.update({
+        where: { studentEmail },
+        data: { projectId: id, downloadedAt: new Date() },
+      });
     }
 
-    // ── 4. Stream the file back as a downloadable attachment ──
+    // ── 5. Stream the file back as a downloadable attachment ──
     // Determine content-type from extension (best-effort)
     const ext = (fileName.split(".").pop() || "").toLowerCase();
     const ct: Record<string, string> = {

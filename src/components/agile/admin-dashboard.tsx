@@ -394,6 +394,9 @@ function UserManagementTab() {
   const [showPw, setShowPw] = useState(false);
   const [expiryDays, setExpiryDays] = useState("");
   const [busy, setBusy] = useState(false);
+  // For assign-project action: list of Project Library items + selected project ID
+  const [libraryProjects, setLibraryProjects] = useState<{ id: string; title: string }[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState("");
 
   // Generate a random 12-char password (letters + digits + symbols).
   const generatePassword = useCallback(() => {
@@ -416,11 +419,24 @@ function UserManagementTab() {
     finally { setLoading(false); }
   }, []);
 
+  // Load Project Library items (for the assign-project dropdown) on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/project-library", { cache: "no-store" });
+        const d = await res.json();
+        if (d.ok) setLibraryProjects((d.items || []).map((p: any) => ({ id: p.id, title: p.title })));
+      } catch { /* ignore */ }
+    })();
+  }, []);
+
   useEffect(() => { load(); }, [load]);
 
   type AccountRow = {
     id: string; username: string; role: string; status: string; fullName: string | null;
     note: string | null; passwordSetAt: string | null; expiresAt: string | null; createdAt: string;
+    assignedProjectId?: string | null;
+    assignedProjectTitle?: string | null;
   };
 
   const filtered = accounts.filter((a) => {
@@ -436,7 +452,10 @@ function UserManagementTab() {
 
   async function performAction() {
     if (!actionDialog) return;
-    if (!reason.trim()) { toast({ title: "Reason required", variant: "destructive" }); return; }
+    // Reason is required for all actions EXCEPT assign-project (which auto-fills it)
+    if (!reason.trim() && actionDialog.action !== "assign-project") {
+      toast({ title: "Reason required", variant: "destructive" }); return;
+    }
     if (actionDialog.action === "reset-password" && newPassword.length < 8) {
       toast({ title: "Password too short", description: "Min 8 characters.", variant: "destructive" }); return;
     }
@@ -446,6 +465,7 @@ function UserManagementTab() {
       if (actionDialog.action === "reset-password") body.newPassword = newPassword;
       if (actionDialog.action === "set-expiry" && expiryDays !== "") body.expiryDays = Number(expiryDays);
       if (actionDialog.action === "unlock" && expiryDays !== "") body.expiryDays = Number(expiryDays);
+      if (actionDialog.action === "assign-project") body.assignedProjectId = selectedProjectId || null;
 
       const res = await fetch("/api/admin/user/manage", {
         method: "POST",
@@ -454,9 +474,9 @@ function UserManagementTab() {
       });
       const d = await res.json();
       if (!res.ok || !d.ok) throw new Error(d.error || "Action failed");
-      toast({ title: `${actionDialog.action} completed`, description: `Reason: ${reason.trim()}` });
+      toast({ title: `${actionDialog.action} completed`, description: `Reason: ${reason.trim() || "auto-filled"}` });
       setActionDialog(null);
-      setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays("");
+      setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays(""); setSelectedProjectId("");
       load();
     } catch (e) {
       toast({ title: "Failed", description: (e as Error).message, variant: "destructive" });
@@ -538,6 +558,7 @@ function UserManagementTab() {
                         <button onClick={() => setActionDialog({ account: a, action: "lock" })} className="text-[10px] px-2 py-1 rounded bg-rose-500/10 text-rose-500 dark:text-rose-400 hover:bg-rose-500/20 mr-1">Lock</button>
                       )}
                       <button onClick={() => setActionDialog({ account: a, action: "set-expiry" })} className="text-[10px] px-2 py-1 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 mr-1">Expiry</button>
+                      <button onClick={() => { setSelectedProjectId(a.assignedProjectId || ""); setActionDialog({ account: a, action: "assign-project" }); }} className="text-[10px] px-2 py-1 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 mr-1" title="Assign a ready-made project this student can download"><FolderKanban className="size-3 inline mr-0.5" />{a.assignedProjectTitle ? "Project" : "Assign"}</button>
                       <button onClick={() => viewHistory(a)} className="text-[10px] px-2 py-1 rounded bg-slate-500/10 text-slate-600 dark:text-slate-400 hover:bg-slate-500/20" title="View action history"><History className="size-3 inline" /></button>
                     </td>
                   </tr>
@@ -585,14 +606,32 @@ function UserManagementTab() {
               </div>
             )}
 
+            {actionDialog.action === "assign-project" && (
+              <div className="space-y-2 mb-3">
+                <Label className="text-xs">Assigned Project (the only project this student can download)</Label>
+                <select value={selectedProjectId} onChange={(e) => setSelectedProjectId(e.target.value)} className="w-full h-9 text-sm rounded-md border border-input bg-background px-2">
+                  <option value="">— Clear assignment (no project) —</option>
+                  {libraryProjects.map((p) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
+                {actionDialog.account.assignedProjectTitle ? (
+                  <p className="text-[10px] text-muted-foreground">Currently assigned: <strong className="text-cyan-300">{actionDialog.account.assignedProjectTitle}</strong></p>
+                ) : (
+                  <p className="text-[10px] text-muted-foreground">No project currently assigned — the student cannot download any project.</p>
+                )}
+                <p className="text-[10px] text-muted-foreground">The student will only be able to download starter files from this project. They can still browse the entire library. Set to "Clear assignment" to revoke download access.</p>
+              </div>
+            )}
+
             <div className="space-y-2 mb-4">
-              <Label className="text-xs">Reason (required — logged for audit)</Label>
+              <Label className="text-xs">Reason {actionDialog.action === "assign-project" ? "(optional — auto-filled if empty)" : "(required — logged for audit)"}</Label>
               <Textarea value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Student reported login issue / Payment confirmed / Misuse of account" className="bg-muted border-border min-h-[60px]" />
             </div>
 
             <div className="flex gap-2 justify-end">
-              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays(""); }} disabled={busy}>Cancel</Button>
-              <Button size="sm" onClick={performAction} disabled={busy} className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
+              <Button size="sm" variant="outline" onClick={() => { setActionDialog(null); setReason(""); setNewPassword(""); setShowPw(false); setExpiryDays(""); setSelectedProjectId(""); }} disabled={busy}>Cancel</Button>
+              <Button size="sm" onClick={performAction} disabled={busy || (actionDialog.action !== "assign-project" && !reason.trim())} className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
                 {busy ? <Loader2 className="size-3.5 animate-spin mr-1" /> : null}
                 Confirm {actionDialog.action.replace("-", " ")}
               </Button>
@@ -638,7 +677,7 @@ function UserManagementTab() {
   );
 }
 
-type ActionType = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew";
+type ActionType = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew" | "assign-project";
 type HistoryEntry = { id: string; adminUser: string; action: string; reason: string | null; expiresAt: string | null; createdAt: string };
 
 

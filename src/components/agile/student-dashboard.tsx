@@ -25,11 +25,11 @@ type TabKey = "overview" | "register" | "track" | "ai-mentor" | "ntai-chat" | "c
 
 const TABS: { key: TabKey; label: string; icon: React.ReactNode; desc: string; accent: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" />, desc: "Your dashboard home", accent: "cyan" },
-  { key: "learning", label: "Learning Path", icon: <BookOpen className="size-4" />, desc: "Structured lessons + progress", accent: "emerald" },
-  { key: "library", label: "Project Library", icon: <FolderKanban className="size-4" />, desc: "Browse + download ready-made projects", accent: "violet" },
   { key: "register", label: "Register", icon: <Rocket className="size-4" />, desc: "4-step free enrolment", accent: "violet" },
   { key: "track", label: "Track Project", icon: <Search className="size-4" />, desc: "Your 6-stage journey", accent: "cyan" },
+  { key: "learning", label: "Learning Path", icon: <BookOpen className="size-4" />, desc: "Structured lessons + progress", accent: "emerald" },
   { key: "ai-mentor", label: "AI Mentor", icon: <Bot className="size-4" />, desc: "Learning assistant", accent: "violet" },
+  { key: "library", label: "Project Library", icon: <FolderKanban className="size-4" />, desc: "Browse + download ready-made projects", accent: "violet" },
   { key: "ntai-chat", label: "NT-AI Chatbot", icon: <MessageSquare className="size-4" />, desc: "Coming in v2.0", accent: "slate" },
   { key: "code", label: "Code Playground", icon: <Code2 className="size-4" />, desc: "HTML · CSS · JS live runner", accent: "emerald" },
   { key: "schedule", label: "Schedule", icon: <Calendar className="size-4" />, desc: "Upcoming batches", accent: "amber" },

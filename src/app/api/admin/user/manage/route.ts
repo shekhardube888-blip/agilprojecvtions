@@ -27,9 +27,9 @@ export const runtime = "nodejs";
 // - The reason field is saved to the audit log so there's a full history of
 //   why each action was taken (e.g. "Student reported login issue").
 
-type Action = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew";
+type Action = "reset-password" | "lock" | "unlock" | "set-expiry" | "renew" | "assign-project";
 
-const VALID_ACTIONS: Action[] = ["reset-password", "lock", "unlock", "set-expiry", "renew"];
+const VALID_ACTIONS: Action[] = ["reset-password", "lock", "unlock", "set-expiry", "renew", "assign-project"];
 
 export async function POST(req: Request) {
   try {
@@ -46,6 +46,9 @@ export async function POST(req: Request) {
     const newPassword = body.newPassword ? String(body.newPassword) : null;
     const expiryDate = body.expiryDate ? String(body.expiryDate) : null; // ISO string
     const expiryDays = body.expiryDays != null ? Number(body.expiryDays) : null;
+    // For assign-project: the Project Library item ID to allow this student to
+    // download. Pass null/empty to CLEAR the assignment.
+    const assignedProjectId = body.assignedProjectId != null ? String(body.assignedProjectId) : null;
 
     if (!accountId) {
       return NextResponse.json({ ok: false, error: "accountId is required." }, { status: 400 });
@@ -54,7 +57,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: `Invalid action. Must be one of: ${VALID_ACTIONS.join(", ")}` }, { status: 400 });
     }
     if (!reason) {
-      return NextResponse.json({ ok: false, error: "A reason is required for audit logging." }, { status: 400 });
+      // assign-project allows an empty reason — we'll auto-fill it below.
+      if (action !== "assign-project") {
+        return NextResponse.json({ ok: false, error: "A reason is required for audit logging." }, { status: 400 });
+      }
     }
 
     const account = await db.account.findUnique({ where: { id: accountId } });
@@ -167,9 +173,52 @@ export async function POST(req: Request) {
         logExpiry = newExpiry;
         break;
       }
+
+      case "assign-project": {
+        // Admin selects which ready-made Project Library item this student is
+        // allowed to download. Pass null/empty to CLEAR the assignment.
+        if (!assignedProjectId || assignedProjectId === "") {
+          updateData.assignedProjectId = null;
+        } else {
+          // Validate that the project exists + is published
+          const proj = await db.projectLibraryItem.findUnique({
+            where: { id: assignedProjectId },
+            select: { id: true, title: true, status: true },
+          });
+          if (!proj) {
+            return NextResponse.json(
+              { ok: false, error: "Project not found." },
+              { status: 404 }
+            );
+          }
+          if (proj.status !== "published") {
+            return NextResponse.json(
+              { ok: false, error: "Project is not published." },
+              { status: 400 }
+            );
+          }
+          updateData.assignedProjectId = assignedProjectId;
+        }
+        // reason is optional for this action — auto-fill if missing
+        // (we already allow empty reason for assign-project above)
+        break;
+      }
     }
 
-    updateData.note = `[${action}] ${reason}`;
+    // For assign-project, build a friendly note if the admin didn't provide one
+    let finalReason = reason;
+    if (action === "assign-project" && !finalReason) {
+      if (updateData.assignedProjectId === null) {
+        finalReason = "Project assignment cleared";
+      } else {
+        const proj = await db.projectLibraryItem.findUnique({
+          where: { id: String(updateData.assignedProjectId) },
+          select: { title: true },
+        });
+        finalReason = `Assigned project: ${proj?.title || "unknown"}`;
+      }
+    }
+    updateData.note = `[${action}] ${finalReason}`;
 
     const updated = await db.account.update({
       where: { id: account.id },
@@ -182,7 +231,7 @@ export async function POST(req: Request) {
         accountId: account.id,
         adminUser: session.username,
         action,
-        reason,
+        reason: finalReason || "",
         expiresAt: logExpiry,
       },
     });
@@ -197,6 +246,7 @@ export async function POST(req: Request) {
         fullName: updated.fullName,
         expiresAt: updated.expiresAt,
         note: updated.note,
+        assignedProjectId: updated.assignedProjectId,
         expired: isExpired(updated.expiresAt),
       },
     });

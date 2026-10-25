@@ -977,3 +977,54 @@ Stage Summary:
 - Verified by Agent Browser end-to-end: login → admin tab → student tab → download enforcement → preview code modal.
 - Files created: 7 API routes, 2 components, 1 const in data.ts, 1 SQL seed, 1 Node seed script.
 - Files modified: 2 prisma schemas, 2 dashboard components (student + admin), 1 project-tracker.tsx.
+
+---
+Task ID: PROJECT-LIBRARY-ADMIN-CONTROL
+Agent: main (claude code)
+Task: (1) Reorder Student Dashboard tabs to: Overview → Register → Track Project → Learning Path → AI Mentor → Project Library → NT-AI Chatbot → Code Playground → Schedule → FAQ. (2) Replace student-chosen "1 project per student" rule with admin-controlled assignment — admin selects which project each student can download via User Management tab.
+
+Work Log:
+- Reordered TABS array in src/components/agile/student-dashboard.tsx to the requested sequence.
+- Added `assignedProjectId String?` field to Account model in BOTH prisma/schema.prisma (SQLite) AND prisma/schema.postgres.prisma (Postgres).
+- Ran `bun run db:generate` + `bun run db:push` — schema now has the new column on the SQLite dev DB.
+- Extended /api/admin/accounts to return assignedProjectId + looked-up assignedProjectTitle in one round-trip.
+- Extended /api/admin/user/manage to support new action "assign-project":
+  * Accepts `assignedProjectId` in the body (null/empty to clear).
+  * Validates the project exists + is published.
+  * Auto-fills the audit-log reason when admin leaves it blank (e.g. "Assigned project: Enterprise AI Chatbot").
+  * Logs the action to UnlockLog.
+- Updated /api/student/project-library to return `assignedProjectId` + `assignedProjectTitle` per the logged-in student's Account row.
+- Updated /api/student/project-library/[id]/download to enforce the new admin-controlled rule:
+  * If no project assigned → 403 NO_ASSIGNED_PROJECT with helpful "contact your mentor" message.
+  * If assigned project != requested project → 403 NOT_ASSIGNED_PROJECT with the assigned project's title.
+  * If matches → 200 OK, streams the file. Re-downloads are always allowed.
+- Updated src/components/agile/project-library.tsx:
+  * Removed the old "first download locks the student" confirmation dialog.
+  * Added "Admin-assigned" / "Locked" / "Awaiting assignment" badges per project card.
+  * Admin-assigned card gets a cyan ring + glow.
+  * Download button on non-assigned projects is `disabled` with a tooltip "This project is not assigned to you".
+  * Submit Work footer shows different messages based on: (a) no assignment → "contact mentor", (b) different project → "not assigned to you", (c) assigned but not downloaded → "download to start", (d) downloaded → Submit button.
+- Updated src/components/agile/admin-dashboard.tsx → UserManagementTab:
+  * Added new "Assign"/"Project" button next to "Expiry" for each user row.
+  * Loads the Project Library list on mount (for the dropdown).
+  * Updated AccountRow type to include assignedProjectId + assignedProjectTitle.
+  * Action dialog renders a project dropdown when action === "assign-project" — shows currently assigned + 5 library projects + "Clear assignment" option.
+  * Reason field becomes optional for assign-project (auto-filled server-side).
+- Verified end-to-end with curl + Agent Browser:
+  * Admin POST /api/admin/user/manage { action: "assign-project", assignedProjectId: X } → 200, account.assignedProjectId updated.
+  * Student GET /api/student/project-library → returns assignedProjectId + assignedProjectTitle.
+  * Student downloads assigned project file → 200 OK (395 bytes).
+  * Student downloads non-assigned project file → 403 NOT_ASSIGNED_PROJECT with helpful message.
+  * Student downloads with no project assigned → 403 NO_ASSIGNED_PROJECT with "contact your mentor" message.
+  * Admin User Management tab shows "Assign" button (for unassigned guests) and "Project" button (for assigned guests).
+  * Clicking "Project" button opens dialog with project dropdown — pre-selects currently-assigned project.
+  * Student dashboard tab bar shows the new order: Overview → Register → Track Project → Learning Path → AI Mentor → Project Library → NT-AI Chatbot → Code Playground → Schedule → FAQ.
+  * Student Project Library tab shows green "Admin assigned you: Enterprise AI Chatbot" banner + cyan-glow ring on the assigned project card + "Locked" badges on all other projects.
+  * Detail dialog for a non-assigned project shows all 5 Download buttons `disabled=true` with tooltip "This project is not assigned to you".
+- Lint clean (only pre-existing warnings in unrelated category-selector.tsx).
+
+Stage Summary:
+- Student Dashboard tab order now matches the user's requested sequence.
+- Project Library downloads are now 100% admin-controlled: only the project the admin assigns to each student in User Management can be downloaded. All other projects are browse-only with clear "Locked" badges + disabled Download buttons.
+- Audit trail: every assign/clear action is logged to UnlockLog with adminUser + timestamp.
+- Files modified: 2 prisma schemas, src/components/agile/student-dashboard.tsx (tab order), src/components/agile/project-library.tsx (badge states + disabled downloads), src/components/agile/admin-dashboard.tsx (Assign button + dialog), src/app/api/admin/accounts/route.ts, src/app/api/admin/user/manage/route.ts, src/app/api/student/project-library/route.ts, src/app/api/student/project-library/[id]/download/route.ts.

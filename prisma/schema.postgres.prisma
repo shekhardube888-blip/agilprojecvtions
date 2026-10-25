@@ -123,6 +123,9 @@ model Account {
   expiresAt     DateTime?              // passwordSetAt + 2 days
   fullName      String?
   note          String?                // e.g. "Payment received ₹X"
+  // Admin-controlled: which ready-made Project Library item this student is
+  // allowed to download. NULL = no project assigned yet.
+  assignedProjectId String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

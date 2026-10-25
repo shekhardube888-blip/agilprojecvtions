@@ -50,12 +50,30 @@ export async function GET(req: Request) {
     });
     const subMap = new Map(submissions.map((s) => [s.projectId, s]));
 
+    // Admin-assigned project — only this project can be downloaded.
+    // If null, the student cannot download ANY project from the library.
+    const account = await db.account.findUnique({
+      where: { username: studentEmail },
+      select: { assignedProjectId: true },
+    });
+    const assignedProjectId = account?.assignedProjectId || null;
+    let assignedProjectTitle: string | null = null;
+    if (assignedProjectId) {
+      const proj = await db.projectLibraryItem.findUnique({
+        where: { id: assignedProjectId },
+        select: { title: true },
+      });
+      assignedProjectTitle = proj?.title || null;
+    }
+
     return NextResponse.json({
       ok: true,
       items,
       downloadedProjectId: download?.projectId || null,
       downloadedAt: download?.downloadedAt || null,
       submissions: subMap,
+      assignedProjectId,
+      assignedProjectTitle,
     });
   } catch (err) {
     console.error("[student/project-library] GET error:", err);

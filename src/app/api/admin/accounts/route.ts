@@ -24,10 +24,25 @@ export async function GET(req: Request) {
         passwordSetAt: true,
         expiresAt: true,
         createdAt: true,
+        assignedProjectId: true,
       },
     });
+
+    // Look up titles for any assigned projects (one round-trip)
+    const assignedIds = accounts
+      .map((a) => a.assignedProjectId)
+      .filter((id): id is string => Boolean(id));
+    const projects = assignedIds.length
+      ? await db.projectLibraryItem.findMany({
+          where: { id: { in: assignedIds } },
+          select: { id: true, title: true },
+        })
+      : [];
+    const projectMap = new Map(projects.map((p) => [p.id, p.title]));
+
     const out = accounts.map((a) => ({
       ...a,
+      assignedProjectTitle: a.assignedProjectId ? projectMap.get(a.assignedProjectId) || null : null,
       expired: a.role === "guest" ? isExpired(a.expiresAt) : false,
     }));
     return NextResponse.json({ ok: true, accounts: out });
