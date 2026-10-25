@@ -21,11 +21,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^5.1.1",
     "@mdxeditor/editor": "^4.3.3",
-<<<<<<< HEAD
-    "@prisma/client": "^6.11.1",
-=======
     "@prisma/client": "^6.19.3",
->>>>>>> 13efa5515ff901c807ebaf1ef510831ee03cab6f
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
@@ -104,18 +100,10 @@
     "@prisma/client@6.19.3": true,
     "sharp@0.34.5": true,
     "unrs-resolver@1.12.2": true,
-<<<<<<< HEAD
     "@parcel/watcher@2.6.0": true,
     "@swc/core@1.16.20": true,
     "es5-ext@0.10.64": true,
-    "prisma@6.12.0": true,
-    "@prisma/engines@6.12.0": true
-=======
-    "@swc/core@1.16.20": true,
-    "es5-ext@0.10.64": true,
-    "@parcel/watcher@2.6.0": true,
     "prisma@6.19.3": true,
     "@prisma/engines@6.19.3": true
->>>>>>> 13efa5515ff901c807ebaf1ef510831ee03cab6f
   }
 }
