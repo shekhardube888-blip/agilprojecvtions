@@ -1,21 +1,3 @@
-// ── AgileProjection · NT-AI Network — DEFAULT schema (Postgres / Supabase) ──
-// This is the default schema. The project connects to Postgres (Supabase)
-// via DATABASE_URL.
-//
-// Setup (one-time):
-//   1. Create a Supabase project → Project Settings → Database → Connection string
-//      Copy the "Transaction" (pooled) URL, port 6543.
-//   2. Set DATABASE_URL in .env to that URL (replace [YOUR-PASSWORD]).
-//   3. bun run db:generate   → download the Prisma engine + generate the client
-//   4. bun run db:push       → create all tables on Supabase Postgres
-//   5. bun run dev           → start the portal on http://localhost:3000
-//
-// SQLite fallback (if you have no Postgres available): use prisma/schema.sqlite.prisma
-//   bun run db:push:sqlite   and   bun run db:generate:sqlite
-//   (and set DATABASE_URL="file:../db/custom.db" in .env)
-//
-// On Vercel: vercel.json runs `prisma generate --schema=prisma/schema.prisma && next build` automatically.
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,103 +7,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Student registration record (covers BE / B.Tech / ME / M.Tech / MCA / B.Sc Engg students)
 model Student {
-  id           String   @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String
-  mobile       String
-  degree       String
-  branch       String
-  semester     String
-  plan         String
-  college      String
-  state        String
-  source       String?
-  notes        String?
-  category     String   // AI/ML domain key (gen-ai, cv, ml, nlp, etc.)
-  categoryLabel String  // human-readable category label
-  project      String   // selected project name
-  projectId    Int?     // selected project id
-  consentWa    Boolean  @default(true)
-  consentEm    Boolean  @default(true)
-  emailSent    Boolean  @default(false)
-  waSent       Boolean  @default(false)
-  // ── Internship lifecycle (admin-controlled) ──
-  paymentStatus    String   @default("pending")     // pending | confirmed
-  internshipStatus String   @default("not_started")  // not_started | in_progress | completed
-  currentStage     Int      @default(0)              // 0 = not started, 1-6 = stage in progress, 7 = all done
-  startedAt        DateTime?
-  completedAt      DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  certificates Certificate[]
+  id               String        @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String
+  mobile           String
+  degree           String
+  branch           String
+  subject          String        @default("")
+  semester         String
+  plan             String
+  college          String
+  state            String
+  source           String?
+  notes            String?
+  category         String
+  categoryLabel    String
+  project          String
+  projectId        Int?
+  consentWa        Boolean       @default(true)
+  consentEm        Boolean       @default(true)
+  emailSent        Boolean       @default(false)
+  waSent           Boolean       @default(false)
+  paymentStatus    String        @default("pending")
+  internshipStatus String        @default("not_started")
+  currentStage     Int           @default(0)
+  startedAt        DateTime?     @db.Timestamp(6)
+  completedAt      DateTime?     @db.Timestamp(6)
+  createdAt        DateTime      @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime      @updatedAt @db.Timestamp(6)
+  Certificate      Certificate[]
 
   @@index([email])
   @@index([category])
   @@index([email, mobile])
 }
 
-// Newsletter subscribers
 model Subscriber {
   id        String   @id @default(cuid())
   email     String   @unique
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamp(6)
 }
 
-// ── Visitor analytics (page views + unique visitors) ──
 model Visitor {
   id        String   @id @default(cuid())
-  uniqueId  String   @unique              // cookie-based stable ID
-  firstSeen DateTime @default(now())
-  lastSeen  DateTime @default(now())
-  views     Int      @default(1)          // page-view count from this visitor
+  uniqueId  String   @unique
+  firstSeen DateTime @default(now()) @db.Timestamp(6)
+  lastSeen  DateTime @default(now()) @db.Timestamp(6)
+  views     Int      @default(1)
 
   @@index([lastSeen])
 }
 
-// AI assistant chat messages (for analytics / follow-up)
 model ChatMessage {
   id        String   @id @default(cuid())
   sessionId String
-  role      String   // 'user' | 'assistant'
+  role      String
   content   String
-  degree    String?  // student degree context (BE / MCA / M.Tech ...)
-  createdAt DateTime @default(now())
+  degree    String?
+  createdAt DateTime @default(now()) @db.Timestamp(6)
 
   @@index([sessionId])
 }
 
-// Cached LLM-generated training modules — stored per student per stage.
-model TrainingModule {
-  id             String   @id @default(cuid())
-  studentEmail   String
-  stage          Int
-  project        String
-  categoryLabel  String
-  content        String
-  aiAvailable    Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@unique([studentEmail, stage])
-  @@index([studentEmail])
-}
-
-// ── Login accounts ──
-// Admin account (never expires, always unlocked) + guest accounts (guest1, guest2, …)
-// whose access expires 2 days after the admin "unlocks" (payment received) them.
 model Account {
-  id            String   @id @default(cuid())
-  username      String   @unique
-  passwordHash  String                 // scrypt hash, salt-prefixed
-  role          String   @default("guest") // "admin" | "guest"
-  status        String   @default("locked") // "locked" | "unlocked"
-  passwordSetAt DateTime?              // when the 2-day window started
-  expiresAt     DateTime?              // passwordSetAt + 2 days
+  id            String      @id @default(cuid())
+  username      String      @unique
+  passwordHash  String
+  role          String      @default("guest")
+  status        String      @default("locked")
+  passwordSetAt DateTime?   @db.Timestamp(6)
+  expiresAt     DateTime?   @db.Timestamp(6)
   fullName      String?
+<<<<<<< HEAD
   note          String?                // e.g. "Payment received ₹X"
   // Admin-controlled: which ready-made Project Library item this student is
   // allowed to download. NULL = no project assigned yet.
@@ -129,111 +88,125 @@ model Account {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+=======
+  note          String?
+  createdAt     DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime    @updatedAt @db.Timestamp(6)
+>>>>>>> 13efa5515ff901c807ebaf1ef510831ee03cab6f
   unlockLogs    UnlockLog[]
 }
 
-// Audit trail of every admin action on a user account.
-// Actions: "unlock" | "lock" | "reset-password" | "set-expiry" | "renew"
+// Audit trail of every admin "unlock / payment received" action.
 model UnlockLog {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   accountId String
-  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  adminUser String                  // who performed the action
-  action    String   @default("unlock")  // unlock | lock | reset-password | set-expiry | renew
-  reason    String?                 // e.g. "Student reported login issue"
-  expiresAt DateTime?              // the new expiry set (null for lock/reset-password)
-  createdAt DateTime @default(now())
+  adminUser String
+  action    String    @default("unlock")
+  reason    String?
+  expiresAt DateTime? @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
   @@index([createdAt])
 }
 
-// ── Auto-issued certificates (verifiable, with a unique certificate number) ──
-model Certificate {
-  id              String   @id @default(cuid())
-  certificateNumber String @unique  // e.g. AP-2026-A1B2C3
-  studentId       String
-  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  type            String   @default("Internship Completion")
-  eligibility     String   // "attendance>75%, project completed, mentor approved"
-  issuedAt        DateTime @default(now())
-  createdAt       DateTime @default(now())
-
-  @@index([studentId])
-}
-
-// ── Colleges (student-selectable + student-added) ──
-model College {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  state     String?
-  source    String   @default("seed")  // "seed" | "student-added"
-  createdAt DateTime @default(now())
-  @@index([name])
-}
-
-// Lesson progress tracking — which lessons has the student completed?
-model LessonProgress {
-  id           String   @id @default(cuid())
-  studentEmail String
-  stage        Int
-  lessonId     String
-  completedAt  DateTime @default(now())
-
-  @@unique([studentEmail, lessonId])
-  @@index([studentEmail, stage])
-}
-
-// Assignment submissions — student submits work per module; admin reviews.
-model Submission {
-  id            String   @id @default(cuid())
-  studentEmail  String
-  studentName   String?
-  stage         Int
-  project       String?
-  content       String
-  status        String   @default("submitted")
-  mentorFeedback String?
-  reviewedBy    String?
-  submittedAt   DateTime @default(now())
-  reviewedAt    DateTime?
-
-  @@unique([studentEmail, stage])
-  @@index([studentEmail])
-  @@index([status])
-}
-
-// Assessment attempts — student quiz scores per module.
 model AssessmentAttempt {
-  id           String   @id @default(cuid())
+  id           String   @id
   studentEmail String
   stage        Int
   score        Int
   passed       Boolean
   answers      String
-  attemptedAt  DateTime @default(now())
+  attemptedAt  DateTime @default(now()) @db.Timestamp(6)
 
+  @@index([studentEmail])
   @@index([studentEmail, stage])
+}
+
+model Certificate {
+  id                String   @id
+  certificateNumber String   @unique
+  studentId         String
+  type              String   @default("Internship Completion")
+  eligibility       String
+  issuedAt          DateTime @default(now()) @db.Timestamp(6)
+  createdAt         DateTime @default(now()) @db.Timestamp(6)
+  Student           Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model College {
+  id        String   @id
+  name      String   @unique
+  state     String?
+  source    String   @default("seed")
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([name])
+}
+
+model DemoProjectRequest {
+  id           String    @id
+  studentEmail String
+  studentName  String?
+  subject      String
+  project      String?
+  requirements String
+  status       String    @default("pending")
+  mentorReply  String?
+  reviewedBy   String?
+  emailedAt    DateTime? @db.Timestamp(6)
+  requestedAt  DateTime  @default(now()) @db.Timestamp(6)
+  reviewedAt   DateTime? @db.Timestamp(6)
+
+  @@index([status])
   @@index([studentEmail])
 }
 
-// Demo Project Requests — student asks for a custom demo project.
-model DemoProjectRequest {
-  id            String   @id @default(cuid())
-  studentEmail  String
-  studentName   String?
-  subject       String
-  project       String?
-  requirements  String
-  status        String   @default("pending")
-  mentorReply   String?
-  reviewedBy    String?
-  emailedAt     DateTime?
-  requestedAt   DateTime @default(now())
-  reviewedAt   DateTime?
+model LessonProgress {
+  id           String   @id
+  studentEmail String
+  stage        Int
+  lessonId     String
+  completedAt  DateTime @default(now()) @db.Timestamp(6)
 
-  @@index([studentEmail])
+  @@unique([studentEmail, lessonId])
+  @@index([studentEmail, stage])
+}
+
+model Submission {
+  id             String    @id
+  studentEmail   String
+  studentName    String?
+  stage          Int
+  project        String?
+  content        String
+  status         String    @default("submitted")
+  mentorFeedback String?
+  reviewedBy     String?
+  submittedAt    DateTime  @default(now()) @db.Timestamp(6)
+  reviewedAt     DateTime? @db.Timestamp(6)
+
+  @@unique([studentEmail, stage])
   @@index([status])
+  @@index([studentEmail])
+}
+
+model TrainingModule {
+  id            String   @id
+  studentEmail  String
+  stage         Int
+  project       String
+  categoryLabel String
+  content       String
+  aiAvailable   Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime @db.Timestamp(6)
+
+  @@unique([studentEmail, stage])
+  @@index([studentEmail])
 }
 
 // ── Project Library: ready-made projects for students to browse + download ──
